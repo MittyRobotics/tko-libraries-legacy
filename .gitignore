@@ -1,0 +1,18 @@
+# Java
+
+# Build
+build
+out
+
+# Gradle
+.gradle
+
+# IntelliJ
+.idea
+
+# docs
+docs
+
+# MacOSX
+.DS_Store
+tko-libraries.iml
