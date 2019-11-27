@@ -1,9 +1,9 @@
 package com.amhsrobotics.libs.geometry;
 
 /**
- * A Transform object that holds the robot's {@link Position} and {@link Rotation} object, making up the robot's overall
- * pose. Unlike the WPILib's Transform2d object, which is used for transformations of Pose2d objects, this Transform
- * object is used to store the robot's actual pose instead of a pose transformation.
+ * A Transform object that holds a {@link Position} and {@link Rotation} object, making up the
+ * robot's overall position on a 2d coordinate plane. Unlike WPILib's Transform2d object, which is used for
+ * transformations of Pose2d objects, this Transform object is used to store the robot's actual position.
  */
 public class Transform {
 	private Position position;
@@ -19,6 +19,10 @@ public class Transform {
 	
 	public Transform(Rotation rotation){
 		this(new Position(), rotation);
+	}
+	
+	public Transform(double x, double y){
+		this(new Position(x,y), new Rotation());
 	}
 	
 	public Transform(double x, double y, double heading){
@@ -45,6 +49,7 @@ public class Transform {
 	public Rotation getRotation() {
 		return rotation;
 	}
+	
 	
 	public Transform multiply(double scalar){
 		Position pos = position.multiply(scalar);

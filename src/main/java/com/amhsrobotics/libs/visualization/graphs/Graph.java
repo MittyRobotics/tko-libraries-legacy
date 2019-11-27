@@ -6,15 +6,10 @@ import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.axis.NumberAxis;
-import org.jfree.chart.block.BlockBorder;
 import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.chart.plot.XYPlot;
 import org.jfree.chart.renderer.xy.XYLineAndShapeRenderer;
-import org.jfree.chart.title.TextTitle;
-import org.jfree.data.general.Series;
 import org.jfree.data.xy.XYDataset;
-import org.jfree.data.xy.XYSeries;
-import org.jfree.data.xy.XYSeriesCollection;
 
 import javax.swing.*;
 import java.awt.*;
@@ -26,7 +21,7 @@ public class Graph extends JFrame {
 	private String yAxisName;
 	private String xAxisName;
 	
-	private XYDataset[] datasets;
+	private XYSeriesCollectionWithRender[] datasets;
 	
 	private ChartPanel chartPanel;
 	private JFreeChart chart;
@@ -38,6 +33,7 @@ public class Graph extends JFrame {
 		this.xAxisName = xAxisName;
 		
 		initUI();
+		setGraphTheme(new DarkTheme());
 	}
 	
 	private void initUI() {
@@ -45,7 +41,6 @@ public class Graph extends JFrame {
 
 		ChartPanel chartPanel = new ChartPanel(chart);
 		chartPanel.setBorder(BorderFactory.createEmptyBorder(15, 15, 15, 15));
-		chartPanel.setBackground(Color.white);
 		add(chartPanel);
 		
 		pack();
@@ -70,13 +65,7 @@ public class Graph extends JFrame {
 		);
 
 		XYPlot plot = chart.getXYPlot();
-
 		
-		XYLineAndShapeRenderer renderer = new XYLineAndShapeRenderer();
-		renderer.setSeriesPaint(0, Color.RED);
-		renderer.setSeriesStroke(0, new BasicStroke(2.0f));
-		
-		plot.setRenderer(renderer);
 		plot.setBackgroundPaint(Color.white);
 		
 		plot.setRangeGridlinesVisible(true);
@@ -88,7 +77,7 @@ public class Graph extends JFrame {
 		( (NumberAxis)plot.getDomainAxis()).setNumberFormatOverride(new DecimalFormat());
 		( (NumberAxis)plot.getRangeAxis()).setNumberFormatOverride(new DecimalFormat());
 
-		
+
 		
 		this.chart = chart;
 		this.plot = plot;
@@ -171,20 +160,25 @@ public class Graph extends JFrame {
 		range.setRange(lowerBound, upperBound);
 	}
 	
-
-	
-	public void updateGraph(){
+	public void clearGraph(){
 		for(int i = 0; i < plot.getDatasetCount(); i++){
 			plot.setDataset(0, null);
 		}
+	}
+	
+	public void updateGraph(){
+		clearGraph();
 		if(datasets != null){
 			for(int i = 0; i < datasets.length; i++){
 				plot.setDataset(i,datasets[i]);
+				plot.setRenderer(i, new CustomRenderer(datasets[i].isShowPoints(), datasets[i].isShowLines(), datasets[i].getColor()));
 			}
 		}
+
+		
 	}
 	
-	public void setDatasets(XYDataset[] datasets) {
+	public void setDatasets(XYSeriesCollectionWithRender[] datasets) {
 		this.datasets = datasets;
 		updateGraph();
 	}

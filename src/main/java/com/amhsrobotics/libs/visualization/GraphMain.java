@@ -3,22 +3,19 @@ package com.amhsrobotics.libs.visualization;
 import com.amhsrobotics.libs.geometry.Position;
 import com.amhsrobotics.libs.geometry.Rotation;
 import com.amhsrobotics.libs.geometry.Transform;
-import com.amhsrobotics.libs.visualization.graphs.Graph;
-import com.amhsrobotics.libs.visualization.themes.DarkTheme;
-import org.jfree.data.xy.XYDataset;
+import com.amhsrobotics.libs.visualization.graphs.XYSeriesCollectionWithRender;
+import com.amhsrobotics.libs.visualization.graphs.GraphManager;
+import com.amhsrobotics.libs.visualization.graphs.RobotSimGraph;
 import org.jfree.data.xy.XYSeries;
 import org.jfree.data.xy.XYSeriesCollection;
-
-import javax.swing.*;
 
 public class GraphMain {
 	public static void main(String[] args) {
 		
-		Graph graph = new Graph("Graph", "X", "Y");
+		RobotSimGraph graph = new RobotSimGraph("Graph", "X", "Y");
 		graph.setVisible(true);
-		graph.setGraphTheme(new DarkTheme());
-		
-		Transform transform = new Transform(new Position(15, 5), new Rotation(45));
+
+		Transform transform = new Transform(new Position(15, 5), new Rotation(10));
 		Transform origin = new Transform(new Position(10, 5), new Rotation(-45));
 		
 		XYSeriesCollection dataset = new XYSeriesCollection();
@@ -27,7 +24,6 @@ public class GraphMain {
 		XYSeries series1 = new XYSeries("Error Point");
 		
 		XYSeries series2 = new XYSeries("Origin");
-		
 		
 		XYSeries series3 = new XYSeries("Relative origin");
 		
@@ -42,19 +38,20 @@ public class GraphMain {
 		
 		series2.add(origin.getPosition().getX(), origin.getPosition().getY());
 		series2.add(origin.getPosition().getX() + origin.getRotation().cos() * 2, origin.getPosition().getY() + origin.getRotation().sin() * 2);
+//
+//		series3.add(0, 0);
+//		series3.add(2, 0);
+//
 		
-		
-		series3.add(0, 0);
-		series3.add(2, 0);
-		
+		System.out.println(transform.toString());
 		System.out.println(error.toString());
-		
-		
-		dataset.addSeries(series);
-		dataset.addSeries(series1);
-		dataset.addSeries(series2);
+
+		//dataset.addSeries(series);
+		//dataset.addSeries(series1);
+		//dataset.addSeries(series2);
 		dataset.addSeries(series3);
-		XYDataset[] datasets = new XYDataset[]{dataset};
+		XYSeriesCollectionWithRender[] datasets = new XYSeriesCollectionWithRender[]{GraphManager.getInstance().graphRectangle(5,5,10,5,10, "Robot"),
+				GraphManager.getInstance().graphArrow(5,5,3,1,10, "Arrow")};
 		
 		graph.setDatasets(datasets);
 		
