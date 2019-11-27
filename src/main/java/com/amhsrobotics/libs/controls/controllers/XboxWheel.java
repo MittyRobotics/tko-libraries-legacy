@@ -1,4 +1,4 @@
-package com.amhsrobotics.libs.controls;
+package com.amhsrobotics.libs.controls.controllers;
 
 import edu.wpi.first.wpilibj.GenericHID;
 

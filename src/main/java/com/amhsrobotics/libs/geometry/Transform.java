@@ -75,16 +75,29 @@ public class Transform {
 		return new Transform(pos,rot);
 	}
 	
-	public Transform rotateBy(Transform other){
-		Position pos = position.rotateBy(other.getRotation());
-		Rotation rot = rotation.rotateBy(other.getRotation());
+	public Transform transformBy(Transform other){
+		Position pos = position.add(other.getPosition().rotateBy(rotation));
+		Rotation rot = rotation.add(other.getRotation());
 		
 		return new Transform(pos,rot);
 	}
 	
-	public Transform getTransformError(Transform other){
-		Position pos = position.subtract(other.getPosition());
+	public Transform relativeTo(Transform other){
+		Position pos = position.subtract(other.getPosition()).rotateBy(other.getRotation().inverse());
 		Rotation rot = rotation.subtract(other.getRotation());
+		
+		return new Transform(pos,rot);
+	}
+	
+	/**
+	 * Rotates this {@link Transform} around the given {@link Transform}.
+	 *
+	 * @param other the {@link Transform} to rotate around
+	 * @return the rotated {@link Transform}
+	 */
+	public Transform rotateAround(Transform other){
+		Position pos = position.subtract(other.getPosition()).rotateBy(other.getRotation()).add(other.getPosition());
+		Rotation rot = rotation.add(other.getRotation());
 		
 		return new Transform(pos,rot);
 	}

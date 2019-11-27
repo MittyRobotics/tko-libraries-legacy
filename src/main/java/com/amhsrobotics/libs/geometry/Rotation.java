@@ -46,6 +46,10 @@ public class Rotation {
 		return -getRadians();
 	}
 	
+	public Rotation inverse(){
+		return new Rotation(inverseAngle());
+	}
+	
 	public Rotation plus(double otherAngle){
 		return rotateBy(new Rotation(otherAngle));
 	}
