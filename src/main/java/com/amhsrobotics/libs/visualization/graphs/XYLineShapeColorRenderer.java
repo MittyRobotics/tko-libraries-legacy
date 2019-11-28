@@ -5,20 +5,18 @@ import sun.jvm.hotspot.debugger.win32.coff.COFFException;
 
 import java.awt.*;
 
-public class CustomRenderer extends XYLineAndShapeRenderer {
+public class XYLineShapeColorRenderer extends XYLineAndShapeRenderer {
 	
 	private final boolean showShapes;
 	private final boolean showLines;
 	private final Color color;
 	
-	public CustomRenderer(boolean showShapes, boolean showLines, Color color){
+	public XYLineShapeColorRenderer(boolean showShapes, boolean showLines, Color color){
 		
 		this.showShapes = showShapes;
 		this.showLines = showLines;
 		this.color = color;
 	}
-	
-	
 	
 	@Override
 	public boolean getItemShapeVisible(int series, int item) {

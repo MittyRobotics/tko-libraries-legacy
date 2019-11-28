@@ -8,7 +8,6 @@ import org.jfree.chart.JFreeChart;
 import org.jfree.chart.axis.NumberAxis;
 import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.chart.plot.XYPlot;
-import org.jfree.chart.renderer.xy.XYLineAndShapeRenderer;
 import org.jfree.data.xy.XYDataset;
 
 import javax.swing.*;
@@ -171,7 +170,7 @@ public class Graph extends JFrame {
 		if(datasets != null){
 			for(int i = 0; i < datasets.length; i++){
 				plot.setDataset(i,datasets[i]);
-				plot.setRenderer(i, new CustomRenderer(datasets[i].isShowPoints(), datasets[i].isShowLines(), datasets[i].getColor()));
+				plot.setRenderer(i, new XYLineShapeColorRenderer(datasets[i].isShowPoints(), datasets[i].isShowLines(), datasets[i].getColor()));
 			}
 		}
 

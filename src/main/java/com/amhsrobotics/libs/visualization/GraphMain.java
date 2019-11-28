@@ -49,12 +49,8 @@ public class GraphMain {
 		//dataset.addSeries(series);
 		//dataset.addSeries(series1);
 		//dataset.addSeries(series2);
-		dataset.addSeries(series3);
-		XYSeriesCollectionWithRender[] datasets = new XYSeriesCollectionWithRender[]{GraphManager.getInstance().graphRectangle(5,5,10,5,10, "Robot"),
-				GraphManager.getInstance().graphArrow(5,5,3,1,10, "Arrow")};
-		
-		graph.setDatasets(datasets);
-		
+		//dataset.addSeries(series3);
+graph.graphRobot(5,5,65,5,10);
 		graph.resizeGraph(-20, 20, -20, 20);
 		
 		graph.setSize(800,800);

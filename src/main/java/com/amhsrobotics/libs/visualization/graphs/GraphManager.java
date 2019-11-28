@@ -39,10 +39,10 @@ public class GraphManager {
 		
 		Transform origin = new Transform(x,y,angle);
 		
-		Transform p0= new Transform(-halfWidth, halfHeight).transformBy(origin).rotateAround(origin);
-		Transform p1= new Transform(-halfWidth, -halfHeight).transformBy(origin).rotateAround(origin);
-		Transform p2= new Transform(halfWidth, -halfHeight).transformBy(origin).rotateAround(origin);
-		Transform p3= new Transform(halfWidth, halfHeight).transformBy(origin).rotateAround(origin);
+		Transform p0= new Transform(-halfHeight, halfWidth).transformBy(origin).rotateAround(origin);
+		Transform p1= new Transform(-halfHeight, -halfWidth).transformBy(origin).rotateAround(origin);
+		Transform p2= new Transform(halfHeight, -halfWidth).transformBy(origin).rotateAround(origin);
+		Transform p3= new Transform(halfHeight, halfWidth).transformBy(origin).rotateAround(origin);
 		
 		series.add(p0.getPosition().getX(), p0.getPosition().getY());
 		series.add(p1.getPosition().getX(), p1.getPosition().getY());

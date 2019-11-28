@@ -1,75 +1,37 @@
 package com.amhsrobotics.libs.auton.path.generation;
 
-import java.awt.geom.Point2D;
+import com.amhsrobotics.libs.geometry.Position;
+import com.amhsrobotics.libs.geometry.Rotation;
+import com.amhsrobotics.libs.geometry.Transform;
 
-public class TrajectoryPoint {
+public class TrajectoryPoint extends Transform {
 	
-	private double x;
-	private double y;
-	private double position;
-	private double velocity;
-	private double curvature;
+	private double distanceAlongPath;
+	private double radius;
 	private double angle;
-	private double time;
 	
-	public TrajectoryPoint(double x, double y) {
-		this.x = x;
-		this.y = y;
+	public TrajectoryPoint(Position position, Rotation rotation) {
+		super(position,rotation);
 	}
 	
-	public double distance(TrajectoryPoint trajectoryPoint){
-		return Point2D.distance(getX(),getY(),trajectoryPoint.getX(),trajectoryPoint .getY());
+	public double getDistanceAlongPath() {
+		return distanceAlongPath;
 	}
 	
-	public double getX() {
-		return x;
+	public void setDistanceAlongPath(double distanceAlongPath) {
+		this.distanceAlongPath = distanceAlongPath;
 	}
 	
-	public void setX(double x) {
-		this.x = x;
+	public double getRadius() {
+		return radius;
 	}
 	
-	public double getY() {
-		return y;
+	public void setRadius(double radius) {
+		this.radius = radius;
 	}
 	
-	public void setY(double y) {
-		this.y = y;
-	}
-	
-	public double getPosition() {
-		return position;
-	}
-	
-	public void setPosition(double position) {
-		this.position = position;
-	}
-	
-	public double getVelocity() {
-		return velocity;
-	}
-	
-	public void setVelocity(double velocity) {
-		this.velocity = velocity;
-	}
-	
-	public double getCurvature() {
-		return Math.abs(curvature);
-	}
-	public double getRawCurvature(){
-		return curvature;
-	}
-	
-	public void setCurvature(double curvature) {
-		this.curvature = curvature;
-	}
-	
-	public double getTime() {
-		return time;
-	}
-	
-	public void setTime(double time) {
-		this.time = time;
+	public double getCurvature(){
+		return 1/radius;
 	}
 	
 	public double getAngle() {
