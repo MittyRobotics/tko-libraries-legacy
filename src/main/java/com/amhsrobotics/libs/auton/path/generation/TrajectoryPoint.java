@@ -7,8 +7,10 @@ import com.amhsrobotics.libs.math.geometry.Transform;
 public class TrajectoryPoint extends Transform {
 	
 	private double distanceAlongPath;
+	private double velocity;
 	private double radius;
-	private double angle;
+	private double time;
+	
 	
 	public TrajectoryPoint(Position position, Rotation rotation) {
 		super(position,rotation);
@@ -34,11 +36,20 @@ public class TrajectoryPoint extends Transform {
 		return 1/radius;
 	}
 	
-	public double getAngle() {
-		return angle;
+	
+	public double getTime() {
+		return time;
 	}
 	
-	public void setAngle(double angle) {
-		this.angle = angle;
+	public void setTime(double time) {
+		this.time = time;
+	}
+	
+	public double getVelocity() {
+		return velocity;
+	}
+	
+	public void setVelocity(double velocity) {
+		this.velocity = velocity;
 	}
 }

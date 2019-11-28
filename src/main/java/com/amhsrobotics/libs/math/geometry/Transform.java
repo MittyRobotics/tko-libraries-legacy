@@ -1,5 +1,7 @@
 package com.amhsrobotics.libs.math.geometry;
 
+import com.amhsrobotics.libs.auton.path.generation.TrajectoryPoint;
+
 /**
  * A Transform object that holds a {@link Position} and {@link Rotation} object, making up the
  * robot's overall position on a 2d coordinate plane. Unlike WPILib's Transform2d object, which is used for
@@ -48,6 +50,28 @@ public class Transform {
 	
 	public Rotation getRotation() {
 		return rotation;
+	}
+	
+	/**
+	 * Finds the {@link Circle} that intersects p0, this point, and p1.
+	 *
+	 * @param p0 another point on the circle
+	 * @param p1 another point on the circle
+	 * @return the {@link Circle} object intersecting with the three points.
+	 */
+	public Circle findIntersectingCircle(Transform p0, Transform p1){
+		return position.findIntersectingCircle(p0.getPosition(), p1.getPosition());
+	}
+	
+	/**
+	 * Finds the side that this point is on the line defined by p0 and p1.
+	 *
+	 * @param p0 first point of the line
+	 * @param p1 second point of the line
+	 * @return side that this point is on the line, +1 for left, -1 for right
+	 */
+	public double findSide(Transform p0, Transform p1){
+		return position.findSide(p0.getPosition(), p1.getPosition());
 	}
 	
 	public Transform multiply(double scalar){

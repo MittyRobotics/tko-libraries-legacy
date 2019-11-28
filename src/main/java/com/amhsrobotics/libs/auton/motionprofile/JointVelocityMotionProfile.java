@@ -138,6 +138,9 @@ public class JointVelocityMotionProfile {
 			this.endVelocity = endVelocity;
 		}
 		
+		public VelocityConstraints getVelocityConstraints() {
+			return velocityConstraints;
+		}
 	}
 	
 }

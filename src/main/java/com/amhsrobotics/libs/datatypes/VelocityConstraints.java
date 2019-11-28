@@ -4,13 +4,19 @@ public class VelocityConstraints {
 	private double maxAcceleration;
 	private double maxDeceleration;
 	private double maxVelocity;
+	private double minVelocity;
 	private double startVelocity;
 	private double endVelocity;
 	
 	public VelocityConstraints(double maxAcceleration, double maxDeceleration, double maxVelocity, double startVelocity, double endVelocity) {
+		this(maxAcceleration,maxDeceleration,maxVelocity,0,startVelocity,endVelocity);
+	}
+	
+	public VelocityConstraints(double maxAcceleration, double maxDeceleration, double maxVelocity, double minVelocity, double startVelocity, double endVelocity) {
 		this.maxAcceleration = Math.abs(maxAcceleration);
 		this.maxDeceleration = Math.abs(maxDeceleration);
 		this.maxVelocity = Math.abs(maxVelocity);
+		this.minVelocity = minVelocity;
 		this.startVelocity = Math.max(Math.min(startVelocity, maxVelocity),-maxVelocity);
 		this.endVelocity = Math.max(Math.min(endVelocity, maxVelocity),-maxVelocity);
 	}
@@ -53,5 +59,13 @@ public class VelocityConstraints {
 	
 	public void setEndVelocity(double endVelocity) {
 		this.endVelocity = endVelocity;
+	}
+	
+	public double getMinVelocity() {
+		return minVelocity;
+	}
+	
+	public void setMinVelocity(double minVelocity) {
+		this.minVelocity = minVelocity;
 	}
 }

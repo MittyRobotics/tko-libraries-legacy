@@ -109,7 +109,6 @@ public class TrapezoidalMotionProfile {
             double overTime = Math.abs(tCruise);
             double accelTimeRatio = tAccel/(tTotal + overTime);
             double decelTimeRatio = tDecel/(tTotal + overTime);
-            System.out.println(accelTimeRatio + " " + tTotal + " " + decelTimeRatio);
             tAccel -= overTime*accelTimeRatio;
             tDecel -= overTime*decelTimeRatio;
             tCruise = 0;
