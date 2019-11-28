@@ -2,33 +2,21 @@ package com.amhsrobotics.libs.auton.path.generation;
 
 import com.amhsrobotics.libs.auton.motionprofile.JointVelocityMotionProfile;
 import com.amhsrobotics.libs.datatypes.VelocityConstraints;
-import com.amhsrobotics.libs.math.geometry.Circle;
-import com.amhsrobotics.libs.math.geometry.Position;
+import com.amhsrobotics.libs.math.geometry.Arc;
 import com.amhsrobotics.libs.math.geometry.Transform;
 
-import java.awt.geom.Point2D;
 import java.util.ArrayList;
 
 public abstract class Path {
 	private final Transform[] waypoints;
 	private final VelocityConstraints velocityConstraints;
-	
-
-	
 	private TrajectoryPoint[] trajectoryPoints;
-	
 	private JointVelocityMotionProfile velocityProfile;
-	
-
-	
 	private double radiusSlowdownThreshold;
 	private double flatSlowdownVelocity;
-	
-
-	
 	private final int samples;
 	
-	public Path(Transform[] waypoints, VelocityConstraints velocityConstraints, double radiusSlowdownThreshold, int samples){
+	public Path(Transform[] waypoints, VelocityConstraints velocityConstraints, double radiusSlowdownThreshold, int samples) {
 		this.samples = samples;
 		this.waypoints = waypoints;
 		this.velocityConstraints = velocityConstraints;
@@ -48,28 +36,28 @@ public abstract class Path {
 	/**
 	 * Calculates the position of each point along the path.
 	 */
-	public void calculateDistances(){
-		if(trajectoryPoints != null){
+	public void calculateDistances() {
+		if (trajectoryPoints != null) {
 			trajectoryPoints[0].setDistanceAlongPath(0);
-			for(int i = 1; i < trajectoryPoints.length; i++){
-				trajectoryPoints[i].setDistanceAlongPath(trajectoryPoints[i-1].getPosition().distance(trajectoryPoints[i].getPosition()) + trajectoryPoints[i-1].getDistanceAlongPath());
+			for (int i = 1; i < trajectoryPoints.length; i++) {
+				trajectoryPoints[i].setDistanceAlongPath(trajectoryPoints[i - 1].getPosition().distance(trajectoryPoints[i].getPosition()) + trajectoryPoints[i - 1].getDistanceAlongPath());
 			}
 		}
 	}
 	
-
+	
 	/**
 	 * Calculates the curvature at each point on the path
 	 */
-	public void calculateCurvature(){
+	public void calculateCurvature() {
 		trajectoryPoints[0].setRadius(0);
-		trajectoryPoints[trajectoryPoints.length-1].setRadius(0);
-		for(int i = 1; i < trajectoryPoints.length-1; i++){
-			Circle circle = trajectoryPoints[i].findIntersectingCircle(trajectoryPoints[i-1], trajectoryPoints[i+1]);
+		trajectoryPoints[trajectoryPoints.length - 1].setRadius(0);
+		for (int i = 1; i < trajectoryPoints.length - 1; i++) {
+			Arc arc = trajectoryPoints[i].findIntersectingArc(trajectoryPoints[i - 1], trajectoryPoints[i + 1]);
 			
-			double r = circle.getRadius();
+			double r = arc.getRadius();
 			
-			r = r * circle.getCenter().findSide(trajectoryPoints[i-1].getPosition(), trajectoryPoints[i].getPosition());
+			r = r * arc.getCenter().findSide(trajectoryPoints[i - 1].getPosition(), trajectoryPoints[i].getPosition());
 			
 			//avoid infinite errors
 			if (Double.isInfinite(r)) {
@@ -77,7 +65,7 @@ public abstract class Path {
 			}
 			
 			//avoid divide by 0 errors
-			if(r == 0){
+			if (r == 0) {
 				r = 0.00001;
 			}
 			
@@ -89,22 +77,21 @@ public abstract class Path {
 	/**
 	 * Calculates the velocity and time of each point along the path
 	 */
-	public void calculateVelocity(){
+	public void calculateVelocity() {
 		for (int i = trajectoryPoints.length - 1; i > -1; i--) {
 			if (i == trajectoryPoints.length - 1) {
 				trajectoryPoints[i].setVelocity(velocityConstraints.getEndVelocity());
 			} else {
 				double distance = trajectoryPoints[i + 1].getPosition().distance(trajectoryPoints[i].getPosition());
 				double velocity;
-				if(velocityConstraints.getMaxDeceleration() != 0){
+				if (velocityConstraints.getMaxDeceleration() != 0) {
 					velocity = Math.sqrt(Math.pow(trajectoryPoints[i + 1].getVelocity(), 2) + 2 * velocityConstraints.getMaxDeceleration() * distance);
-				}
-				else {
+				} else {
 					velocity = Math.sqrt(Math.pow(trajectoryPoints[i + 1].getVelocity(), 2) + 2 * velocityConstraints.getMaxAcceleration() * distance);
 				}
 				
-				if(trajectoryPoints[i].getRadius() < radiusSlowdownThreshold){
-					velocity = Math.min(flatSlowdownVelocity,velocity);
+				if (trajectoryPoints[i].getRadius() < radiusSlowdownThreshold) {
+					velocity = Math.min(flatSlowdownVelocity, velocity);
 				}
 				
 				trajectoryPoints[i].setVelocity(velocity);
@@ -112,79 +99,76 @@ public abstract class Path {
 		}
 		
 		for (int i = 0; i < trajectoryPoints.length; i++) {
-			if(i == 0){
+			if (i == 0) {
 				trajectoryPoints[i].setTime(0);
 			}
 			if (i <= 0) {
 				trajectoryPoints[i].setVelocity(velocityConstraints.getStartVelocity());
 			} else {
-				double distance = trajectoryPoints[i - 1].getPosition().distance( trajectoryPoints[i].getPosition());
+				double distance = trajectoryPoints[i - 1].getPosition().distance(trajectoryPoints[i].getPosition());
 				double velocity = Math.min(trajectoryPoints[i].getVelocity(), Math.sqrt(Math.pow(trajectoryPoints[i - 1].getVelocity(), 2) + 2 * velocityConstraints.getMaxAcceleration() * distance));
-				double time = distance/velocity;
+				double time = distance / velocity;
 				
-				if(Double.isInfinite(time)){
+				if (Double.isInfinite(time)) {
 					time = 0;
 				}
 				
-				if(trajectoryPoints[i].getRadius() < radiusSlowdownThreshold){
-					velocity = Math.min(flatSlowdownVelocity,velocity);
+				if (trajectoryPoints[i].getRadius() < radiusSlowdownThreshold) {
+					velocity = Math.min(flatSlowdownVelocity, velocity);
 				}
 				
 				trajectoryPoints[i].setVelocity(velocity);
-				trajectoryPoints[i].setTime(trajectoryPoints[i-1].getTime() + time);
+				trajectoryPoints[i].setTime(trajectoryPoints[i - 1].getTime() + time);
 			}
 		}
 	}
 	
-	
 	/**
 	 * Calculates the angles from each point to the next.
 	 */
-	public void calculateAngles(){
-		for(int i = 0; i < trajectoryPoints.length-1; i++){
-			trajectoryPoints[i].getRotation().setHeading(trajectoryPoints[i].getPosition().angleTo(trajectoryPoints[i+1].getPosition()));
+	public void calculateAngles() {
+		for (int i = 0; i < trajectoryPoints.length - 1; i++) {
+			trajectoryPoints[i].getRotation().setHeading(trajectoryPoints[i].getPosition().angleTo(trajectoryPoints[i + 1].getPosition()));
 		}
 	}
 	
 	/**
 	 * Calculates the {@link JointVelocityMotionProfile} profile for the robot's linear following velocity.
 	 */
-	public void calculateVelocityProfile(){
+	public void calculateVelocityProfile() {
 		ArrayList<JointVelocityMotionProfile.MotionSegment> motionSegments = new ArrayList<>();
 		boolean recordingSlowdown = false;
 		double currentSlowdownStartTime;
 		double currentMotionProfileSegmentStartTime;
 		
-		for(int i = 0; i < trajectoryPoints.length; i++){
-			if(trajectoryPoints[i].getRadius() < radiusSlowdownThreshold && recordingSlowdown == false){
+		for (int i = 0; i < trajectoryPoints.length; i++) {
+			if (trajectoryPoints[i].getRadius() < radiusSlowdownThreshold && recordingSlowdown == false) {
 				recordingSlowdown = true;
-				if(motionSegments.size() == 0){
-					motionSegments.add(new JointVelocityMotionProfile.TrapezoidalMotionSegment(0,trajectoryPoints[i].getTime(),
-							new VelocityConstraints(velocityConstraints.getMaxAcceleration(),velocityConstraints.getMaxDeceleration(),velocityConstraints.getMaxVelocity(),velocityConstraints.getStartVelocity(),flatSlowdownVelocity)));
-				} else{
-					motionSegments.add(new JointVelocityMotionProfile.TrapezoidalMotionSegment(motionSegments.get(motionSegments.size()-1).getEndTime(),trajectoryPoints[i].getTime(),
-							new VelocityConstraints(velocityConstraints.getMaxAcceleration(),velocityConstraints.getMaxDeceleration(),velocityConstraints.getMaxVelocity(),flatSlowdownVelocity,flatSlowdownVelocity)));
+				if (motionSegments.size() == 0) {
+					motionSegments.add(new JointVelocityMotionProfile.TrapezoidalMotionSegment(0, trajectoryPoints[i].getTime(),
+							new VelocityConstraints(velocityConstraints.getMaxAcceleration(), velocityConstraints.getMaxDeceleration(), velocityConstraints.getMaxVelocity(), velocityConstraints.getStartVelocity(), flatSlowdownVelocity)));
+				} else {
+					motionSegments.add(new JointVelocityMotionProfile.TrapezoidalMotionSegment(motionSegments.get(motionSegments.size() - 1).getEndTime(), trajectoryPoints[i].getTime(),
+							new VelocityConstraints(velocityConstraints.getMaxAcceleration(), velocityConstraints.getMaxDeceleration(), velocityConstraints.getMaxVelocity(), flatSlowdownVelocity, flatSlowdownVelocity)));
 				}
 			}
-			if(trajectoryPoints[i].getRadius() > radiusSlowdownThreshold && recordingSlowdown == true){
+			if (trajectoryPoints[i].getRadius() > radiusSlowdownThreshold && recordingSlowdown == true) {
 				recordingSlowdown = false;
-				if(motionSegments.size() == 0){
-					motionSegments.add(new JointVelocityMotionProfile.FlatMotionSegment(flatSlowdownVelocity,0,trajectoryPoints[i].getTime()));
-				} else{
-					motionSegments.add(new JointVelocityMotionProfile.FlatMotionSegment(flatSlowdownVelocity,motionSegments.get(motionSegments.size()-1).getEndTime(),trajectoryPoints[i].getTime()));
+				if (motionSegments.size() == 0) {
+					motionSegments.add(new JointVelocityMotionProfile.FlatMotionSegment(flatSlowdownVelocity, 0, trajectoryPoints[i].getTime()));
+				} else {
+					motionSegments.add(new JointVelocityMotionProfile.FlatMotionSegment(flatSlowdownVelocity, motionSegments.get(motionSegments.size() - 1).getEndTime(), trajectoryPoints[i].getTime()));
 				}
 			}
 		}
-
+		
 		JointVelocityMotionProfile.MotionSegment[] motionSegmentsArray = new JointVelocityMotionProfile.MotionSegment[motionSegments.size()];
 		
-		for(int i = 0; i < motionSegments.size(); i++){
+		for (int i = 0; i < motionSegments.size(); i++) {
 			motionSegmentsArray[i] = motionSegments.get(i);
 		}
-		velocityProfile = new JointVelocityMotionProfile(motionSegmentsArray,velocityConstraints);
+		velocityProfile = new JointVelocityMotionProfile(motionSegmentsArray, velocityConstraints);
 	}
-	
-	
 	
 	public Transform[] getWaypoints() {
 		return waypoints;

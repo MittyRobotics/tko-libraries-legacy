@@ -22,15 +22,15 @@ public class Position {
 	}
 	
 	/**
-	 * Finds the {@link Circle} that intersects p0, this point, and p1.
+	 * Finds the {@link Arc} that intersects p0, this point, and p1.
 	 *
 	 * Equation: https://www.geeksforgeeks.org/equation-of-circle-when-three-points-on-the-circle-are-given/
 	 *
 	 * @param p0 another point on the circle
 	 * @param p1 another point on the circle
-	 * @return the {@link Circle} object intersecting with the three points.
+	 * @return the {@link Arc} object intersecting with the three points.
 	 */
-	public Circle findIntersectingCircle(Position p0, Position p1){
+	public Arc findIntersectingCircle(Position p0, Position p1){
 		double x1 = p0.getX();
 		double y1 = p0.getY();
 		double x2 = getX();
@@ -77,7 +77,7 @@ public class Position {
 		// r is the radius
 		double r = Math.sqrt(sqr_of_r);
 		
-		return new Circle(new Position(h,k), r);
+		return new Arc(new Position(h,k), r);
 	}
 	
 	/**

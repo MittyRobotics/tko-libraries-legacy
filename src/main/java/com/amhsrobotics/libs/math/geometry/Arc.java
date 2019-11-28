@@ -1,10 +1,10 @@
 package com.amhsrobotics.libs.math.geometry;
 
-public class Circle {
+public class Arc {
 	private Position center;
 	private double radius;
 	
-	public Circle(Position center, double radius){
+	public Arc(Position center, double radius){
 		
 		this.center = center;
 		this.radius = radius;

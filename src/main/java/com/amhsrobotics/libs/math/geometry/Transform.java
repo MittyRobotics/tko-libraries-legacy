@@ -1,6 +1,6 @@
 package com.amhsrobotics.libs.math.geometry;
 
-import com.amhsrobotics.libs.auton.path.generation.TrajectoryPoint;
+import java.awt.geom.Point2D;
 
 /**
  * A Transform object that holds a {@link Position} and {@link Rotation} object, making up the
@@ -53,14 +53,46 @@ public class Transform {
 	}
 	
 	/**
-	 * Finds the {@link Circle} that intersects p0, this point, and p1.
+	 * Finds the {@link Arc} that intersects p0, this point, and p1.
 	 *
 	 * @param p0 another point on the circle
 	 * @param p1 another point on the circle
-	 * @return the {@link Circle} object intersecting with the three points.
+	 * @return the {@link Arc} object intersecting with the three points.
 	 */
-	public Circle findIntersectingCircle(Transform p0, Transform p1){
+	public Arc findIntersectingArc(Transform p0, Transform p1){
 		return position.findIntersectingCircle(p0.getPosition(), p1.getPosition());
+	}
+	
+	/**
+	 * Finds the {@link Arc} that is tangent to this {@link Transform} and intersects with the other {@link Transform} position.
+	 *
+	 * @param other the point that the {@link Arc} intersects
+	 * @return the {@link Arc} tangent to this and intersecting other
+	 */
+	public Arc findTangentIntersectionArc(Transform other){
+		
+		final Position vectorHead = new Position(getRotation().cos(), getRotation().sin());
+		
+		final double a = other.getPosition().getX() - getPosition().getX();
+		final double b = other.getPosition().getY() -getPosition().getY();
+		final double c = vectorHead.getX();
+		final double d = vectorHead.getY();
+		
+		final double v = 2 * ((a * d) - (b * c));
+		final double x = (d * ((a * a) + (b * b))) / v;
+		final double y = -(c * (a * a + b * b)) / v;
+		
+		final Position relativeCircleCenter = new Position(x, y);
+		
+		Position center = new Position(relativeCircleCenter.getX() + getPosition().getX(), relativeCircleCenter.getY() + getPosition().getY());
+		
+		Position pB = new Position(getPosition().getX() + getRotation().cos() * 20, getPosition().getY() + getRotation().sin() * 20);
+		
+		double sign = center.findSide(getPosition(), pB);
+		
+		double radius = Math.sqrt(relativeCircleCenter.getX() * relativeCircleCenter.getX() + relativeCircleCenter.getY() * relativeCircleCenter.getY()) * sign;
+		
+		return new Arc(center,radius);
 	}
 	
 	/**
