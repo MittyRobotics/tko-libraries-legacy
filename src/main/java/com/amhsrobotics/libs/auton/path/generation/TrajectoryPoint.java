@@ -1,8 +1,8 @@
 package com.amhsrobotics.libs.auton.path.generation;
 
-import com.amhsrobotics.libs.geometry.Position;
-import com.amhsrobotics.libs.geometry.Rotation;
-import com.amhsrobotics.libs.geometry.Transform;
+import com.amhsrobotics.libs.math.geometry.Position;
+import com.amhsrobotics.libs.math.geometry.Rotation;
+import com.amhsrobotics.libs.math.geometry.Transform;
 
 public class TrajectoryPoint extends Transform {
 	

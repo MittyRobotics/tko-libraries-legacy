@@ -1,6 +1,6 @@
 package com.amhsrobotics.libs.visualization.graphs;
 
-import com.amhsrobotics.libs.geometry.Transform;
+import com.amhsrobotics.libs.math.geometry.Transform;
 import org.jfree.data.xy.XYSeries;
 import org.jfree.data.xy.XYSeriesCollection;
 

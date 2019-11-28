@@ -1,4 +1,4 @@
-package com.amhsrobotics.libs.geometry;
+package com.amhsrobotics.libs.math.geometry;
 
 /**
  * Position object, hold the x and y position of the robot's {@link Transform}. Based on WPILib's Translation2d object:

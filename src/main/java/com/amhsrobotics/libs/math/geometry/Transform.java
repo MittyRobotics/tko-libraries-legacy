@@ -1,4 +1,4 @@
-package com.amhsrobotics.libs.geometry;
+package com.amhsrobotics.libs.math.geometry;
 
 /**
  * A Transform object that holds a {@link Position} and {@link Rotation} object, making up the
@@ -49,7 +49,6 @@ public class Transform {
 	public Rotation getRotation() {
 		return rotation;
 	}
-	
 	
 	public Transform multiply(double scalar){
 		Position pos = position.multiply(scalar);
