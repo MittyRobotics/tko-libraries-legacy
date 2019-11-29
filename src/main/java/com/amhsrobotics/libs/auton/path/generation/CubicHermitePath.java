@@ -1,5 +1,6 @@
 package com.amhsrobotics.libs.auton.path.generation;
 
+import com.amhsrobotics.libs.datatypes.TrajectoryPoint;
 import com.amhsrobotics.libs.datatypes.VelocityConstraints;
 import com.amhsrobotics.libs.math.geometry.Position;
 import com.amhsrobotics.libs.math.geometry.Rotation;

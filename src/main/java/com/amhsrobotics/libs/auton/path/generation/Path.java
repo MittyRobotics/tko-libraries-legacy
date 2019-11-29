@@ -1,6 +1,7 @@
 package com.amhsrobotics.libs.auton.path.generation;
 
 import com.amhsrobotics.libs.auton.motionprofile.JointVelocityMotionProfile;
+import com.amhsrobotics.libs.datatypes.TrajectoryPoint;
 import com.amhsrobotics.libs.datatypes.VelocityConstraints;
 import com.amhsrobotics.libs.math.geometry.Arc;
 import com.amhsrobotics.libs.math.geometry.Transform;
@@ -28,7 +29,6 @@ public abstract class Path {
 		calculateCurvature();
 		calculateVelocity();
 		calculateAngles();
-		calculateVelocityProfile();
 	}
 	
 	public abstract void generateTrajectoryPoints();

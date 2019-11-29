@@ -96,6 +96,45 @@ public class Transform {
 	}
 	
 	/**
+	 * Finds the point that intersects the line defined by this {@link Transform} and the other {@link Transform}.
+	 *
+	 * @return the {@link Transform} containing the {@link Position} of the intersecting point.
+	 */
+	public Transform findLineIntersectionPoint(Transform other){
+		Line l1 = new Line(this);
+		Line l2 = new Line(other);
+		
+		double m1 = l1.getSlope();
+		double b1 = l1.getYIntercept();
+		double m2 = l2.getSlope();
+		double b2 = l2.getYIntercept();
+		
+		//Parallel lines, no intersection
+		if(m1 == m2){
+			return new Transform();
+		}
+		
+		System.out.println(m1 + " " + m2);
+		
+		double x = (b2-b1)/(m1-m2);
+		double y = m1*x+b1;
+		
+		return new Transform(new Position(x,y));
+	}
+	
+	/**
+	 * Finds the point along the line defined by this {@link Transform} that is a certain distance away from this {@link Transform}s position
+	 *
+	 * @param distance the distance along the line to find the point
+	 * @return the {@link Transform} containing the {@link Position} of the point that is distance away from this {@link Position}
+	 */
+	public Transform findPointDistanceAlongLine(double distance){
+		double x = getRotation().cos() * distance;
+		double y = getRotation().sin() * distance;
+		return new Transform(x,y).transformBy(this);
+	}
+	
+	/**
 	 * Finds the side that this point is on the line defined by p0 and p1.
 	 *
 	 * @param p0 first point of the line

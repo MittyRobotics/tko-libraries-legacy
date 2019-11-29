@@ -1,4 +1,4 @@
-package com.amhsrobotics.libs.auton.path.generation;
+package com.amhsrobotics.libs.datatypes;
 
 import com.amhsrobotics.libs.math.geometry.Position;
 import com.amhsrobotics.libs.math.geometry.Rotation;

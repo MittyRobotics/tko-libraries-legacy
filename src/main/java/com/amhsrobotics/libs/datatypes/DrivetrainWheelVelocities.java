@@ -17,4 +17,8 @@ public class DrivetrainWheelVelocities {
 	public double getRightVelocity() {
 		return rightVelocity;
 	}
+	
+	public double getAvgVelocity(){
+		return (rightVelocity + leftVelocity)/2;
+	}
 }
