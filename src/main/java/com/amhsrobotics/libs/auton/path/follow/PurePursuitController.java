@@ -1,14 +1,11 @@
 package com.amhsrobotics.libs.auton.path.follow;
 
-import com.amhsrobotics.libs.auton.motionprofile.LimitVelocityMotion;
 import com.amhsrobotics.libs.auton.path.generation.Path;
-import com.amhsrobotics.libs.datatypes.TrajectoryPoint;
-import com.amhsrobotics.libs.datatypes.DrivetrainWheelVelocities;
-import com.amhsrobotics.libs.math.geometry.Arc;
-import com.amhsrobotics.libs.math.geometry.Position;
-import com.amhsrobotics.libs.math.geometry.Rotation;
-import com.amhsrobotics.libs.math.geometry.Transform;
-import org.graalvm.compiler.nodes.InliningLog;
+import com.amhsrobotics.libs.util.path.TrajectoryPoint;
+import com.amhsrobotics.libs.util.geometry.Arc;
+import com.amhsrobotics.libs.util.geometry.Position;
+import com.amhsrobotics.libs.util.geometry.Rotation;
+import com.amhsrobotics.libs.util.geometry.Transform;
 
 public class PurePursuitController {
 	
@@ -42,8 +39,7 @@ public class PurePursuitController {
 	}
 	
 	public Output update(){
-		
-		roughClosestPoint = getClosestPoint(AutonDriver.getInstance().getRobotTransform(),0,currentClosestPointIndex, false);
+		roughClosestPoint = getClosestPoint(AutonDriver.getInstance().getRobotTransform(),0,currentClosestPointIndex, true);
 		currentClosestPointIndex = previousSearchIndex;
 		actualClosestPoint = findClosestPointInSegment();
 		roughTargetPoint = getClosestPoint(actualClosestPoint, AutonDriver.PATH_DEFAULT_LOOKAHEAD,currentClosestPointIndex, true);
@@ -52,7 +48,7 @@ public class PurePursuitController {
 		
 		Arc arcToTargetPoint = AutonDriver.getInstance().getRobotTransform().findTangentIntersectionArc(roughTargetPoint);
 		
-		double desiredLinearVelocity = actualClosestPoint.getVelocity();
+		double desiredLinearVelocity = 0;
 		
 		return new Output(desiredLinearVelocity,arcToTargetPoint.getRadius());
 	}
@@ -86,7 +82,8 @@ public class PurePursuitController {
 				double distance = path.getTrajectoryPoints()[i].getPosition().distance(originPoint.getPosition()) - distanceShift;
 				double distanceAbs = Math.abs(distance);
 				if (distanceAbs < currentClosest) {
-					if(roundUp && distance > 0){
+					boolean roundedUp = path.getTrajectoryPoints()[i].relativeTo(originPoint).getPosition().getX() > 0;
+					if(roundUp && distance > 0 && roundedUp){
 						currentClosest = distanceAbs;
 						previousSearchIndex = i;
 						point = path.getTrajectoryPoints()[i];
@@ -95,6 +92,10 @@ public class PurePursuitController {
 						currentClosest = distanceAbs;
 						previousSearchIndex = i;
 						point = path.getTrajectoryPoints()[i];
+					}
+					else{
+						point = path.getTrajectoryPoints()[path.getTrajectoryPoints().length-1];
+						previousSearchIndex = path.getTrajectoryPoints().length-1;
 					}
 				}
 			}
@@ -107,31 +108,31 @@ public class PurePursuitController {
 	 * @return a new {@link TrajectoryPoint} containing the position of the point in between the two closest points to the robot.
 	 */
 	public TrajectoryPoint findClosestPointInSegment(){
-		int secondPointIndex;
-		if(currentClosestPointIndex != 0 && currentClosestPointIndex != path.getTrajectoryPoints().length-1){
-			double distanceBehind = path.getTrajectoryPoints()[currentClosestPointIndex-1].getPosition().distance(AutonDriver.getInstance().getRobotTransform().getPosition());
-			double distanceFront = path.getTrajectoryPoints()[currentClosestPointIndex+1].getPosition().distance(AutonDriver.getInstance().getRobotTransform().getPosition());
-			
-			if(distanceBehind < distanceFront){
-				secondPointIndex = currentClosestPointIndex -1;
-			}
-			else{
-				secondPointIndex = currentClosestPointIndex;
-			}
-		}
-		else if(currentClosestPointIndex == 0){
-			secondPointIndex = 0;
-		}
-		else{
-			secondPointIndex = path.getTrajectoryPoints().length-1;
-		}
+		int secondPointIndex = currentClosestPointIndex;
+//		if(currentClosestPointIndex != 0 && currentClosestPointIndex != path.getTrajectoryPoints().length-1){
+//			double distanceBehind = path.getTrajectoryPoints()[currentClosestPointIndex-1].getPosition().distance(AutonDriver.getInstance().getRobotTransform().getPosition());
+//			double distanceFront = path.getTrajectoryPoints()[currentClosestPointIndex+1].getPosition().distance(AutonDriver.getInstance().getRobotTransform().getPosition());
+//
+//			if(distanceBehind < distanceFront){
+//				secondPointIndex = currentClosestPointIndex -1;
+//			}
+//			else{
+//				secondPointIndex = currentClosestPointIndex;
+//			}
+//		}
+//		else if(currentClosestPointIndex == 0){
+//			secondPointIndex = 0;
+//		}
+//		else{
+//			secondPointIndex = path.getTrajectoryPoints().length-1;
+//		}
 		
-		Transform intersectingPoint = AutonDriver.getInstance().getRobotTransform().transformBy(new Transform(new Rotation(90))).findLineIntersectionPoint(path.getTrajectoryPoints()[secondPointIndex]);
+		Transform intersectingPoint = new Transform(AutonDriver.getInstance().getRobotTransform().getPosition(), path.getTrajectoryPoints()[secondPointIndex-1].getRotation().rotateBy(90)).findLineIntersectionPoint(path.getTrajectoryPoints()[secondPointIndex-1]);
 		TrajectoryPoint trajectoryPoint = new TrajectoryPoint(intersectingPoint.getPosition(),intersectingPoint.getRotation());
 		trajectoryPoint.setDistanceAlongPath(roughClosestPoint.getDistanceAlongPath());
-		trajectoryPoint.setRadius(roughClosestPoint.getRadius());
+//		trajectoryPoint.setRadius(roughClosestPoint.getRadius());
 		trajectoryPoint.setTime(roughClosestPoint.getTime());
-		trajectoryPoint.setVelocity(roughClosestPoint.getVelocity());
+//		trajectoryPoint.setVelocity(roughClosestPoint.getVelocity());
 		return trajectoryPoint;
 	}
 	
@@ -155,9 +156,9 @@ public class PurePursuitController {
 		Transform transform = adjustedRoughTargetPoint.findPointDistanceAlongLine(distanceOffset);
 		TrajectoryPoint trajectoryPoint = new TrajectoryPoint(transform.getPosition(), transform.getRotation());
 		trajectoryPoint.setDistanceAlongPath(roughTargetPoint.getDistanceAlongPath());
-		trajectoryPoint.setRadius(roughTargetPoint.getRadius());
+		//trajectoryPoint.setRadius(roughTargetPoint.getRadius());
 		trajectoryPoint.setTime(roughTargetPoint.getTime());
-		trajectoryPoint.setVelocity(roughTargetPoint.getVelocity());
+		//trajectoryPoint.setVelocity(roughTargetPoint.getVelocity());
 		return trajectoryPoint;
 	}
 	

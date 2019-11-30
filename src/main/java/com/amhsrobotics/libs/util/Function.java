@@ -1,4 +1,4 @@
-package com.amhsrobotics.libs.math;
+package com.amhsrobotics.libs.util;
 public interface Function {
 	
 	public double f(double x);

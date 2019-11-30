@@ -1,0 +1,74 @@
+package com.amhsrobotics.libs.util.path;
+
+
+import com.amhsrobotics.libs.util.geometry.Line;
+import com.amhsrobotics.libs.util.geometry.Position;
+import com.amhsrobotics.libs.util.geometry.Transform;
+
+public class LinePathSegment extends PathSegment{
+	private Line line;
+	private Transform startPoint;
+	private Transform endPoint;
+	
+	public LinePathSegment(Line line, Transform startPoint, Transform endPoint){
+		this.line = line;
+		this.startPoint = startPoint;
+		this.endPoint = endPoint;
+	}
+	
+	@Override
+	public Position getIntersection(Transform robotTransform) {
+		return new Transform(robotTransform.getPosition(), line.getTransform().getRotation().rotateBy(90)).findLineIntersectionPoint(line.getTransform()).getPosition();
+	}
+	
+	@Override
+	public boolean onSegment(Position point) {
+		boolean withinStartAndEnd = Math.abs(point.distance(startPoint.getPosition()) + point.distance(endPoint.getPosition()) - startPoint.getPosition().distance(endPoint.getPosition())) < 2e-16;
+		return line.isColinear(point) && withinStartAndEnd;
+	}
+	
+	@Override
+	public double getVelocity() {
+		return 0;
+	}
+	
+	@Override
+	public PathSegmentType getType() {
+		return PathSegmentType.LINE;
+	}
+	
+	@Override
+	public ArcPathSegment getArcSegment() {
+		System.out.println("Tried to get arc segment, but the segment is a line!");
+		return null;
+	}
+	
+	@Override
+	public LinePathSegment getLineSegment() {
+		return this;
+	}
+	
+	public Line getLine() {
+		return line;
+	}
+	
+	public void setLine(Line line) {
+		this.line = line;
+	}
+	
+	public Transform getStartPoint() {
+		return startPoint;
+	}
+	
+	public void setStartPoint(TrajectoryPoint startPoint) {
+		this.startPoint = startPoint;
+	}
+	
+	public Transform getEndPoint() {
+		return endPoint;
+	}
+	
+	public void setEndPoint(TrajectoryPoint endPoint) {
+		this.endPoint = endPoint;
+	}
+}

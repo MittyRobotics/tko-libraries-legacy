@@ -1,6 +1,4 @@
-package com.amhsrobotics.libs.math.geometry;
-
-import java.awt.geom.Point2D;
+package com.amhsrobotics.libs.util.geometry;
 
 /**
  * A Transform object that holds a {@link Position} and {@link Rotation} object, making up the
@@ -60,7 +58,7 @@ public class Transform {
 	 * @return the {@link Arc} object intersecting with the three points.
 	 */
 	public Arc findIntersectingArc(Transform p0, Transform p1){
-		return position.findIntersectingCircle(p0.getPosition(), p1.getPosition());
+		return position.findIntersectingArc(p0.getPosition(), p1.getPosition());
 	}
 	
 	/**
@@ -101,25 +99,7 @@ public class Transform {
 	 * @return the {@link Transform} containing the {@link Position} of the intersecting point.
 	 */
 	public Transform findLineIntersectionPoint(Transform other){
-		Line l1 = new Line(this);
-		Line l2 = new Line(other);
-		
-		double m1 = l1.getSlope();
-		double b1 = l1.getYIntercept();
-		double m2 = l2.getSlope();
-		double b2 = l2.getYIntercept();
-		
-		//Parallel lines, no intersection
-		if(m1 == m2){
-			return new Transform();
-		}
-		
-		System.out.println(m1 + " " + m2);
-		
-		double x = (b2-b1)/(m1-m2);
-		double y = m1*x+b1;
-		
-		return new Transform(new Position(x,y));
+		return new Transform(new Line(this).findLineIntersectionPoint(new Line(other)));
 	}
 	
 	/**

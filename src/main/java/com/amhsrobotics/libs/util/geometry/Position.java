@@ -1,4 +1,4 @@
-package com.amhsrobotics.libs.math.geometry;
+package com.amhsrobotics.libs.util.geometry;
 
 /**
  * Position object, hold the x and y position of the robot's {@link Transform}. Based on WPILib's Translation2d object:
@@ -30,7 +30,7 @@ public class Position {
 	 * @param p1 another point on the circle
 	 * @return the {@link Arc} object intersecting with the three points.
 	 */
-	public Arc findIntersectingCircle(Position p0, Position p1){
+	public Arc findIntersectingArc(Position p0, Position p1){
 		double x1 = p0.getX();
 		double y1 = p0.getY();
 		double x2 = getX();

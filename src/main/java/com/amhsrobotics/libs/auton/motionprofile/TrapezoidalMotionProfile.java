@@ -3,8 +3,8 @@ package com.amhsrobotics.libs.auton.motionprofile;
 import com.amhsrobotics.libs.datatypes.MechanismBounds;
 import com.amhsrobotics.libs.datatypes.MotionFrame;
 import com.amhsrobotics.libs.datatypes.VelocityConstraints;
-import com.amhsrobotics.libs.math.Function;
-import com.amhsrobotics.libs.math.IntegralMath;
+import com.amhsrobotics.libs.util.Function;
+import com.amhsrobotics.libs.util.IntegralMath;
 
 public class TrapezoidalMotionProfile {
 

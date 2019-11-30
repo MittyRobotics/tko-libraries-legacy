@@ -1,10 +1,10 @@
 package com.amhsrobotics.libs.auton.path.generation;
 
-import com.amhsrobotics.libs.datatypes.TrajectoryPoint;
+import com.amhsrobotics.libs.util.path.TrajectoryPoint;
 import com.amhsrobotics.libs.datatypes.VelocityConstraints;
-import com.amhsrobotics.libs.math.geometry.Position;
-import com.amhsrobotics.libs.math.geometry.Rotation;
-import com.amhsrobotics.libs.math.geometry.Transform;
+import com.amhsrobotics.libs.util.geometry.Position;
+import com.amhsrobotics.libs.util.geometry.Rotation;
+import com.amhsrobotics.libs.util.geometry.Transform;
 
 public class CubicHermitePath extends Path {
 
@@ -31,7 +31,7 @@ public class CubicHermitePath extends Path {
 				stepsPerSegment+=addedSteps;
 			}
 			
-			TrajectoryPoint[] segment = generateSegment(getWaypoints()[i], getWaypoints()[i + 1], stepsPerSegment, i == 0, i == getWaypoints().length-2);
+			TrajectoryPoint[] segment = generateSpline(getWaypoints()[i], getWaypoints()[i + 1], stepsPerSegment, i == 0, i == getWaypoints().length-2);
 			for (int a = 0; a < segment.length; a++) {
 				tradjectoryPoints[a +prevSegmentLength] = segment[a];
 			}
@@ -40,8 +40,7 @@ public class CubicHermitePath extends Path {
 		setTrajectoryPoints(tradjectoryPoints);
 	}
 	
-	
-	private TrajectoryPoint[] generateSegment(Transform coordinate, Transform coordinate1, int steps, boolean firstSegment, boolean lastSegment) {
+	private TrajectoryPoint[] generateSpline(Transform coordinate, Transform coordinate1, int steps, boolean firstSegment, boolean lastSegment) {
 		TrajectoryPoint[] tradjectoryPoints = new TrajectoryPoint[steps];
 		double x0,x1,y0,y1,a0,a1,d,mx0,mx1,my0,my1;
 		x0 = coordinate.getPosition().getX();

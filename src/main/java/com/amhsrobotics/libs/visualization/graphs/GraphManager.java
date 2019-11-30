@@ -1,6 +1,6 @@
 package com.amhsrobotics.libs.visualization.graphs;
 
-import com.amhsrobotics.libs.math.geometry.Transform;
+import com.amhsrobotics.libs.util.geometry.Transform;
 import org.jfree.data.xy.XYSeries;
 import org.jfree.data.xy.XYSeriesCollection;
 
@@ -66,8 +66,8 @@ public class GraphManager {
 	 * @param seriesName the name of the {@link XYSeries} containing the rectangle
 	 * @return an {@link XYSeriesCollection} dataset containing an {@link XYSeries} with the coordinates that make up the arrow
 	 */
-	public XYSeriesCollectionWithRender graphArrow(double x, double y, double length, double arrowWidth, double angle, String seriesName){
-		XYSeriesCollectionWithRender dataset = new XYSeriesCollectionWithRender(true,false, Color.red, new Rectangle(2,2));
+	public XYSeriesCollectionWithRender graphArrow(double x, double y, double length, double arrowWidth, double angle, String seriesName, Color color){
+		XYSeriesCollectionWithRender dataset = new XYSeriesCollectionWithRender(true,false,color, new Rectangle(2,2));
 		
 		XYSeries series = new XYSeries(seriesName,false);
 		
@@ -97,6 +97,24 @@ public class GraphManager {
 		
 		dataset.addSeries(series);
 		
+		return dataset;
+	}
+	
+	public XYSeriesCollectionWithRender graphArc(double x, double y, double radius, double minAngle, double maxAngle, String seriesName, Color color){
+		XYSeriesCollectionWithRender dataset = new XYSeriesCollectionWithRender(true,false, color, null);
+		
+		XYSeries series = new XYSeries(seriesName,false);
+		if(Math.abs(radius) > 100){
+			series.add(x + Math.cos(Math.toRadians(minAngle)) * radius, y + Math.sin(Math.toRadians(minAngle)) * radius);
+			series.add(x + Math.cos(Math.toRadians(maxAngle)) * radius, y + Math.sin(Math.toRadians(maxAngle)) * radius);
+		}
+		else{
+			for(double i = minAngle; i < maxAngle; i+=0.1){
+				series.add(x + Math.cos(Math.toRadians(i)) * radius, y + Math.sin(Math.toRadians(i)) * radius);
+			}
+		}
+		
+		dataset.addSeries(series);
 		return dataset;
 	}
 	

@@ -1,7 +1,6 @@
 package com.amhsrobotics.libs.auton.motionprofile;
 
 import com.amhsrobotics.libs.datatypes.VelocityConstraints;
-import com.amhsrobotics.libs.math.Function;
 
 public class JointVelocityMotionProfile {
 	

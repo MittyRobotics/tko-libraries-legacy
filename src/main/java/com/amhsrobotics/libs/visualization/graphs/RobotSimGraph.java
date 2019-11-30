@@ -2,6 +2,8 @@ package com.amhsrobotics.libs.visualization.graphs;
 
 import org.jfree.data.xy.XYSeriesCollection;
 
+import java.awt.*;
+
 public class RobotSimGraph extends Graph {
 	XYSeriesCollectionWithRender robotDataset;
 	XYSeriesCollectionWithRender robotArrowDataset;
@@ -12,7 +14,7 @@ public class RobotSimGraph extends Graph {
 	
 	public void graphRobot(double x, double y, double heading, double width, double length){
 		robotDataset = GraphManager.getInstance().graphRectangle(x,y,width,length,heading,"Robot");
-		robotArrowDataset = GraphManager.getInstance().graphArrow(x,y,length/2.5, 2, heading,"Robot Arrow");
+		robotArrowDataset = GraphManager.getInstance().graphArrow(x,y,length/2.5, 2, heading,"Robot Arrow", Color.white);
 		setDatasets(new XYSeriesCollectionWithRender[]{robotDataset,robotArrowDataset});
 	}
 }

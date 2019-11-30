@@ -1,4 +1,4 @@
-package com.amhsrobotics.libs.math.geometry;
+package com.amhsrobotics.libs.util.geometry;
 
 /**
  * Rotation object, hold the heading of the robot's {@link Transform}. Based on WPILib's Rotation2d object:
