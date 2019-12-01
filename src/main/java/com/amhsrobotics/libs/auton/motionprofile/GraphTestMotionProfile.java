@@ -11,13 +11,13 @@ public class GraphTestMotionProfile {
     public static void main(String... args){
         double acceleration = 5; 		//units/sec^2
         double deceleration = 5; 		//units/sec^2
-        double maxVelocity = 10; 		//units/sec
+        double maxVelocity = 20.0; 		//units/sec
         double startVelocity = 0; 		//units/sec
         double endVelocity = 0; 		//units/sec
         double lowerPositionBound = 0; 		//units
-        double upperPositionBound = 124.5; 	//units
-        double currentPosition = 22.4; 		//units
-        double setpoint = 80; 			//units
+        double upperPositionBound = 0; 	//units
+        double currentPosition = 0; 		//units
+        double setpoint = 10; 			//units
 
         VelocityConstraints velocityConstraints = new VelocityConstraints(
                 acceleration,

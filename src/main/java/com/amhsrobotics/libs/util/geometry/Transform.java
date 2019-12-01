@@ -2,8 +2,8 @@ package com.amhsrobotics.libs.util.geometry;
 
 /**
  * A Transform object that holds a {@link Position} and {@link Rotation} object, making up the
- * robot's overall position on a 2d coordinate plane. Unlike WPILib's Transform2d object, which is used for
- * transformations of Pose2d objects, this Transform object is used to store the robot's actual position.
+ * robot's overall position on a 2d coordinate plane. Our geometry system is based off of 254's Pose2d system.
+ * https://github.com/Team254/FRC-2019-Public/blob/master/src/main/java/com/team254/lib/geometry/Pose2d.java
  */
 public class Transform {
 	private Position position;

@@ -1,8 +1,8 @@
 package com.amhsrobotics.libs.util.geometry;
 
 /**
- * Position object, hold the x and y position of the robot's {@link Transform}. Based on WPILib's Translation2d object:
- * https://github.com/wpilibsuite/allwpilib/blob/master/wpilibj/src/main/java/edu/wpi/first/wpilibj/geometry/Translation2d.java
+ * Position object, hold the x and y position of the robot's {@link Transform}. Our geometry system is based off of 254's Pose2d system.
+ * https://github.com/Team254/FRC-2019-Public/blob/master/src/main/java/com/team254/lib/geometry/Pose2d.java
  */
 public class Position {
 	private double x;

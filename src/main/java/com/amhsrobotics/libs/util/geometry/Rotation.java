@@ -1,8 +1,8 @@
 package com.amhsrobotics.libs.util.geometry;
 
 /**
- * Rotation object, hold the heading of the robot's {@link Transform}. Based on WPILib's Rotation2d object:
- * https://github.com/wpilibsuite/allwpilib/blob/master/wpilibj/src/main/java/edu/wpi/first/wpilibj/geometry/Rotation2d.java
+ * Rotation object, hold the heading of the robot's {@link Transform}. Our geometry system is based off of 254's Pose2d system.
+ * https://github.com/Team254/FRC-2019-Public/blob/master/src/main/java/com/team254/lib/geometry/Pose2d.java
  */
 public class Rotation {
 	private double heading;

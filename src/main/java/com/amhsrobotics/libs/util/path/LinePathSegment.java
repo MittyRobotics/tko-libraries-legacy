@@ -13,8 +13,6 @@ public class LinePathSegment extends PathSegment{
 
 	
 	private double startDistance;
-	private double startTime;
-	private double endTime;
 	
 	public LinePathSegment(Line line, Transform startPoint, Transform endPoint){
 		this.line = line;
@@ -33,10 +31,7 @@ public class LinePathSegment extends PathSegment{
 		return line.isColinear(point) && withinStartAndEnd;
 	}
 	
-	@Override
-	public double getVelocity() {
-		return 0;
-	}
+
 	
 	@Override
 	public PathSegmentType getType() {
@@ -79,16 +74,7 @@ public class LinePathSegment extends PathSegment{
 		return startPoint.getPosition().distance(endPoint.getPosition());
 	}
 	
-	@Override
-	public double getStartTime() {
-		return startTime;
-	}
-	
-	@Override
-	public double getEndTime() {
-		return endTime;
-	}
-	
+
 	@Override
 	public double getAbsoluteStartDistance() {
 		return startDistance;
@@ -97,11 +83,6 @@ public class LinePathSegment extends PathSegment{
 	@Override
 	public double getAbsoluteEndDistance() {
 		return startDistance+getSegmentDistance();
-	}
-	
-	@Override
-	public double getSegmentTime() {
-		return endTime-startTime;
 	}
 	
 	@Override
@@ -126,11 +107,4 @@ public class LinePathSegment extends PathSegment{
 		this.startDistance = startDistance;
 	}
 	
-	public void setStartTime(double startTime) {
-		this.startTime = startTime;
-	}
-	
-	public void setEndTime(double endTime) {
-		this.endTime = endTime;
-	}
 }

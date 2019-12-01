@@ -6,6 +6,8 @@ import com.amhsrobotics.libs.datatypes.VelocityConstraints;
 import com.amhsrobotics.libs.util.Function;
 import com.amhsrobotics.libs.util.IntegralMath;
 
+import javax.swing.text.html.StyleSheet;
+
 public class TrapezoidalMotionProfile {
 
 
@@ -128,11 +130,13 @@ public class TrapezoidalMotionProfile {
     private void calculateMotionProfile() {
 
         double theoreticalMaxVelocity = Math.sqrt((maxDeceleration * (startVelocity * startVelocity) + 2 * maxAcceleration * adjustedSetpoint * maxDeceleration) / (maxAcceleration + maxDeceleration));
-
         if(maxVelocity < 0){
 			theoreticalMaxVelocity = -theoreticalMaxVelocity;
 		}
 
+        maxVelocity = Math.min(maxVelocity, Math.max(-maxVelocity,theoreticalMaxVelocity));
+        
+        
         double tAccel = (maxVelocity - startVelocity) / maxAcceleration;
         double tDecel = (maxVelocity - endVelocity) / maxDeceleration;
         double dAccel = maxVelocity * tAccel / 2;
@@ -143,23 +147,35 @@ public class TrapezoidalMotionProfile {
 
         double tTotal = tAccel + tDecel + tCruise;
         double dTotal = dAccel + dCruise + dDecel;
-
-        if ((dCruise <= 0 && maxAcceleration > 0) || (dCruise >= 0 && maxAcceleration < 0) || maxVelocity == 0) {
-            this.maxVelocity = theoreticalMaxVelocity;
-
-            tAccel = (maxVelocity - startVelocity) / maxAcceleration;
-            tDecel = (maxVelocity - endVelocity) / maxDeceleration;
-            dAccel = maxVelocity * tAccel / 2;
-            dDecel = maxVelocity * tDecel / 2;
-
-            dCruise = this.adjustedSetpoint - dAccel - dDecel;
-            tCruise = dCruise / maxVelocity;
-
-            tTotal = tAccel + tDecel + tCruise;
-            dTotal = dAccel + dCruise + dDecel;
-
-        }
-
+    
+        System.out.println("profile " + tAccel + " " + tCruise + " " + tDecel + " " + theoreticalMaxVelocity);
+//        if(theoreticalMaxVelocity <= endVelocity){
+//            System.out.println("decel 0 " + tDecel);
+//            tDecel = 0;
+//            tTotal = tAccel+tCruise;
+//        }
+//        else if(theoreticalMaxVelocity <= startVelocity){
+//            System.out.println("accel 0 " + tAccel);
+//            tAccel = 0;
+//            tTotal = tDecel+tCruise;
+//
+//        }
+//       else if ((dCruise <= 0 && maxAcceleration > 0) || (dCruise >= 0 && maxAcceleration < 0) || maxVelocity == 0) {
+//            System.out.println("cruise 0");
+//            this.maxVelocity = theoreticalMaxVelocity;
+//
+//            tAccel = (maxVelocity - startVelocity) / maxAcceleration;
+//            tDecel = (maxVelocity - endVelocity) / maxDeceleration;
+//            dAccel = maxVelocity * tAccel / 2;
+//            dDecel = maxVelocity * tDecel / 2;
+//
+//            dCruise = this.adjustedSetpoint - dAccel - dDecel;
+//            tCruise = dCruise / maxVelocity;
+//
+//            tTotal = tAccel + tDecel + tCruise;
+//            dTotal = dAccel + dCruise + dDecel;
+//        }
+       
         this.tTotal = tTotal;
 
 

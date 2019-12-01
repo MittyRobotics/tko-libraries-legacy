@@ -1,10 +1,19 @@
 package com.amhsrobotics.libs.util.path;
 
+import com.amhsrobotics.libs.auton.motionprofile.TrapezoidalMotionProfile;
 import com.amhsrobotics.libs.util.geometry.Line;
 import com.amhsrobotics.libs.util.geometry.Position;
 import com.amhsrobotics.libs.util.geometry.Transform;
 
 public abstract class PathSegment {
+	
+	private double startTime;
+	private double endTime;
+	private double maxVelocity;
+	private double startVelocity;
+	private double endVelocity;
+	private TrapezoidalMotionProfile motionProfile;
+	
 	/**
 	 * Returns the intersection of the line perpendicular to the segment that intersects with the robot position
 	 *
@@ -22,9 +31,24 @@ public abstract class PathSegment {
 	public abstract boolean onSegment(Position point);
 	
 	/**
-	 * Returns the velocity of the path segment. This is how fast the robot should be going at this segment
+	 * Returns the max velocity of the path segment. This is the absolute max speed the robot can be driving at this
+	 * segment, and is used in calculating the motion profile of all segments.
 	 */
-	public abstract double getVelocity();
+	public double getMaxVelocity(){
+		return maxVelocity;
+	}
+	
+	public void setMaxVelocity(double maxVelocity){
+		this.maxVelocity = maxVelocity;
+	}
+	
+	public TrapezoidalMotionProfile getMotionProfile(){
+		return motionProfile;
+	}
+	
+	public void setMotionProfile(TrapezoidalMotionProfile motionProfile){
+		this.motionProfile = motionProfile;
+	}
 	
 	public abstract Transform getStartPoint();
 	
@@ -36,11 +60,26 @@ public abstract class PathSegment {
 	
 	public abstract double getAbsoluteEndDistance();
 	
-	public abstract double getSegmentTime();
+	public double getSegmentTime(){
+		return endTime-startTime;
+	}
 	
-	public abstract double getStartTime();
+	public double getStartTime(){
+		return startTime;
+	}
 	
-	public abstract double getEndTime();
+	public double getEndTime(){
+		return endTime;
+	}
+	
+	public void setStartTime(double startTime) {
+		this.startTime = startTime;
+	}
+	
+	public void setEndTime(double endTime) {
+		this.endTime = endTime;
+	}
+	
 	
 	public abstract double getRemainingDistance(Position intersectionPoint);
 	
@@ -49,4 +88,21 @@ public abstract class PathSegment {
 	public abstract ArcPathSegment getArcSegment();
 	
 	public abstract LinePathSegment getLineSegment();
+	
+	
+	public double getStartVelocity() {
+		return startVelocity;
+	}
+	
+	public void setStartVelocity(double startVelocity) {
+		this.startVelocity = startVelocity;
+	}
+	
+	public double getEndVelocity() {
+		return endVelocity;
+	}
+	
+	public void setEndVelocity(double endVelocity) {
+		this.endVelocity = endVelocity;
+	}
 }

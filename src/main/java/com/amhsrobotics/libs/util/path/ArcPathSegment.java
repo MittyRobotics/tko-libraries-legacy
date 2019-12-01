@@ -1,5 +1,6 @@
 package com.amhsrobotics.libs.util.path;
 
+import com.amhsrobotics.libs.auton.motionprofile.TrapezoidalMotionProfile;
 import com.amhsrobotics.libs.util.geometry.*;
 
 public class ArcPathSegment extends PathSegment {
@@ -7,8 +8,6 @@ public class ArcPathSegment extends PathSegment {
 	private Transform startPoint;
 	private Transform endPoint;
 	private double startDistance;
-	private double startTime;
-	private double endTime;
 	
 	public ArcPathSegment(Arc arc, Transform startPoint, Transform endPoint){
 		this.arc = arc;
@@ -28,10 +27,7 @@ public class ArcPathSegment extends PathSegment {
 		return arc.isOnCircle(point);
 	}
 	
-	@Override
-	public double getVelocity() {
-		return 0;
-	}
+
 	
 	@Override
 	public PathSegmentType getType() {
@@ -76,18 +72,9 @@ public class ArcPathSegment extends PathSegment {
 		double angleToStart = arc.getMinAngle();
 		double angleToEnd = arc.getMaxAngle();
 		double angleDifference = Math.abs(angleToStart-angleToEnd);
-		return circumference*(360-angleDifference);
+		return circumference*(angleDifference/360);
 	}
 	
-	@Override
-	public double getStartTime() {
-		return startTime;
-	}
-	
-	@Override
-	public double getEndTime() {
-		return endTime;
-	}
 	
 	@Override
 	public double getAbsoluteStartDistance() {
@@ -97,11 +84,6 @@ public class ArcPathSegment extends PathSegment {
 	@Override
 	public double getAbsoluteEndDistance() {
 		return startDistance+getSegmentDistance();
-	}
-	
-	@Override
-	public double getSegmentTime() {
-		return endTime-startTime;
 	}
 	
 	@Override
@@ -120,11 +102,4 @@ public class ArcPathSegment extends PathSegment {
 		this.startDistance = startDistance;
 	}
 	
-	public void setStartTime(double startTime) {
-		this.startTime = startTime;
-	}
-	
-	public void setEndTime(double endTime) {
-		this.endTime = endTime;
-	}
 }
