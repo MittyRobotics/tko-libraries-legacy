@@ -1,14 +1,14 @@
 package com.amhsrobotics.libs.util.path;
 
-import com.amhsrobotics.libs.util.geometry.Arc;
-import com.amhsrobotics.libs.util.geometry.Line;
-import com.amhsrobotics.libs.util.geometry.Position;
-import com.amhsrobotics.libs.util.geometry.Transform;
+import com.amhsrobotics.libs.util.geometry.*;
 
 public class ArcPathSegment extends PathSegment {
 	private Arc arc;
 	private Transform startPoint;
 	private Transform endPoint;
+	private double startDistance;
+	private double startTime;
+	private double endTime;
 	
 	public ArcPathSegment(Arc arc, Transform startPoint, Transform endPoint){
 		this.arc = arc;
@@ -18,7 +18,9 @@ public class ArcPathSegment extends PathSegment {
 	
 	@Override
 	public Position getIntersection(Transform robotTransform) {
-		return null;
+		Rotation angleTo = new Rotation(arc.getCenter().angleTo(robotTransform.getPosition()));
+		
+		return  new Position(angleTo.cos()*arc.getRadius(), angleTo.sin()*arc.getRadius()).add(arc.getCenter());
 	}
 	
 	@Override
@@ -68,7 +70,61 @@ public class ArcPathSegment extends PathSegment {
 		return endPoint;
 	}
 	
+	@Override
+	public double getSegmentDistance() {
+		double circumference = 2*Math.PI*arc.getRadius();
+		double angleToStart = arc.getMinAngle();
+		double angleToEnd = arc.getMaxAngle();
+		double angleDifference = Math.abs(angleToStart-angleToEnd);
+		return circumference*(360-angleDifference);
+	}
+	
+	@Override
+	public double getStartTime() {
+		return startTime;
+	}
+	
+	@Override
+	public double getEndTime() {
+		return endTime;
+	}
+	
+	@Override
+	public double getAbsoluteStartDistance() {
+		return startDistance;
+	}
+	
+	@Override
+	public double getAbsoluteEndDistance() {
+		return startDistance+getSegmentDistance();
+	}
+	
+	@Override
+	public double getSegmentTime() {
+		return endTime-startTime;
+	}
+	
+	@Override
+	public double getRemainingDistance(Position intersectionPoint) {
+		double circumference = 2*Math.PI*arc.getRadius();
+		double angleTo = arc.getCenter().angleTo(intersectionPoint);
+		double angleDifference = arc.getMaxAngle()-angleTo;
+		return circumference*(angleDifference/360);
+	}
+	
 	public void setEndPoint(Transform endPoint) {
 		this.endPoint = endPoint;
+	}
+	
+	public void setStartDistance(double startDistance) {
+		this.startDistance = startDistance;
+	}
+	
+	public void setStartTime(double startTime) {
+		this.startTime = startTime;
+	}
+	
+	public void setEndTime(double endTime) {
+		this.endTime = endTime;
 	}
 }

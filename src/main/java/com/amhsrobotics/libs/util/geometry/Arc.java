@@ -8,9 +8,14 @@ public class Arc {
 	private double maxAngle;
 	
 	public Arc(Position center, double radius){
-		
+		this(center,radius,0,360);
+	}
+	
+	public Arc(Position center, double radius, double minAngle, double maxAngle){
 		this.center = center;
 		this.radius = radius;
+		this.minAngle = minAngle;
+		this.maxAngle = maxAngle;
 	}
 	
 	public Arc(Position p1, Position p2, Position p3){

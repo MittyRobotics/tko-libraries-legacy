@@ -1,56 +1,66 @@
 package com.amhsrobotics.libs.auton.path.generation;
 
-import com.amhsrobotics.libs.util.path.TrajectoryPoint;
 import com.amhsrobotics.libs.datatypes.VelocityConstraints;
-import com.amhsrobotics.libs.util.geometry.Position;
-import com.amhsrobotics.libs.util.geometry.Rotation;
-import com.amhsrobotics.libs.util.geometry.Transform;
+import com.amhsrobotics.libs.util.geometry.*;
+import com.amhsrobotics.libs.util.path.ArcPathSegment;
+import com.amhsrobotics.libs.util.path.LinePathSegment;
+import com.amhsrobotics.libs.util.path.PathSegment;
+
+import java.util.ArrayList;
 
 public class CubicHermitePath extends Path {
-
 	
-	public CubicHermitePath(Transform[] waypoints, VelocityConstraints velocityConstraints, double radiusSlowdownThreshold, int samples){
-		super(waypoints, velocityConstraints, radiusSlowdownThreshold,samples);
+	
+	public CubicHermitePath(Transform[] waypoints, VelocityConstraints velocityConstraints, int segmentSamples) {
+		super(waypoints, velocityConstraints, segmentSamples);
 	}
 	
 	@Override
-	public void generateTrajectoryPoints() {
-		int steps = getSamples();
+	public void generatePath() {
+		ArrayList<PathSegment> segments = new ArrayList<>();
 		
-		TrajectoryPoint[] tradjectoryPoints = new TrajectoryPoint[steps];
-		int prevSegmentLength = 0;
-		int stepsPerSegment = steps/(getWaypoints().length-1);
-		int addedSteps = 0;
-		
-		if(stepsPerSegment*(getWaypoints().length-1) < steps){
-			addedSteps = (steps-(stepsPerSegment*(getWaypoints().length-1)));
+		double totalRoughDistance = 0;
+		for(int i = 0; i < getWaypoints().length-1; i++){
+			totalRoughDistance += getWaypoints()[i].getPosition().distance(getWaypoints()[i+1].getPosition());
 		}
 		
-		for (int i = 0; i < getWaypoints().length - 1; i++) {
-			if(i== getWaypoints().length-2){
-				stepsPerSegment+=addedSteps;
-			}
+		for(int i = 0; i < getWaypoints().length-1; i++){
+			double roughDistance = getWaypoints()[i].getPosition().distance(getWaypoints()[i+1].getPosition());
+			double roughDistanceRatio = roughDistance/totalRoughDistance;
+			double samples = getSegmentSamples()*roughDistanceRatio;
 			
-			TrajectoryPoint[] segment = generateSpline(getWaypoints()[i], getWaypoints()[i + 1], stepsPerSegment, i == 0, i == getWaypoints().length-2);
-			for (int a = 0; a < segment.length; a++) {
-				tradjectoryPoints[a +prevSegmentLength] = segment[a];
+			samples = 3*(Math.ceil(samples));
+			Transform[] points = generateSpline(getWaypoints()[i], getWaypoints()[i+1], (int)samples, i == getWaypoints().length-2);
+			for(int a = 0; a < points.length-2; a+=2){
+				if(new Line(points[a].getPosition(),points[a+2].getPosition()).isColinear(points[a+1].getPosition(),0.5)){
+					Line line = new Line(points[a].getPosition(),points[a+2].getPosition());
+					segments.add(new LinePathSegment(line,new Transform(line.getP1()),new Transform(line.getP2())));
+				}
+				else{
+					Arc arc = new Arc(points[a].getPosition(), points[a+1].getPosition(), points[a+2].getPosition());
+					segments.add(new ArcPathSegment(arc, points[a],points[a+2]));
+				}
+
 			}
-			prevSegmentLength = segment.length+prevSegmentLength;
+			//Arc arc = new Arc(points[points.length-3].getPosition(), points[points.length-2].getPosition(), points[points.length-2].getPosition());
+			//segments.add(new ArcPathSegment(arc, points[i],points[i+2]));
 		}
-		setTrajectoryPoints(tradjectoryPoints);
+		
+
+		setSegments(segments);
 	}
 	
-	private TrajectoryPoint[] generateSpline(Transform coordinate, Transform coordinate1, int steps, boolean firstSegment, boolean lastSegment) {
-		TrajectoryPoint[] tradjectoryPoints = new TrajectoryPoint[steps];
+	private Transform[] generateSpline(Transform coordinate, Transform coordinate1, int steps, boolean lastSegment) {
+		Transform[] points = new Transform[steps];
 		double x0,x1,y0,y1,a0,a1,d,mx0,mx1,my0,my1;
 		x0 = coordinate.getPosition().getX();
 		x1 = coordinate1.getPosition().getX();
 		y0 = coordinate.getPosition().getY();
 		y1 = coordinate1.getPosition().getY();
-
+		
 		a0 = Math.toRadians(coordinate.getRotation().getHeading());
 		a1 = Math.toRadians(coordinate1.getRotation().getHeading());
-
+		
 		d = coordinate.getPosition().distance(coordinate1.getPosition());
 		mx0 = Math.cos(a0) * d;
 		my0 = Math.sin(a0) * d;
@@ -64,21 +74,25 @@ public class CubicHermitePath extends Path {
 			if(!lastSegment){
 				t = Math.max(0, t);
 			}
-
+			
+			if(i == steps-1){
+				t = 1;
+			}
+			
+			
 			double h0,h1,h2,h3;
-
+			
 			h0 = 2*Math.pow(t,3)-3*Math.pow(t,2)+1;
 			h1 = Math.pow(t,3)-2*Math.pow(t,2)+t;
 			h2 = -2*Math.pow(t,3)+3*Math.pow(t,2);
 			h3 = Math.pow(t,3)-Math.pow(t,2);
-
+			
 			double x = h0*x0+h1*mx0+h2*x1+h3*mx1;
 			double y = h0*y0+h1*my0+h2*y1+h3*my1;
-			tradjectoryPoints[i] = new TrajectoryPoint(new Position(x,y), new Rotation(0));
+			points[i] = new Transform(new Position(x,y), new Rotation(0));
 		}
 		
 		
-		return tradjectoryPoints;
+		return points;
 	}
-	
 }

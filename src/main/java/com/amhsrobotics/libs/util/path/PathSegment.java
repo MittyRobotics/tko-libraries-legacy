@@ -30,6 +30,20 @@ public abstract class PathSegment {
 	
 	public abstract Transform getEndPoint();
 	
+	public abstract double getSegmentDistance();
+	
+	public abstract double getAbsoluteStartDistance();
+	
+	public abstract double getAbsoluteEndDistance();
+	
+	public abstract double getSegmentTime();
+	
+	public abstract double getStartTime();
+	
+	public abstract double getEndTime();
+	
+	public abstract double getRemainingDistance(Position intersectionPoint);
+	
 	public abstract PathSegmentType getType();
 	
 	public abstract ArcPathSegment getArcSegment();

@@ -2,8 +2,8 @@ package com.amhsrobotics.libs.visualization.themes;
 
 import java.awt.*;
 
-public class DarkTheme extends GraphTheme {
-	public DarkTheme() {
+public class DarkSeaGraphTheme extends GraphTheme {
+	public DarkSeaGraphTheme() {
 		super(
 				new Color(18, 23, 25),
 				new Color(0,0,0),

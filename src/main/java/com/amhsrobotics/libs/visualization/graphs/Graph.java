@@ -1,6 +1,6 @@
 package com.amhsrobotics.libs.visualization.graphs;
 
-import com.amhsrobotics.libs.visualization.themes.DarkTheme;
+import com.amhsrobotics.libs.visualization.themes.DarkSeaGraphTheme;
 import com.amhsrobotics.libs.visualization.themes.GraphTheme;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
@@ -32,7 +32,7 @@ public class Graph extends JFrame {
 		this.xAxisName = xAxisName;
 		
 		initUI();
-		setGraphTheme(new DarkTheme());
+		setGraphTheme(new DarkSeaGraphTheme());
 	}
 	
 	private void initUI() {

@@ -9,7 +9,7 @@ public class RobotSimGraph extends Graph {
 	XYSeriesCollectionWithRender robotArrowDataset;
 	
 	public RobotSimGraph(String titleName, String yAxisName, String xAxisName) {
-		super("Robot Sim Graph", "Y position (in)", "X position (in)");
+		super("Graph", "Y position (in)", "X position (in)");
 	}
 	
 	public void graphRobot(double x, double y, double heading, double width, double length){

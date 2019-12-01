@@ -10,6 +10,12 @@ public class LinePathSegment extends PathSegment{
 	private Transform startPoint;
 	private Transform endPoint;
 	
+
+	
+	private double startDistance;
+	private double startTime;
+	private double endTime;
+	
 	public LinePathSegment(Line line, Transform startPoint, Transform endPoint){
 		this.line = line;
 		this.startPoint = startPoint;
@@ -68,7 +74,63 @@ public class LinePathSegment extends PathSegment{
 		return endPoint;
 	}
 	
+	@Override
+	public double getSegmentDistance() {
+		return startPoint.getPosition().distance(endPoint.getPosition());
+	}
+	
+	@Override
+	public double getStartTime() {
+		return startTime;
+	}
+	
+	@Override
+	public double getEndTime() {
+		return endTime;
+	}
+	
+	@Override
+	public double getAbsoluteStartDistance() {
+		return startDistance;
+	}
+	
+	@Override
+	public double getAbsoluteEndDistance() {
+		return startDistance+getSegmentDistance();
+	}
+	
+	@Override
+	public double getSegmentTime() {
+		return endTime-startTime;
+	}
+	
+	@Override
+	public double getRemainingDistance(Position intersectionPoint) {
+		return intersectionPoint.distance(endPoint.getPosition());
+	}
+
+	
 	public void setEndPoint(TrajectoryPoint endPoint) {
 		this.endPoint = endPoint;
+	}
+	
+	public void setStartPoint(Transform startPoint) {
+		this.startPoint = startPoint;
+	}
+	
+	public void setEndPoint(Transform endPoint) {
+		this.endPoint = endPoint;
+	}
+	
+	public void setStartDistance(double startDistance) {
+		this.startDistance = startDistance;
+	}
+	
+	public void setStartTime(double startTime) {
+		this.startTime = startTime;
+	}
+	
+	public void setEndTime(double endTime) {
+		this.endTime = endTime;
 	}
 }
