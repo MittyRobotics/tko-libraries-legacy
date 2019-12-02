@@ -36,7 +36,7 @@ public class GraphMain {
 		};
 		
 		
-		Path path = new CubicHermitePath(waypoints, new VelocityConstraints(5,5,20,10,0,0), 10);
+		Path path = new CubicHermitePath(waypoints, new VelocityConstraints(20,5,20,10,0,0), 10);
 		
 		XYSeriesCollectionWithRender[] datasets = new XYSeriesCollectionWithRender[1];
 		
@@ -44,10 +44,10 @@ public class GraphMain {
 		
 		XYSeries series = new XYSeries("asdfasdf");
 		double prevTime = 0;
-		for (int i = 0; i < path.getSegments().size(); i++) {
+		for (int i = 0; i <path.getSegments().size(); i++) {
 			TrapezoidalMotionProfile motionProfile = path.getSegments().get(i).getMotionProfile();
 			double time = 0;
-			System.out.println(" " + motionProfile.getMaxVelocity() + " " + motionProfile.gettTotal() + " " + i + " " + motionProfile.getMaxVelocity());
+			System.out.println(i + " " + motionProfile.getMaxVelocity() + " " + path.getSegments().get(i).getSegmentDistance() + " " + motionProfile.getStartVelocity() + " " + motionProfile.getEndVelocity() );
 			for(double a = 0; a < motionProfile.gettTotal(); a+=0.01){
 				series.add(a+prevTime,motionProfile.getVelocityAtTime(a));
 				time = a;

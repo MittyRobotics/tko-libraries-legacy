@@ -86,11 +86,11 @@ public abstract class Path {
 			TrapezoidalMotionProfile motionProfile = new TrapezoidalMotionProfile(segments.get(i).getSegmentDistance(),
 					new VelocityConstraints(
 							velocityConstraints.getMaxAcceleration(),
-							velocityConstraints.getMaxDeceleration(),segments.get(i).getMaxVelocity(),
+							velocityConstraints.getMaxDeceleration(),Math.max(segments.get(i).getStartVelocity(),segments.get(i).getEndVelocity()),
 							segments.get(i).getStartVelocity(),
 							segments.get(i).getEndVelocity()),
 					new MechanismBounds(0,0,0));
-			System.out.println(i + " " + segments.get(i).getMaxVelocity() + " " + segments.get(i).getSegmentDistance() + " " + segments.get(i).getStartVelocity() + " " + segments.get(i).getEndVelocity() );
+			
 			segments.get(i).setMotionProfile(motionProfile);
 		}
 	}

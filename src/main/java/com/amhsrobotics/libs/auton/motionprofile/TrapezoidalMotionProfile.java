@@ -128,57 +128,113 @@ public class TrapezoidalMotionProfile {
      * Calculates the outline (the 3 {@link TrapezoidalMotionProfile.MotionSegment}s) of the motion profile.
      */
     private void calculateMotionProfile() {
-
-        double theoreticalMaxVelocity = Math.sqrt((maxDeceleration * (startVelocity * startVelocity) + 2 * maxAcceleration * adjustedSetpoint * maxDeceleration) / (maxAcceleration + maxDeceleration));
-        if(maxVelocity < 0){
-			theoreticalMaxVelocity = -theoreticalMaxVelocity;
-		}
-
-        maxVelocity = Math.min(maxVelocity, Math.max(-maxVelocity,theoreticalMaxVelocity));
         
-        
-        double tAccel = (maxVelocity - startVelocity) / maxAcceleration;
-        double tDecel = (maxVelocity - endVelocity) / maxDeceleration;
-        double dAccel = maxVelocity * tAccel / 2;
-        double dDecel = maxVelocity * tDecel / 2;
-
-        double dCruise = this.adjustedSetpoint - dAccel - dDecel;
-        double tCruise = dCruise / maxVelocity;
-
-        double tTotal = tAccel + tDecel + tCruise;
-        double dTotal = dAccel + dCruise + dDecel;
+        double zeroToStartVelocityTime = startVelocity/maxAcceleration;
+        double zeroToStartVelocityDistance = zeroToStartVelocityTime * zeroToStartVelocityTime * maxAcceleration/2;
     
-        System.out.println("profile " + tAccel + " " + tCruise + " " + tDecel + " " + theoreticalMaxVelocity);
-//        if(theoreticalMaxVelocity <= endVelocity){
-//            System.out.println("decel 0 " + tDecel);
-//            tDecel = 0;
-//            tTotal = tAccel+tCruise;
-//        }
-//        else if(theoreticalMaxVelocity <= startVelocity){
-//            System.out.println("accel 0 " + tAccel);
-//            tAccel = 0;
-//            tTotal = tDecel+tCruise;
-//
-//        }
-//       else if ((dCruise <= 0 && maxAcceleration > 0) || (dCruise >= 0 && maxAcceleration < 0) || maxVelocity == 0) {
-//            System.out.println("cruise 0");
-//            this.maxVelocity = theoreticalMaxVelocity;
-//
-//            tAccel = (maxVelocity - startVelocity) / maxAcceleration;
-//            tDecel = (maxVelocity - endVelocity) / maxDeceleration;
-//            dAccel = maxVelocity * tAccel / 2;
-//            dDecel = maxVelocity * tDecel / 2;
-//
-//            dCruise = this.adjustedSetpoint - dAccel - dDecel;
-//            tCruise = dCruise / maxVelocity;
-//
-//            tTotal = tAccel + tDecel + tCruise;
-//            dTotal = dAccel + dCruise + dDecel;
-//        }
-       
-        this.tTotal = tTotal;
+        double endVelocityToZeroTime = endVelocity/maxDeceleration;
+        double endVelocityToZeroDistance = endVelocityToZeroTime * endVelocityToZeroTime * maxDeceleration/2;
+        
+        double totalDistanceWithEnds = zeroToStartVelocityDistance+adjustedSetpoint+endVelocityToZeroDistance;
+        
+        double triangleDDecel;
+        double triangleDAccel;
+        
+        if(maxAcceleration >= maxDeceleration){
+            double accelDecelRatio = (maxAcceleration/(maxDeceleration+maxAcceleration));
+            
+            triangleDAccel = totalDistanceWithEnds*accelDecelRatio;
+            triangleDDecel = totalDistanceWithEnds-triangleDAccel;
+        }
+        else{
+            double accelDecelRatio = (maxDeceleration/(maxAcceleration+maxDeceleration));
+    
+            triangleDDecel = totalDistanceWithEnds*accelDecelRatio;
+            triangleDAccel = totalDistanceWithEnds-triangleDDecel;
+        }
+        
+        double theoreticalMaxVelocity = Math.sqrt(2*maxAcceleration*triangleDAccel);
+    
+        double tAccel, tDecel, dAccel, dDecel, dCruise, tCruise, tTotal;
+        if(startVelocity >= theoreticalMaxVelocity){
+            theoreticalMaxVelocity = startVelocity;
+            maxVelocity = Math.min(theoreticalMaxVelocity,maxVelocity);
+            tAccel = 0;
+            dAccel = 0;
+            tDecel = maxVelocity/maxDeceleration;
+            dDecel = (maxDeceleration*tDecel*tDecel)/2;
+            dCruise = totalDistanceWithEnds-dAccel-dDecel;
+    
+            tCruise = dCruise/maxVelocity;
+    
+            if(dCruise < 0.01){
+                dCruise = 0;
+                tCruise = 0;
+            }
+            tTotal = tAccel+tCruise+tDecel;
+    
+            this.tTotal = tTotal;
+        }
+        else if(endVelocity >= theoreticalMaxVelocity){
+            theoreticalMaxVelocity = endVelocity;
+            maxVelocity = Math.min(theoreticalMaxVelocity,maxVelocity);
+            tDecel = 0;
+            dDecel = 0;
+            tAccel = maxVelocity/maxAcceleration;
+            dAccel = (maxAcceleration*tAccel*tAccel)/2;
+            dCruise = totalDistanceWithEnds-dAccel-dDecel;
+    
+            tCruise = dCruise/maxVelocity;
+    
+            if(dCruise < 0.01){
+                dCruise = 0;
+                tCruise = 0;
+            }
+            tTotal = tAccel+tCruise+tDecel;
+    
+            this.tTotal = tTotal;
+        }
+        else{
+            maxVelocity = Math.min(theoreticalMaxVelocity,maxVelocity);
+            
+            tAccel = maxVelocity/maxAcceleration;
+ 
+            tDecel = maxVelocity/maxDeceleration;
+            
+            dAccel = (maxAcceleration*tAccel*tAccel)/2;
+     
+            dDecel = (maxDeceleration*tDecel*tDecel)/2;
+ 
+            dCruise = totalDistanceWithEnds-dAccel-dDecel;
 
-
+            tCruise = dCruise/maxVelocity;
+    
+            if(dCruise < 0.01){
+                dCruise = 0;
+                tCruise = 0;
+            }
+    
+            tAccel = tAccel-zeroToStartVelocityTime;
+            tDecel = tDecel-endVelocityToZeroTime;
+            
+            tTotal = tAccel+tCruise+tDecel;
+    
+            this.tTotal = tTotal;
+            
+            if(tAccel < 0.01){
+                tAccel = 0;
+                dAccel = 0;
+            }
+    
+            if(tDecel < 0.01){
+                tDecel = 0;
+                dDecel = 0;
+            }
+        }
+        
+        
+        System.out.println(maxVelocity + " " + tAccel + " " + tCruise + " " + tDecel + " " + dAccel + " " + dCruise + " " + dDecel + " " + (dAccel+dCruise+dDecel));
+        
         double d = maxVelocity;
         double a = startVelocity;
         double c = tAccel;

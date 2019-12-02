@@ -9,15 +9,15 @@ import com.amhsrobotics.libs.visualization.graphs.GraphMotionProfile;
  */
 public class GraphTestMotionProfile {
     public static void main(String... args){
-        double acceleration = 5; 		//units/sec^2
+        double acceleration = 20; 		//units/sec^2
         double deceleration = 5; 		//units/sec^2
-        double maxVelocity = 20.0; 		//units/sec
-        double startVelocity = 0; 		//units/sec
-        double endVelocity = 0; 		//units/sec
+        double maxVelocity = 18.844194345562954; 		//units/sec
+        double startVelocity = 18.844194345562954; 		//units/sec
+        double endVelocity = 10.0; 		//units/sec
         double lowerPositionBound = 0; 		//units
         double upperPositionBound = 0; 	//units
         double currentPosition = 0; 		//units
-        double setpoint = 10; 			//units
+        double setpoint =  7.821977362208773; 			//units
 
         VelocityConstraints velocityConstraints = new VelocityConstraints(
                 acceleration,
