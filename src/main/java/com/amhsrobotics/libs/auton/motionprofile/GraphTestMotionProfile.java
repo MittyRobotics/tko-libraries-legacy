@@ -10,7 +10,7 @@ import com.amhsrobotics.libs.visualization.graphs.GraphMotionProfile;
 public class GraphTestMotionProfile {
     public static void main(String... args){
         double acceleration = 20; 		//units/sec^2
-        double deceleration = 5; 		//units/sec^2
+        double deceleration = 14; 		//units/sec^2
         double maxVelocity = 18.844194345562954; 		//units/sec
         double startVelocity = 18.844194345562954; 		//units/sec
         double endVelocity = 10.0; 		//units/sec

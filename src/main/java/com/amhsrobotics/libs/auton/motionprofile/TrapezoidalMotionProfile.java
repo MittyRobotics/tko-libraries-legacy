@@ -171,6 +171,9 @@ public class TrapezoidalMotionProfile {
                 dCruise = 0;
                 tCruise = 0;
             }
+            tAccel = tAccel-zeroToStartVelocityTime;
+            tDecel = tDecel-endVelocityToZeroTime;
+    
             tTotal = tAccel+tCruise+tDecel;
     
             this.tTotal = tTotal;
@@ -190,6 +193,9 @@ public class TrapezoidalMotionProfile {
                 dCruise = 0;
                 tCruise = 0;
             }
+            tAccel = tAccel-zeroToStartVelocityTime;
+            tDecel = tDecel-endVelocityToZeroTime;
+    
             tTotal = tAccel+tCruise+tDecel;
     
             this.tTotal = tTotal;
