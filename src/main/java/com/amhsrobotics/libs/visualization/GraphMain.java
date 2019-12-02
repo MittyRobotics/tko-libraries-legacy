@@ -49,7 +49,7 @@ public class GraphMain {
 			TrapezoidalMotionProfile motionProfile = path.getSegments().get(i).getMotionProfile();
 			double time = 0;
 			System.out.println(i + " " + motionProfile.getMaxVelocity() + " " + path.getSegments().get(i).getSegmentDistance() + " " + motionProfile.getStartVelocity() + " " + motionProfile.getEndVelocity() );
-			XYSeriesCollectionWithRender velocityDataset = new XYSeriesCollectionWithRender(true,false,Color.red),null);
+			XYSeriesCollectionWithRender velocityDataset = new XYSeriesCollectionWithRender(true,false,Color.red,null);
 			XYSeries series = new XYSeries("series" + i);
 			for(double a = 0; a < motionProfile.gettTotal(); a+=0.01){
 
