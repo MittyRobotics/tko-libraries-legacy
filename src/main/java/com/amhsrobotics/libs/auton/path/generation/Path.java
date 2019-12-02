@@ -38,7 +38,7 @@ public abstract class Path {
 		while(iterator.hasNext()){
 			PathSegment segment = iterator.next();
 			segment.setMaxVelocity(velocityConstraints.getMaxVelocity());
-			if(segment.getType() == PathSegmentType.ARC && segment.getArcSegment().getArc().getRadius() < 10){
+			if(segment.getType() == PathSegmentType.ARC && segment.getArcSegment().getArc().getRadius() < 50){
 				segment.setMaxVelocity(velocityConstraints.getMinVelocity());
 			}
 		}
@@ -47,16 +47,18 @@ public abstract class Path {
 	public void generateStartEndVelocities(){
 		PathSegment previousSegment = null;
 		for(int i = 0; i < segments.size(); i++){
-			double deltaVelocity = Math.sqrt(2*velocityConstraints.getMaxAcceleration()*segments.get(i).getSegmentDistance());
+		
 			double startVelocity;
 			double endVelocity;
 			if(previousSegment == null){
 				startVelocity = 0;
-				endVelocity = deltaVelocity;
+				double finalVelocity = Math.sqrt(2*velocityConstraints.getMaxAcceleration()*segments.get(i).getSegmentDistance());
+				endVelocity = finalVelocity;
 			}
 			else{
 				startVelocity = previousSegment.getEndVelocity();
-				endVelocity = startVelocity + deltaVelocity;
+				double fianlVelocity = Math.sqrt(startVelocity*startVelocity+2*velocityConstraints.getMaxAcceleration()*segments.get(i).getSegmentDistance());
+				endVelocity = fianlVelocity;
 			}
 			segments.get(i).setStartVelocity(Math.min(segments.get(i).getMaxVelocity(),startVelocity));
 			segments.get(i).setEndVelocity(Math.min(segments.get(i).getMaxVelocity(),endVelocity));
@@ -64,16 +66,18 @@ public abstract class Path {
 		}
 		previousSegment = null;
 		for(int i = segments.size()-1; i > 0; i--){
-			double deltaVelocity = Math.sqrt(2*velocityConstraints.getMaxDeceleration()*segments.get(i).getSegmentDistance());
+			
 			double startVelocity;
 			double endVelocity;
 			if(previousSegment == null){
 				endVelocity = 0;
-				startVelocity = deltaVelocity;
+				double fianlVelocity = Math.sqrt(2*velocityConstraints.getMaxDeceleration()*segments.get(i).getSegmentDistance());
+				startVelocity = fianlVelocity;
 			}
 			else{
 				endVelocity = previousSegment.getStartVelocity();
-				startVelocity = endVelocity + deltaVelocity;
+				double fianlVelocity = Math.sqrt(endVelocity*endVelocity+2*velocityConstraints.getMaxDeceleration()*segments.get(i).getSegmentDistance());
+				startVelocity =  fianlVelocity;
 			}
 			segments.get(i).setStartVelocity(Math.min(Math.min(segments.get(i).getMaxVelocity(),startVelocity),segments.get(i).getStartVelocity()));
 			segments.get(i).setEndVelocity(Math.min(Math.min(segments.get(i).getMaxVelocity(),endVelocity),segments.get(i).getEndVelocity()));

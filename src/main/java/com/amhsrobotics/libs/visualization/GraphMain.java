@@ -17,6 +17,7 @@ import com.amhsrobotics.libs.visualization.graphs.XYSeriesCollectionWithRender;
 import org.jfree.data.xy.XYSeries;
 
 import java.awt.*;
+import java.util.Random;
 
 public class GraphMain {
 	public static void main(String[] args) throws InterruptedException {
@@ -36,28 +37,34 @@ public class GraphMain {
 		};
 		
 		
-		Path path = new CubicHermitePath(waypoints, new VelocityConstraints(20,5,20,10,0,0), 10);
+		Path path = new CubicHermitePath(waypoints, new VelocityConstraints(10,5,20,10,0,0), 10);
 		
-		XYSeriesCollectionWithRender[] datasets = new XYSeriesCollectionWithRender[1];
+		XYSeriesCollectionWithRender[] datasets = new XYSeriesCollectionWithRender[path.getSegments().size()];
 		
-		XYSeriesCollectionWithRender velocityDataset = new XYSeriesCollectionWithRender();
 		
-		XYSeries series = new XYSeries("asdfasdf");
+		
+		
 		double prevTime = 0;
 		for (int i = 0; i <path.getSegments().size(); i++) {
 			TrapezoidalMotionProfile motionProfile = path.getSegments().get(i).getMotionProfile();
 			double time = 0;
 			System.out.println(i + " " + motionProfile.getMaxVelocity() + " " + path.getSegments().get(i).getSegmentDistance() + " " + motionProfile.getStartVelocity() + " " + motionProfile.getEndVelocity() );
+			XYSeriesCollectionWithRender velocityDataset = new XYSeriesCollectionWithRender(true,false,Color.red),null);
+			XYSeries series = new XYSeries("series" + i);
 			for(double a = 0; a < motionProfile.gettTotal(); a+=0.01){
+
 				series.add(a+prevTime,motionProfile.getVelocityAtTime(a));
+
+				
 				time = a;
 			}
+			velocityDataset.addSeries(series);
+			datasets[i] = velocityDataset;
 			prevTime += time;
 		}
 
-		velocityDataset.addSeries(series);
+
 		
-		datasets[0] = velocityDataset;
 		graph.setDatasets(datasets);
 		
 	}
