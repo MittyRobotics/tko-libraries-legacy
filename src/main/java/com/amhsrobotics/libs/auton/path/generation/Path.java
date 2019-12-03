@@ -3,6 +3,7 @@ package com.amhsrobotics.libs.auton.path.generation;
 import com.amhsrobotics.libs.auton.motionprofile.TrapezoidalMotionProfile;
 import com.amhsrobotics.libs.datatypes.MechanismBounds;
 import com.amhsrobotics.libs.datatypes.VelocityConstraints;
+import com.amhsrobotics.libs.util.geometry.Position;
 import com.amhsrobotics.libs.util.geometry.Transform;
 import com.amhsrobotics.libs.util.path.PathSegment;
 import com.amhsrobotics.libs.util.path.PathSegmentType;
@@ -11,6 +12,12 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 public abstract class Path {
+	public static enum RoundMode{
+		ROUND_UP,
+		ROUND_DOWN,
+		ROUND_CLOSEST
+	}
+	
 	private final Transform[] waypoints;
 	private final VelocityConstraints velocityConstraints;
 	private final int segmentSamples;
@@ -30,6 +37,53 @@ public abstract class Path {
 	
 	public double getTotalDistance(){
 		return segments.get(segments.size()-1).getAbsoluteEndDistance();
+	}
+
+	public Position getClosestPoint(Transform referenceTransform, RoundMode roundMode, double distanceShift){
+		return new Position();
+	}
+	
+	public Position getClosestPointInSegment(Transform referenceTransform, PathSegment pathSegment, double distanceShift){
+		return new Position();
+	}
+	
+	public PathSegment getClosestSegment(Transform referenceTransform, RoundMode roundMode, double distanceShift){
+		double currentClosest = 9999;
+		PathSegment closestSegment = null;
+		for(int i = 0; i < getSegments().size(); i++){
+			Transform startPoint = getSegments().get(i).getStartPoint();
+
+			if(Math.abs(startPoint.getPosition().distance(referenceTransform.getPosition())-distanceShift) < currentClosest ){
+				if(roundMode == RoundMode.ROUND_DOWN){
+					if(referenceTransform.relativeTo(startPoint).getPosition().getX() >= 0){
+						currentClosest = startPoint.getPosition().distance(referenceTransform.getPosition());
+						closestSegment = getSegments().get(i);
+					}
+				}
+				else if(roundMode == RoundMode.ROUND_UP){
+					if(referenceTransform.relativeTo(startPoint).getPosition().getX() <= 0){
+						currentClosest = startPoint.getPosition().distance(referenceTransform.getPosition());
+						closestSegment = getSegments().get(i);
+					}
+				}
+				else{
+					currentClosest = startPoint.getPosition().distance(referenceTransform.getPosition());
+					closestSegment = getSegments().get(i);
+				}
+			}
+		}
+
+		if(closestSegment == null){
+			currentClosest = 9999;
+			for(int i = 0; i < getSegments().size(); i++) {
+				Transform startPoint = getSegments().get(i).getStartPoint();
+				if(startPoint.getPosition().distance(referenceTransform.getPosition()) < currentClosest ) {
+					currentClosest = startPoint.getPosition().distance(referenceTransform.getPosition());
+					closestSegment = getSegments().get(i);
+				}
+			}
+		}
+		return closestSegment;
 	}
 	
 	public void generateMaxVelocities(){

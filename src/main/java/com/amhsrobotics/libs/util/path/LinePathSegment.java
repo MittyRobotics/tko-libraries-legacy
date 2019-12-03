@@ -1,37 +1,52 @@
 package com.amhsrobotics.libs.util.path;
 
 
+import com.amhsrobotics.libs.util.geometry.Arc;
 import com.amhsrobotics.libs.util.geometry.Line;
 import com.amhsrobotics.libs.util.geometry.Position;
 import com.amhsrobotics.libs.util.geometry.Transform;
 
 public class LinePathSegment extends PathSegment{
 	private Line line;
-	private Transform startPoint;
-	private Transform endPoint;
-	
-
 	
 	private double startDistance;
 	
 	public LinePathSegment(Line line, Transform startPoint, Transform endPoint){
 		this.line = line;
-		this.startPoint = startPoint;
-		this.endPoint = endPoint;
+		setStartPoint(startPoint);
+		setEndPoint(endPoint);
 	}
 	
 	@Override
-	public Position getIntersection(Transform robotTransform) {
-		return new Transform(robotTransform.getPosition(), line.getTransform().getRotation().rotateBy(90)).findLineIntersectionPoint(line.getTransform()).getPosition();
+	public Position getParrallelIntersection(Transform referenceTransform) {
+		return new Transform(referenceTransform.getPosition(), line.getTransform().getRotation().rotateBy(90)).findLineIntersectionPoint(line.getTransform()).getPosition();
 	}
 	
 	@Override
 	public boolean onSegment(Position point) {
-		boolean withinStartAndEnd = Math.abs(point.distance(startPoint.getPosition()) + point.distance(endPoint.getPosition()) - startPoint.getPosition().distance(endPoint.getPosition())) < 2e-16;
+		boolean withinStartAndEnd = Math.abs(point.distance(getStartPoint().getPosition()) + point.distance(getEndPoint().getPosition()) - getStartPoint().getPosition().distance(getEndPoint().getPosition())) < 2e-16;
 		return line.isColinear(point) && withinStartAndEnd;
 	}
 	
+	@Override
+	public Position getIntersectionPointWithCircle(Arc circle) {
+		Position[] positions = line.intersectionPointsWithCircle(circle);
 
+		double currentClosest = 9999;
+		Position currentPosition = null;
+		for(int i = 0; i < positions.length; i++){
+			if(positions[i].distance(getStartPoint().getPosition()) < currentClosest && onSegment(positions[i])){
+	
+				currentClosest = positions[i].distance(getStartPoint().getPosition());
+				currentPosition = positions[i];
+			}
+		}
+		if(currentPosition == null){
+			currentPosition = getStartPoint().getPosition();
+		}
+		return currentPosition;
+	}
+	
 	
 	@Override
 	public PathSegmentType getType() {
@@ -57,21 +72,10 @@ public class LinePathSegment extends PathSegment{
 		this.line = line;
 	}
 	
-	public Transform getStartPoint() {
-		return startPoint;
-	}
-	
-	public void setStartPoint(TrajectoryPoint startPoint) {
-		this.startPoint = startPoint;
-	}
-	
-	public Transform getEndPoint() {
-		return endPoint;
-	}
-	
+
 	@Override
 	public double getSegmentDistance() {
-		return startPoint.getPosition().distance(endPoint.getPosition());
+		return getStartPoint().getPosition().distance(getEndPoint().getPosition());
 	}
 	
 
@@ -87,21 +91,9 @@ public class LinePathSegment extends PathSegment{
 	
 	@Override
 	public double getRemainingDistance(Position intersectionPoint) {
-		return intersectionPoint.distance(endPoint.getPosition());
-	}
-
-	
-	public void setEndPoint(TrajectoryPoint endPoint) {
-		this.endPoint = endPoint;
+		return intersectionPoint.distance(getEndPoint().getPosition());
 	}
 	
-	public void setStartPoint(Transform startPoint) {
-		this.startPoint = startPoint;
-	}
-	
-	public void setEndPoint(Transform endPoint) {
-		this.endPoint = endPoint;
-	}
 	
 	public void setStartDistance(double startDistance) {
 		this.startDistance = startDistance;

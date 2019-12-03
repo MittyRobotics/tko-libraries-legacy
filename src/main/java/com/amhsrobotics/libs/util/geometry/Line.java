@@ -48,7 +48,41 @@ public class Line {
 	}
 	
 	public boolean isColinear(Position point){
-		return isColinear(point,2e-16);
+		return isColinear(point,0.01);
+	}
+	
+	
+	public Position[] intersectionPointsWithCircle(Arc other){
+		double baX = p2.getX() - p1.getX();
+		double baY = p2.getY() - p1.getY();
+		double caX = other.getCenter().getX() - p1.getX();
+		double caY = other.getCenter().getY() - p1.getY();
+		
+		double a = baX * baX + baY * baY;
+		double bBy2 = baX * caX + baY * caY;
+		double c = caX * caX + caY * caY - other.getRadius() * other.getRadius();
+		
+		double pBy2 = bBy2 / a;
+		double q = c / a;
+		
+		double disc = pBy2 * pBy2 - q;
+		
+		if (disc < 0) {
+			return new Position[]{};
+		}
+
+		double tmpSqrt = Math.sqrt(disc);
+		double abScalingFactor1 = -pBy2 + tmpSqrt;
+		double abScalingFactor2 = -pBy2 - tmpSqrt;
+		
+		Position pos1 = new Position(p1.getX() - baX * abScalingFactor1, p1.getY()
+				- baY * abScalingFactor1);
+		if (disc == 0) {
+			return new Position[]{pos1};
+		}
+		Position pos2 = new Position(p1.getX() - baX * abScalingFactor2, p1.getY()
+				- baY * abScalingFactor2);
+		return new Position[]{pos1,pos2};
 	}
 	
 	/**

@@ -1,33 +1,51 @@
 package com.amhsrobotics.libs.util.path;
 
-import com.amhsrobotics.libs.auton.motionprofile.TrapezoidalMotionProfile;
 import com.amhsrobotics.libs.util.geometry.*;
 
 public class ArcPathSegment extends PathSegment {
 	private Arc arc;
-	private Transform startPoint;
-	private Transform endPoint;
 	private double startDistance;
 	
 	public ArcPathSegment(Arc arc, Transform startPoint, Transform endPoint){
 		this.arc = arc;
-		this.startPoint = startPoint;
-		this.endPoint = endPoint;
+		setStartPoint(startPoint);
+		setEndPoint(endPoint);
+		
+		
+		arc.setMinAngle(Math.min(arc.getCenter().angleTo(startPoint.getPosition()),arc.getCenter().angleTo(endPoint.getPosition())));
+		arc.setMaxAngle(Math.max(arc.getCenter().angleTo(startPoint.getPosition()),arc.getCenter().angleTo(endPoint.getPosition())));
 	}
 	
 	@Override
-	public Position getIntersection(Transform robotTransform) {
-		Rotation angleTo = new Rotation(arc.getCenter().angleTo(robotTransform.getPosition()));
+	public Position getParrallelIntersection(Transform referenceTransform) {
+		Rotation angleTo = new Rotation(arc.getCenter().angleTo(referenceTransform.getPosition()));
 		
 		return  new Position(angleTo.cos()*arc.getRadius(), angleTo.sin()*arc.getRadius()).add(arc.getCenter());
 	}
 	
 	@Override
 	public boolean onSegment(Position point) {
-		return arc.isOnCircle(point);
+		boolean withinMinAndMax = arc.getCenter().angleTo(point) > arc.getMinAngle() && arc.getCenter().angleTo(point) < arc.getMaxAngle();
+		return arc.isOnCircle(point) && withinMinAndMax;
 	}
 	
-
+	@Override
+	public Position getIntersectionPointWithCircle(Arc circle) {
+		Position[] positions = arc.intersectionPointsWithCircle(circle);
+		double currentClosest = 9999;
+		Position currentPosition = null;
+		for(int i = 0; i < positions.length; i++){
+			if(positions[i].distance(getStartPoint().getPosition()) < currentClosest && onSegment(positions[i])){
+				currentClosest = positions[i].distance(getStartPoint().getPosition());
+				currentPosition = positions[i];
+			}
+		}
+		if(currentPosition == null){
+			currentPosition = getStartPoint().getPosition();
+		}
+		return currentPosition;
+	}
+	
 	
 	@Override
 	public PathSegmentType getType() {
@@ -54,17 +72,7 @@ public class ArcPathSegment extends PathSegment {
 		this.arc = arc;
 	}
 	
-	public Transform getStartPoint() {
-		return startPoint;
-	}
-	
-	public void setStartPoint(Transform startPoint) {
-		this.startPoint = startPoint;
-	}
-	
-	public Transform getEndPoint() {
-		return endPoint;
-	}
+
 	
 	@Override
 	public double getSegmentDistance() {
@@ -93,10 +101,7 @@ public class ArcPathSegment extends PathSegment {
 		double angleDifference = arc.getMaxAngle()-angleTo;
 		return circumference*(angleDifference/360);
 	}
-	
-	public void setEndPoint(Transform endPoint) {
-		this.endPoint = endPoint;
-	}
+
 	
 	public void setStartDistance(double startDistance) {
 		this.startDistance = startDistance;

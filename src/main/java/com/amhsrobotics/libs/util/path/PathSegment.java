@@ -1,6 +1,7 @@
 package com.amhsrobotics.libs.util.path;
 
 import com.amhsrobotics.libs.auton.motionprofile.TrapezoidalMotionProfile;
+import com.amhsrobotics.libs.util.geometry.Arc;
 import com.amhsrobotics.libs.util.geometry.Line;
 import com.amhsrobotics.libs.util.geometry.Position;
 import com.amhsrobotics.libs.util.geometry.Transform;
@@ -14,13 +15,17 @@ public abstract class PathSegment {
 	private double endVelocity;
 	private TrapezoidalMotionProfile motionProfile;
 	
+	private Transform startPoint;
+	private Transform endPoint;
+	
+	
 	/**
-	 * Returns the intersection of the line perpendicular to the segment that intersects with the robot position
+	 * Returns the intersection of the line perpendicular to the segment that intersects with the referenceTransform
 	 *
-	 * @param robotTransform the {@link Transform} of the robot
+	 * @param referenceTransform the {@link Transform} of the point you want to find the closest point to
 	 * @return the point intersecting with the perpendicular robot line and the segment
 	 */
-	public abstract Position getIntersection(Transform robotTransform);
+	public abstract Position getParrallelIntersection(Transform referenceTransform);
 	
 	/**
 	 * Checks to see whether a point lies on the path segment and between the beginning and ending point.
@@ -29,6 +34,13 @@ public abstract class PathSegment {
 	 * @return whether the point lies on the path segment and is between the beginning and ending point
 	 */
 	public abstract boolean onSegment(Position point);
+	
+	/**
+	 * Returns the points of intersection of this segment and a specified circle. If there are multiple, it returns the closest one to the starting point of the segment.
+	 * @param circle
+	 * @return the point of intersection
+	 */
+	public abstract Position getIntersectionPointWithCircle(Arc circle);
 	
 	/**
 	 * Returns the max velocity of the path segment. This is the absolute max speed the robot can be driving at this
@@ -50,9 +62,15 @@ public abstract class PathSegment {
 		this.motionProfile = motionProfile;
 	}
 	
-	public abstract Transform getStartPoint();
+
 	
-	public abstract Transform getEndPoint();
+	public void setStartPoint(Transform startPoint) {
+		this.startPoint = startPoint;
+	}
+	
+	public void setEndPoint(Transform endPoint) {
+		this.endPoint = endPoint;
+	}
 	
 	public abstract double getSegmentDistance();
 	
@@ -104,5 +122,13 @@ public abstract class PathSegment {
 	
 	public void setEndVelocity(double endVelocity) {
 		this.endVelocity = endVelocity;
+	}
+	
+	public Transform getEndPoint() {
+		return endPoint;
+	}
+	
+	public Transform getStartPoint() {
+		return startPoint;
 	}
 }
