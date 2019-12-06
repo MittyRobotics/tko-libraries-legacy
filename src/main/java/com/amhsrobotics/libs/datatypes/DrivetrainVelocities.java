@@ -1,10 +1,10 @@
 package com.amhsrobotics.libs.datatypes;
 
-public class DrivetrainWheelVelocities {
+public class DrivetrainVelocities {
 	private final double leftVelocity;
 	private final double rightVelocity;
 	
-	public DrivetrainWheelVelocities(double leftVelocity, double rightVelocity){
+	public DrivetrainVelocities(double leftVelocity, double rightVelocity){
 		
 		this.leftVelocity = leftVelocity;
 		this.rightVelocity = rightVelocity;

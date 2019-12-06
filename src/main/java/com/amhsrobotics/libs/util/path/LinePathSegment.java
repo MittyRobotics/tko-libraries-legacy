@@ -18,7 +18,7 @@ public class LinePathSegment extends PathSegment{
 	}
 	
 	@Override
-	public Position getParrallelIntersection(Transform referenceTransform) {
+	public Position getParallelIntersection(Transform referenceTransform) {
 		return new Transform(referenceTransform.getPosition(), line.getTransform().getRotation().rotateBy(90)).findLineIntersectionPoint(line.getTransform()).getPosition();
 	}
 	

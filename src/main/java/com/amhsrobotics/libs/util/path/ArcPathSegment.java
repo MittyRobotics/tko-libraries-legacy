@@ -17,7 +17,7 @@ public class ArcPathSegment extends PathSegment {
 	}
 	
 	@Override
-	public Position getParrallelIntersection(Transform referenceTransform) {
+	public Position getParallelIntersection(Transform referenceTransform) {
 		Rotation angleTo = new Rotation(arc.getCenter().angleTo(referenceTransform.getPosition()));
 		
 		return  new Position(angleTo.cos()*arc.getRadius(), angleTo.sin()*arc.getRadius()).add(arc.getCenter());

@@ -25,7 +25,7 @@ public abstract class PathSegment {
 	 * @param referenceTransform the {@link Transform} of the point you want to find the closest point to
 	 * @return the point intersecting with the perpendicular robot line and the segment
 	 */
-	public abstract Position getParrallelIntersection(Transform referenceTransform);
+	public abstract Position getParallelIntersection(Transform referenceTransform);
 	
 	/**
 	 * Checks to see whether a point lies on the path segment and between the beginning and ending point.
@@ -61,8 +61,6 @@ public abstract class PathSegment {
 	public void setMotionProfile(TrapezoidalMotionProfile motionProfile){
 		this.motionProfile = motionProfile;
 	}
-	
-
 	
 	public void setStartPoint(Transform startPoint) {
 		this.startPoint = startPoint;

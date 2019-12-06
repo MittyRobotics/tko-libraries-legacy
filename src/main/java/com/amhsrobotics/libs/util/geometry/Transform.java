@@ -62,17 +62,17 @@ public class Transform {
 	}
 	
 	/**
-	 * Finds the {@link Arc} that is tangent to this {@link Transform} and intersects with the other {@link Transform} position.
+	 * Finds the {@link Arc} that is tangent to this {@link Transform} and intersects with the other {@link Position}.
 	 *
 	 * @param other the point that the {@link Arc} intersects
 	 * @return the {@link Arc} tangent to this and intersecting other
 	 */
-	public Arc findTangentIntersectionArc(Transform other){
+	public Arc findTangentIntersectionArc(Position other){
 		
 		final Position vectorHead = new Position(getRotation().cos(), getRotation().sin());
 		
-		final double a = other.getPosition().getX() - getPosition().getX();
-		final double b = other.getPosition().getY() -getPosition().getY();
+		final double a = other.getX() - getPosition().getX();
+		final double b = other.getY() -getPosition().getY();
 		final double c = vectorHead.getX();
 		final double d = vectorHead.getY();
 		
@@ -160,7 +160,13 @@ public class Transform {
 		
 		return new Transform(pos,rot);
 	}
-	
+
+	/**
+	 * Finds this point relative to {@link Transform} other.
+	 *
+	 * @param other
+	 * @return
+	 */
 	public Transform relativeTo(Transform other){
 		Position pos = position.subtract(other.getPosition()).rotateBy(other.getRotation().inverse());
 		Rotation rot = rotation.subtract(other.getRotation());

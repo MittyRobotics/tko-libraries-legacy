@@ -347,7 +347,27 @@ public class TrapezoidalMotionProfile {
         }
 
         return output + startPosition;
+    }
 
+    /**
+     *
+     * Only works with starting and ending velocity of 0.
+     * @param position
+     * @return
+     */
+    public double getTimeAtPosition(double position){
+        if(position < accelerationSegment.distance){
+            return Math.sqrt((2*position)/maxAcceleration);
+        }
+        else if(position > accelerationSegment.distance && position < cruiseSegment.distance){
+            return accelerationSegment.getTime() +
+                    (position-accelerationSegment.getDistance())/maxVelocity;
+        }
+        else{
+            return accelerationSegment.getTime() +
+                    cruiseSegment.getTime() +
+                    Math.sqrt((2*(position-accelerationSegment.getDistance()-cruiseSegment.getDistance()))/maxAcceleration);
+        }
     }
 
     /**
