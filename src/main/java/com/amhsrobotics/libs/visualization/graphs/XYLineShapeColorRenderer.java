@@ -1,7 +1,6 @@
 package com.amhsrobotics.libs.visualization.graphs;
 
 import org.jfree.chart.renderer.xy.XYLineAndShapeRenderer;
-import sun.jvm.hotspot.debugger.win32.coff.COFFException;
 
 import java.awt.*;
 
