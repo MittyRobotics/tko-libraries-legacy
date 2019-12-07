@@ -93,7 +93,7 @@ public class Rotation {
 	}
 	
 	/**
-	 * Maps the heading value of the {@link Rotation} object between -180 to 180;
+	 * Maps the heading value of the {@link Rotation} between -180 to 180;
 	 */
 	public Rotation mapHeading(){
 		double angle = getHeading();
