@@ -166,8 +166,14 @@ public class Rotation {
 		return new Rotation(heading / scalar);
 	}
 	
-	public Rotation rotateBy(double otherAngle) {
-		return rotateBy(new Rotation(otherAngle));
+	/**
+	 * Rotates this {@link Rotation} by the <code>angle</code> in degrees
+	 *
+	 * @param angle the angle in degrees to rotate this {@link Rotation} by
+	 * @return a new {@link Rotation} containing the angle of this {@link Rotation} rotated by <code>angle</code>.
+	 */
+	public Rotation rotateBy(double angle) {
+		return rotateBy(new Rotation(angle));
 	}
 	
 	/**
