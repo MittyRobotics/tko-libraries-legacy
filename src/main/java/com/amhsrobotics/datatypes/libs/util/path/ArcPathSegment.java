@@ -1,6 +1,6 @@
 package com.amhsrobotics.datatypes.libs.util.path;
 
-import com.amhsrobotics.libs.util.geometry.*;
+
 import com.amhsrobotics.datatypes.libs.util.geometry.Arc;
 import com.amhsrobotics.datatypes.libs.util.geometry.Position;
 import com.amhsrobotics.datatypes.libs.util.geometry.Rotation;

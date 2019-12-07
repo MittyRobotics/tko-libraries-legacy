@@ -1,7 +1,6 @@
 package com.amhsrobotics.datatypes.libs.auton.path.generation;
 
 import com.amhsrobotics.datatypes.libs.datatypes.VelocityConstraints;
-import com.amhsrobotics.libs.util.geometry.*;
 import com.amhsrobotics.datatypes.libs.util.geometry.*;
 import com.amhsrobotics.datatypes.libs.util.path.ArcPathSegment;
 import com.amhsrobotics.datatypes.libs.util.path.LinePathSegment;
