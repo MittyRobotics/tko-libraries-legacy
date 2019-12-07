@@ -50,14 +50,6 @@ public class Rotation {
 		return new Rotation(inverseAngle());
 	}
 	
-	public Rotation plus(double otherAngle){
-		return rotateBy(new Rotation(otherAngle));
-	}
-	
-	public Rotation minus(double otherAngle){
-		return rotateBy(new Rotation(otherAngle).inverseAngle());
-	}
-	
 	public Rotation add(Rotation other){
 		return rotateBy(other);
 	}
