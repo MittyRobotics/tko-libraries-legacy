@@ -9,6 +9,7 @@ version = "1.0-SNAPSHOT"
 repositories {
     jcenter()
     mavenLocal()
+    maven (url = "https://jitpack.io")
 }
 
 dependencies {
