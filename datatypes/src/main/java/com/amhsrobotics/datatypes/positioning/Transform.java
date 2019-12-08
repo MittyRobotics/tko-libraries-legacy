@@ -52,18 +52,24 @@ public class Transform {
 	 * @return a new {@link Transform} containing the point relative to <code>other</code>
 	 */
 	public Transform relativeTo(Transform other) {
-		return new Transform();
+		Position pos = position.subtract(other.getPosition()).rotateBy(other.getRotation().inverse());
+		Rotation rot = rotation.subtract(other.getRotation());
+		
+		return new Transform(pos,rot);
 	}
 	
 	/**
 	 * Rotates this {@link Transform} around the given {@link Position} <code>other</code>.
 	 *
-	 * @param other    the {@link Position} to rotate around
+	 * @param origin    the {@link Position} to rotate around
 	 * @param rotation the {@link Rotation} amount to rotate this Transform around
 	 * @return the rotated {@link Transform}
 	 */
-	public Transform rotateAround(Position other, Rotation rotation) {
-		return new Transform();
+	public Transform rotateAround(Position origin, Rotation rotation) {
+		Position pos = position.subtract(origin).rotateBy(rotation).add(origin);
+		Rotation rot = rotation.add(rotation);
+		
+		return new Transform(pos,rot);
 	}
 	
 	/**
@@ -73,7 +79,10 @@ public class Transform {
 	 * @return a new {@link Transform} multiplied by <code>scalar</code>.
 	 */
 	public Transform multiply(double scalar) {
-		return new Transform();
+		Position pos = position.multiply(scalar);
+		Rotation rot = rotation.multiply(scalar);
+		
+		return new Transform(pos,rot);
 	}
 	
 	/**
@@ -83,7 +92,10 @@ public class Transform {
 	 * @return a new {@link Transform} divided by <code>scalar</code>.
 	 */
 	public Transform divide(double scalar) {
-		return new Transform();
+		Position pos = position.divide(scalar);
+		Rotation rot = rotation.divide(scalar);
+		
+		return new Transform(pos,rot);
 	}
 	
 	/**
@@ -93,7 +105,10 @@ public class Transform {
 	 * @return a new {@link Transform} with this {@link Transform} and <code>other</code> added together.
 	 */
 	public Transform add(Transform other) {
-		return new Transform();
+		Position pos = position.add(other.getPosition());
+		Rotation rot = rotation.add(other.getRotation());
+		
+		return new Transform(pos,rot);
 	}
 	
 	/**
@@ -103,7 +118,10 @@ public class Transform {
 	 * @return a new {@link Transform} with this {@link Transform} and <code>other</code> subtracted together.
 	 */
 	public Transform subtract(Transform other) {
-		return new Transform();
+		Position pos = position.subtract(other.getPosition());
+		Rotation rot = rotation.subtract(other.getRotation());
+		
+		return new Transform(pos,rot);
 	}
 	
 	/**
@@ -113,7 +131,10 @@ public class Transform {
 	 * @return a new {@link Transform} transformed by <code>other</code>
 	 */
 	public Transform transformBy(Transform other) {
-		return new Transform();
+		Position pos = position.add(other.getPosition().rotateBy(rotation));
+		Rotation rot = rotation.add(other.getRotation());
+		
+		return new Transform(pos,rot);
 	}
 	
 	public Position getPosition() {
