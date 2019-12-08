@@ -14,6 +14,7 @@ repositories {
 
 dependencies {
     implementation("com.github.MittyRobotics:visualization:1.0-SNAPSHOT")
+    compile(project(":datatypes"))
 }
 
 publishing {

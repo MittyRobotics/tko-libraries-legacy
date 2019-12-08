@@ -13,6 +13,7 @@ repositories {
 
 dependencies {
     implementation("com.github.MittyRobotics:path-generation:1.0-SNAPSHOT")
+    compile(project(":datatypes"))
 }
 
 publishing {
