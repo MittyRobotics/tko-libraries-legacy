@@ -3,7 +3,8 @@ package com.amhsrobotics.datatypes.positioning;
 /**
  * Represents a 2d <code>(x,y)</code> position on a standard cartesian coordinate plane.
  * <p>
- * Inspired by team 254's geometry system: https://github.com/Team254/FRC-2019-Public/blob/master/src/main/java/com/team254/lib/geometry/
+ * Inspired by team 254's geometry system:
+ * https://github.com/Team254/FRC-2019-Public/blob/master/src/main/java/com/team254/lib/geometry/
  */
 public class Position {
 	private double x;

@@ -69,15 +69,22 @@ public class Circle {
 		double x3 = p3.getX();
 		double y3 = p3.getY();
 		
-		double cX = (x1 * x1 * y2 - x1 * x1 * y3 - x2 * x2 * y1 + x2 * x2 * y3 + x3 * x3 * y1 - x3 * x3 * y2 + y1 * y1 * y2 - y1 * y2 * y2 - y1 * y1 * y3 + y1 * y3 * y3 + y2 * y2 * y3 - y2 * y3 * y3) / (2 * (x1 * y2 - x3 * y2 - x1 * y3 - x2 * y1 + x3 * y1 + x2 * y3));
-		double cY = (x1 * x1 * x2 - x1 * x1 * x3 - x1 * x2 * x2 + x1 * x3 * x3 - x1 * y2 * y2 + x1 * y3 * y3 + x2 * x2 * x3 - x2 * x3 * x3 + x2 * y1 * y1 - x2 * y3 * y3 - x3 * y1 * y1 + x3 * y2 * y2) / (2 * (-x1 * y2 + x1 * y3 + x2 * y1 - x2 * y3 - x3 * y1 + x3 * y2));
+		double cX =
+				(x1 * x1 * y2 - x1 * x1 * y3 - x2 * x2 * y1 + x2 * x2 * y3 + x3 * x3 * y1 - x3 * x3 * y2 + y1 * y1 * y2
+						- y1 * y2 * y2 - y1 * y1 * y3 + y1 * y3 * y3 + y2 * y2 * y3 - y2 * y3 * y3) / (2 * (x1 * y2 - x3
+						* y2 - x1 * y3 - x2 * y1 + x3 * y1 + x2 * y3));
+		double cY =
+				(x1 * x1 * x2 - x1 * x1 * x3 - x1 * x2 * x2 + x1 * x3 * x3 - x1 * y2 * y2 + x1 * y3 * y3 + x2 * x2 * x3
+						- x2 * x3 * x3 + x2 * y1 * y1 - x2 * y3 * y3 - x3 * y1 * y1 + x3 * y2 * y2) / (2 * (-x1 * y2 +
+						x1 * y3 + x2 * y1 - x2 * y3 - x3 * y1 + x3 * y2));
 		
 		double radius = Math.sqrt(Math.pow(cX - x1, 2) + Math.pow(cY - y1, 2));
 		return new Circle(new Position(cX, cY), radius);
 	}
 	
 	/**
-	 * Returns a circle that is tangent to the <code>tangentPoint</code> {@link Transform} and intersects the <code>intersection</code> {@link Position}
+	 * Returns a circle that is tangent to the <code>tangentPoint</code> {@link Transform} and intersects the
+	 * <code>intersection</code> {@link Position}
 	 * <p>
 	 * The tangent point contains a {@link Position} which is the point of tangency and a {@link Rotation} that defines
 	 * the angle of the tangent line.
@@ -95,14 +102,19 @@ public class Circle {
 		double d = intersection.getY();
 		Rotation theta = tangentPoint.getRotation();
 		
-		double cX = ((b + d) * (d - b) * theta.tan() - (a + c) * (a - c) * theta.tan() - 2 * (d - b) * theta.tan() * b - 2 * (d - b) * a) / (2 * (theta.tan() * (c - a) + b - d));
-		double cY = (b + d) / 2 - (c - a) / (d - b) * (cX - ((a + c) * (theta.tan() * (c - a) + b - d)) / (2 * (theta.tan() * (c - a) + b - d)));
+		double cX =
+				((b + d) * (d - b) * theta.tan() - (a + c) * (a - c) * theta.tan() - 2 * (d - b) * theta.tan() * b - 2
+						* (d - b) * a) / (2 * (theta.tan() * (c - a) + b - d));
+		double cY =
+				(b + d) / 2 - (c - a) / (d - b) * (cX - ((a + c) * (theta.tan() * (c - a) + b - d)) / (2 * (theta.tan()
+						* (c - a) + b - d)));
 		
 		return new Circle(new Position(cX, cY), new Position(cX, cY).distance(tangentPoint.getPosition()));
 	}
 	
 	/**
-	 * Finds the two {@link Position}s of intersection between two {@link Circle}s, this {@link Circle} and <code>other</code>.
+	 * Finds the two {@link Position}s of intersection between two {@link Circle}s, this {@link Circle} and
+	 * <code>other</code>.
 	 * <p>
 	 * This returns an array, which could either contain 0, 1, or 2 points. Make sure to check how many points of
 	 * intersection there are in the array after using the function.
@@ -168,7 +180,8 @@ public class Circle {
 	 * https://www.desmos.com/calculator/dwwixupcxt
 	 *
 	 * @param line the other {@link Line}
-	 * @return an array containing the points of intersection between the {@link Line} <code>other</code> and this {@link Circle}
+	 * @return an array containing the points of intersection between the {@link Line} <code>other</code> and this
+	 * {@link Circle}
 	 */
 	public Position[] circleLineIntersection(Line line) {
 		double a = getCenter().getX();
@@ -195,9 +208,11 @@ public class Circle {
 				v1 - (g - d) * sqrt / sqrt1
 		);
 		
-		//If any of these values look bad, it most likely means there is no intersection and we should return an empty array
-		if (Double.isNaN(pos1.getX()) || Double.isNaN(pos2.getX()) || Double.isNaN(pos1.getY()) || Double.isNaN(pos2.getY()) ||
-				Double.isInfinite(pos1.getX()) || Double.isInfinite(pos2.getX()) || Double.isInfinite(pos1.getY()) || Double.isInfinite(pos2.getY())) {
+		//If any of these values look bad, it most likely means there is no intersection and we should return an empty
+		//array
+		if (Double.isNaN(pos1.getX()) || Double.isNaN(pos2.getX()) || Double.isNaN(pos1.getY()) ||
+				Double.isNaN(pos2.getY()) || Double.isInfinite(pos1.getX()) || Double.isInfinite(pos2.getX()) ||
+				Double.isInfinite(pos1.getY()) || Double.isInfinite(pos2.getY())) {
 			return new Position[]{};
 		}
 		

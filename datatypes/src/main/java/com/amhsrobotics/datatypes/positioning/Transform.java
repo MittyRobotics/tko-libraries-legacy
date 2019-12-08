@@ -3,7 +3,8 @@ package com.amhsrobotics.datatypes.positioning;
 /**
  * Represents a 2d {@link Position} and {@link Rotation}
  * <p>
- * Inspired by team 254's geometry system: https://github.com/Team254/FRC-2019-Public/blob/master/src/main/java/com/team254/lib/geometry/
+ * Inspired by team 254's geometry system:
+ * https://github.com/Team254/FRC-2019-Public/blob/master/src/main/java/com/team254/lib/geometry/
  */
 public class Transform {
 	private Position position;
@@ -55,13 +56,13 @@ public class Transform {
 		Position pos = position.subtract(other.getPosition()).rotateBy(other.getRotation().inverse());
 		Rotation rot = rotation.subtract(other.getRotation());
 		
-		return new Transform(pos,rot);
+		return new Transform(pos, rot);
 	}
 	
 	/**
 	 * Rotates this {@link Transform} around the given {@link Position} <code>other</code>.
 	 *
-	 * @param origin    the {@link Position} to rotate around
+	 * @param origin   the {@link Position} to rotate around
 	 * @param rotation the {@link Rotation} amount to rotate this Transform around
 	 * @return the rotated {@link Transform}
 	 */
@@ -69,7 +70,7 @@ public class Transform {
 		Position pos = position.subtract(origin).rotateBy(rotation).add(origin);
 		Rotation rot = rotation.add(rotation);
 		
-		return new Transform(pos,rot);
+		return new Transform(pos, rot);
 	}
 	
 	/**
@@ -82,7 +83,7 @@ public class Transform {
 		Position pos = position.multiply(scalar);
 		Rotation rot = rotation.multiply(scalar);
 		
-		return new Transform(pos,rot);
+		return new Transform(pos, rot);
 	}
 	
 	/**
@@ -95,7 +96,7 @@ public class Transform {
 		Position pos = position.divide(scalar);
 		Rotation rot = rotation.divide(scalar);
 		
-		return new Transform(pos,rot);
+		return new Transform(pos, rot);
 	}
 	
 	/**
@@ -108,7 +109,7 @@ public class Transform {
 		Position pos = position.add(other.getPosition());
 		Rotation rot = rotation.add(other.getRotation());
 		
-		return new Transform(pos,rot);
+		return new Transform(pos, rot);
 	}
 	
 	/**
@@ -121,7 +122,7 @@ public class Transform {
 		Position pos = position.subtract(other.getPosition());
 		Rotation rot = rotation.subtract(other.getRotation());
 		
-		return new Transform(pos,rot);
+		return new Transform(pos, rot);
 	}
 	
 	/**
@@ -134,7 +135,7 @@ public class Transform {
 		Position pos = position.add(other.getPosition().rotateBy(rotation));
 		Rotation rot = rotation.add(other.getRotation());
 		
-		return new Transform(pos,rot);
+		return new Transform(pos, rot);
 	}
 	
 	public Position getPosition() {
