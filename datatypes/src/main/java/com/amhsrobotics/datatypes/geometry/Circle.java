@@ -3,7 +3,9 @@ package com.amhsrobotics.datatypes.geometry;
 import com.amhsrobotics.datatypes.positioning.Position;
 import com.amhsrobotics.datatypes.positioning.Rotation;
 import com.amhsrobotics.datatypes.positioning.Transform;
-
+/**
+ * Represents a 2d circle on a standard cartesian coordinate plane.
+ */
 public class Circle {
 	private Position center;
 	private double radius;

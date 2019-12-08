@@ -2,6 +2,9 @@ package com.amhsrobotics.datatypes.geometry;
 
 import com.amhsrobotics.datatypes.positioning.Position;
 
+/**
+ * Represents a 2d line on a standard cartesian coordinate plane going infinitely in both directions.
+ */
 public class Line {
 	private Position firstPoint;
 	private Position secondPoint;
