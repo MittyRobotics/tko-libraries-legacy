@@ -28,6 +28,8 @@ public class Circle {
 	 * @return a new {@link Circle} that intersects all three {@link Position}s
 	 */
 	public Circle getCircleFromPoints(Position p1, Position p2, Position p3){
+		
+		
 		return new Circle(new Position(),0);
 	}
 	
