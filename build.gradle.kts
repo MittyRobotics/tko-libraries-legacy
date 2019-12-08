@@ -11,6 +11,7 @@ version = "1.0.0"
 allprojects {
     apply(plugin = "java")
     apply(plugin = "edu.wpi.first.GradleRIO" )
+    apply("maven")
 
     group = "com.github.MittyRobotics"
 
