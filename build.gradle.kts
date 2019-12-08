@@ -4,6 +4,7 @@ plugins {
     id("java")
     id("edu.wpi.first.GradleRIO") version "2019.4.1"
     id("maven")
+    `maven-publish`
 }
 
 group = "com.github.MittyRobotics"
@@ -11,12 +12,10 @@ version = "1.0.0"
 
 allprojects {
     apply(plugin = "java")
-    apply(plugin = "edu.wpi.first.GradleRIO" )
-    apply(plugin = "maven")
-
-    group = "com.github.MittyRobotics"
+    apply(plugin = "edu.wpi.first.GradleRIO")
 
     repositories {
+        mavenLocal()
         jcenter()
         maven(url = "https://jitpack.io")
     }
@@ -31,5 +30,11 @@ allprojects {
 
 // https://mvnrepository.com/artifact/org.jfree/jfreechart
         compile(group = "org.jfree", name = "jfreechart", version = "1.5.0")
+    }
+}
+
+publishing{
+    repositories{
+        mavenLocal()
     }
 }

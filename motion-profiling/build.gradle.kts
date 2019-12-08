@@ -1,10 +1,12 @@
 plugins {
     id("java")
+    id("edu.wpi.first.GradleRIO")
+    id("maven")
     `maven-publish`
 }
 
 group = "com.github.MittyRobotics"
-version = "1.0-SNAPSHOT"
+version = "0.1.0"
 
 repositories {
     jcenter()
@@ -12,12 +14,7 @@ repositories {
 }
 
 dependencies {
-    implementation("com.github.MittyRobotics:motion-profiling:1.0-SNAPSHOT")
+
     compile(project(":datatypes"))
 }
 
-publishing {
-    repositories {
-        mavenLocal()
-    }
-}

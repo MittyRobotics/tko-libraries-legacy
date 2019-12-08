@@ -1,8 +1,9 @@
 plugins {
     id("java")
+    id("edu.wpi.first.GradleRIO")
+    id("maven")
     `maven-publish`
 }
-
 group = "com.github.MittyRobotics"
 version = "1.0-SNAPSHOT"
 
@@ -16,8 +17,3 @@ dependencies {
     compile(project(":datatypes"))
 }
 
-publishing {
-    repositories {
-        mavenLocal()
-    }
-}
