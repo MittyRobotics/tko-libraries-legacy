@@ -152,4 +152,9 @@ public class Transform {
 	public void setRotation(Rotation rotation) {
 		this.rotation = rotation;
 	}
+	
+	@Override
+	public String toString() {
+		return String.format("Transform(%s, %s)", position.toString(), rotation.toString());
+	}
 }

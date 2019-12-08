@@ -187,4 +187,9 @@ public class Rotation {
 		double sin = cos() * other.sin() + sin() * other.cos();
 		return new Rotation(Math.toDegrees(Math.atan2(sin, cos)));
 	}
+	
+	@Override
+	public String toString() {
+		return String.format("Rotation(%s)", heading);
+	}
 }

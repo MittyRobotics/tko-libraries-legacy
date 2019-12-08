@@ -13,7 +13,9 @@ public class Circle {
 	}
 	
 	public Circle(Position p1, Position p2, Position p3) {
-	
+		Circle circle = getCircleFromPoints(p1,p2,p3);
+		this.center = circle.center;
+		this.radius = circle.radius;
 	}
 	
 	public Circle(Transform tangentPoint, Position intersection) {
@@ -39,44 +41,10 @@ public class Circle {
 		double x3 = p3.getX();
 		double y3 = p3.getY();
 		
-		double cX = (((((((((x1 * x1 * y2) -
-				(x1 * x1 * y3) -
-				(x2 * x2 * y1)) +
-				(x2 * x2 * y3) +
-				(x3 * x3 * y1)) -
-				(x3 * x3 * y2)) +
-				(y1 * y1 * y2)) -
-				(y1 * y2 * y2) -
-				(y1 * y1 * y3)) +
-				(y1 * y3 * y3) +
-				(y2 * y2 * y3)) -
-				(y2 * y3 * y3)) / 2) *
-				(((x1 * y2) -
-						(x3 * y2) -
-						(x1 * y3) -
-						(x2 * y1)) +
-						(x3 * y1) +
-						(x2 * y3));
-		double cY = ((((((((((x1 * x1 * x2) -
-				(x1 * x1 * x3) -
-				(x1 * x2 * x2)) +
-				(x1 * x3 * x3)) -
-				(x1 * y2 * y2)) +
-				(x1 * y3 * y3) +
-				(x2 * x2 * x3)) -
-				(x2 * x3 * x3)) +
-				(x2 * y1 * y1)) -
-				(x2 * y3 * y3) -
-				(x3 * y1 * y1)) +
-				(x3 * y2 * y2)) / 2) *
-				((((-x1 * y2) +
-						(x1 * y3) +
-						(x2 * y1)) -
-						(x2 * y3) -
-						(x3 * y1)) +
-						(x3 * y2));
-		double radius = Math.sqrt(Math.pow(cX - x1, 2) + Math.pow(cY - y1, 2));
+		double cX = (x1*x1*y2-x1*x1*y3-x2*x2*y1+x2*x2*y3+x3*x3*y1-x3*x3*y2+y1*y1*y2-y1*y2*y2-y1*y1*y3+y1*y3*y3+y2*y2*y3-y2*y3*y3)/(2*(x1*y2-x3*y2-x1*y3-x2*y1+x3*y1+x2*y3));
+		double cY = (x1*x1*x2-x1*x1*x3-x1*x2*x2+x1*x3*x3-x1*y2*y2+x1*y3*y3+x2*x2*x3-x2*x3*x3+x2*y1*y1-x2*y3*y3-x3*y1*y1+x3*y2*y2)/(2*(-x1*y2+x1*y3+x2*y1-x2*y3-x3*y1+x3*y2));
 		
+		double radius = Math.sqrt(Math.pow(cX - x1, 2) + Math.pow(cY - y1, 2));
 		return new Circle(new Position(cX, cY), radius);
 	}
 	
@@ -156,7 +124,7 @@ public class Circle {
 		double c = 0;
 		double d = line.getYIntercept();
 		double f = 1;
-		double g = line.getSlope();
+		double g = line.getYIntercept()+line.getSlope();
 		double m = line.getSlope();
 		
 		
