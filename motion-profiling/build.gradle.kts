@@ -14,7 +14,14 @@ repositories {
 }
 
 dependencies {
-
     compile(project(":datatypes"))
 }
 
+
+publishing {
+    publications {
+        create<MavenPublication>("maven") {
+            from(components["java"])
+        }
+    }
+}
