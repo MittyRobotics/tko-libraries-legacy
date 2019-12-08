@@ -81,6 +81,7 @@ public class Circle {
 	 * <p>
 	 * The tangent point contains a {@link Position} which is the point of tangency and a {@link Rotation} that defines
 	 * the angle of the tangent line.
+	 * https://www.desmos.com/calculator/dihvevz2n8
 	 *
 	 * @param tangentPoint the {@link Transform} that defines the point of tangency and tangent line
 	 * @param intersection another point that the circle intersects
