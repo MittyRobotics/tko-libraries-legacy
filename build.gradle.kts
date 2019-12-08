@@ -3,6 +3,7 @@ import edu.wpi.first.toolchain.NativePlatforms
 plugins {
     id("java")
     id("edu.wpi.first.GradleRIO") version "2019.4.1"
+    id("maven")
 }
 
 group = "com.github.MittyRobotics"
@@ -11,7 +12,7 @@ version = "1.0.0"
 allprojects {
     apply(plugin = "java")
     apply(plugin = "edu.wpi.first.GradleRIO" )
-    apply("maven")
+    apply(plugin = "maven")
 
     group = "com.github.MittyRobotics"
 
