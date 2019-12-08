@@ -1,23 +1,46 @@
 package com.amhsrobotics.datatypes.geometry;
 
 import com.amhsrobotics.datatypes.positioning.Position;
+import com.amhsrobotics.datatypes.positioning.Rotation;
 import com.amhsrobotics.datatypes.positioning.Transform;
 
 public class Circle {
 	private Position center;
 	private double radius;
 	
+	/**
+	 * Constructs a {@link Circle} given a center {@link Position} and a radius
+	 *
+	 * @param center the center {@link Position} of the circle
+	 * @param radius the radius of the circle
+	 */
 	public Circle(Position center, double radius) {
 		this.center = center;
 		this.radius = radius;
 	}
 	
+	/**
+	 * Constructs a {@link Circle} given three {@link Position}s that it intersects
+	 *
+	 * @param p1 first {@link Position}
+	 * @param p2 second {@link Position}
+	 * @param p3 third {@link Position}
+	 */
 	public Circle(Position p1, Position p2, Position p3) {
 		Circle circle = getCircleFromPoints(p1,p2,p3);
 		this.center = circle.center;
 		this.radius = circle.radius;
 	}
 	
+	/**
+	 * Constructs a circle given a {@link Transform} tangent point and a {@link Position} that it intersects
+	 *
+	 * The tangent point contains a {@link Position} which is the point of tangency and a {@link Rotation} that defines
+	 * the angle of the tangent line.
+	 *
+	 * @param tangentPoint the {@link Transform} that defines the point of tangency and tangent line
+	 * @param intersection another point that the circle intersects
+	 */
 	public Circle(Transform tangentPoint, Position intersection) {
 	
 	}
@@ -121,10 +144,10 @@ public class Circle {
 		double a = getCenter().getX();
 		double b = getCenter().getY();
 		double r = getRadius();
-		double c = 0;
-		double d = line.getYIntercept();
-		double f = 1;
-		double g = line.getYIntercept()+line.getSlope();
+		double c = line.getFirstPoint().getX();
+		double d = line.getFirstPoint().getY();
+		double f = line.getSecondPoint().getX();
+		double g = line.getSecondPoint().getY();
 		double m = line.getSlope();
 		
 		
@@ -132,6 +155,7 @@ public class Circle {
 		double v1 = (m * a + b * m * m + g - f * m) / (m * m + 1);
 		double sqrt = Math.sqrt(r * r - Math.pow(a - v, 2) - Math.pow(b - v1, 2));
 		double sqrt1 = Math.sqrt(Math.pow(g - d, 2) + Math.pow(f - c, 2));
+		
 		Position pos1 = new Position(
 				v +(f-c)* sqrt / sqrt1,
 				v1 +(g-d)* sqrt / sqrt1
@@ -140,6 +164,12 @@ public class Circle {
 				v - (f-c)* sqrt / sqrt1,
 				v1 - (g-d)* sqrt / sqrt1
 		);
+		
+		//If any of these values look bad, it most likely means there is no intersection and we should return an empty array
+		if(Double.isNaN(pos1.getX()) || Double.isNaN(pos2.getX()) || Double.isNaN(pos1.getY())|| Double.isNaN(pos2.getY()) ||
+				Double.isInfinite(pos1.getX()) || Double.isInfinite(pos2.getX()) || Double.isInfinite(pos1.getY())|| Double.isInfinite(pos2.getY())){
+			return new Position[]{};
+		}
 		
 		return new Position[]{
 				pos1,
