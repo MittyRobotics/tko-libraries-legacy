@@ -33,13 +33,13 @@ public class Position {
 	 * Calculates the angle from this {@link Position} to other.
 	 *
 	 * @param other the {@link Position} to get the angle to
-	 * @return angle to from this {@link Position} to <code>other</code> in degrees
+	 * @return {@link Rotation} from this {@link Position} to <code>other</code> in degrees
 	 */
-	public double angleTo(Position other) {
+	public Rotation angleTo(Position other) {
 		double x = getX() - other.getX();
 		double y = getY() - other.getY();
 		double angleToPoint = 180 + Math.toDegrees(Math.atan2(y, x));
-		return angleToPoint;
+		return new Rotation(angleToPoint);
 	}
 	
 	/**

@@ -222,6 +222,27 @@ public class Circle {
 		};
 	}
 	
+	/**
+	 * Determines whether or not <code>point</code> is on the circle.
+	 *
+	 * @param point the {@link Position} to determine if it is on the circle or not
+	 * @return whether or not <code>point</code> is on the circle.
+	 */
+	public boolean isOnCircle(Position point){
+		return isOnCircle(point,0.001);
+	}
+	
+	/**
+	 * Determines whether or not <code>point</code> is on the circle given a certain <code>tolerance</code>.
+	 *
+	 * @param point the {@link Position} to determine if it is on the circle or not
+	 * @param tolerance the tolerance of how far the <code>point</code> can be off the circle.
+	 * @return whether or not <code>point</code> is on the circle.
+	 */
+	public boolean isOnCircle(Position point, double tolerance){
+		return Math.abs(point.distance(center)-radius) < tolerance;
+	}
+	
 	public Position getCenter() {
 		return center;
 	}
