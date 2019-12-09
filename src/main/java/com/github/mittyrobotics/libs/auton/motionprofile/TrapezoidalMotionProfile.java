@@ -1,9 +1,9 @@
 package com.github.mittyrobotics.libs.auton.motionprofile;
 
+import com.github.mittyrobotics.libs.util.Function;
 import com.github.mittyrobotics.libs.datatypes.MechanismBounds;
 import com.github.mittyrobotics.libs.datatypes.MotionFrame;
 import com.github.mittyrobotics.libs.datatypes.VelocityConstraints;
-import com.github.mittyrobotics.libs.util.Function;
 import com.github.mittyrobotics.libs.util.IntegralMath;
 
 public class TrapezoidalMotionProfile {

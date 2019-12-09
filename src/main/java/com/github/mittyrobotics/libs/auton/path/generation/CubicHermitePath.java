@@ -1,10 +1,11 @@
 package com.github.mittyrobotics.libs.auton.path.generation;
 
 import com.github.mittyrobotics.libs.datatypes.VelocityConstraints;
+import com.github.mittyrobotics.libs.util.geometry.*;
 import com.github.mittyrobotics.libs.util.path.ArcPathSegment;
 import com.github.mittyrobotics.libs.util.path.LinePathSegment;
 import com.github.mittyrobotics.libs.util.path.PathSegment;
-import com.github.mittyrobotics.libs.util.geometry.*;
+
 
 import java.util.ArrayList;
 

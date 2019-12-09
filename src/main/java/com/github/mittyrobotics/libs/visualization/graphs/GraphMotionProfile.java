@@ -1,7 +1,7 @@
 package com.github.mittyrobotics.libs.visualization.graphs;
 
-import com.github.mittyrobotics.libs.datatypes.MotionFrame;
 import com.github.mittyrobotics.libs.auton.motionprofile.TrapezoidalMotionProfile;
+import com.github.mittyrobotics.libs.datatypes.MotionFrame;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;

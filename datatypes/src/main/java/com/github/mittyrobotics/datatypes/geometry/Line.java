@@ -1,6 +1,6 @@
-package com.github.mittyrobotics.geometry;
+package com.github.mittyrobotics.datatypes.geometry;
 
-import com.github.mittyrobotics.positioning.Position;
+import com.github.mittyrobotics.datatypes.positioning.Position;
 
 /**
  * Represents a 2d line on a standard cartesian coordinate plane going infinitely in both directions.

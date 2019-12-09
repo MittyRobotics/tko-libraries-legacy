@@ -1,4 +1,4 @@
-package com.github.mittyrobotics.positioning;
+package com.github.mittyrobotics.datatypes.positioning;
 
 /**
  * Represents a 2d <code>(x,y)</code> position on a standard cartesian coordinate plane.

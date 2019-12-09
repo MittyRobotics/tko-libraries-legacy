@@ -1,4 +1,4 @@
-package com.github.mittyrobotics.positioning;
+package com.github.mittyrobotics.datatypes.positioning;
 
 /**
  * Represents a 2d rotation (heading) value in degrees or radians and contains the tangent, cosine, or sine of that

@@ -1,8 +1,8 @@
-package com.github.mittyrobotics.geometry;
+package com.github.mittyrobotics.datatypes.geometry;
 
-import com.github.mittyrobotics.positioning.Position;
-import com.github.mittyrobotics.positioning.Rotation;
-import com.github.mittyrobotics.positioning.Transform;
+import com.github.mittyrobotics.datatypes.positioning.Position;
+import com.github.mittyrobotics.datatypes.positioning.Rotation;
+import com.github.mittyrobotics.datatypes.positioning.Transform;
 
 /**
  * Represents a 2d circle on a standard cartesian coordinate plane.

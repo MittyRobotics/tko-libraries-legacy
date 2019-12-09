@@ -1,10 +1,10 @@
 package com.github.mittyrobotics.libs.auton.path.follow;
 
-import com.github.mittyrobotics.libs.auton.path.generation.Path;
-import com.github.mittyrobotics.libs.datatypes.DrivetrainVelocities;
 import com.github.mittyrobotics.libs.util.geometry.Arc;
 import com.github.mittyrobotics.libs.util.geometry.Position;
 import com.github.mittyrobotics.libs.util.geometry.Transform;
+import com.github.mittyrobotics.libs.auton.path.generation.Path;
+import com.github.mittyrobotics.libs.datatypes.DrivetrainVelocities;
 import com.github.mittyrobotics.libs.util.path.PathSegment;
 
 public class AutonDriver {

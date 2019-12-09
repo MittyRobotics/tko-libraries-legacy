@@ -1,11 +1,11 @@
-package com.github.mittyrobotics.geometry;
+package com.github.mittyrobotics.datatypes.geometry;
 
-import com.github.mittyrobotics.positioning.Position;
+import com.github.mittyrobotics.datatypes.positioning.Position;
 
 /**
  * Represents a 2d arc segment on a standard cartesian coordinate plane with two end points.
  */
-public class Arc extends Circle {
+public class ArcSegment extends Circle {
 	
 	private Position startPoint;
 	private Position endPoint;
@@ -19,7 +19,7 @@ public class Arc extends Circle {
 	 * @param intermediatePoint a {@link Position} in between the start and end point of the arc used to determine
 	 *                          which way the arc is filled in and defines the {@link Circle}.
 	 */
-	public Arc(Position startPoint, Position endPoint, Position intermediatePoint) {
+	public ArcSegment(Position startPoint, Position endPoint, Position intermediatePoint) {
 		super(startPoint, intermediatePoint, endPoint);
 		this.startPoint = startPoint;
 		this.endPoint = endPoint;
@@ -27,14 +27,14 @@ public class Arc extends Circle {
 	}
 	
 	/**
-	 * Determines whether or not a point is on this {@link Arc} segment.
+	 * Determines whether or not a point is on this {@link ArcSegment} segment.
 	 * <p>
 	 * This checks for both if the point is on the circle and if the point is within the defining end points of the arc.
 	 *
 	 * @param point the {@link Position} to determine if it is on the arc or not
-	 * @return whether or not <code>point</code> is on this {@link Arc} segment.
+	 * @return whether or not <code>point</code> is on this {@link ArcSegment} segment.
 	 */
-	public boolean isOnArc(Position point) {
+	public boolean isOnSegment(Position point) {
 		double intermediateToStartDist = intermediatePoint.distance(startPoint);
 		double intermediateToEndDist = intermediatePoint.distance(endPoint);
 		double intermediateToPoint = intermediatePoint.distance(point);

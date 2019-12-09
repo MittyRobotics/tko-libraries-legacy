@@ -1,4 +1,4 @@
-package com.github.mittyrobotics.positioning;
+package com.github.mittyrobotics.datatypes.positioning;
 
 /**
  * Represents a 2d {@link Position} and {@link Rotation}
