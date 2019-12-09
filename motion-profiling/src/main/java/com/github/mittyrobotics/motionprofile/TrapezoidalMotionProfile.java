@@ -14,14 +14,15 @@ public class TrapezoidalMotionProfile {
 	private final VelocityConstraints velocityConstraints;
 	private final MechanismBounds mechanismBounds;
 	
-	MotionSegment accelerationSegment;
-	MotionSegment cruiseSegment;
-	MotionSegment decelerationSegment;
+	private MotionSegment accelerationSegment;
+	private MotionSegment cruiseSegment;
+	private MotionSegment decelerationSegment;
 	
 	private double tTotal;
 	
 	private double startPosition, startVelocity, endPosition, endVelocity, maxAcceleration, maxDeceleration, maxVelocity, minPosition, maxPosition;
-	
+
+	private boolean reversed;
 	private boolean isFinished;
 	
 	/**
@@ -52,7 +53,9 @@ public class TrapezoidalMotionProfile {
 		this.endMotionFrame = endMotionFrame;
 		this.velocityConstraints = velocityConstraints;
 		this.mechanismBounds = mechanismBounds;
-		
+
+
+
 		this.startPosition = startMotionFrame.getPosition();
 		this.startVelocity = startMotionFrame.getVelocity();
 		this.endPosition = endMotionFrame.getPosition();
@@ -62,20 +65,28 @@ public class TrapezoidalMotionProfile {
 		this.maxVelocity = velocityConstraints.getMaxVelocity();
 		this.minPosition = mechanismBounds.getMinPosition();
 		this.maxPosition = mechanismBounds.getMaxPosition();
-		
+
+		this.reversed = endPosition < startPosition;
+		if(reversed){
+			this.endPosition = Math.abs(startPosition-endPosition);
+			this.endVelocity = -endVelocity;
+			this.startVelocity = -startVelocity;
+			System.out.println(endPosition);
+		}
+
 		//Since we are dealing with non-zero start and end velocity values, we need to first figure out where the
 		//motion profile gets to with the non-zero values and adjust the setpoint so it reaches the actual position
 		//that it wants to get to.
 		
 		//Initial motion profile calculation with setpoint
-		calculateMotionProfile(endMotionFrame.getPosition());
+		calculateMotionProfile(endPosition);
 		
 		//Get the difference in setpoint between the input and the final one
 		double finalPosition = getPositionAtTime(tTotal);
 		double setpointDifference = endMotionFrame.getPosition() - finalPosition;
 		
 		//Recalculate the motion profile with the adjusted setpoint
-		calculateMotionProfile(endMotionFrame.getPosition() + setpointDifference);
+		calculateMotionProfile(endPosition + setpointDifference);
 	}
 	
 	private void calculateMotionProfile(double currentSetpoint) {
@@ -276,7 +287,10 @@ public class TrapezoidalMotionProfile {
 		} else {
 			output = maxVelocity - (t - accelerationSegment.getTime() - cruiseSegment.getTime()) * maxDeceleration;
 		}
-		
+
+		if(reversed){
+			return -output;
+		}
 		return output;
 	}
 	
@@ -299,7 +313,11 @@ public class TrapezoidalMotionProfile {
 		} else {
 			output = IntegralMath.integral(f, t, decelerationSegment.getF()) + IntegralMath.integral(0, c, accelerationSegment.getF()) + IntegralMath.integral(c, f, cruiseSegment.getF());
 		}
-		
+
+		if(reversed){
+			output = -output;
+		}
+
 		return output + startPosition;
 	}
 	
@@ -343,6 +361,11 @@ public class TrapezoidalMotionProfile {
 		
 		this.prevVelocity = velocity;
 		this.prevTime = t;
+
+		if(reversed){
+			return -acceleration;
+		}
+
 		return acceleration;
 	}
 	
@@ -368,5 +391,9 @@ public class TrapezoidalMotionProfile {
 	
 	public boolean isFinished() {
 		return isFinished;
+	}
+
+	public boolean isReversed() {
+		return reversed;
 	}
 }

@@ -12,7 +12,7 @@ import java.awt.*;
 public class Main {
 	public static void main(String[] args) {
 		MotionFrame startFrame = new MotionFrame(0,0);
-		MotionFrame endFrame = new MotionFrame(10,0);
+		MotionFrame endFrame = new MotionFrame(20,0);
 		VelocityConstraints velocityConstraints = new VelocityConstraints(5,5,10);
 		MechanismBounds bounds = new MechanismBounds(0,0);
 		TrapezoidalMotionProfile motionProfile = new TrapezoidalMotionProfile(startFrame,endFrame,velocityConstraints,bounds);
