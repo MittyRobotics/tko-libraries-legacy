@@ -25,7 +25,16 @@ public class ArcSegment extends Circle {
 		this.endPoint = endPoint;
 		this.intermediatePoint = intermediatePoint;
 	}
-	
+
+	/**
+	 * Gets the length of the arc segment.
+	 *
+	 * @return the length of the arc segment.
+	 */
+	public double getArcLength(){
+		return 0;
+	}
+
 	/**
 	 * Determines whether or not a point is on this {@link ArcSegment} segment.
 	 * <p>

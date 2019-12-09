@@ -2,7 +2,7 @@ package com.github.mittyrobotics.motionprofile;
 
 import com.github.mittyrobotics.datatypes.motion.VelocityConstraints;
 import com.github.mittyrobotics.motionprofile.util.datatypes.MechanismBounds;
-import com.github.mittyrobotics.motionprofile.util.datatypes.MotionFrame;
+import com.github.mittyrobotics.datatypes.motion.MotionState;
 import com.github.mittyrobotics.visualization.Graph;
 import com.github.mittyrobotics.visualization.XYSeriesCollectionWithRender;
 import org.jfree.data.xy.XYSeries;
@@ -11,8 +11,8 @@ import java.awt.*;
 
 public class Main {
 	public static void main(String[] args) {
-		MotionFrame startFrame = new MotionFrame(0,0);
-		MotionFrame endFrame = new MotionFrame(20,0);
+		MotionState startFrame = new MotionState(0,0);
+		MotionState endFrame = new MotionState(20,0);
 		VelocityConstraints velocityConstraints = new VelocityConstraints(5,5,10);
 		MechanismBounds bounds = new MechanismBounds(0,0);
 		TrapezoidalMotionProfile motionProfile = new TrapezoidalMotionProfile(startFrame,endFrame,velocityConstraints,bounds);

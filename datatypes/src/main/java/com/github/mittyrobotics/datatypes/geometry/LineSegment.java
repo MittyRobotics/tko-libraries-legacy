@@ -20,7 +20,16 @@ public class LineSegment extends Line {
 		this.startPoint = startPoint;
 		this.endPoint = endPoint;
 	}
-	
+
+	/**
+	 * Gets the length of the line segment.
+	 *
+	 * @return the length of the line segment.
+	 */
+	public double getArcLength(){
+		return startPoint.distance(endPoint);
+	}
+
 	/**
 	 * Returns whether or not the <code>point</code> is on this line segment.
 	 * <p>
