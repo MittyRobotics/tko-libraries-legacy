@@ -5,13 +5,12 @@ import com.github.mittyrobotics.positioning.Position;
 /**
  * Represents a 2d line segment on a standard cartesian coordinate plane with two end points.
  */
-public class LineSegment {
-	private Line line;
+public class LineSegment extends Line{
 	private Position startPoint;
 	private Position endPoint;
 	
-	public LineSegment(Line line, Position startPoint, Position endPoint){
-		this.line = line;
+	public LineSegment(Position startPoint, Position endPoint){
+		super(startPoint,endPoint);
 		this.startPoint = startPoint;
 		this.endPoint = endPoint;
 	}
@@ -26,32 +25,8 @@ public class LineSegment {
 	 * @return whether or not the <code>point</code> is on this line segment.
 	 */
 	public boolean isOnSegment(Position point){
-		boolean withinStartAndEnd = Math.abs(point.distance(getStartPoint()) + point.distance(getEndPoint()) -
-				getStartPoint().distance(getEndPoint())) < 0.001;
-		return withinStartAndEnd && line.isCollinear(point);
-	}
-	
-	public Line getLine() {
-		return line;
-	}
-	
-	public void setLine(Line line) {
-		this.line = line;
-	}
-	
-	public Position getStartPoint() {
-		return startPoint;
-	}
-	
-	public void setStartPoint(Position startPoint) {
-		this.startPoint = startPoint;
-	}
-	
-	public Position getEndPoint() {
-		return endPoint;
-	}
-	
-	public void setEndPoint(Position endPoint) {
-		this.endPoint = endPoint;
+		boolean withinStartAndEnd = Math.abs(point.distance(getFirstPoint()) + point.distance(getSecondPoint()) -
+				getFirstPoint().distance(getSecondPoint())) < 0.001;
+		return withinStartAndEnd && isCollinear(point);
 	}
 }
