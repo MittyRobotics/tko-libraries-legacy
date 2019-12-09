@@ -34,7 +34,7 @@ public class TrapezoidalMotionProfile {
 	 * @param velocityConstraints The {@link VelocityConstraints} of the mechanism.
 	 */
 	public TrapezoidalMotionProfile(MotionFrame startMotionFrame, MotionFrame endMotionFrame, VelocityConstraints velocityConstraints) {
-		this(startMotionFrame,endMotionFrame,velocityConstraints,new MechanismBounds(0,0));
+		this(startMotionFrame, endMotionFrame, velocityConstraints, new MechanismBounds(0, 0));
 	}
 	
 	/**
@@ -349,7 +349,6 @@ public class TrapezoidalMotionProfile {
 	public double getTotalTime() {
 		return tTotal;
 	}
-	
 	
 	public MotionFrame getStartMotionFrame() {
 		return startMotionFrame;
