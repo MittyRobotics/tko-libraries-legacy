@@ -9,8 +9,9 @@ public class ArcPathSegment extends PathSegment {
 	private ArcSegment arcSegment;
 	
 	public ArcPathSegment(ArcSegment arcSegment) {
-		super(PathSegmentType.LINE);
+		super(PathSegmentType.ARC);
 		this.arcSegment = arcSegment;
+		setSegmentDistance(2*arcSegment.getRadius()*Math.asin(getStartPoint().distance(getEndPoint())/(2*arcSegment.getRadius())));
 	}
 	
 	public ArcSegment getArcSegment() {
@@ -19,6 +20,6 @@ public class ArcPathSegment extends PathSegment {
 
 	@Override
 	public Position getClosestPointOnSegment(Position referencePosition) {
-		return null;
+		return arcSegment.getClosestPoint(referencePosition);
 	}
 }
