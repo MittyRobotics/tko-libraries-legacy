@@ -22,7 +22,7 @@ public abstract class PathSegment {
 	public PathSegment(PathSegmentType type){
 		this.type = type;
 	}
-
+	
 	/**
 	 * Interpolates the closest {@link Position} to the reference position on the path segment.
 	 *
@@ -50,7 +50,7 @@ public abstract class PathSegment {
 	}
 
 	/**
-	 * Sets the {@link TrapezoidalMotionProfile} for the path segment. Set this to the generated profile for your segment.
+	 * Sets the {@link TrapezoidalMotionProfile} for the path segment. Set this to the generated profile for the segment.
 	 *
 	 * @param velocityMotionProfile the {@link TrapezoidalMotionProfile} for the path segment.
 	 */

@@ -62,6 +62,30 @@ public class Line {
 	}
 	
 	/**
+	 * Finds the closest point on this {@link Line} to the <code>referencePosition</code>.
+	 *
+	 * This is done by finding the line parallel to this line that intersects with the <code>referenceTransform</code>.
+	 * https://www.desmos.com/calculator/trqlffx7ha
+	 *
+	 * @param referencePosition the {@link Position} to find the closest point to.
+	 * @return the closest {@link Position} to the <code>referencePosition</code>.
+	 */
+	public Position getClosestPoint(Position referencePosition){
+		double f = referencePosition.getX();
+		double g = referencePosition.getY();
+		double m = getSlope();
+		
+		//Get parallel slope
+		double m1 = -1/m;
+		
+		//Create parallel line from position and another position along parallel line
+		Line parallelLine = new Line(referencePosition,new Position(1,m1).add(referencePosition));
+		
+		//Return the intersection between the two lines
+		return getIntersection(parallelLine);
+	}
+	
+	/**
 	 * Determines whether or not <code>point</code> is collinear with this {@link Line}.
 	 *
 	 * @param point the {@link Position} to determine whether or not it is collinear.

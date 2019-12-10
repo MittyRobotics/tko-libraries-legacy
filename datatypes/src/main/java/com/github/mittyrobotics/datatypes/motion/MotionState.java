@@ -7,6 +7,10 @@ public class MotionState {
 	private double acceleration;
 	private double t;
 	
+	public MotionState(double velocity) {
+		this.velocity = velocity;
+	}
+	
 	public MotionState(double position, double velocity) {
 		this.position = position;
 		this.velocity = velocity;

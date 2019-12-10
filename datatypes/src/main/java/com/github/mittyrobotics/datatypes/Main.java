@@ -1,11 +1,13 @@
 package com.github.mittyrobotics.datatypes;
 
 import com.github.mittyrobotics.datatypes.geometry.ArcSegment;
+import com.github.mittyrobotics.datatypes.geometry.Circle;
+import com.github.mittyrobotics.datatypes.geometry.Line;
 import com.github.mittyrobotics.datatypes.positioning.Position;
 
 public class Main {
 	public static void main(String[] args) {
-		ArcSegment arcSegment = new ArcSegment(new Position(5,0), new Position(0,5), new Position(Math.cos(Math.toRadians(1))*5,Math.sin(Math.toRadians(1))*5));
-		System.out.println(arcSegment.isOnSegment(new Position(Math.cos(Math.toRadians(50))*5,Math.sin(Math.toRadians(50))*5)));
+		Position point = new Circle(new Position(5,5), 6).getClosestPoint(new Position(15,13));
+		System.out.println(point);
 	}
 }

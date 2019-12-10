@@ -172,6 +172,34 @@ public class Circle {
 	}
 	
 	/**
+	 * Finds the closest point on this {@link Circle} to the <code>referencePosition</code>.
+	 *
+	 * This is done by finding the line that intersects the center of this {@link Circle} and the <code>referencePosition</code>.
+	 * https://www.desmos.com/calculator/mfywvuunva
+	 *
+	 * @param referencePosition the {@link Position} to find the closest point to.
+	 * @return the closest {@link Position} to the <code>referencePosition</code>.
+	 */
+	public Position getClosestPoint(Position referencePosition){
+		//Find the line intersecting with the circle center and the reference position
+		Line line = new Line(center,referencePosition);
+		
+		//Find all the points of intersection between the circle and the reference position
+		Position[] positions = circleLineIntersection(line);
+		
+		//Find the closest point out of the intersection points to the reference position
+		double currentClosest = 9999;
+		Position currentClosestPosition = null;
+		for(int i = 0; i < positions.length; i++){
+			if(positions[i].distance(referencePosition) < currentClosest){
+				currentClosest = positions[i].distance(referencePosition);
+				currentClosestPosition = positions[i];
+			}
+		}
+		return currentClosestPosition;
+	}
+	
+	/**
 	 * Finds the two {@link Position}s of intersection between this {@link Circle} and {@link Line} <code>other</code>.
 	 * <p>
 	 * This returns an array, which could either contain 0, 1, or 2 points. Make sure to check how many points of
