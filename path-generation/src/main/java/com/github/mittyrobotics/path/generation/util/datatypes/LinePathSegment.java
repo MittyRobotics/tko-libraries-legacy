@@ -8,11 +8,12 @@ public class LinePathSegment extends PathSegment{
 	private LineSegment lineSegment;
 	
 	public LinePathSegment(LineSegment lineSegment) {
-		super(PathSegmentType.LINE);
+		super(PathSegmentType.LINE, lineSegment.getFirstPoint(), lineSegment.getSecondPoint());
 		this.lineSegment = lineSegment;
 		setSegmentDistance(getStartPoint().distance(getEndPoint()));
 	}
-	
+
+	@Override
 	public LineSegment getLineSegment() {
 		return lineSegment;
 	}
@@ -21,4 +22,5 @@ public class LinePathSegment extends PathSegment{
 	public Position getClosestPointOnSegment(Position referencePosition) {
 		return lineSegment.getClosestPoint(referencePosition);
 	}
+
 }

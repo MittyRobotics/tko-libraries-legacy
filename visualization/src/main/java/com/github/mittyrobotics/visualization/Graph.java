@@ -10,6 +10,7 @@ import org.jfree.chart.axis.NumberAxis;
 import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.chart.plot.XYPlot;
 import org.jfree.data.xy.XYDataset;
+import org.jfree.data.xy.XYSeriesCollection;
 
 import javax.swing.*;
 import java.awt.*;
@@ -181,6 +182,11 @@ public class Graph extends JFrame {
 	public void setDatasets(XYSeriesCollectionWithRender[] datasets) {
 		this.datasets = datasets;
 		updateGraph();
+	}
+
+	public void addDataset(XYSeriesCollectionWithRender dataset){
+		plot.setDataset(plot.getDatasetCount(),dataset);
+		plot.setRenderer(plot.getDatasetCount()-1, new XYLineShapeColorRenderer(dataset.isShowPoints(), dataset.isShowLines(), dataset.getColor()));
 	}
 	
 	public XYDataset[] getDatasets() {

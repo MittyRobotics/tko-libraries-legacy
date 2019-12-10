@@ -16,11 +16,10 @@ import com.github.mittyrobotics.path.generation.util.splines.CubicHermiteSpline;
 import java.util.ArrayList;
 
 public class CubicHermitePath extends Path {
-	private final double samples;
-	
+
 	public CubicHermitePath(Transform[] waypoints, MotionState startMotionState, MotionState endMotionState, VelocityConstraints velocityConstraints, double samples) {
-		super(waypoints, startMotionState, endMotionState, velocityConstraints);
-		this.samples = samples;
+		super(waypoints, startMotionState, endMotionState, velocityConstraints,samples);
+
 	}
 	
 	/**
@@ -40,13 +39,17 @@ public class CubicHermitePath extends Path {
 		for (int i = 0; i < getWaypoints().length - 1; i++) {
 			double roughDistance = getWaypoints()[i].getPosition().distance(getWaypoints()[i + 1].getPosition());
 			double roughDistanceRatio = roughDistance / totalRoughDistance;
-			double currentSamples = samples * roughDistanceRatio;
+			double currentSamples = getSamples() * roughDistanceRatio;
 			
 			currentSamples = 3 * (Math.ceil(currentSamples));
+
+			//Generate the CubicHermiteSpline for the points i and i+1
 			Transform[] points = new CubicHermiteSpline(getWaypoints()[i], getWaypoints()[i + 1], (int) currentSamples).generateSpline();
+
 			for (int a = 0; a < points.length - 2; a += 2) {
 				if (new Line(points[a].getPosition(), points[a + 2].getPosition()).isCollinear(points[a + 1].getPosition(), 0.5)) {
 					LineSegment line = new LineSegment(points[a].getPosition(), points[a + 2].getPosition());
+					System.out.println(line.getFirstPoint());
 					segments.add(new LinePathSegment(line));
 				} else {
 					ArcSegment arc = new ArcSegment(points[a].getPosition(), points[a + 1].getPosition(), points[a + 2].getPosition());
@@ -54,6 +57,7 @@ public class CubicHermitePath extends Path {
 				}
 			}
 		}
+
 		setSegments(segments);
 	}
 	

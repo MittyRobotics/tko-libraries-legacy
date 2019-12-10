@@ -9,11 +9,12 @@ public class ArcPathSegment extends PathSegment {
 	private ArcSegment arcSegment;
 	
 	public ArcPathSegment(ArcSegment arcSegment) {
-		super(PathSegmentType.ARC);
+		super(PathSegmentType.ARC, arcSegment.getStartPoint(), arcSegment.getEndPoint());
 		this.arcSegment = arcSegment;
 		setSegmentDistance(2*arcSegment.getRadius()*Math.asin(getStartPoint().distance(getEndPoint())/(2*arcSegment.getRadius())));
 	}
-	
+
+	@Override
 	public ArcSegment getArcSegment() {
 		return arcSegment;
 	}

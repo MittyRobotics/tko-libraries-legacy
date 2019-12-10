@@ -1,5 +1,7 @@
 package com.github.mittyrobotics.path.generation.util.datatypes;
 
+import com.github.mittyrobotics.datatypes.geometry.ArcSegment;
+import com.github.mittyrobotics.datatypes.geometry.LineSegment;
 import com.github.mittyrobotics.datatypes.positioning.Position;
 import com.github.mittyrobotics.motionprofile.TrapezoidalMotionProfile;
 import com.github.mittyrobotics.datatypes.motion.MotionState;
@@ -19,8 +21,10 @@ public abstract class PathSegment {
 	 *
 	 * @param type the {@link PathSegmentType} of the path segment.
 	 */
-	public PathSegment(PathSegmentType type){
+	public PathSegment(PathSegmentType type, Position startPoint, Position endPoint){
 		this.type = type;
+		this.startPoint = startPoint;
+		this.endPoint = endPoint;
 	}
 	
 	/**
@@ -58,6 +62,15 @@ public abstract class PathSegment {
 		this.velocityMotionProfile = velocityMotionProfile;
 	}
 
+	public ArcSegment getArcSegment(){
+		return null;
+	}
+
+	public LineSegment getLineSegment(){
+		return null;
+	}
+
+
 	public Position getStartPoint() {
 		return startPoint;
 	}
@@ -72,14 +85,6 @@ public abstract class PathSegment {
 
 	public MotionState getEndMotionState() {
 		return endMotionState;
-	}
-
-	public void setStartPoint(Position startPoint) {
-		this.startPoint = startPoint;
-	}
-
-	public void setEndPoint(Position endPoint) {
-		this.endPoint = endPoint;
 	}
 
 	public void setStartMotionState(MotionState startMotionState) {

@@ -12,14 +12,16 @@ public abstract class Path {
 	private final MotionState startMotionState;
 	private final MotionState endMotionState;
 	private final VelocityConstraints velocityConstraints;
+	private final double samples;
 	
 	private ArrayList<PathSegment> segments = new ArrayList<>();
 	
-	public Path(Transform[] waypoints, MotionState startMotionState, MotionState endMotionState, VelocityConstraints velocityConstraints){
+	public Path(Transform[] waypoints, MotionState startMotionState, MotionState endMotionState, VelocityConstraints velocityConstraints, double samples){
 		this.waypoints = waypoints;
 		this.startMotionState = startMotionState;
 		this.endMotionState = endMotionState;
 		this.velocityConstraints = velocityConstraints;
+		this.samples = samples;
 		generatePathSegments();
 		generateMotionProfiles();
 	}
@@ -53,5 +55,9 @@ public abstract class Path {
 	
 	public void setSegments(ArrayList<PathSegment> segments) {
 		this.segments = segments;
+	}
+
+	public double getSamples() {
+		return samples;
 	}
 }

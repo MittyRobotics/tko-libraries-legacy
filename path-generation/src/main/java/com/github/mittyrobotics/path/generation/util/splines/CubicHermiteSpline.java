@@ -22,8 +22,7 @@ public class CubicHermiteSpline {
 		this.point1 = point1;
 		this.steps = steps;
 	}
-	
-	
+
 	/**
 	 * Generates the points of the cubic hermite spline.
 	 *
