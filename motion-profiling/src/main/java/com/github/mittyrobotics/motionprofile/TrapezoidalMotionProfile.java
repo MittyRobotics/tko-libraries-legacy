@@ -66,26 +66,28 @@ public class TrapezoidalMotionProfile {
         this.maxPosition = mechanismBounds.getMaxPosition();
 
         this.reversed = endPosition < startPosition;
+        double currentSetpoint;
+        currentSetpoint = Math.abs(startPosition - endPosition);
         if (reversed) {
-            this.endPosition = Math.abs(startPosition - endPosition);
             this.endVelocity = -endVelocity;
             this.startVelocity = -startVelocity;
-            System.out.println(endPosition);
         }
-
         //Since we are dealing with non-zero start and end velocity values, we need to first figure out where the
         //motion profile gets to with the non-zero values and adjust the setpoint so it reaches the actual position
         //that it wants to get to.
+        
 
+        
         //Initial motion profile calculation with setpoint
-        calculateMotionProfile(endPosition);
-
+        calculateMotionProfile(currentSetpoint);
+        
         //Get the difference in setpoint between the input and the final one
         double finalPosition = getPositionAtTime(tTotal);
         double setpointDifference = endMotionState.getPosition() - finalPosition;
 
         //Recalculate the motion profile with the adjusted setpoint
         calculateMotionProfile(endPosition + setpointDifference);
+
     }
 
     private void calculateMotionProfile(double currentSetpoint) {

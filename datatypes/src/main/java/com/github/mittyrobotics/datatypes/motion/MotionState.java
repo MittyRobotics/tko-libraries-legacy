@@ -38,4 +38,25 @@ public class MotionState {
 	public double getT() {
 		return t;
 	}
+	
+	public void setPosition(double position) {
+		this.position = position;
+	}
+	
+	public void setVelocity(double velocity) {
+		this.velocity = velocity;
+	}
+	
+	public void setAcceleration(double acceleration) {
+		this.acceleration = acceleration;
+	}
+	
+	public void setT(double t) {
+		this.t = t;
+	}
+	
+	@Override
+	public String toString() {
+		return String.format("MotionState(pos: %s, vel: %s, accel: %s, time: %s )", position, velocity, acceleration, t);
+	}
 }

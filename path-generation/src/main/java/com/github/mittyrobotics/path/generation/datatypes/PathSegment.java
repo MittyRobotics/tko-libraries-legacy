@@ -11,17 +11,18 @@ public abstract class PathSegment {
 	private Position startPoint;
 	private Position endPoint;
 	private double segmentDistance;
+	private double maxVelocity;
 	private MotionState startMotionState;
 	private MotionState endMotionState;
 	private TrapezoidalMotionProfile velocityMotionProfile;
 	private final PathSegmentType type;
-
+	
 	/**
 	 * Constructs a {@Link PathSegment} given a {@link PathSegmentType}.
 	 *
 	 * @param type the {@link PathSegmentType} of the path segment.
 	 */
-	public PathSegment(PathSegmentType type, Position startPoint, Position endPoint){
+	public PathSegment(PathSegmentType type, Position startPoint, Position endPoint) {
 		this.type = type;
 		this.startPoint = startPoint;
 		this.endPoint = endPoint;
@@ -34,16 +35,16 @@ public abstract class PathSegment {
 	 * @return the {@link Position} closest to the <code>referencePosition</code>.
 	 */
 	public abstract Position getClosestPointOnSegment(Position referencePosition);
-
+	
 	/**
 	 * Returns the {@link PathSegmentType} of the path segment
 	 *
 	 * @return the {@link PathSegmentType} of the path segment
 	 */
-	public PathSegmentType getPathSegmentType(){
+	public PathSegmentType getPathSegmentType() {
 		return type;
 	}
-
+	
 	/**
 	 * Returns the {@link TrapezoidalMotionProfile} that controls the velocity of the robot during the path segment.
 	 *
@@ -52,7 +53,7 @@ public abstract class PathSegment {
 	public TrapezoidalMotionProfile getVelocityMotionProfile() {
 		return velocityMotionProfile;
 	}
-
+	
 	/**
 	 * Sets the {@link TrapezoidalMotionProfile} for the path segment. Set this to the generated profile for the segment.
 	 *
@@ -61,46 +62,66 @@ public abstract class PathSegment {
 	public void setVelocityMotionProfile(TrapezoidalMotionProfile velocityMotionProfile) {
 		this.velocityMotionProfile = velocityMotionProfile;
 	}
-
-	public ArcSegment getArcSegment(){
+	
+	
+	/**
+	 * Returns the maximum allowed velocity for this segment.
+	 *
+	 * @return the maximum allowed velocity for this segment.
+	 */
+	public double getMaxVelocity() {
+		return maxVelocity;
+	}
+	
+	/**
+	 * Set the maximum allowed velocity for this segment.
+	 *
+	 * @param maxVelocity the maximum allowed velocity for this segment.
+	 */
+	public void setMaxVelocity(double maxVelocity) {
+		this.maxVelocity = maxVelocity;
+	}
+	
+	public ArcSegment getArcSegment() {
 		return null;
 	}
-
-	public LineSegment getLineSegment(){
+	
+	public LineSegment getLineSegment() {
 		return null;
 	}
-
-
+	
+	
 	public Position getStartPoint() {
 		return startPoint;
 	}
-
+	
 	public Position getEndPoint() {
 		return endPoint;
 	}
-
+	
 	public MotionState getStartMotionState() {
 		return startMotionState;
 	}
-
+	
 	public MotionState getEndMotionState() {
 		return endMotionState;
 	}
-
+	
 	public void setStartMotionState(MotionState startMotionState) {
 		this.startMotionState = startMotionState;
 	}
-
+	
 	public void setEndMotionState(MotionState endMotionState) {
 		this.endMotionState = endMotionState;
 	}
-
+	
 	public double getSegmentDistance() {
 		return segmentDistance;
 	}
-
+	
 	public void setSegmentDistance(double segmentDistance) {
 		this.segmentDistance = segmentDistance;
 	}
-
+	
+	
 }

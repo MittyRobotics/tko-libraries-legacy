@@ -12,8 +12,8 @@ import java.awt.*;
 public class Main {
 	public static void main(String[] args) {
 		MotionState startFrame = new MotionState(0,0);
-		MotionState endFrame = new MotionState(20,0);
-		VelocityConstraints velocityConstraints = new VelocityConstraints(5,5,10);
+		MotionState endFrame = new MotionState(6.896551724137931,8.304547985373997);
+		VelocityConstraints velocityConstraints = new VelocityConstraints(5,5,20);
 		MechanismBounds bounds = new MechanismBounds(0,0);
 		TrapezoidalMotionProfile motionProfile = new TrapezoidalMotionProfile(startFrame,endFrame,velocityConstraints,bounds);
 		
@@ -24,7 +24,7 @@ public class Main {
 		
 		XYSeries series = new XYSeries("Velocity");
 		XYSeries series1 = new XYSeries("Position");
-		for(double i = 0; i < motionProfile.getTotalTime(); i+= 0.1){
+		for(double i = 0; i < motionProfile.getTotalTime(); i+= 0.01){
 			series.add(i,motionProfile.getFrameAtTime(i).getVelocity());
 			series1.add(i,motionProfile.getFrameAtTime(i).getPosition());
 		}
