@@ -60,21 +60,17 @@ public class GraphManager {
     /**
      * Returns an {@link XYSeriesCollection} with an arrow drawn on it starting at position (x,y), extending length long, having an arrow pointer width of arrowWidth, and pointing at angle degrees
      *
-     * @param x          x position of arrow
-     * @param y          y position of arrow
+     * @param transform the {@link Transform} that defines the position and rotation of the arrow
      * @param length     length of arrow
      * @param arrowWidth width of arrow pointer
-     * @param angle      angle of arrow
      * @param seriesName the name of the {@link XYSeries} containing the rectangle
      * @return an {@link XYSeriesCollection} dataset containing an {@link XYSeries} with the coordinates that make up the arrow
      */
-    public XYSeriesCollectionWithRender graphArrow(double x, double y, double length, double arrowWidth, double angle, String seriesName, Color color) {
+    public XYSeriesCollectionWithRender graphArrow(Transform transform, double length, double arrowWidth, String seriesName, Color color) {
         XYSeriesCollectionWithRender dataset = new XYSeriesCollectionWithRender(true, false, color, new Rectangle(2, 2));
 
         XYSeries series = new XYSeries(seriesName, false);
-
-        Transform origin = new Transform(x, y, angle);
-
+    
         double halfWidth = arrowWidth / 2;
 
         //   ^
@@ -86,10 +82,10 @@ public class GraphManager {
         //   0
 
 
-        Transform p0 = new Transform(0, 0).transformBy(origin).rotateAround(origin.getPosition(), origin.getRotation());
-        Transform p1 = new Transform(length, 0).transformBy(origin).rotateAround(origin.getPosition(), origin.getRotation());
-        Transform p2 = new Transform(length - halfWidth, halfWidth).transformBy(origin).rotateAround(origin.getPosition(), origin.getRotation());
-        Transform p3 = new Transform(length - halfWidth, -halfWidth).transformBy(origin).rotateAround(origin.getPosition(), origin.getRotation());
+        Transform p0 = new Transform(0, 0).transformBy(transform).rotateAround(transform.getPosition(), transform.getRotation());
+        Transform p1 = new Transform(length, 0).transformBy(transform).rotateAround(transform.getPosition(), transform.getRotation());
+        Transform p2 = new Transform(length - halfWidth, halfWidth).transformBy(transform).rotateAround(transform.getPosition(), transform.getRotation());
+        Transform p3 = new Transform(length - halfWidth, -halfWidth).transformBy(transform).rotateAround(transform.getPosition(), transform.getRotation());
 
         series.add(p0.getPosition().getX(), p0.getPosition().getY());
         series.add(p1.getPosition().getX(), p1.getPosition().getY());
@@ -103,17 +99,22 @@ public class GraphManager {
     }
 
     public XYSeriesCollectionWithRender graphArc(ArcSegment arcSegment, String seriesName, Color color) {
-        XYSeriesCollectionWithRender dataset = new XYSeriesCollectionWithRender(true, false, color, null);
+        XYSeriesCollectionWithRender dataset = new XYSeriesCollectionWithRender(true, false, color, new Rectangle(1,1));
 
         XYSeries series = new XYSeries(seriesName, false);
-        if (Math.abs(arcSegment.getRadius()) > 100) {
+        if (Math.abs(arcSegment.getRadius()) > 1000) {
         	series.add(arcSegment.getStartPoint().getX(),arcSegment.getStartPoint().getY());
         	series.add(arcSegment.getEndPoint().getX(),arcSegment.getEndPoint().getY());
         } else {
-            for (double i = 0; i < 360; i += 0.1) {
-            	if(arcSegment.isOnSegment(new Position(arcSegment.getCenter().getX() + Math.cos(Math.toRadians(i)) * arcSegment.getRadius(), arcSegment.getCenter().getY() + Math.sin(Math.toRadians(i)) * arcSegment.getRadius()))){
-					series.add(arcSegment.getCenter().getX() + Math.cos(Math.toRadians(i)) * arcSegment.getRadius(), arcSegment.getCenter().getY() + Math.sin(Math.toRadians(i)) * arcSegment.getRadius());
-				}
+            double i = 180 + arcSegment.getCenter().angleTo(arcSegment.getIntermediatePoint()).getHeading();
+            double initI = i;
+            while(i < initI+359){
+                Position pos = new Position(arcSegment.getCenter().getX() + Math.cos(Math.toRadians(i)) * arcSegment.getRadius(), arcSegment.getCenter().getY() + Math.sin(Math.toRadians(i)) * arcSegment.getRadius());
+                if(arcSegment.isOnSegment(pos)){
+                    series.add(pos.getX(),pos.getY());
+                }
+                
+                i += 0.1;
             }
         }
 

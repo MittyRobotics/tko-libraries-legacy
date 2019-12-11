@@ -44,14 +44,21 @@ public class ArcSegment extends Circle {
 	 * @return whether or not <code>point</code> is on this {@link ArcSegment} segment.
 	 */
 	public boolean isOnSegment(Position point) {
-		double intermediateToStartDist = intermediatePoint.distance(startPoint);
-		double intermediateToEndDist = intermediatePoint.distance(endPoint);
 		double intermediateToPoint = intermediatePoint.distance(point);
+		double pointToStart = point.distance(startPoint);
+		double pointToEnd = point.distance(endPoint);
 		
-		boolean isWithinPoints = intermediateToPoint <= intermediateToStartDist || intermediateToPoint <= intermediateToEndDist;
+		boolean isWithinPoints = false;
 		
-		System.out.println(isWithinPoints + " " + isOnCircle(point) + " " + intermediateToPoint + " " + intermediateToStartDist + " " + intermediateToEndDist);
-		
+		if(pointToStart < pointToEnd){
+			double intermediateToStartDist = intermediatePoint.distance(startPoint);
+			isWithinPoints = intermediateToPoint <= intermediateToStartDist;
+		}
+		else{
+			double intermediateToEndDist = intermediatePoint.distance(endPoint);
+			isWithinPoints = intermediateToPoint <= intermediateToEndDist;
+		}
+
 		return isOnCircle(point) && isWithinPoints;
 	}
 	

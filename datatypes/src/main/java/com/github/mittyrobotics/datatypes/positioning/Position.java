@@ -26,7 +26,7 @@ public class Position {
 	 * @return the distance from this {@link Position} to <code>other</code>.
 	 */
 	public double distance(Position other) {
-		return Math.hypot(other.x - x, other.y - y);
+		return Math.sqrt(Math.pow(other.x - x,2) + Math.pow(other.y - y,2));
 	}
 	
 	/**
