@@ -1,11 +1,11 @@
-package com.github.mittyrobotics.path.generation.util.datatypes;
+package com.github.mittyrobotics.path.generation.datatypes;
 
 import com.github.mittyrobotics.datatypes.geometry.ArcSegment;
 import com.github.mittyrobotics.datatypes.geometry.LineSegment;
 import com.github.mittyrobotics.datatypes.positioning.Position;
 import com.github.mittyrobotics.motionprofile.TrapezoidalMotionProfile;
 import com.github.mittyrobotics.datatypes.motion.MotionState;
-import com.github.mittyrobotics.path.generation.util.enums.PathSegmentType;
+import com.github.mittyrobotics.path.generation.enums.PathSegmentType;
 
 public abstract class PathSegment {
 	private Position startPoint;

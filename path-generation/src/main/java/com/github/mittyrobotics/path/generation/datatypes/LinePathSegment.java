@@ -1,8 +1,8 @@
-package com.github.mittyrobotics.path.generation.util.datatypes;
+package com.github.mittyrobotics.path.generation.datatypes;
 
 import com.github.mittyrobotics.datatypes.geometry.LineSegment;
 import com.github.mittyrobotics.datatypes.positioning.Position;
-import com.github.mittyrobotics.path.generation.util.enums.PathSegmentType;
+import com.github.mittyrobotics.path.generation.enums.PathSegmentType;
 
 public class LinePathSegment extends PathSegment{
 	private LineSegment lineSegment;

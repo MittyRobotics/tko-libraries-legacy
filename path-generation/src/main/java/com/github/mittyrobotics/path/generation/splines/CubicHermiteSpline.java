@@ -1,4 +1,4 @@
-package com.github.mittyrobotics.path.generation.util.splines;
+package com.github.mittyrobotics.path.generation.splines;
 
 import com.github.mittyrobotics.datatypes.positioning.Position;
 import com.github.mittyrobotics.datatypes.positioning.Rotation;

@@ -5,13 +5,11 @@ import com.github.mittyrobotics.datatypes.geometry.Line;
 import com.github.mittyrobotics.datatypes.geometry.LineSegment;
 import com.github.mittyrobotics.datatypes.motion.MotionState;
 import com.github.mittyrobotics.datatypes.motion.VelocityConstraints;
-import com.github.mittyrobotics.datatypes.positioning.Position;
-import com.github.mittyrobotics.datatypes.positioning.Rotation;
 import com.github.mittyrobotics.datatypes.positioning.Transform;
-import com.github.mittyrobotics.path.generation.util.datatypes.ArcPathSegment;
-import com.github.mittyrobotics.path.generation.util.datatypes.LinePathSegment;
-import com.github.mittyrobotics.path.generation.util.datatypes.PathSegment;
-import com.github.mittyrobotics.path.generation.util.splines.CubicHermiteSpline;
+import com.github.mittyrobotics.path.generation.datatypes.ArcPathSegment;
+import com.github.mittyrobotics.path.generation.datatypes.LinePathSegment;
+import com.github.mittyrobotics.path.generation.datatypes.PathSegment;
+import com.github.mittyrobotics.path.generation.splines.CubicHermiteSpline;
 
 import java.util.ArrayList;
 

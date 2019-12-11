@@ -2,13 +2,11 @@ package com.github.mittyrobotics.path.generation;
 
 import com.github.mittyrobotics.datatypes.motion.MotionState;
 import com.github.mittyrobotics.datatypes.motion.VelocityConstraints;
-import com.github.mittyrobotics.datatypes.positioning.Position;
 import com.github.mittyrobotics.datatypes.positioning.Transform;
 import com.github.mittyrobotics.path.generation.paths.CubicHermitePath;
-import com.github.mittyrobotics.path.generation.util.enums.PathSegmentType;
+import com.github.mittyrobotics.path.generation.enums.PathSegmentType;
 import com.github.mittyrobotics.visualization.Graph;
 import com.github.mittyrobotics.visualization.GraphManager;
-import org.jfree.chart.axis.SymbolAxis;
 
 import java.awt.*;
 

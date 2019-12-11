@@ -3,7 +3,7 @@ package com.github.mittyrobotics.path.generation.paths;
 import com.github.mittyrobotics.datatypes.motion.MotionState;
 import com.github.mittyrobotics.datatypes.motion.VelocityConstraints;
 import com.github.mittyrobotics.datatypes.positioning.Transform;
-import com.github.mittyrobotics.path.generation.util.datatypes.PathSegment;
+import com.github.mittyrobotics.path.generation.datatypes.PathSegment;
 
 import java.util.ArrayList;
 
