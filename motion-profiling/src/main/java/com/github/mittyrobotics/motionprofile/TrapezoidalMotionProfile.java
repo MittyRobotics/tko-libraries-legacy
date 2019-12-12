@@ -80,14 +80,16 @@ public class TrapezoidalMotionProfile {
         
         //Initial motion profile calculation with setpoint
         calculateMotionProfile(currentSetpoint);
-        
+
         //Get the difference in setpoint between the input and the final one
         double finalPosition = getPositionAtTime(tTotal);
+
         double setpointDifference = endMotionState.getPosition() - finalPosition;
-
+    
+        System.out.println(currentSetpoint + " " + finalPosition + " " + setpointDifference + " " + endPosition);
+        
         //Recalculate the motion profile with the adjusted setpoint
-        calculateMotionProfile(endPosition + setpointDifference);
-
+       // calculateMotionProfile(endMotionState.getPosition() + setpointDifference);
     }
 
     private void calculateMotionProfile(double currentSetpoint) {
@@ -148,7 +150,7 @@ public class TrapezoidalMotionProfile {
             //Calculate the deceleration and cruise as normal
             tDecel = maxVelocity / maxDeceleration;
             dDecel = (maxDeceleration * tDecel * tDecel) / 2;
-            dCruise = totalDistanceWithEnds - dAccel - dDecel;
+            dCruise = totalDistanceWithEnds - triangleDAccel - dDecel;
             tCruise = dCruise / maxVelocity;
         }
         //If the ending velocity is greater than or equal to the theoretical max velocity
@@ -166,8 +168,9 @@ public class TrapezoidalMotionProfile {
             //Calculate the acceleration and cruise as normal
             tAccel = maxVelocity / maxAcceleration;
             dAccel = (maxAcceleration * tAccel * tAccel) / 2;
-            dCruise = totalDistanceWithEnds - dAccel - dDecel;
+            dCruise = totalDistanceWithEnds - dAccel - triangleDDecel;
             tCruise = dCruise / maxVelocity;
+
         }
         //If the start and end velocity are below the theoretical max velocity (a regular trapezoidal profile)
         else {
@@ -187,10 +190,11 @@ public class TrapezoidalMotionProfile {
         tAccel = tAccel - zeroToStartVelocityTime;
         tDecel = tDecel - endVelocityToZeroTime;
 
+
         //Subtract the extra end distances from the final acceleration and deceleration distances
         dAccel = dAccel - zeroToStartVelocityDistance;
         dDecel = dDecel - endVelocityToZeroDistance;
-
+        
         //If any of of the times or distances are less than 0, set them to 0.
         if (tCruise < 0 || dCruise < 0) {
             dCruise = 0;
@@ -204,6 +208,7 @@ public class TrapezoidalMotionProfile {
             tDecel = 0;
             dDecel = 0;
         }
+    
 
         //Find the total time of the motion profile
         tTotal = tAccel + tCruise + tDecel;

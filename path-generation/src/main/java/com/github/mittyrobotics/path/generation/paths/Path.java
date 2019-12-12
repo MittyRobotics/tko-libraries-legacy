@@ -185,8 +185,8 @@ public abstract class Path {
 			double cappedStartVelocity = Math.min(Math.min(segments.get(i).getMaxVelocity(),startVelocity),segments.get(i).getStartMotionState().getVelocity());
 			double cappedEndVelocity = Math.min(Math.min(segments.get(i).getMaxVelocity(),endVelocity),segments.get(i).getEndMotionState().getVelocity());
 			
-			//segments.get(i).getStartMotionState().setVelocity(cappedStartVelocity);
-			//segments.get(i).getEndMotionState().setVelocity(cappedEndVelocity);
+			segments.get(i).getStartMotionState().setVelocity(cappedStartVelocity);
+			segments.get(i).getEndMotionState().setVelocity(cappedEndVelocity);
 			previousSegment = segments.get(i);
 		}
 	}
