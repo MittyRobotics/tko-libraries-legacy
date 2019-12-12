@@ -11,9 +11,9 @@ import java.awt.*;
 
 public class Main {
 	public static void main(String[] args) {
-		MotionState startFrame = new MotionState(0,0);
-		MotionState endFrame = new MotionState(6.896551724137931,8.304547985373997);
-		VelocityConstraints velocityConstraints = new VelocityConstraints(5,5,20);
+		MotionState startFrame = new MotionState(13.559322033898304,5.207556439232954);
+		MotionState endFrame = new MotionState(16.94915254237288, 5.822225097395819);
+		VelocityConstraints velocityConstraints = new VelocityConstraints(1,1,20);
 		MechanismBounds bounds = new MechanismBounds(0,0);
 		TrapezoidalMotionProfile motionProfile = new TrapezoidalMotionProfile(startFrame,endFrame,velocityConstraints,bounds);
 		

@@ -20,7 +20,7 @@ public class Main {
                 new Transform(100,0,0)
         };
 
-        CubicHermitePath path = new CubicHermitePath(waypoints,new MotionState(0),new MotionState(0),new VelocityConstraints(5,5,20),10);
+        CubicHermitePath path = new CubicHermitePath(waypoints,new MotionState(0),new MotionState(0),new VelocityConstraints(1,1,20),20);
 
         Graph graph = new Graph("graph","y","x");
 
@@ -42,8 +42,8 @@ public class Main {
             TrapezoidalMotionProfile motionProfile = path.getSegments().get(i).getVelocityMotionProfile();
             System.out.println(motionProfile.getStartMotionState() + " " + motionProfile.getEndMotionState() + " " + path.getSegments().get(i).getSegmentDistance());
 
-            for(double a = 0; a < motionProfile.getTotalTime(); a+=0.01){
-                System.out.println(a+prevA + " " + motionProfile.getFrameAtTime(a).getPosition() + " " + motionProfile.getFrameAtTime(a).getVelocity());
+            for(double a = 0; a < motionProfile.getTotalTime(); a+=0.05){
+                //System.out.println(a+prevA + " " + motionProfile.getFrameAtTime(a).getPosition() + " " + motionProfile.getFrameAtTime(a).getVelocity());
                 series.add(prevA+a,motionProfile.getFrameAtTime(a).getVelocity());
             }
             
@@ -52,7 +52,7 @@ public class Main {
             XYSeriesCollectionWithRender dataset = new XYSeriesCollectionWithRender(true,false,Color.cyan,null);
             dataset.addSeries(series);
             graph.addDataset(dataset);
-            Thread.sleep(2000);
+           // Thread.sleep(2000);
         }
 
 

@@ -133,7 +133,7 @@ public abstract class Path {
 				//Set the start motion state position to the position of the previous ending motion state position
 				segments.get(i).setStartMotionState(new MotionState(segments.get(i-1).getEndMotionState().getPosition(),0));
 				//Set the end motion state position to the distance of the segment (total distance traveled by the end of the segment)
-				segments.get(i).setEndMotionState(new MotionState(segments.get(i-1).getSegmentDistance() + segments.get(i-1).getEndMotionState().getPosition(),0));
+				segments.get(i).setEndMotionState(new MotionState(segments.get(i-1).getSegmentDistance() + segments.get(i).getStartMotionState().getPosition(),0));
 				
 			}
 		}
@@ -185,8 +185,8 @@ public abstract class Path {
 			double cappedStartVelocity = Math.min(Math.min(segments.get(i).getMaxVelocity(),startVelocity),segments.get(i).getStartMotionState().getVelocity());
 			double cappedEndVelocity = Math.min(Math.min(segments.get(i).getMaxVelocity(),endVelocity),segments.get(i).getEndMotionState().getVelocity());
 			
-			segments.get(i).getStartMotionState().setVelocity(cappedStartVelocity);
-			segments.get(i).getEndMotionState().setVelocity(cappedEndVelocity);
+			//segments.get(i).getStartMotionState().setVelocity(cappedStartVelocity);
+			//segments.get(i).getEndMotionState().setVelocity(cappedEndVelocity);
 			previousSegment = segments.get(i);
 		}
 	}
