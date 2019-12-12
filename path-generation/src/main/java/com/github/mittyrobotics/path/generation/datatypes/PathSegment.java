@@ -37,6 +37,18 @@ public abstract class PathSegment {
 	public abstract Position getClosestPointOnSegment(Position referencePosition);
 	
 	/**
+	 * Interpolates the closest {@link Position} that is <code>distanceShift</code> away from the
+	 * <code>referencePosition</code> on the path segment.
+	 *
+	 * Please ensure that the parameters will actually find a valid intersection point on the {@link PathSegment}.
+	 *
+	 * @param referencePosition the {@link Position} to find the closest point to.
+	 * @param distanceShift the distance away from the <code>referencePosition</code> to find the closest point to.
+	 * @return the {@link Position} closest to the <code>referencePosition</code>.
+	 */
+	public abstract Position getClosestPointOnSegment(Position referencePosition, double distanceShift);
+	
+	/**
 	 * Returns the {@link PathSegmentType} of the path segment
 	 *
 	 * @return the {@link PathSegmentType} of the path segment
@@ -89,7 +101,6 @@ public abstract class PathSegment {
 	public LineSegment getLineSegment() {
 		return null;
 	}
-	
 	
 	public Position getStartPoint() {
 		return startPoint;

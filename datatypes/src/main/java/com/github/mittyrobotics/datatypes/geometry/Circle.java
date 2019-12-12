@@ -173,16 +173,16 @@ public class Circle {
 	
 	/**
 	 * Finds the closest point on this {@link Circle} to the <code>referencePosition</code>.
-	 *
+	 * <p>
 	 * This is done by finding the line that intersects the center of this {@link Circle} and the <code>referencePosition</code>.
 	 * https://www.desmos.com/calculator/mfywvuunva
 	 *
 	 * @param referencePosition the {@link Position} to find the closest point to.
 	 * @return the closest {@link Position} to the <code>referencePosition</code>.
 	 */
-	public Position getClosestPoint(Position referencePosition){
+	public Position getClosestPoint(Position referencePosition) {
 		//Find the line intersecting with the circle center and the reference position
-		Line line = new Line(center,referencePosition);
+		Line line = new Line(center, referencePosition);
 		
 		//Find all the points of intersection between the circle and the reference position
 		Position[] positions = circleLineIntersection(line);
@@ -190,8 +190,8 @@ public class Circle {
 		//Find the closest point out of the intersection points to the reference position
 		double currentClosest = 9999;
 		Position currentClosestPosition = null;
-		for(int i = 0; i < positions.length; i++){
-			if(positions[i].distance(referencePosition) < currentClosest){
+		for (int i = 0; i < positions.length; i++) {
+			if (positions[i].distance(referencePosition) < currentClosest) {
 				currentClosest = positions[i].distance(referencePosition);
 				currentClosestPosition = positions[i];
 			}
@@ -256,19 +256,19 @@ public class Circle {
 	 * @param point the {@link Position} to determine if it is on the circle or not
 	 * @return whether or not <code>point</code> is on the circle.
 	 */
-	public boolean isOnCircle(Position point){
-		return isOnCircle(point,0.001);
+	public boolean isOnCircle(Position point) {
+		return isOnCircle(point, 0.001);
 	}
 	
 	/**
 	 * Determines whether or not <code>point</code> is on the circle given a certain <code>tolerance</code>.
 	 *
-	 * @param point the {@link Position} to determine if it is on the circle or not
+	 * @param point     the {@link Position} to determine if it is on the circle or not
 	 * @param tolerance the tolerance of how far the <code>point</code> can be off the circle.
 	 * @return whether or not <code>point</code> is on the circle.
 	 */
-	public boolean isOnCircle(Position point, double tolerance){
-		return Math.abs(point.distance(center)-radius) < tolerance;
+	public boolean isOnCircle(Position point, double tolerance) {
+		return Math.abs(point.distance(center) - radius) < tolerance;
 	}
 	
 	public Position getCenter() {

@@ -32,7 +32,6 @@ public class CubicHermitePath extends Path {
 		super(waypoints, startMotionState, endMotionState, velocityConstraints, samples);
 	}
 	
-	
 	/**
 	 * Constructs a {@link CubicHermitePath}. This also takes in a <code>curvatureGain</code> and a
 	 * <code>minSlowedVelocity</code>, which are used in slowing down {@link ArcPathSegment}s based on how sharp their

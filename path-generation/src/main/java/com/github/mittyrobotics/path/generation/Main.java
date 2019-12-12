@@ -31,7 +31,6 @@ public class Main {
 		double prevA = 0;
 		double b = path.getSegments().size();
 		for (int i = 0; i < b; i++) {
-			
 			if (path.getSegments().get(i).getPathSegmentType() == PathSegmentType.ARC) {
 				//graph.addDataset(GraphManager.getInstance().graphArc(path.getSegments().get(i).getArcSegment(), "arc" + i, Color.CYAN));
 			} else if (path.getSegments().get(i).getPathSegmentType() == PathSegmentType.LINE) {
@@ -39,7 +38,7 @@ public class Main {
 			}
 			XYSeries series = new XYSeries("Motion Profile" + i);
 			TrapezoidalMotionProfile motionProfile = path.getSegments().get(i).getVelocityMotionProfile();
-			System.out.println(motionProfile.getStartMotionState() + " " + motionProfile.getEndMotionState() + " " + path.getSegments().get(i).getSegmentDistance() + " " + path.getSegments().get(i).getMaxVelocity());
+			//System.out.println(motionProfile.getStartMotionState() + " " + motionProfile.getEndMotionState() + " " + path.getSegments().get(i).getSegmentDistance() + " " + path.getSegments().get(i).getMaxVelocity());
 			
 			for (double a = 0; a < motionProfile.getTotalTime(); a += 0.01) {
 				//System.out.println(a+prevA + " " + motionProfile.getFrameAtTime(a).getPosition() + " " + motionProfile.getFrameAtTime(a).getVelocity());

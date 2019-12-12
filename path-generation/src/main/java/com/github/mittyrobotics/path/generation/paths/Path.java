@@ -3,12 +3,15 @@ package com.github.mittyrobotics.path.generation.paths;
 import com.github.mittyrobotics.datatypes.geometry.ArcSegment;
 import com.github.mittyrobotics.datatypes.motion.MotionState;
 import com.github.mittyrobotics.datatypes.motion.VelocityConstraints;
+import com.github.mittyrobotics.datatypes.positioning.Position;
 import com.github.mittyrobotics.datatypes.positioning.Transform;
 import com.github.mittyrobotics.motionprofile.TrapezoidalMotionProfile;
 import com.github.mittyrobotics.path.generation.datatypes.ArcPathSegment;
 import com.github.mittyrobotics.path.generation.datatypes.PathSegment;
 import com.github.mittyrobotics.path.generation.enums.PathSegmentType;
+import com.github.mittyrobotics.path.generation.enums.RoundMode;
 
+import java.math.RoundingMode;
 import java.util.ArrayList;
 
 public abstract class Path {
@@ -71,6 +74,59 @@ public abstract class Path {
 		generateMotionProfiles();
 	}
 	
+	/**
+	 * Finds the closes {@link PathSegment} to the {@link Position} <code>referencePosition</code> that is
+	 * <code>distanceShift</code> away from it. It will either round to the next segment up or down, or just the
+	 * closest segment based on the {@link RoundMode}.
+	 *
+	 * @param referencePosition the {@link Position} to find the closest {@link PathSegment} to.
+	 * @param distanceShift     the distance away from the <code>referencePosition</code> to find the closest
+	 *                          {@link PathSegment} to.
+	 * @param roundMode         determines whether to round up, down, or to the closest.
+	 * @return the {@link PathSegment} that is closest to the <code>referenceTransform</code> and satisfies the other
+	 * parameters.
+	 */
+	public PathSegment findClosestSegment(Position referencePosition, double distanceShift, RoundMode roundMode) {
+		double currentClosest = Double.NaN;
+		PathSegment segment = null;
+		for (int i = 0; i < segments.size(); i++) {
+			double distance = segments.get(i).getStartPoint().distance(referencePosition);
+			double shiftedDistance = distance - distanceShift;
+			if (roundMode == RoundMode.ROUND_UP) {
+				if (shiftedDistance > 0) {
+					if (Double.isNaN(currentClosest) || Math.abs(currentClosest) > shiftedDistance) {
+						currentClosest = shiftedDistance;
+						segment = segments.get(i);
+					}
+				}
+			} else if (roundMode == RoundMode.ROUND_DOWN) {
+				if (shiftedDistance < 0) {
+					if (Double.isNaN(currentClosest) || Math.abs(currentClosest) > shiftedDistance) {
+						currentClosest = shiftedDistance;
+						segment = segments.get(i);
+					}
+				}
+			} else {
+				if (Double.isNaN(currentClosest) || Math.abs(currentClosest) > shiftedDistance) {
+					currentClosest = shiftedDistance;
+					segment = segments.get(i);
+				}
+			}
+		}
+		if(segment == null){
+			if(roundMode == RoundMode.ROUND_UP){
+				segment = segments.get(segments.size()-1);
+			}
+			else if(roundMode == RoundMode.ROUND_DOWN){
+				segment = segments.get(0);
+			}
+			else{
+				segment = segments.get(0);
+			}
+		}
+		return segment;
+	}
+	
 	public abstract void generatePathSegments();
 	
 	/**
@@ -121,19 +177,19 @@ public abstract class Path {
 	public void initMotionStates() {
 		//Find the position of each segment
 		for (int i = 0; i < segments.size(); i++) {
-
+			
 			//If this is the first segment
 			if (i == 0) {
 				//Set the start motion state position to 0
-				segments.get(i).setStartMotionState(new MotionState(0,0));
+				segments.get(i).setStartMotionState(new MotionState(0, 0));
 				//Set the end motion state position to the distance of the segment (total distance traveled by the end of the segment)
-				segments.get(i).setEndMotionState(new MotionState(segments.get(i).getSegmentDistance(),0));
+				segments.get(i).setEndMotionState(new MotionState(segments.get(i).getSegmentDistance(), 0));
 				;
 			} else {
 				//Set the start motion state position to the position of the previous ending motion state position
-				segments.get(i).setStartMotionState(new MotionState(segments.get(i-1).getEndMotionState().getPosition(),0));
+				segments.get(i).setStartMotionState(new MotionState(segments.get(i - 1).getEndMotionState().getPosition(), 0));
 				//Set the end motion state position to the distance of the segment (total distance traveled by the end of the segment)
-				segments.get(i).setEndMotionState(new MotionState(segments.get(i-1).getSegmentDistance() + segments.get(i).getStartMotionState().getPosition(),0));
+				segments.get(i).setEndMotionState(new MotionState(segments.get(i - 1).getSegmentDistance() + segments.get(i).getStartMotionState().getPosition(), 0));
 				
 			}
 		}
@@ -144,47 +200,58 @@ public abstract class Path {
 	 * acceleration and deceleration from the {@link VelocityConstraints}.
 	 * <p>
 	 * These adjusted {@link MotionState}s will then work with a {@link TrapezoidalMotionProfile} to generate the
-	 * velocity motion profile for eaCH path segment.
+	 * velocity motion profile for each path segment.
 	 */
 	public void generateAdjustedMotionStates() {
 		PathSegment previousSegment = null;
+		//D0 a forward pass through the segments to regulate acceleration
 		for (int i = 0; i < segments.size(); i++) {
 			double startVelocity;
 			double endVelocity;
-			if(previousSegment == null){
-				startVelocity = 0;
-				endVelocity = Math.sqrt(2*velocityConstraints.getMaxAcceleration()*segments.get(i).getSegmentDistance());
-			}
-			else{
+			//If this is the first segment
+			if (previousSegment == null) {
+				//Set start velocity to the path's starting velocity
+				startVelocity = getStartMotionState().getVelocity();
+			} else {
+				//Set start velocity to the end velocity of the previous segment
 				startVelocity = previousSegment.getEndMotionState().getVelocity();
-				endVelocity = Math.sqrt(startVelocity*startVelocity+2*velocityConstraints.getMaxAcceleration()*segments.get(i).getSegmentDistance());
 			}
 			
-			double cappedStartVelocity = Math.min(segments.get(i).getMaxVelocity(),startVelocity);
-			double cappedEndVelocity = Math.min(segments.get(i).getMaxVelocity(),endVelocity);
+			//Set the end velocity to the final velocity after accelerating for the distance of the segment
+			//using the formula vFinal = sqrt(vInitial^2 + 2*acceleration*distance)
+			endVelocity = Math.sqrt(startVelocity * startVelocity +
+					2 * velocityConstraints.getMaxAcceleration() * segments.get(i).getSegmentDistance());
 			
-			
+			//Cap the velocity to be below the max velocity of the segment
+			double cappedStartVelocity = Math.min(segments.get(i).getMaxVelocity(), startVelocity);
+			double cappedEndVelocity = Math.min(segments.get(i).getMaxVelocity(), endVelocity);
 			
 			segments.get(i).getStartMotionState().setVelocity(cappedStartVelocity);
 			segments.get(i).getEndMotionState().setVelocity(cappedEndVelocity);
 			previousSegment = segments.get(i);
 		}
 		previousSegment = null;
+		//Do a backward pass through the segments to regulate deceleration
 		for (int i = segments.size() - 1; i > 0; i--) {
 			double startVelocity;
 			double endVelocity;
-			if(previousSegment == null){
-				endVelocity = 0;
-				double fianlVelocity = Math.sqrt(2*velocityConstraints.getMaxDeceleration()*segments.get(i).getSegmentDistance());
-				startVelocity = fianlVelocity;
-			}
-			else{
+			//If this is the first segment
+			if (previousSegment == null) {
+				//Set end velocity to the path's starting velocity
+				endVelocity = getEndMotionState().getVelocity();
+			} else {
+				//Set end velocity to the start velocity of the previous segment
 				endVelocity = previousSegment.getStartMotionState().getVelocity();
-				double fianlVelocity = Math.sqrt(endVelocity*endVelocity+2*velocityConstraints.getMaxDeceleration()*segments.get(i).getSegmentDistance());
-				startVelocity =  fianlVelocity;
 			}
-			double cappedStartVelocity = Math.min(Math.min(segments.get(i).getMaxVelocity(),startVelocity),segments.get(i).getStartMotionState().getVelocity());
-			double cappedEndVelocity = Math.min(Math.min(segments.get(i).getMaxVelocity(),endVelocity),segments.get(i).getEndMotionState().getVelocity());
+			
+			//Set the start velocity to the final velocity after accelerating for the distance of the segment
+			//using the formula vFinal = sqrt(vInitial^2 + 2*acceleration*distance)
+			startVelocity = Math.sqrt(endVelocity * endVelocity + 2 * velocityConstraints.getMaxDeceleration() * segments.get(i).getSegmentDistance());
+			
+			//Cap the velocity to be below the max velocity of the segment and get the lowest value between this
+			//velocity and the current velocity as generated from the forward pass.
+			double cappedStartVelocity = Math.min(Math.min(segments.get(i).getMaxVelocity(), startVelocity), segments.get(i).getStartMotionState().getVelocity());
+			double cappedEndVelocity = Math.min(Math.min(segments.get(i).getMaxVelocity(), endVelocity), segments.get(i).getEndMotionState().getVelocity());
 			
 			segments.get(i).getStartMotionState().setVelocity(cappedStartVelocity);
 			segments.get(i).getEndMotionState().setVelocity(cappedEndVelocity);
@@ -198,12 +265,12 @@ public abstract class Path {
 	 * {@link MotionState}s should have been adjusted to follow the {@link VelocityConstraints} of this path, the
 	 * {@link TrapezoidalMotionProfile} is calculated by passing in the two motion states.
 	 */
-	public void generateMotionProfiles(){
-		for(int i = 0; i < segments.size(); i++){
+	public void generateMotionProfiles() {
+		for (int i = 0; i < segments.size(); i++) {
 			//Generate the motion profile given the segment's start motion state, end motion state, and the path's velocity constraints
 			TrapezoidalMotionProfile motionProfile = new TrapezoidalMotionProfile(segments.get(i).getStartMotionState(),
 					segments.get(i).getEndMotionState(),
-					new VelocityConstraints(velocityConstraints.getMaxAcceleration(),velocityConstraints.getMaxDeceleration(),segments.get(i).getMaxVelocity()));
+					new VelocityConstraints(velocityConstraints.getMaxAcceleration(), velocityConstraints.getMaxDeceleration(), segments.get(i).getMaxVelocity()));
 			segments.get(i).setVelocityMotionProfile(motionProfile);
 		}
 	}
