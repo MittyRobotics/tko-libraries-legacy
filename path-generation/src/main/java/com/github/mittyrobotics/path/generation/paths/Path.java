@@ -160,9 +160,10 @@ public abstract class Path {
 				endVelocity = Math.sqrt(startVelocity*startVelocity+2*velocityConstraints.getMaxAcceleration()*segments.get(i).getSegmentDistance());
 			}
 			
-			
 			double cappedStartVelocity = Math.min(segments.get(i).getMaxVelocity(),startVelocity);
 			double cappedEndVelocity = Math.min(segments.get(i).getMaxVelocity(),endVelocity);
+			
+			
 			
 			segments.get(i).getStartMotionState().setVelocity(cappedStartVelocity);
 			segments.get(i).getEndMotionState().setVelocity(cappedEndVelocity);
@@ -202,7 +203,7 @@ public abstract class Path {
 			//Generate the motion profile given the segment's start motion state, end motion state, and the path's velocity constraints
 			TrapezoidalMotionProfile motionProfile = new TrapezoidalMotionProfile(segments.get(i).getStartMotionState(),
 					segments.get(i).getEndMotionState(),
-					velocityConstraints);
+					new VelocityConstraints(velocityConstraints.getMaxAcceleration(),velocityConstraints.getMaxDeceleration(),segments.get(i).getMaxVelocity()));
 			segments.get(i).setVelocityMotionProfile(motionProfile);
 		}
 	}

@@ -20,7 +20,7 @@ public class Main {
 				new Transform(100, 100, 0)
 		};
 		
-		CubicHermitePath path = new CubicHermitePath(waypoints, new MotionState(0), new MotionState(0), new VelocityConstraints(5, 5, 20), 20,.3,10);
+		CubicHermitePath path = new CubicHermitePath(waypoints, new MotionState(0), new MotionState(0), new VelocityConstraints(5, 5, 20), 20,.2,10);
 		
 		Graph graph = new Graph("graph", "y", "x");
 		
@@ -39,7 +39,7 @@ public class Main {
 			}
 			XYSeries series = new XYSeries("Motion Profile" + i);
 			TrapezoidalMotionProfile motionProfile = path.getSegments().get(i).getVelocityMotionProfile();
-			System.out.println(motionProfile.getStartMotionState() + " " + motionProfile.getEndMotionState() + " " + path.getSegments().get(i).getSegmentDistance());
+			System.out.println(motionProfile.getStartMotionState() + " " + motionProfile.getEndMotionState() + " " + path.getSegments().get(i).getSegmentDistance() + " " + path.getSegments().get(i).getMaxVelocity());
 			
 			for (double a = 0; a < motionProfile.getTotalTime(); a += 0.01) {
 				//System.out.println(a+prevA + " " + motionProfile.getFrameAtTime(a).getPosition() + " " + motionProfile.getFrameAtTime(a).getVelocity());
