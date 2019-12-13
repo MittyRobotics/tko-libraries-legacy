@@ -1,17 +1,18 @@
 package com.github.mittyrobotics.path.generation.paths;
 
 import com.github.mittyrobotics.datatypes.geometry.ArcSegment;
+import com.github.mittyrobotics.datatypes.geometry.LineSegment;
 import com.github.mittyrobotics.datatypes.motion.MotionState;
 import com.github.mittyrobotics.datatypes.motion.VelocityConstraints;
 import com.github.mittyrobotics.datatypes.positioning.Position;
+import com.github.mittyrobotics.datatypes.positioning.Rotation;
 import com.github.mittyrobotics.datatypes.positioning.Transform;
 import com.github.mittyrobotics.motionprofile.TrapezoidalMotionProfile;
 import com.github.mittyrobotics.path.generation.datatypes.ArcPathSegment;
+import com.github.mittyrobotics.path.generation.datatypes.LinePathSegment;
 import com.github.mittyrobotics.path.generation.datatypes.PathSegment;
 import com.github.mittyrobotics.path.generation.enums.PathSegmentType;
-import com.github.mittyrobotics.path.generation.enums.RoundMode;
 
-import java.math.RoundingMode;
 import java.util.ArrayList;
 
 public abstract class Path {
@@ -75,56 +76,66 @@ public abstract class Path {
 	}
 	
 	/**
-	 * Finds the closes {@link PathSegment} to the {@link Position} <code>referencePosition</code> that is
-	 * <code>distanceShift</code> away from it. It will either round to the next segment up or down, or just the
-	 * closest segment based on the {@link RoundMode}.
+	 * Finds the closest {@link PathSegment} to the {@link Position} <code>referencePosition</code> that is
+	 * <code>distanceShift</code> away from it.
 	 *
 	 * @param referencePosition the {@link Position} to find the closest {@link PathSegment} to.
 	 * @param distanceShift     the distance away from the <code>referencePosition</code> to find the closest
 	 *                          {@link PathSegment} to.
-	 * @param roundMode         determines whether to round up, down, or to the closest.
 	 * @return the {@link PathSegment} that is closest to the <code>referenceTransform</code> and satisfies the other
 	 * parameters.
 	 */
-	public PathSegment findClosestSegment(Position referencePosition, double distanceShift, RoundMode roundMode) {
+	public PathSegment getClosestSegment(Position referencePosition, double distanceShift) {
 		double currentClosest = Double.NaN;
 		PathSegment segment = null;
+		PathSegment segmentFront = null;
+		PathSegment segmentBack = null;
 		for (int i = 0; i < segments.size(); i++) {
 			double distance = segments.get(i).getStartPoint().distance(referencePosition);
 			double shiftedDistance = distance - distanceShift;
-			if (roundMode == RoundMode.ROUND_UP) {
-				if (shiftedDistance > 0) {
-					if (Double.isNaN(currentClosest) || Math.abs(currentClosest) > shiftedDistance) {
-						currentClosest = shiftedDistance;
-						segment = segments.get(i);
-					}
-				}
-			} else if (roundMode == RoundMode.ROUND_DOWN) {
-				if (shiftedDistance < 0) {
-					if (Double.isNaN(currentClosest) || Math.abs(currentClosest) > shiftedDistance) {
-						currentClosest = shiftedDistance;
-						segment = segments.get(i);
-					}
-				}
-			} else {
-				if (Double.isNaN(currentClosest) || Math.abs(currentClosest) > shiftedDistance) {
-					currentClosest = shiftedDistance;
+			Transform origin = new Transform(segments.get(i).getStartPoint(),segments.get(i).getStartPoint().angleTo(segments.get(i).getEndPoint()));
+			Transform relative = new Transform(referencePosition).relativeTo(origin);
+			if (relative.getPosition().getX() <= 0) {
+				if (Double.isNaN(currentClosest) || currentClosest > Math.abs(shiftedDistance)) {
+					currentClosest = Math.abs(shiftedDistance);
 					segment = segments.get(i);
+					segmentFront = segments.get(Math.min(segments.size() - 1, i + 1));
+					segmentBack = segments.get(Math.max(0, i - 1));
 				}
 			}
 		}
+		
 		if(segment == null){
-			if(roundMode == RoundMode.ROUND_UP){
-				segment = segments.get(segments.size()-1);
-			}
-			else if(roundMode == RoundMode.ROUND_DOWN){
-				segment = segments.get(0);
+			double distanceToStartPoint = referencePosition.distance(segments.get(0).getStartPoint());
+			double distanceToEndPoint = referencePosition.distance(segments.get(segments.size()-1).getEndPoint());
+			
+			if(distanceToStartPoint < distanceToEndPoint){
+				double distance = distanceToStartPoint + distanceShift + 10;
+				Rotation rot = waypoints[0].getRotation().add(new Rotation(180));
+				PathSegment newSegment = new LinePathSegment(new LineSegment(segments.get(0).getStartPoint(),segments.get(0).getStartPoint().add(new Position(rot.cos()*distance,rot.sin()*distance))));
+				return newSegment;
 			}
 			else{
-				segment = segments.get(0);
+				double distance = distanceToEndPoint + distanceShift + 10;
+				Rotation rot = waypoints[waypoints.length-1].getRotation();
+				System.out.println(referencePosition + " d" );
+				PathSegment newSegment = new LinePathSegment(new LineSegment(segments.get(segments.size()-1).getEndPoint(),segments.get(segments.size()-1).getEndPoint().add(new Position(rot.cos()*distance,rot.sin()*distance))));
+				return newSegment;
 			}
 		}
-		return segment;
+		else if(segmentFront.getClosestPointOnSegment(referencePosition,distanceShift) != null){
+			return segment;
+		}
+		else if(segmentFront.getClosestPointOnSegment(referencePosition,distanceShift) != null){
+			return segmentFront;
+		}
+		else if(segmentFront.getClosestPointOnSegment(referencePosition,distanceShift) != null){
+			return segmentBack;
+		}
+		else{
+			return segment;
+		}
+		
 	}
 	
 	public abstract void generatePathSegments();

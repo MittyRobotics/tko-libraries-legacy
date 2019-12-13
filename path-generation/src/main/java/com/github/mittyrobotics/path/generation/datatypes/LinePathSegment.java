@@ -28,4 +28,9 @@ public class LinePathSegment extends PathSegment {
 	public Position getClosestPointOnSegment(Position referencePosition, double distanceShift) {
 		return lineSegment.getClosestPoint(referencePosition, distanceShift);
 	}
+	
+	@Override
+	public boolean isOnSegment(Position position) {
+		return lineSegment.isOnSegment(position);
+	}
 }

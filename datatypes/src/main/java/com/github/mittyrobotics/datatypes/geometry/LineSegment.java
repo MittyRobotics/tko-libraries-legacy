@@ -53,7 +53,13 @@ public class LineSegment extends Line {
 		
 		//If no points intersect the the line and the circle, return the closest point to the reference point.
 		if(positions.length == 0){
-			return getClosestPoint(referencePosition);
+			Position pos = getClosestPoint(referencePosition);
+			if(isOnSegment(pos)){
+				return pos;
+			}
+			else{
+				return null;
+			}
 		}
 		
 		double pointsOnSegment = 0;

@@ -196,6 +196,7 @@ public class Circle {
 				currentClosestPosition = positions[i];
 			}
 		}
+
 		return currentClosestPosition;
 	}
 	
@@ -257,7 +258,7 @@ public class Circle {
 	 * @return whether or not <code>point</code> is on the circle.
 	 */
 	public boolean isOnCircle(Position point) {
-		return isOnCircle(point, 0.001);
+		return isOnCircle(point, 0.01);
 	}
 	
 	/**

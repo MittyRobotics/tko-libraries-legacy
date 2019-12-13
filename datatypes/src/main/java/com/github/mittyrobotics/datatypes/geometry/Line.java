@@ -71,16 +71,22 @@ public class Line {
 	 * @return the closest {@link Position} to the <code>referencePosition</code>.
 	 */
 	public Position getClosestPoint(Position referencePosition){
-		double f = referencePosition.getX();
-		double g = referencePosition.getY();
 		double m = getSlope();
 		
 		//Get parallel slope
 		double m1 = -1/m;
 		
-		//Create parallel line from position and another position along parallel line
-		Line parallelLine = new Line(referencePosition,new Position(1,m1).add(referencePosition));
+
 		
+		//Create parallel line from position and another position along parallel line
+		Line parallelLine;
+		if(Double.isInfinite(m1)){
+			parallelLine = new Line(referencePosition,new Position(1,referencePosition.getY()).add(referencePosition));
+		}
+		else{
+
+			parallelLine = new Line(referencePosition,new Position(1,m1).add(referencePosition));
+		}
 		//Return the intersection between the two lines
 		return getIntersection(parallelLine);
 	}

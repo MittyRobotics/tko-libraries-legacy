@@ -28,4 +28,9 @@ public class ArcPathSegment extends PathSegment {
 	public Position getClosestPointOnSegment(Position referencePosition, double distanceShift) {
 		return arcSegment.getClosestPoint(referencePosition, distanceShift);
 	}
+	
+	@Override
+	public boolean isOnSegment(Position position) {
+		return arcSegment.isOnSegment(position);
+	}
 }

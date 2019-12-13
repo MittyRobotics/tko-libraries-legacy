@@ -76,8 +76,6 @@ public class TrapezoidalMotionProfile {
         //motion profile gets to with the non-zero values and adjust the setpoint so it reaches the actual position
         //that it wants to get to.
         
-
-        
         //Initial motion profile calculation with setpoint
         calculateMotionProfile(currentSetpoint);
 
@@ -85,8 +83,6 @@ public class TrapezoidalMotionProfile {
         double finalPosition = getPositionAtTime(tTotal);
 
         double setpointDifference = endMotionState.getPosition() - finalPosition;
-    
-        System.out.println(currentSetpoint + " " + finalPosition + " " + setpointDifference + " " + endPosition);
         
         //Recalculate the motion profile with the adjusted setpoint
        // calculateMotionProfile(endMotionState.getPosition() + setpointDifference);

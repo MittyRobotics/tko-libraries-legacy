@@ -58,6 +58,14 @@ public abstract class PathSegment {
 	}
 	
 	/**
+	 * Returns whether or not the {@link Position} is on the segment.
+	 *
+	 * @param position the {@link Position} to check
+	 * @return whether or not the {@link Position} is on the segment.
+	 */
+	public abstract boolean isOnSegment(Position position);
+	
+	/**
 	 * Returns the {@link TrapezoidalMotionProfile} that controls the velocity of the robot during the path segment.
 	 *
 	 * @return the {@link TrapezoidalMotionProfile} of the path segment.

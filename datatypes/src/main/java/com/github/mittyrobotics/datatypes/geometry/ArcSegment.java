@@ -54,11 +54,14 @@ public class ArcSegment extends Circle {
 	 */
 	public Position getClosestPoint(Position referencePosition, double distanceShift) {
 		//Get points that intersect the circle
-		Position[] positions = new Circle(referencePosition,distanceShift).circleCircleIntersection(this);
+		Position[] positions = circleCircleIntersection(new Circle(referencePosition,distanceShift));
 		
+		
+
 		//If no points intersect the two circles, return the closest point to the reference point.
 		if(positions.length == 0){
-			return getClosestPoint(referencePosition);
+			Position pos = getClosestPoint(referencePosition);
+			return pos;
 		}
 		
 		double pointsOnSegment = 0;
