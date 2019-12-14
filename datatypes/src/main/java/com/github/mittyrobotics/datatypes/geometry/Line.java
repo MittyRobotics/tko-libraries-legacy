@@ -2,6 +2,8 @@ package com.github.mittyrobotics.datatypes.geometry;
 
 import com.github.mittyrobotics.datatypes.positioning.Position;
 
+import java.util.Optional;
+
 /**
  * Represents a 2d line on a standard cartesian coordinate plane going infinitely in both directions.
  */
@@ -47,7 +49,7 @@ public class Line {
 	 *
 	 * @return the intersection {@link Position} between the two {@link Line}s.
 	 */
-	public Position getIntersection(Line other){
+	public Optional<Position> getIntersection(Line other){
 		double m1 = getSlope();
 		double m2 = other.getSlope();
 		double b1 = getYIntercept();
@@ -55,13 +57,13 @@ public class Line {
 		
 		//If the lines are parallel, return null
 		if(m1 == m2){
-			return null;
+			return Optional.empty();
 		}
 		
 		double x = (b2-b1)/(m1-m2);
 		double y = m1*x+b1;
 		
-		return new Position(x,y);
+		return Optional.of(new Position(x,y));
 	}
 	
 	/**
@@ -89,7 +91,7 @@ public class Line {
 		}
 		
 		//Return the intersection between the two lines
-		return getIntersection(parallelLine);
+		return getIntersection(parallelLine).get();
 	}
 	
 	/**

@@ -4,6 +4,8 @@ import com.github.mittyrobotics.datatypes.positioning.Position;
 import com.github.mittyrobotics.datatypes.positioning.Rotation;
 import com.github.mittyrobotics.datatypes.positioning.Transform;
 
+import java.util.Optional;
+
 /**
  * Represents a 2d circle on a standard cartesian coordinate plane.
  */

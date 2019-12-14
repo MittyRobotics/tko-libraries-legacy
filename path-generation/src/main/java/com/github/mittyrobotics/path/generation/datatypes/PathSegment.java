@@ -8,6 +8,8 @@ import com.github.mittyrobotics.motionprofile.TrapezoidalMotionProfile;
 import com.github.mittyrobotics.datatypes.motion.MotionState;
 import com.github.mittyrobotics.path.generation.enums.PathSegmentType;
 
+import java.util.Optional;
+
 public abstract class PathSegment {
 	private Position startPoint;
 	private Position endPoint;
@@ -35,19 +37,22 @@ public abstract class PathSegment {
 	 * @param referencePosition the {@link Position} to find the closest point to.
 	 * @return the {@link Position} closest to the <code>referencePosition</code>.
 	 */
-	public abstract Position getClosestPointOnSegment(Position referencePosition);
+	public abstract Optional<Position> getClosestPointOnSegment(Position referencePosition);
 	
 	/**
 	 * Interpolates the closest {@link Position} that is <code>distanceShift</code> away from the
 	 * <code>referencePosition</code> on the path segment.
-	 *
-	 * Please ensure that the parameters will actually find a valid intersection point on the {@link PathSegment}.
+	 * <p>
+	 * It will round to either the closest point in front of the
+	 * <code>referencePoint</code>, behind the <code>referencePoint</code>, or the closest to the
+	 * <code>referencePoint</code> depending on the {@link RoundMode}.
 	 *
 	 * @param referencePosition the {@link Position} to find the closest point to.
-	 * @param distanceShift the distance away from the <code>referencePosition</code> to find the closest point to.
+	 * @param distanceShift     the distance away from the <code>referencePosition</code> to find the closest point to.
+	 * @param roundMode         the {@link RoundMode}
 	 * @return the {@link Position} closest to the <code>referencePosition</code>.
 	 */
-	public abstract Position getClosestPointOnSegment(Position referencePosition, double distanceShift, RoundMode roundMode);
+	public abstract Optional<Position> getClosestPointOnSegment(Position referencePosition, double distanceShift, RoundMode roundMode);
 	
 	/**
 	 * Returns the {@link PathSegmentType} of the path segment

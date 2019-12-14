@@ -43,11 +43,12 @@ public class Main {
 			}
 		}
 		
-		Position pos = new Position(25, 74);
+		Position pos = new Position(-250, 0);
 		PathSegment closestSegment = path.getClosestSegment(pos, 0);
-		PathSegment lookaheadSegment = path.getClosestSegment(closestSegment.getClosestPointOnSegment(pos), 20);
-		graph.addDataset(GraphManager.getInstance().graphArrow(new Transform(closestSegment.getClosestPointOnSegment(pos)), 5, 2, "asdf", Color.green));
-		graph.addDataset(GraphManager.getInstance().graphArrow(new Transform(lookaheadSegment.getClosestPointOnSegment(closestSegment.getClosestPointOnSegment(pos), 20, RoundMode.ROUND_UP)), 5, 2, "asdf", Color.white));
+		Position closestPosition = closestSegment.getClosestPointOnSegment(pos).get();
+		PathSegment lookaheadSegment = path.getClosestSegment(closestPosition, 20);
+		graph.addDataset(GraphManager.getInstance().graphArrow(new Transform(closestPosition), 5, 2, "asdf", Color.green));
+		graph.addDataset(GraphManager.getInstance().graphArrow(new Transform(lookaheadSegment.getClosestPointOnSegment(closestPosition, 20, RoundMode.ROUND_UP).get()), 5, 2, "asdf", Color.white));
 		
 	}
 }

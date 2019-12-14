@@ -5,6 +5,8 @@ import com.github.mittyrobotics.datatypes.geometry.LineSegment;
 import com.github.mittyrobotics.datatypes.positioning.Position;
 import com.github.mittyrobotics.path.generation.enums.PathSegmentType;
 
+import java.util.Optional;
+
 public class LinePathSegment extends PathSegment {
 	private LineSegment lineSegment;
 	
@@ -20,12 +22,12 @@ public class LinePathSegment extends PathSegment {
 	}
 	
 	@Override
-	public Position getClosestPointOnSegment(Position referencePosition) {
+	public Optional<Position> getClosestPointOnSegment(Position referencePosition) {
 		return lineSegment.getClosestPointOnSegment(referencePosition, 0, RoundMode.ROUND_CLOSEST);
 	}
 	
 	@Override
-	public Position getClosestPointOnSegment(Position referencePosition, double distanceShift, RoundMode roundMode) {
+	public Optional<Position> getClosestPointOnSegment(Position referencePosition, double distanceShift, RoundMode roundMode) {
 		return lineSegment.getClosestPointOnSegment(referencePosition, distanceShift, roundMode);
 	}
 	
