@@ -35,7 +35,6 @@ public class Main {
 		double b = path.getSegments().size();
 		for (int i = 0; i < b; i++) {
 			Color color = Color.cyan;
-			
 			if (path.getSegments().get(i).getPathSegmentType() == PathSegmentType.ARC) {
 				graph.addDataset(GraphManager.getInstance().graphArc(path.getSegments().get(i).getArcSegment(), "arc" + i, color));
 			} else if (path.getSegments().get(i).getPathSegmentType() == PathSegmentType.LINE) {

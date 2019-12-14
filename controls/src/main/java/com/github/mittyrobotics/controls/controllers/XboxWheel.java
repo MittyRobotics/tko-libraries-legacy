@@ -1,4 +1,4 @@
-package com.github.mittyrobotics.libs.controls.controllers;
+package com.github.mittyrobotics.controls.controllers;
 
 import edu.wpi.first.wpilibj.GenericHID;
 
