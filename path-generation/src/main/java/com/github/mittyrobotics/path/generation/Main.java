@@ -23,7 +23,7 @@ public class Main {
 				new Transform(100, 100, 0)
 		};
 		
-		CubicHermitePath path = new CubicHermitePath(waypoints, new MotionState(0), new MotionState(0), new VelocityConstraints(5, 5, 20), 20,.2,10);
+		CubicHermitePath path = new CubicHermitePath(waypoints, new MotionState(0), new MotionState(0), new VelocityConstraints(5, 5, 20), 20, .2, 10);
 		
 		Graph graph = new Graph("graph", "y", "x");
 		
@@ -31,45 +31,23 @@ public class Main {
 		graph.getChart().removeLegend();
 		graph.setVisible(true);
 		//graph.resizeGraph(-20,100,-20,100);
-		double prevA = 0;
-		double b = path.getSegments().size();
 		
-
+		double b = path.getSegments().size();
 		for (int i = 0; i < b; i++) {
 			Color color = Color.cyan;
 			
 			if (path.getSegments().get(i).getPathSegmentType() == PathSegmentType.ARC) {
 				graph.addDataset(GraphManager.getInstance().graphArc(path.getSegments().get(i).getArcSegment(), "arc" + i, color));
 			} else if (path.getSegments().get(i).getPathSegmentType() == PathSegmentType.LINE) {
-				graph.addDataset(GraphManager.getInstance().graphArrow(new Transform(path.getSegments().get(i).getStartPoint(), path.getSegments().get(i).getStartPoint().angleTo(path.getSegments().get(i).getEndPoint())), path.getSegments().get(i).getLineSegment().getFirstPoint().distance(path.getSegments().get(i).getLineSegment().getSecondPoint()), 0, "arc" + i,color));
+				graph.addDataset(GraphManager.getInstance().graphArrow(new Transform(path.getSegments().get(i).getStartPoint(), path.getSegments().get(i).getStartPoint().angleTo(path.getSegments().get(i).getEndPoint())), path.getSegments().get(i).getLineSegment().getFirstPoint().distance(path.getSegments().get(i).getLineSegment().getSecondPoint()), 0, "arc" + i, color));
 			}
-			XYSeries series = new XYSeries("Motion Profile" + i);
-			TrapezoidalMotionProfile motionProfile = path.getSegments().get(i).getVelocityMotionProfile();
-			
-			
-			prevA += motionProfile.getTotalTime();
-			
-			XYSeriesCollectionWithRender dataset = new XYSeriesCollectionWithRender(true, false, Color.cyan, null);
-			dataset.addSeries(series);
-			graph.addDataset(dataset);
 		}
 		
-		Position pos = new Position(25,74);
-		PathSegment closestSegment = path.getClosestSegment(pos,0);
-		PathSegment lookaheadSegment = path.getClosestSegment(closestSegment.getClosestPointOnSegment(pos),20);
-		graph.addDataset(GraphManager.getInstance().graphArrow(new Transform(closestSegment.getClosestPointOnSegment(pos)),5,2,"asdf",Color.green));
-		graph.addDataset(GraphManager.getInstance().graphArrow(new Transform(lookaheadSegment.getClosestPointOnSegment(closestSegment.getClosestPointOnSegment(pos),20, RoundMode.ROUND_UP)),5,2,"asdf",Color.white));
+		Position pos = new Position(25, 74);
+		PathSegment closestSegment = path.getClosestSegment(pos, 0);
+		PathSegment lookaheadSegment = path.getClosestSegment(closestSegment.getClosestPointOnSegment(pos), 20);
+		graph.addDataset(GraphManager.getInstance().graphArrow(new Transform(closestSegment.getClosestPointOnSegment(pos)), 5, 2, "asdf", Color.green));
+		graph.addDataset(GraphManager.getInstance().graphArrow(new Transform(lookaheadSegment.getClosestPointOnSegment(closestSegment.getClosestPointOnSegment(pos), 20, RoundMode.ROUND_UP)), 5, 2, "asdf", Color.white));
 		
-		if (closestSegment.getPathSegmentType() == PathSegmentType.ARC) {
-			graph.addDataset(GraphManager.getInstance().graphArc(closestSegment.getArcSegment(), "arcg" , Color.blue));
-		} else if (closestSegment.getPathSegmentType() == PathSegmentType.LINE) {
-			graph.addDataset(GraphManager.getInstance().graphArrow(new Transform(closestSegment.getStartPoint(), closestSegment.getStartPoint().angleTo(closestSegment.getEndPoint())), closestSegment.getLineSegment().getFirstPoint().distance(closestSegment.getLineSegment().getSecondPoint()), 0, "arcasdf" ,Color.blue));
-		}
-		
-		if (lookaheadSegment.getPathSegmentType() == PathSegmentType.ARC) {
-			graph.addDataset(GraphManager.getInstance().graphArc(lookaheadSegment.getArcSegment(), "ardcg" , Color.red));
-		} else if (lookaheadSegment.getPathSegmentType() == PathSegmentType.LINE) {
-			graph.addDataset(GraphManager.getInstance().graphArrow(new Transform(lookaheadSegment.getStartPoint(), lookaheadSegment.getStartPoint().angleTo(lookaheadSegment.getEndPoint())), lookaheadSegment.getLineSegment().getFirstPoint().distance(lookaheadSegment.getLineSegment().getSecondPoint()), 0, "arcadsdf" ,Color.red));
-		}
 	}
 }
