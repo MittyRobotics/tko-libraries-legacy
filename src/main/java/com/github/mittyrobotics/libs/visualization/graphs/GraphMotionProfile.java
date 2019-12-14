@@ -28,7 +28,7 @@ public class GraphMotionProfile {
 		double t = 0;
 		for(int i = 0; i < motion_profile.gettTotal()*100; i++){
 			t = (double)i / 100;
-			//System.out.println(t + " " + motion_profile.gettTotal());
+		
 			MotionFrame frame1 = motion_profile.getFrameAtTime(t);
 			position.add(t,frame1.getPosition());
 			velocity.add(t, frame1.getVelocity());

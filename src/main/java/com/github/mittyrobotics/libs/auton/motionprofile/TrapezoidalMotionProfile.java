@@ -230,9 +230,6 @@ public class TrapezoidalMotionProfile {
 			}
 		}
 		
-		
-		System.out.println(maxVelocity + " " + tAccel + " " + tCruise + " " + tDecel + " " + dAccel + " " + dCruise + " " + dDecel + " " + (dAccel + dCruise + dDecel));
-		
 		double d = maxVelocity;
 		double a = startVelocity;
 		double c = tAccel;

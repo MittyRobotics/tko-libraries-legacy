@@ -45,19 +45,13 @@ public class Main {
 			}
 			XYSeries series = new XYSeries("Motion Profile" + i);
 			TrapezoidalMotionProfile motionProfile = path.getSegments().get(i).getVelocityMotionProfile();
-			//System.out.println(motionProfile.getStartMotionState() + " " + motionProfile.getEndMotionState() + " " + path.getSegments().get(i).getSegmentDistance() + " " + path.getSegments().get(i).getMaxVelocity());
 			
-			for (double a = 0; a < motionProfile.getTotalTime(); a += 0.01) {
-				//System.out.println(a+prevA + " " + motionProfile.getFrameAtTime(a).getPosition() + " " + motionProfile.getFrameAtTime(a).getVelocity());
-				//series.add(prevA + a, motionProfile.getFrameAtTime(a).getVelocity());
-			}
 			
 			prevA += motionProfile.getTotalTime();
 			
 			XYSeriesCollectionWithRender dataset = new XYSeriesCollectionWithRender(true, false, Color.cyan, null);
 			dataset.addSeries(series);
 			graph.addDataset(dataset);
-			// Thread.sleep(2000);
 		}
 		
 		Position pos = new Position(25,74);
@@ -65,8 +59,6 @@ public class Main {
 		PathSegment lookaheadSegment = path.getClosestSegment(closestSegment.getClosestPointOnSegment(pos),20);
 		graph.addDataset(GraphManager.getInstance().graphArrow(new Transform(closestSegment.getClosestPointOnSegment(pos)),5,2,"asdf",Color.green));
 		graph.addDataset(GraphManager.getInstance().graphArrow(new Transform(lookaheadSegment.getClosestPointOnSegment(closestSegment.getClosestPointOnSegment(pos),20, RoundMode.ROUND_UP)),5,2,"asdf",Color.white));
-		
-		System.out.println(closestSegment.getStartPoint() + " " +  closestSegment.getPathSegmentType());
 		
 		if (closestSegment.getPathSegmentType() == PathSegmentType.ARC) {
 			graph.addDataset(GraphManager.getInstance().graphArc(closestSegment.getArcSegment(), "arcg" , Color.blue));

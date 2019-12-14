@@ -39,8 +39,6 @@ public class Line {
 			return new Position();
 		}
 		
-		System.out.println(m1 + " " + m2);
-		
 		double x = (b2-b1)/(m1-m2);
 		double y = m1*x+b1;
 		

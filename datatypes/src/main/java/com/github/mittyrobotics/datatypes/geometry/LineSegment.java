@@ -85,8 +85,6 @@ public class LineSegment extends Line {
 			return positions[latestPointIndex];
 		}
 		
-		System.out.println(positions[0] + " " + positions[1]);
-		
 		//If two points fall on the segment, return the point closest to the distance shift
 		double currentClosest = Double.NaN;
 		Position currentClosestPosition = null;

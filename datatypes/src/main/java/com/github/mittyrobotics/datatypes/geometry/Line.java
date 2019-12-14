@@ -88,8 +88,6 @@ public class Line {
 			parallelLine = new Line(referencePosition,new Position(1,m1).add(referencePosition));
 		}
 		
-		System.out.println(parallelLine.getSlope() + " " + m);
-		
 		//Return the intersection between the two lines
 		return getIntersection(parallelLine);
 	}

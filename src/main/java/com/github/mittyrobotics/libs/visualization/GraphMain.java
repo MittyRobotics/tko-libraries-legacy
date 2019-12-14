@@ -26,8 +26,6 @@ public class GraphMain {
 		datasets[0] = GraphManager.getInstance().graphArrow(transform.getPosition().getX(),transform.getPosition().getY(),4,1,transform.getRotation().getHeading(),"asdf", Color.white);
 		datasets[1] = GraphManager.getInstance().graphArrow(transform1.getPosition().getX(),transform1.getPosition().getY(),4,1,transform1.getRotation().getHeading(),"asdf", Color.red);
 		datasets[2] = GraphManager.getInstance().graphArrow(transform2.getPosition().getX(),transform2.getPosition().getY(),4,1,transform2.getRotation().getHeading(),"asdf", Color.blue);
-		
-		System.out.println(transform.relativeTo(transform2));
 
 		graph.setDatasets(datasets);
 		
