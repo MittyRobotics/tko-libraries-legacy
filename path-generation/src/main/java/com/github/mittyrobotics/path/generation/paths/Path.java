@@ -116,19 +116,18 @@ public abstract class Path {
 				return new LinePathSegment(new LineSegment(segments.get(segments.size()-1).getEndPoint(),segments.get(segments.size()-1).getEndPoint().add(new Position(rot.cos()*distance,rot.sin()*distance))));
 			}
 		}
-		else if(segmentFront.getClosestPointOnSegment(referencePosition,distanceShift, RoundMode.ROUND_CLOSEST) != null){
+		else if(segmentFront.getClosestPointOnSegment(referencePosition, distanceShift, RoundMode.ROUND_CLOSEST).isPresent()){
 			return segment;
 		}
-		else if(segmentFront.getClosestPointOnSegment(referencePosition,distanceShift, RoundMode.ROUND_CLOSEST) != null){
+		else if(segmentFront.getClosestPointOnSegment(referencePosition, distanceShift, RoundMode.ROUND_CLOSEST).isPresent()){
 			return segmentFront;
 		}
-		else if(segmentFront.getClosestPointOnSegment(referencePosition,distanceShift, RoundMode.ROUND_CLOSEST) != null){
+		else if(segmentFront.getClosestPointOnSegment(referencePosition, distanceShift, RoundMode.ROUND_CLOSEST).isPresent()){
 			return segmentBack;
 		}
 		else{
 			return segment;
 		}
-		
 	}
 	
 	public abstract void generatePathSegments();
