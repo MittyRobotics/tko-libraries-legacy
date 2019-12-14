@@ -1,6 +1,9 @@
 package com.github.mittyrobotics.datatypes.geometry;
 
+import com.github.mittyrobotics.datatypes.enums.RoundMode;
 import com.github.mittyrobotics.datatypes.positioning.Position;
+import com.github.mittyrobotics.datatypes.positioning.Rotation;
+import com.github.mittyrobotics.datatypes.positioning.Transform;
 
 /**
  * Represents a 2d line segment on a standard cartesian coordinate plane with two end points.
@@ -45,9 +48,10 @@ public class LineSegment extends Line {
 	 *
 	 * @param referencePosition the {@link Position} to find the closest point to.
 	 * @param distanceShift     the distance away from the <code>referencePosition</code> to find the closest point to.
+	 * @param roundMode
 	 * @return the closest {@link Position} to the <code>referencePosition</code> that is <code>distanceShift</code> away.
 	 */
-	public Position getClosestPoint(Position referencePosition, double distanceShift) {
+	public Position getClosestPointOnSegment(Position referencePosition, double distanceShift, RoundMode roundMode) {
 		//Get points that intersect the circle
 		Position[] positions = new Circle(referencePosition,distanceShift).circleLineIntersection(this);
 		
@@ -81,13 +85,31 @@ public class LineSegment extends Line {
 			return positions[latestPointIndex];
 		}
 		
+		System.out.println(positions[0] + " " + positions[1]);
+		
 		//If two points fall on the segment, return the point closest to the distance shift
 		double currentClosest = Double.NaN;
 		Position currentClosestPosition = null;
 		for (int i = 0; i < positions.length; i++) {
-			if (Double.isNaN(currentClosest) || Math.abs(positions[i].distance(referencePosition)-distanceShift) < currentClosest) {
-				currentClosest = positions[i].distance(referencePosition);
-				currentClosestPosition = positions[i];
+			if(roundMode == RoundMode.ROUND_DOWN){
+				Position relative = new Transform(positions[i]).relativeTo(new Transform(referencePosition,referencePosition.angleTo(endPoint))).getPosition();
+				if(relative.getX() < 0){
+					currentClosest = positions[i].distance(referencePosition);
+					currentClosestPosition = positions[i];
+				}
+			}
+			else if(roundMode == RoundMode.ROUND_UP){
+				Position relative = new Transform(positions[i]).relativeTo(new Transform(referencePosition,referencePosition.angleTo(endPoint))).getPosition();
+				if(relative.getX() > 0){
+					currentClosest = positions[i].distance(referencePosition);
+					currentClosestPosition = positions[i];
+				}
+			}
+			else {
+				if (Double.isNaN(currentClosest) || Math.abs(positions[i].distance(referencePosition)-distanceShift) < currentClosest) {
+					currentClosest = positions[i].distance(referencePosition);
+					currentClosestPosition = positions[i];
+				}
 			}
 		}
 		

@@ -34,6 +34,9 @@ public class Line {
 		this.firstPoint = firstPoint;
 		this.secondPoint = secondPoint;
 		this.slope = (firstPoint.getY()-secondPoint.getY())/(firstPoint.getX()-secondPoint.getX());
+		if(Double.isInfinite(this.slope)){
+			this.slope = 2e16;
+		}
 		this.yIntercept = firstPoint.getY()-(slope*firstPoint.getX());
 	}
 	
@@ -76,17 +79,17 @@ public class Line {
 		//Get parallel slope
 		double m1 = -1/m;
 		
-
-		
 		//Create parallel line from position and another position along parallel line
 		Line parallelLine;
 		if(Double.isInfinite(m1)){
-			parallelLine = new Line(referencePosition,new Position(1,referencePosition.getY()).add(referencePosition));
+			parallelLine = new Line(referencePosition,referencePosition.add(new Position(0,1)));
 		}
 		else{
-
 			parallelLine = new Line(referencePosition,new Position(1,m1).add(referencePosition));
 		}
+		
+		System.out.println(parallelLine.getSlope() + " " + m);
+		
 		//Return the intersection between the two lines
 		return getIntersection(parallelLine);
 	}

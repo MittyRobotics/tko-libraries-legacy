@@ -1,5 +1,6 @@
 package com.github.mittyrobotics.path.generation;
 
+import com.github.mittyrobotics.datatypes.enums.RoundMode;
 import com.github.mittyrobotics.datatypes.motion.MotionState;
 import com.github.mittyrobotics.datatypes.motion.VelocityConstraints;
 import com.github.mittyrobotics.datatypes.positioning.Position;
@@ -59,14 +60,13 @@ public class Main {
 			// Thread.sleep(2000);
 		}
 		
-		Position pos = new Position(-40,0);
+		Position pos = new Position(25,74);
 		PathSegment closestSegment = path.getClosestSegment(pos,0);
 		PathSegment lookaheadSegment = path.getClosestSegment(closestSegment.getClosestPointOnSegment(pos),20);
-		
-		System.out.println(lookaheadSegment.getClosestPointOnSegment(closestSegment.getClosestPointOnSegment(pos),20));
-		
 		graph.addDataset(GraphManager.getInstance().graphArrow(new Transform(closestSegment.getClosestPointOnSegment(pos)),5,2,"asdf",Color.green));
-		graph.addDataset(GraphManager.getInstance().graphArrow(new Transform(lookaheadSegment.getClosestPointOnSegment(closestSegment.getClosestPointOnSegment(pos),20)),5,2,"asdf",Color.white));
+		graph.addDataset(GraphManager.getInstance().graphArrow(new Transform(lookaheadSegment.getClosestPointOnSegment(closestSegment.getClosestPointOnSegment(pos),20, RoundMode.ROUND_UP)),5,2,"asdf",Color.white));
+		
+		System.out.println(closestSegment.getStartPoint() + " " +  closestSegment.getPathSegmentType());
 		
 		if (closestSegment.getPathSegmentType() == PathSegmentType.ARC) {
 			graph.addDataset(GraphManager.getInstance().graphArc(closestSegment.getArcSegment(), "arcg" , Color.blue));

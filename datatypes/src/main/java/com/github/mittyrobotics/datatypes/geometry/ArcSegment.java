@@ -1,6 +1,8 @@
 package com.github.mittyrobotics.datatypes.geometry;
 
+import com.github.mittyrobotics.datatypes.enums.RoundMode;
 import com.github.mittyrobotics.datatypes.positioning.Position;
+import com.github.mittyrobotics.datatypes.positioning.Transform;
 
 /**
  * Represents a 2d arc segment on a standard cartesian coordinate plane with two end points.
@@ -50,18 +52,23 @@ public class ArcSegment extends Circle {
 	 *
 	 * @param referencePosition the {@link Position} to find the closest point to.
 	 * @param distanceShift     the distance away from the <code>referencePosition</code> to find the closest point to.
+	 * @param roundMode
 	 * @return the closest {@link Position} to the <code>referencePosition</code> that is <code>distanceShift</code> away.
 	 */
-	public Position getClosestPoint(Position referencePosition, double distanceShift) {
+	public Position getClosestPointOnSegment(Position referencePosition, double distanceShift, RoundMode roundMode) {
 		//Get points that intersect the circle
 		Position[] positions = circleCircleIntersection(new Circle(referencePosition,distanceShift));
 		
-		
-
-		//If no points intersect the two circles, return the closest point to the reference point.
+		//If no points intersect the two circles, return either the start or end point of the segment.
 		if(positions.length == 0){
-			Position pos = getClosestPoint(referencePosition);
-			return pos;
+			double distanceToStartPoint = referencePosition.distance(startPoint);
+			double distanceToEndPoint = referencePosition.distance(endPoint);
+			if(distanceToStartPoint < distanceToEndPoint){
+				return startPoint;
+			}
+			else{
+				return endPoint;
+			}
 		}
 		
 		double pointsOnSegment = 0;
@@ -76,7 +83,14 @@ public class ArcSegment extends Circle {
 		
 		//If no points fall on the segment, return null.
 		if(pointsOnSegment == 0){
-			return null;
+			double distanceToStartPoint = referencePosition.distance(startPoint);
+			double distanceToEndPoint = referencePosition.distance(endPoint);
+			if(distanceToStartPoint < distanceToEndPoint){
+				return startPoint;
+			}
+			else{
+				return endPoint;
+			}
 		}
 		//If only one point falls on the segment, return that point.
 		else if(pointsOnSegment == 1){
@@ -87,9 +101,25 @@ public class ArcSegment extends Circle {
 		double currentClosest = Double.NaN;
 		Position currentClosestPosition = null;
 		for (int i = 0; i < positions.length; i++) {
-			if (Double.isNaN(currentClosest) || Math.abs(positions[i].distance(referencePosition)-distanceShift) < currentClosest) {
-				currentClosest = positions[i].distance(referencePosition);
-				currentClosestPosition = positions[i];
+			if(roundMode == RoundMode.ROUND_DOWN){
+				Position relative = new Transform(positions[i]).relativeTo(new Transform(referencePosition,referencePosition.angleTo(endPoint))).getPosition();
+				if(relative.getX() < 0){
+					currentClosest = positions[i].distance(referencePosition);
+					currentClosestPosition = positions[i];
+				}
+			}
+			else if(roundMode == RoundMode.ROUND_UP){
+				Position relative = new Transform(positions[i]).relativeTo(new Transform(referencePosition,referencePosition.angleTo(endPoint))).getPosition();
+				if(relative.getX() > 0){
+					currentClosest = positions[i].distance(referencePosition);
+					currentClosestPosition = positions[i];
+				}
+			}
+			else {
+				if (Double.isNaN(currentClosest) || Math.abs(positions[i].distance(referencePosition)-distanceShift) < currentClosest) {
+					currentClosest = positions[i].distance(referencePosition);
+					currentClosestPosition = positions[i];
+				}
 			}
 		}
 		

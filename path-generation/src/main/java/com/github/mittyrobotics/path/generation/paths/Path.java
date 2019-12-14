@@ -1,5 +1,6 @@
 package com.github.mittyrobotics.path.generation.paths;
 
+import com.github.mittyrobotics.datatypes.enums.RoundMode;
 import com.github.mittyrobotics.datatypes.geometry.ArcSegment;
 import com.github.mittyrobotics.datatypes.geometry.LineSegment;
 import com.github.mittyrobotics.datatypes.motion.MotionState;
@@ -106,30 +107,22 @@ public abstract class Path {
 		}
 		
 		if(segment == null){
-			double distanceToStartPoint = referencePosition.distance(segments.get(0).getStartPoint());
-			double distanceToEndPoint = referencePosition.distance(segments.get(segments.size()-1).getEndPoint());
-			
-			if(distanceToStartPoint < distanceToEndPoint){
-				double distance = distanceToStartPoint + distanceShift + 10;
-				Rotation rot = waypoints[0].getRotation().add(new Rotation(180));
-				PathSegment newSegment = new LinePathSegment(new LineSegment(segments.get(0).getStartPoint(),segments.get(0).getStartPoint().add(new Position(rot.cos()*distance,rot.sin()*distance))));
-				return newSegment;
+			if(distanceShift == 0){
+				return segments.get(segments.size()-1);
 			}
 			else{
-				double distance = distanceToEndPoint + distanceShift + 10;
+				double distance = distanceShift;
 				Rotation rot = waypoints[waypoints.length-1].getRotation();
-				System.out.println(referencePosition + " d" );
-				PathSegment newSegment = new LinePathSegment(new LineSegment(segments.get(segments.size()-1).getEndPoint(),segments.get(segments.size()-1).getEndPoint().add(new Position(rot.cos()*distance,rot.sin()*distance))));
-				return newSegment;
+				return new LinePathSegment(new LineSegment(segments.get(segments.size()-1).getEndPoint(),segments.get(segments.size()-1).getEndPoint().add(new Position(rot.cos()*distance,rot.sin()*distance))));
 			}
 		}
-		else if(segmentFront.getClosestPointOnSegment(referencePosition,distanceShift) != null){
+		else if(segmentFront.getClosestPointOnSegment(referencePosition,distanceShift, RoundMode.ROUND_CLOSEST) != null){
 			return segment;
 		}
-		else if(segmentFront.getClosestPointOnSegment(referencePosition,distanceShift) != null){
+		else if(segmentFront.getClosestPointOnSegment(referencePosition,distanceShift, RoundMode.ROUND_CLOSEST) != null){
 			return segmentFront;
 		}
-		else if(segmentFront.getClosestPointOnSegment(referencePosition,distanceShift) != null){
+		else if(segmentFront.getClosestPointOnSegment(referencePosition,distanceShift, RoundMode.ROUND_CLOSEST) != null){
 			return segmentBack;
 		}
 		else{

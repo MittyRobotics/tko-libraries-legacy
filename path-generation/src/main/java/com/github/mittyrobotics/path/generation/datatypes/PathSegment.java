@@ -1,5 +1,6 @@
 package com.github.mittyrobotics.path.generation.datatypes;
 
+import com.github.mittyrobotics.datatypes.enums.RoundMode;
 import com.github.mittyrobotics.datatypes.geometry.ArcSegment;
 import com.github.mittyrobotics.datatypes.geometry.LineSegment;
 import com.github.mittyrobotics.datatypes.positioning.Position;
@@ -46,7 +47,7 @@ public abstract class PathSegment {
 	 * @param distanceShift the distance away from the <code>referencePosition</code> to find the closest point to.
 	 * @return the {@link Position} closest to the <code>referencePosition</code>.
 	 */
-	public abstract Position getClosestPointOnSegment(Position referencePosition, double distanceShift);
+	public abstract Position getClosestPointOnSegment(Position referencePosition, double distanceShift, RoundMode roundMode);
 	
 	/**
 	 * Returns the {@link PathSegmentType} of the path segment

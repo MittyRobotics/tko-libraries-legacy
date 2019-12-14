@@ -1,5 +1,6 @@
 package com.github.mittyrobotics.path.generation.datatypes;
 
+import com.github.mittyrobotics.datatypes.enums.RoundMode;
 import com.github.mittyrobotics.datatypes.geometry.ArcSegment;
 import com.github.mittyrobotics.datatypes.positioning.Position;
 import com.github.mittyrobotics.path.generation.enums.PathSegmentType;
@@ -21,12 +22,12 @@ public class ArcPathSegment extends PathSegment {
 	
 	@Override
 	public Position getClosestPointOnSegment(Position referencePosition) {
-		return arcSegment.getClosestPoint(referencePosition);
+		return arcSegment.getClosestPointOnSegment(referencePosition, 0, RoundMode.ROUND_CLOSEST);
 	}
 	
 	@Override
-	public Position getClosestPointOnSegment(Position referencePosition, double distanceShift) {
-		return arcSegment.getClosestPoint(referencePosition, distanceShift);
+	public Position getClosestPointOnSegment(Position referencePosition, double distanceShift, RoundMode roundMode) {
+		return arcSegment.getClosestPointOnSegment(referencePosition, distanceShift, roundMode);
 	}
 	
 	@Override
