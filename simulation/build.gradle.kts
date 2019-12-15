@@ -14,6 +14,7 @@ repositories {
 
 dependencies {
     compile(project(":datatypes"))
+    compile(project(":visualization"))
 }
 
 

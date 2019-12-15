@@ -17,3 +17,11 @@ dependencies {
     compile(project(":datatypes"))
     compile(project(":motion-profiling"))
 }
+
+publishing {
+    publications {
+        create<MavenPublication>("maven") {
+            from(components["java"])
+        }
+    }
+}

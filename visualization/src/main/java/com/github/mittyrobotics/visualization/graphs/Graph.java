@@ -1,6 +1,7 @@
-package com.github.mittyrobotics.visualization;
+package com.github.mittyrobotics.visualization.graphs;
 
-import com.github.mittyrobotics.visualization.themes.DarkSeaGraphTheme;
+import com.github.mittyrobotics.visualization.util.XYLineShapeColorRenderer;
+import com.github.mittyrobotics.visualization.util.XYSeriesCollectionWithRender;
 import com.github.mittyrobotics.visualization.themes.GraphTheme;
 import com.github.mittyrobotics.visualization.themes.TKOTheme;
 import org.jfree.chart.ChartFactory;
@@ -10,7 +11,6 @@ import org.jfree.chart.axis.NumberAxis;
 import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.chart.plot.XYPlot;
 import org.jfree.data.xy.XYDataset;
-import org.jfree.data.xy.XYSeriesCollection;
 
 import javax.swing.*;
 import java.awt.*;
@@ -28,6 +28,10 @@ public class Graph extends JFrame {
 	private JFreeChart chart;
 	private XYPlot plot;
 	
+	public Graph(){
+		this("Graph", "X","Y");
+	}
+	
 	public Graph(String titleName, String yAxisName, String xAxisName) {
 		this.titleName = titleName;
 		this.yAxisName = yAxisName;
@@ -35,6 +39,7 @@ public class Graph extends JFrame {
 		
 		initUI();
 		setGraphTheme(new TKOTheme());
+		setVisible(true);
 	}
 	
 	private void initUI() {

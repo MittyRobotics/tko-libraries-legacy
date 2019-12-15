@@ -72,9 +72,11 @@ public class PathFollower {
 		TransformWithSegment closestTransformWithSegment = currentPath.getClosestTransformWithSegment(robotTransform,0,reversed);
 		PathSegment closestSegment = closestTransformWithSegment.getSegment();
 		Transform closestPosition = closestTransformWithSegment.getTransform();
+		
 		TransformWithSegment targetTransformWithSegment = currentPath.getClosestTransformWithSegment(robotTransform,purePursuitLookaheadDistance,reversed);
 		PathSegment targetSegment = targetTransformWithSegment.getSegment();
 		Transform targetPosition = targetTransformWithSegment.getTransform();
+		
 		TrapezoidalMotionProfile velocityMotionProfile = closestSegment.getVelocityMotionProfile();
 
 		double robotVelocity = velocityMotionProfile.getVelocityAtPosition(closestSegment.getDistanceAlongSegment(closestPosition.getPosition()));

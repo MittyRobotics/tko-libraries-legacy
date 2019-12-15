@@ -3,8 +3,8 @@ package com.github.mittyrobotics.motionprofile;
 import com.github.mittyrobotics.datatypes.motion.VelocityConstraints;
 import com.github.mittyrobotics.motionprofile.util.datatypes.MechanismBounds;
 import com.github.mittyrobotics.datatypes.motion.MotionState;
-import com.github.mittyrobotics.visualization.Graph;
-import com.github.mittyrobotics.visualization.XYSeriesCollectionWithRender;
+import com.github.mittyrobotics.visualization.graphs.Graph;
+import com.github.mittyrobotics.visualization.util.XYSeriesCollectionWithRender;
 import org.jfree.data.xy.XYSeries;
 
 import java.awt.*;

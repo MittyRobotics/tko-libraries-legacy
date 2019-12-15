@@ -8,8 +8,8 @@ import com.github.mittyrobotics.path.generation.datatypes.PathSegment;
 import com.github.mittyrobotics.path.generation.datatypes.TransformWithSegment;
 import com.github.mittyrobotics.path.generation.paths.CubicHermitePath;
 import com.github.mittyrobotics.path.generation.enums.PathSegmentType;
-import com.github.mittyrobotics.visualization.Graph;
-import com.github.mittyrobotics.visualization.GraphManager;
+import com.github.mittyrobotics.visualization.graphs.Graph;
+import com.github.mittyrobotics.visualization.util.GraphManager;
 
 import java.awt.*;
 

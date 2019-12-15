@@ -1,4 +1,4 @@
-package com.github.mittyrobotics.visualization;
+package com.github.mittyrobotics.visualization.util;
 
 import com.github.mittyrobotics.datatypes.geometry.ArcSegment;
 import com.github.mittyrobotics.datatypes.positioning.Position;
@@ -19,17 +19,16 @@ public class GraphManager {
     /**
      * Returns a dataset with a rectangle drawn on it at position (x,y) that is size width and height and rotated angle degrees
      *
-     * @param x          x position of the center of the rectangle
-     * @param y          y position of the center of the rectangle
+     * @param transform the {@link Transform} that defines the position and rotation of the rectangle
      * @param width      width of the rectangle
      * @param height     height of the rectangle
-     * @param angle      the angle of the rectangle in degrees
      * @param seriesName the name of the {@link XYSeries} containing the rectangle
      * @return an {@link XYSeriesCollection} dataset containing an {@link XYSeries} with the coordinates that make up the rectangle
      */
-    public XYSeriesCollectionWithRender graphRectangle(double x, double y, double width, double height, double angle, String seriesName) {
-        XYSeriesCollectionWithRender dataset = new XYSeriesCollectionWithRender(true, true, Color.white, new Rectangle(2, 2));
+    public XYSeriesCollectionWithRender graphRectangle(Transform transform, double width, double height, String seriesName, Color color) {
+        XYSeriesCollectionWithRender dataset = new XYSeriesCollectionWithRender(true, true, color, new Rectangle(2, 2));
 
+        
         double halfWidth = width / 2;
         double halfHeight = height / 2;
 
@@ -38,13 +37,11 @@ public class GraphManager {
         // 0------3
         // |      |
         // 1------2
-
-        Transform origin = new Transform(x, y, angle);
-
-        Transform p0 = new Transform(-halfHeight, halfWidth).transformBy(origin).rotateAround(origin.getPosition(), origin.getRotation());
-        Transform p1 = new Transform(-halfHeight, -halfWidth).transformBy(origin).rotateAround(origin.getPosition(), origin.getRotation());
-        Transform p2 = new Transform(halfHeight, -halfWidth).transformBy(origin).rotateAround(origin.getPosition(), origin.getRotation());
-        Transform p3 = new Transform(halfHeight, halfWidth).transformBy(origin).rotateAround(origin.getPosition(), origin.getRotation());
+    
+        Transform p0 = new Transform(-halfHeight, halfWidth).transformBy(transform).rotateAround(transform.getPosition(), transform.getRotation());
+        Transform p1 = new Transform(-halfHeight, -halfWidth).transformBy(transform).rotateAround(transform.getPosition(), transform.getRotation());
+        Transform p2 = new Transform(halfHeight, -halfWidth).transformBy(transform).rotateAround(transform.getPosition(), transform.getRotation());
+        Transform p3 = new Transform(halfHeight, halfWidth).transformBy(transform).rotateAround(transform.getPosition(), transform.getRotation());
 
         series.add(p0.getPosition().getX(), p0.getPosition().getY());
         series.add(p1.getPosition().getX(), p1.getPosition().getY());

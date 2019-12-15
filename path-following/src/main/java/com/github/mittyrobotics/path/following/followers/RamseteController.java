@@ -1,9 +1,8 @@
 package com.github.mittyrobotics.path.following.followers;
 
 import com.github.mittyrobotics.datatypes.motion.DrivetrainVelocities;
-import com.github.mittyrobotics.datatypes.positioning.Rotation;
 import com.github.mittyrobotics.datatypes.positioning.Transform;
-import com.github.mittyrobotics.datatypes.units.Conversion;
+import com.github.mittyrobotics.datatypes.units.Conversions;
 import com.github.mittyrobotics.path.following.datatypes.DifferentialDriveKinematics;
 
 public class RamseteController {
@@ -38,7 +37,7 @@ public class RamseteController {
 		//Calculate the angular velocity in radians per second given the turning radius and the robot velocity.
 		double angularVelocity = robotVelocity/turningRadius;
 		//Calculate linear velocity in meters per second given robot velocity in inches per second
-		double linearVelocity = robotVelocity* Conversion.IN_TO_M;
+		double linearVelocity = robotVelocity* Conversions.IN_TO_M;
 		
 		double eX = error.getPosition().getX();
 		double eY = error.getPosition().getY();
@@ -50,7 +49,7 @@ public class RamseteController {
 		//Calculate the adjusted linear velocity from the Ramsete algorithm
 		double adjustedLinearVelocity = linearVelocity * error.getRotation().cos() + k * eX;
 		//Convert linear velocity back into inches per second
-		adjustedLinearVelocity = adjustedLinearVelocity * Conversion.M_TO_IN;
+		adjustedLinearVelocity = adjustedLinearVelocity * Conversions.M_TO_IN;
 		
 		//Calculate the adjusted angular velocity from the Ramsete algorithm (stays in radians per second)
 		double adjustedAngularVelocity = angularVelocity + k * eTheta + aggressiveGain * linearVelocity * error.getRotation().sinc() * eY;

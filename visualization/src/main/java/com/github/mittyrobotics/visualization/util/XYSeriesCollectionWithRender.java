@@ -1,4 +1,4 @@
-package com.github.mittyrobotics.visualization;
+package com.github.mittyrobotics.visualization.util;
 
 import org.jfree.data.xy.XYSeriesCollection;
 
