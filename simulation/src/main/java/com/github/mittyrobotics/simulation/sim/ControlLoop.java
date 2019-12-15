@@ -1,6 +1,7 @@
-package com.github.mittyrobotics.simulation;
+package com.github.mittyrobotics.simulation.sim;
 
 import com.github.mittyrobotics.datatypes.units.Conversions;
+import com.github.mittyrobotics.simulation.enums.ControlLoopType;
 
 public class ControlLoop {
 	

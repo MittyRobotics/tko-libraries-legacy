@@ -1,4 +1,4 @@
-package com.github.mittyrobotics.simulation;
+package com.github.mittyrobotics.simulation.sim;
 
 import com.github.mittyrobotics.datatypes.units.Conversions;
 

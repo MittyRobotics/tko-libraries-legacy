@@ -1,4 +1,4 @@
-package com.github.mittyrobotics.simulation;
+package com.github.mittyrobotics.simulation.sim;
 
 
 import com.github.mittyrobotics.datatypes.units.Conversions;
@@ -16,7 +16,7 @@ public abstract class SimDrivetrain {
     private double heading=0;
 
     
-    abstract void initDrivetrain();
+    public abstract void initDrivetrain();
     
     public void odometry() {
 

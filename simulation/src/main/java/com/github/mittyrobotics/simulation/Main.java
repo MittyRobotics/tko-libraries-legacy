@@ -3,6 +3,10 @@ package com.github.mittyrobotics.simulation;
 
 
 import com.github.mittyrobotics.datatypes.units.Conversions;
+import com.github.mittyrobotics.simulation.sim.ControlLoop;
+import com.github.mittyrobotics.simulation.sim.MotorSimulator;
+import com.github.mittyrobotics.simulation.enums.ControlLoopType;
+import com.github.mittyrobotics.simulation.enums.ControlType;
 import com.github.mittyrobotics.simulation.motors.CIMMotor;
 import com.github.mittyrobotics.visualization.graphs.MotorSimGraph;
 

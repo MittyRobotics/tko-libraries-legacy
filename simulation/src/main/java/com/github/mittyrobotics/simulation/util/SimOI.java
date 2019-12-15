@@ -1,4 +1,4 @@
-package com.github.mittyrobotics.simulation;
+package com.github.mittyrobotics.simulation.util;
 
 import javax.swing.*;
 import java.awt.event.KeyAdapter;

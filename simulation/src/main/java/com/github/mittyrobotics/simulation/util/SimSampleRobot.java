@@ -1,4 +1,6 @@
-package com.github.mittyrobotics.simulation;
+package com.github.mittyrobotics.simulation.util;
+
+import com.github.mittyrobotics.simulation.sim.SimRobot;
 
 public class SimSampleRobot implements SimRobot {
 	
