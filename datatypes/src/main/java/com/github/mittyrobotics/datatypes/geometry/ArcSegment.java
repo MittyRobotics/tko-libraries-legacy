@@ -47,27 +47,29 @@ public class ArcSegment extends Circle {
 	 * @param position the ending point
 	 * @return the distance
 	 */
-	public double getDistanceToPoint(Position position){
+	public double getDistanceToPoint(Position position) {
 		return 2 * getRadius() * Math.asin(getStartPoint().distance(position) / (2 * getRadius()));
 	}
 	
 	/**
 	 * Finds the closest point on this {@link ArcSegment} to the <code>referencePosition</code> that is
-	 * <code>distanceShift</code> away from the <code>referencePosition</code>.
+	 * <code>distanceShift</code> away from the <code>referencePosition</code>. Returns it in the form of an
+	 * {@link Optional} due to the fact that it may not exist.
 	 * <p>
 	 * This is done by finding the circle with a center of <code>referencePosition</code> that has a radius of
 	 * <code>distanceShift</code> and finding the points that it intersects with this {@link Circle}. It then gets the
 	 * point that falls within the {@link ArcSegment}.
 	 * <p>
-	 * If two intersection points fall within the {@link ArcSegment},
-	 * it will pick the point closest to <code>distanceShift</code> away from the <code>referencePosition</code>.
+	 * If two intersection points fall within the {@link ArcSegment}, it will pick the point either in front of,
+	 * behind, or closest to the <code>referenceTransform</code> based on the {@link RoundMode}.
 	 * <p>
-	 * If no intersection points fall within the {@link ArcSegment} or exist, it will return null.
+	 * If no intersection points fall within the {@link ArcSegment} or exist, it will return an empty {@link Optional}.
 	 *
 	 * @param referenceTransform the {@link Position} to find the closest point to.
-	 * @param distanceShift     the distance away from the <code>referencePosition</code> to find the closest point to.
-	 * @param roundMode         the {@link RoundMode}
-	 * @return the closest {@link Position} to the <code>referencePosition</code> that is <code>distanceShift</code> away.
+	 * @param distanceShift      the distance away from the <code>referencePosition</code> to find the closest point to.
+	 * @param roundMode          the {@link RoundMode}
+	 * @return an {@link Optional} containing the closest {@link Position} to the <code>referencePosition</code> that is
+	 * <code>distanceShift</code> away.
 	 */
 	public Optional<Transform> getClosestPointOnSegment(Transform referenceTransform, double distanceShift, RoundMode roundMode) {
 		//Get the actual closest point on the arc
@@ -78,9 +80,9 @@ public class ArcSegment extends Circle {
 			actualClosestPoint = getClosestEndPoint(referenceTransform.getPosition());
 		}
 		
-		Transform actualClosestTransform = new Transform(actualClosestPoint,getTangentLineAtPoint(actualClosestPoint).getLineAngle());
+		Transform actualClosestTransform = new Transform(actualClosestPoint, getTangentLineAtPoint(actualClosestPoint).getLineAngle());
 		
-		actualClosestTransform = new Transform(actualClosestTransform.getPosition(),actualClosestTransform.getRotation());
+		actualClosestTransform = new Transform(actualClosestTransform.getPosition(), actualClosestTransform.getRotation());
 		
 		//If the distance shift is zero, meaning we want to find the actual closest point to the reference position,
 		//return the actual closest point on the segment.
@@ -109,13 +111,13 @@ public class ArcSegment extends Circle {
 		//If no intersection points fall on the segment, return either the start or end point
 		if (pointsOnSegment == 0) {
 			Position pos = getClosestEndPoint(referenceTransform.getPosition());
-			return Optional.of(new Transform(pos,getTangentLineAtPoint(pos).getLineAngle()));
+			return Optional.of(new Transform(pos, getTangentLineAtPoint(pos).getLineAngle()));
 		}
 		
 		//If only one point falls on the segment, return that point.
 		else if (pointsOnSegment == 1) {
 			Position pos = positions[latestPointIndex];
-			return Optional.of(new Transform(pos,getTangentLineAtPoint(pos).getLineAngle()));
+			return Optional.of(new Transform(pos, getTangentLineAtPoint(pos).getLineAngle()));
 		}
 		
 		//If two points fall on the segment, return the point depending on the round mode
@@ -147,7 +149,7 @@ public class ArcSegment extends Circle {
 			}
 		}
 		
-		return Optional.of(new Transform(currentClosestPosition,getTangentLineAtPoint(currentClosestPosition).getLineAngle()));
+		return Optional.of(new Transform(currentClosestPosition, getTangentLineAtPoint(currentClosestPosition).getLineAngle()));
 	}
 	
 	/**

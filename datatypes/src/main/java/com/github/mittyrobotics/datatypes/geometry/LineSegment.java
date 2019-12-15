@@ -25,13 +25,13 @@ public class LineSegment extends Line {
 		this.startPoint = startPoint;
 		this.endPoint = endPoint;
 	}
-
+	
 	/**
 	 * Gets the length of the line segment.
 	 *
 	 * @return the length of the line segment.
 	 */
-	public double getSegmentLength(){
+	public double getSegmentLength() {
 		return getDistanceToPoint(endPoint);
 	}
 	
@@ -41,27 +41,29 @@ public class LineSegment extends Line {
 	 * @param position the ending point
 	 * @return the distance
 	 */
-	public double getDistanceToPoint(Position position){
+	public double getDistanceToPoint(Position position) {
 		return startPoint.distance(position);
 	}
 	
 	/**
-	 * Finds the closest point on this {@link LineSegment} to the <code>referencePosition</code> that is
-	 * <code>distanceShift</code> away from the <code>referencePosition</code>.
+	 * Finds the closest {@link Transform} on this {@link LineSegment} to the <code>referencePosition</code> that is
+	 * <code>distanceShift</code> away from the <code>referencePosition</code>. Returns it in the form of an
+	 * {@link Optional} due to the fact that it may not exist.
 	 * <p>
 	 * This is done by finding the circle with a center of <code>referencePosition</code> that has a radius of
 	 * <code>distanceShift</code> and finding the points that it intersects with this {@link Line}. It then gets the
 	 * point that falls within the {@link LineSegment}.
-	 *
-	 * If two intersection points fall within the {@link LineSegment},
-	 * it will pick the point closest to <code>distanceShift</code> away from the <code>referencePosition</code>.
-	 *
-	 * If no intersection points fall within the {@link LineSegment} or exist, it will return null.
+	 * <p>
+	 * If two intersection points fall within the {@link LineSegment}, it will pick the point either in front of,
+	 * behind, or closest to the <code>referenceTransform</code> based on the {@link RoundMode}.
+	 * <p>
+	 * If no intersection points fall within the {@link LineSegment} or exist, it will return an empty {@link Optional}.
 	 *
 	 * @param referenceTransform the {@link Position} to find the closest point to.
-	 * @param distanceShift     the distance away from the <code>referencePosition</code> to find the closest point to.
-	 * @param roundMode         the {@link RoundMode}
-	 * @return the closest {@link Position} to the <code>referencePosition</code> that is <code>distanceShift</code> away.
+	 * @param distanceShift      the distance away from the <code>referencePosition</code> to find the closest point to.
+	 * @param roundMode          the {@link RoundMode}
+	 * @return an {@link Optional} containing the closest {@link Position} to the <code>referencePosition</code> that is
+	 * <code>distanceShift</code> away.
 	 */
 	public Optional<Transform> getClosestPointOnSegment(Transform referenceTransform, double distanceShift, RoundMode roundMode) {
 		//Get the actual closest point on the line segment
@@ -72,9 +74,9 @@ public class LineSegment extends Line {
 			actualClosestPoint = getClosestEndPoint(referenceTransform.getPosition());
 		}
 		
-		Transform actualClosestTransform = new Transform(actualClosestPoint,actualClosestPoint.angleTo(endPoint));
+		Transform actualClosestTransform = new Transform(actualClosestPoint, actualClosestPoint.angleTo(endPoint));
 		
-		actualClosestTransform = new Transform(actualClosestTransform.getPosition(),actualClosestTransform.getRotation());
+		actualClosestTransform = new Transform(actualClosestTransform.getPosition(), actualClosestTransform.getRotation());
 		
 		//If the distance shift is zero, meaning we want to find the actual closest point to the reference position,
 		//return the actual closest point on the segment.
@@ -83,7 +85,7 @@ public class LineSegment extends Line {
 		}
 		
 		//Get points that intersect the circle
-		Position[] positions = new Circle(referenceTransform.getPosition(),distanceShift).circleLineIntersection(this);
+		Position[] positions = new Circle(referenceTransform.getPosition(), distanceShift).circleLineIntersection(this);
 		
 		//If no points intersect the two circles, return the actual closest point on the segment
 		if (positions.length == 0) {
@@ -103,15 +105,15 @@ public class LineSegment extends Line {
 		//If no intersection points fall on the segment, return either the start or end point
 		if (pointsOnSegment == 0) {
 			Position pos = getClosestEndPoint(referenceTransform.getPosition());
-
-			return Optional.of(new Transform(pos,pos.angleTo(endPoint)));
+			
+			return Optional.of(new Transform(pos, pos.angleTo(endPoint)));
 		}
 		
 		//If only one point falls on the segment, return that point.
 		else if (pointsOnSegment == 1) {
 			Position pos = positions[latestPointIndex];
-
-			return Optional.of(new Transform(pos,pos.angleTo(endPoint)));
+			
+			return Optional.of(new Transform(pos, pos.angleTo(endPoint)));
 		}
 		
 		//If two points fall on the segment, return the point depending on the round mode
@@ -142,8 +144,8 @@ public class LineSegment extends Line {
 				}
 			}
 		}
-
-		return Optional.of(new Transform(currentClosestPosition,currentClosestPosition.angleTo(endPoint)));
+		
+		return Optional.of(new Transform(currentClosestPosition, currentClosestPosition.angleTo(endPoint)));
 	}
 	
 	/**
