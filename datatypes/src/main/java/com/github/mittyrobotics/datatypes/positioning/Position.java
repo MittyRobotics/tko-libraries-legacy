@@ -1,5 +1,7 @@
 package com.github.mittyrobotics.datatypes.positioning;
 
+import com.github.mittyrobotics.datatypes.units.Conversion;
+
 /**
  * Represents a 2d <code>(x,y)</code> position on a standard cartesian coordinate plane.
  * <p>
@@ -27,6 +29,24 @@ public class Position {
 	 */
 	public double distance(Position other) {
 		return Math.sqrt(Math.pow(other.x - x,2) + Math.pow(other.y - y,2));
+	}
+	
+	/**
+	 * Converts this {@link Position} from inches to meters.
+	 *
+	 * @return this {@link Position} from inches to meters.
+	 */
+	public Position inToM(){
+		return multiply(Conversion.IN_TO_M);
+	}
+	
+	/**
+	 * Converts this {@link Position} from meters to inches.
+	 *
+	 * @return this {@link Position} from meters to inches.
+	 */
+	public Position mToIn(){
+		return multiply(Conversion.M_TO_IN);
 	}
 	
 	/**

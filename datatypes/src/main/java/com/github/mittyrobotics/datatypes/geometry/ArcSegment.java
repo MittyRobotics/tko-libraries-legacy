@@ -2,8 +2,10 @@ package com.github.mittyrobotics.datatypes.geometry;
 
 import com.github.mittyrobotics.datatypes.enums.RoundMode;
 import com.github.mittyrobotics.datatypes.positioning.Position;
+import com.github.mittyrobotics.datatypes.positioning.Rotation;
 import com.github.mittyrobotics.datatypes.positioning.Transform;
 
+import java.awt.*;
 import java.util.Optional;
 
 /**
@@ -35,8 +37,18 @@ public class ArcSegment extends Circle {
 	 *
 	 * @return the length of the arc segment.
 	 */
-	public double getArcLength() {
-		return 0;
+	public double getSegmentLength() {
+		return getDistanceToPoint(endPoint);
+	}
+	
+	/**
+	 * Gets the distance along the segment from the start point to an end point.
+	 *
+	 * @param position the ending point
+	 * @return the distance
+	 */
+	public double getDistanceToPoint(Position position){
+		return 2 * getRadius() * Math.asin(getStartPoint().distance(position) / (2 * getRadius()));
 	}
 	
 	/**
@@ -52,32 +64,36 @@ public class ArcSegment extends Circle {
 	 * <p>
 	 * If no intersection points fall within the {@link ArcSegment} or exist, it will return null.
 	 *
-	 * @param referencePosition the {@link Position} to find the closest point to.
+	 * @param referenceTransform the {@link Position} to find the closest point to.
 	 * @param distanceShift     the distance away from the <code>referencePosition</code> to find the closest point to.
 	 * @param roundMode         the {@link RoundMode}
 	 * @return the closest {@link Position} to the <code>referencePosition</code> that is <code>distanceShift</code> away.
 	 */
-	public Optional<Position> getClosestPointOnSegment(Position referencePosition, double distanceShift, RoundMode roundMode) {
+	public Optional<Transform> getClosestPointOnSegment(Transform referenceTransform, double distanceShift, RoundMode roundMode) {
 		//Get the actual closest point on the arc
-		Position actualClosestPoint = getClosestPoint(referencePosition);
+		Position actualClosestPoint = getClosestPoint(referenceTransform.getPosition());
 		
 		//If the actual closest point is not on the segment, set it to the closest end point
 		if (!isOnSegment(actualClosestPoint)) {
-			actualClosestPoint = getClosestEndPoint(referencePosition);
+			actualClosestPoint = getClosestEndPoint(referenceTransform.getPosition());
 		}
+		
+		Transform actualClosestTransform = new Transform(actualClosestPoint,getTangentLineAtPoint(actualClosestPoint).getLineAngle());
+		
+		actualClosestTransform = new Transform(actualClosestTransform.getPosition(),actualClosestTransform.getRotation());
 		
 		//If the distance shift is zero, meaning we want to find the actual closest point to the reference position,
 		//return the actual closest point on the segment.
 		if (distanceShift == 0) {
-			return Optional.ofNullable(actualClosestPoint);
+			return Optional.of(actualClosestTransform);
 		}
 		
 		//Get points that intersect the circle
-		Position[] positions = circleCircleIntersection(new Circle(referencePosition, distanceShift));
+		Position[] positions = circleCircleIntersection(new Circle(referenceTransform.getPosition(), distanceShift));
 		
 		//If no points intersect the two circles, return the actual closest point on the segment
 		if (positions.length == 0) {
-			return Optional.ofNullable(actualClosestPoint);
+			return Optional.of(actualClosestTransform);
 		}
 		
 		double pointsOnSegment = 0;
@@ -92,12 +108,14 @@ public class ArcSegment extends Circle {
 		
 		//If no intersection points fall on the segment, return either the start or end point
 		if (pointsOnSegment == 0) {
-			return Optional.ofNullable(getClosestEndPoint(referencePosition));
+			Position pos = getClosestEndPoint(referenceTransform.getPosition());
+			return Optional.of(new Transform(pos,getTangentLineAtPoint(pos).getLineAngle()));
 		}
 		
 		//If only one point falls on the segment, return that point.
 		else if (pointsOnSegment == 1) {
-			return Optional.ofNullable(positions[latestPointIndex]);
+			Position pos = positions[latestPointIndex];
+			return Optional.of(new Transform(pos,getTangentLineAtPoint(pos).getLineAngle()));
 		}
 		
 		//If two points fall on the segment, return the point depending on the round mode
@@ -107,29 +125,29 @@ public class ArcSegment extends Circle {
 			//If we round down, return the point behind the reference position
 			if (roundMode == RoundMode.ROUND_DOWN) {
 				//Get the intersection point relative to the actual closest point on the arc
-				Position relative = new Transform(positions[i]).relativeTo(new Transform(referencePosition, actualClosestPoint.angleTo(endPoint))).getPosition();
+				Position relative = new Transform(positions[i]).relativeTo(referenceTransform).getPosition();
 				//Check if relative point is in front of the origin, meaning it is behind
 				if (relative.getX() <= 0) {
-					currentClosest = positions[i].distance(referencePosition);
+					currentClosest = positions[i].distance(referenceTransform.getPosition());
 					currentClosestPosition = positions[i];
 				}
 			} else if (roundMode == RoundMode.ROUND_UP) {
 				//Get the intersection point relative to the actual closest point on the arc
-				Position relative = new Transform(positions[i]).relativeTo(new Transform(referencePosition, actualClosestPoint.angleTo(endPoint))).getPosition();
+				Position relative = new Transform(positions[i]).relativeTo(referenceTransform).getPosition();
 				//Check if relative point is in front of the origin, meaning it is ahead of the reference point
 				if (relative.getX() >= 0) {
-					currentClosest = positions[i].distance(referencePosition);
+					currentClosest = positions[i].distance(referenceTransform.getPosition());
 					currentClosestPosition = positions[i];
 				}
 			} else {
-				if (Double.isNaN(currentClosest) || Math.abs(positions[i].distance(referencePosition) - distanceShift) < currentClosest) {
-					currentClosest = positions[i].distance(referencePosition);
+				if (Double.isNaN(currentClosest) || Math.abs(positions[i].distance(referenceTransform.getPosition()) - distanceShift) < currentClosest) {
+					currentClosest = positions[i].distance(referenceTransform.getPosition());
 					currentClosestPosition = positions[i];
 				}
 			}
 		}
 		
-		return Optional.ofNullable(currentClosestPosition);
+		return Optional.of(new Transform(currentClosestPosition,getTangentLineAtPoint(currentClosestPosition).getLineAngle()));
 	}
 	
 	/**

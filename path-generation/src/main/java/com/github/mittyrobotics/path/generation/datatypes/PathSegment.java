@@ -4,6 +4,7 @@ import com.github.mittyrobotics.datatypes.enums.RoundMode;
 import com.github.mittyrobotics.datatypes.geometry.ArcSegment;
 import com.github.mittyrobotics.datatypes.geometry.LineSegment;
 import com.github.mittyrobotics.datatypes.positioning.Position;
+import com.github.mittyrobotics.datatypes.positioning.Transform;
 import com.github.mittyrobotics.motionprofile.TrapezoidalMotionProfile;
 import com.github.mittyrobotics.datatypes.motion.MotionState;
 import com.github.mittyrobotics.path.generation.enums.PathSegmentType;
@@ -34,10 +35,10 @@ public abstract class PathSegment {
 	/**
 	 * Interpolates the closest {@link Position} to the reference position on the path segment.
 	 *
-	 * @param referencePosition the {@link Position} to find the closest point to.
-	 * @return the {@link Position} closest to the <code>referencePosition</code>.
+	 * @param referenceTransform the {@link Transform} to find the closest point to.
+	 * @return the {@link Transform} closest to the <code>referencePosition</code>.
 	 */
-	public abstract Optional<Position> getClosestPointOnSegment(Position referencePosition);
+	public abstract Optional<Transform> getClosestPointOnSegment(Transform referenceTransform);
 	
 	/**
 	 * Interpolates the closest {@link Position} that is <code>distanceShift</code> away from the
@@ -47,12 +48,20 @@ public abstract class PathSegment {
 	 * <code>referencePoint</code>, behind the <code>referencePoint</code>, or the closest to the
 	 * <code>referencePoint</code> depending on the {@link RoundMode}.
 	 *
-	 * @param referencePosition the {@link Position} to find the closest point to.
+	 * @param referenceTransform the {@link Transform} to find the closest point to.
 	 * @param distanceShift     the distance away from the <code>referencePosition</code> to find the closest point to.
 	 * @param roundMode         the {@link RoundMode}
-	 * @return the {@link Position} closest to the <code>referencePosition</code>.
+	 * @return the {@link Transform} closest to the <code>referencePosition</code>.
 	 */
-	public abstract Optional<Position> getClosestPointOnSegment(Position referencePosition, double distanceShift, RoundMode roundMode);
+	public abstract Optional<Transform> getClosestPointOnSegment(Transform referenceTransform, double distanceShift, RoundMode roundMode);
+	
+	/**
+	 * Returns the distance of the {@link Position} along the segment.
+	 *
+	 * @param position the {@link Position} to get the distance to.
+	 * @return the distance of the {@link Position} along the segment.
+	 */
+	public abstract double getDistanceAlongSegment(Position position);
 	
 	/**
 	 * Returns the {@link PathSegmentType} of the path segment

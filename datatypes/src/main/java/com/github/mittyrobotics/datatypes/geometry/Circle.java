@@ -174,6 +174,17 @@ public class Circle {
 	}
 	
 	/**
+	 * Returns the {@link Line} of tangency at the {@link Position}.
+	 *
+	 * @param pointOfTangency the {@link Position} on the circle to find the {@link Line} of tangency.
+	 * @return the {@link Line} of tangency.
+	 */
+	public Line getTangentLineAtPoint(Position pointOfTangency){
+		Line centerToPointLine = new Line(getCenter(),pointOfTangency);
+		return centerToPointLine.getParallelLine(pointOfTangency);
+	}
+	
+	/**
 	 * Finds the closest point on this {@link Circle} to the <code>referencePosition</code>.
 	 * <p>
 	 * This is done by finding the line that intersects the center of this {@link Circle} and the <code>referencePosition</code>.

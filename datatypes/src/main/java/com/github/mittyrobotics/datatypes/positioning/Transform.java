@@ -44,6 +44,24 @@ public class Transform {
 	}
 	
 	/**
+	 * Converts this {@link Transform} from inches to meters.
+	 *
+	 * @return this {@link Transform} from inches to meters.
+	 */
+	public Transform inToM(){
+		return new Transform(position.inToM(),rotation);
+	}
+	
+	/**
+	 * Converts this {@link Transform} from meters to inches.
+	 *
+	 * @return this {@link Transform} from meters to inches.
+	 */
+	public Transform mToIn(){
+		return new Transform(position.mToIn(),rotation);
+	}
+	
+	/**
 	 * Finds this {@link Transform} relative to {@link Transform} <code>other</code>.
 	 * <p>
 	 * In other words, it finds where this {@link Transform} is if <code>other</code> becomes the new origin

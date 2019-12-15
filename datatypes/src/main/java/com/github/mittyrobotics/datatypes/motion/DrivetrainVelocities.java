@@ -21,4 +21,9 @@ public class DrivetrainVelocities {
 	public double getAvgVelocity(){
 		return (rightVelocity + leftVelocity)/2;
 	}
+	
+	@Override
+	public String toString() {
+		return String.format("DrivetrainVelocities(left: %s, right: %s)", leftVelocity, rightVelocity);
+	}
 }
