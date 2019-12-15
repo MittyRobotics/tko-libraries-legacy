@@ -1,18 +1,19 @@
 plugins {
-    java
+    id("java")
+    id("edu.wpi.first.GradleRIO")
+    id("maven")
+    `maven-publish`
 }
 
 group = "com.github.MittyRobotics"
-version = "1.0.0"
+version = "0.1.0"
 
 repositories {
-    mavenCentral()
+    jcenter()
+    mavenLocal()
 }
 
 dependencies {
-    testCompile("junit", "junit", "4.12")
-}
-
-configure<JavaPluginConvention> {
-    sourceCompatibility = JavaVersion.VERSION_1_8
+    compile(project(":datatypes"))
+    compile(project(":motion-profiling"))
 }

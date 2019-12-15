@@ -1,5 +1,6 @@
 package com.github.mittyrobotics.path.generation;
 
+import com.github.mittyrobotics.datacollection.performance.TimeMonitor;
 import com.github.mittyrobotics.datatypes.motion.MotionState;
 import com.github.mittyrobotics.datatypes.motion.VelocityConstraints;
 import com.github.mittyrobotics.datatypes.positioning.Transform;
@@ -19,7 +20,12 @@ public class Main {
 				new Transform(100, 100, 0)
 		};
 		
-		CubicHermitePath path = new CubicHermitePath(waypoints, new MotionState(0), new MotionState(0), new VelocityConstraints(5, 5, 20), 20, .2, 10);
+		TimeMonitor timeMonitor1 = new TimeMonitor("Generate Path");
+		timeMonitor1.start();
+		CubicHermitePath path = new CubicHermitePath(waypoints, new MotionState(0), new MotionState(0), new VelocityConstraints(5, 5, 20), 8, .2, 10);
+		timeMonitor1.end();
+		timeMonitor1.printMillis();
+		
 		
 		Graph graph = new Graph("graph", "y", "x");
 		

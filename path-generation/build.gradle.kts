@@ -16,4 +16,5 @@ repositories {
 dependencies {
     compile(project(":datatypes"))
     compile(project(":motion-profiling"))
+    compile(project(":data-collection"))
 }

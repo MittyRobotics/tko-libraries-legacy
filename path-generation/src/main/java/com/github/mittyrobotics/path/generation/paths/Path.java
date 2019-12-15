@@ -1,5 +1,6 @@
 package com.github.mittyrobotics.path.generation.paths;
 
+import com.github.mittyrobotics.datacollection.performance.TimeMonitor;
 import com.github.mittyrobotics.datatypes.enums.RoundMode;
 import com.github.mittyrobotics.datatypes.geometry.ArcSegment;
 import com.github.mittyrobotics.datatypes.geometry.LineSegment;
