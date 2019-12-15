@@ -133,7 +133,7 @@ public abstract class Path {
 		closestDist = Double.NaN;
 		for (int i = 0; i < segments.size(); i++) {
 			PathSegment segment = segments.get(i);
-			Optional<Transform> transform = segment.getClosestPointOnSegment(referenceTransform);
+			Optional<Transform> transform = segment.getClosestPointOnSegment(referenceTransform,distanceShift,RoundMode.ROUND_CLOSEST);
 			if (transform.isPresent()) {
 				double distance = Math.abs(transform.get().getPosition().distance(referenceTransform.getPosition()) - distanceShift);
 				Transform relative = transform.get().relativeTo(actualClosestSegment.getTransform());
@@ -151,6 +151,7 @@ public abstract class Path {
 		}
 		
 		if (shiftedClosestSegment == null) {
+			System.out.println("asdf");
 			double distance = distanceShift + 5;
 			LineSegment lineSegment;
 			if (reversed) {

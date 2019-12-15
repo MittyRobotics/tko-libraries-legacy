@@ -18,7 +18,7 @@ public class Main {
 	public static void main(String[] args) throws InterruptedException {
 		Transform[] waypoints = new Transform[]{
 				new Transform(0, 0, 0),
-				new Transform(50, 100, 0),
+				//new Transform(50, 100, 0),
 				new Transform(100, 100, 0)
 		};
 		
@@ -76,8 +76,8 @@ public class Main {
 			}
 			
 			
-			transform.setPosition(closestTransform.getPosition().add(new Position(1, 1)));
-			//Thread.sleep(20);
+			transform.setPosition(closestTransform.getPosition().add(new Position(.1, .1)));
+			Thread.sleep(20);
 		}
 		
 	}

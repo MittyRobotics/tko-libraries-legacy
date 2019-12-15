@@ -182,7 +182,8 @@ public class Graph extends JFrame {
 	
 	public void addDataset(XYSeriesCollectionWithRender dataset) {
 		plot.setDataset(lastIndex, dataset);
-		plot.setRenderer(plot.getDatasetCount() - 1, new XYLineShapeColorRenderer(dataset.isShowPoints(), dataset.isShowLines(), dataset.getColor()));
+		plot.setRenderer(lastIndex, new XYLineShapeColorRenderer(dataset.isShowPoints(), dataset.isShowLines(), dataset.getColor()));
+		lastIndex++;
 	}
 	
 	public XYDataset[] getDatasets() {

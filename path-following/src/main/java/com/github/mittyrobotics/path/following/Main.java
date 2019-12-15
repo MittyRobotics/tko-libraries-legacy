@@ -32,9 +32,9 @@ public class Main {
 		
 		//Setup graph stuff
 		RobotGraph.getInstance().resizeGraph(-20, 120, -20, 120);
-		SimSampleDrivetrain.getInstance().setOdometry(0, 100, 0);
+		SimSampleDrivetrain.getInstance().setOdometry(0, 0, 0);
 		
-		while (true) {
+			while (true) {
 			DrivetrainVelocities output = PathFollower.getInstance().updatePathFollower(SimSampleDrivetrain.getInstance().getRobotTransform());
 			SimSampleDrivetrain.getInstance().setVelocities(output.getLeftVelocity(), output.getRightVelocity());
 			System.out.println(output + " " + SimSampleDrivetrain.getInstance().getRightMasterTalon().getVelocity());

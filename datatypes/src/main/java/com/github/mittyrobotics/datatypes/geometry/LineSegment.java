@@ -101,11 +101,9 @@ public class LineSegment extends Line {
 			}
 		}
 		
-		//If no intersection points fall on the segment, return either the start or end point
+		//If no intersection points fall on the segment, return empty
 		if (pointsOnSegment == 0) {
-			Position pos = getClosestEndPoint(referenceTransform.getPosition());
-			
-			return Optional.of(new Transform(pos, pos.angleTo(endPoint)));
+			return Optional.empty();
 		}
 		
 		//If only one point falls on the segment, return that point.
