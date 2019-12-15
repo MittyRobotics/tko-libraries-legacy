@@ -3,15 +3,16 @@ package com.github.mittyrobotics.path.generation.datatypes;
 import com.github.mittyrobotics.datatypes.enums.RoundMode;
 import com.github.mittyrobotics.datatypes.geometry.ArcSegment;
 import com.github.mittyrobotics.datatypes.geometry.LineSegment;
+import com.github.mittyrobotics.datatypes.motion.MotionState;
 import com.github.mittyrobotics.datatypes.positioning.Position;
 import com.github.mittyrobotics.datatypes.positioning.Transform;
 import com.github.mittyrobotics.motionprofile.TrapezoidalMotionProfile;
-import com.github.mittyrobotics.datatypes.motion.MotionState;
 import com.github.mittyrobotics.path.generation.enums.PathSegmentType;
 
 import java.util.Optional;
 
 public abstract class PathSegment {
+	private final PathSegmentType type;
 	private Position startPoint;
 	private Position endPoint;
 	private double segmentDistance;
@@ -19,7 +20,6 @@ public abstract class PathSegment {
 	private MotionState startMotionState;
 	private MotionState endMotionState;
 	private TrapezoidalMotionProfile velocityMotionProfile;
-	private final PathSegmentType type;
 	
 	/**
 	 * Constructs a {@Link PathSegment} given a {@link PathSegmentType}.
@@ -49,8 +49,8 @@ public abstract class PathSegment {
 	 * <code>referencePoint</code> depending on the {@link RoundMode}.
 	 *
 	 * @param referenceTransform the {@link Transform} to find the closest point to.
-	 * @param distanceShift     the distance away from the <code>referencePosition</code> to find the closest point to.
-	 * @param roundMode         the {@link RoundMode}
+	 * @param distanceShift      the distance away from the <code>referencePosition</code> to find the closest point to.
+	 * @param roundMode          the {@link RoundMode}
 	 * @return the {@link Transform} closest to the <code>referencePosition</code>.
 	 */
 	public abstract Optional<Transform> getClosestPointOnSegment(Transform referenceTransform, double distanceShift, RoundMode roundMode);
@@ -137,12 +137,12 @@ public abstract class PathSegment {
 		return startMotionState;
 	}
 	
-	public MotionState getEndMotionState() {
-		return endMotionState;
-	}
-	
 	public void setStartMotionState(MotionState startMotionState) {
 		this.startMotionState = startMotionState;
+	}
+	
+	public MotionState getEndMotionState() {
+		return endMotionState;
 	}
 	
 	public void setEndMotionState(MotionState endMotionState) {

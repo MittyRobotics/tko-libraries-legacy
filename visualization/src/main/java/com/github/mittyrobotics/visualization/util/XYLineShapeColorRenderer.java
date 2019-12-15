@@ -10,7 +10,7 @@ public class XYLineShapeColorRenderer extends XYLineAndShapeRenderer {
 	private final boolean showLines;
 	private final Color color;
 	
-	public XYLineShapeColorRenderer(boolean showShapes, boolean showLines, Color color){
+	public XYLineShapeColorRenderer(boolean showShapes, boolean showLines, Color color) {
 		
 		this.showShapes = showShapes;
 		this.showLines = showLines;

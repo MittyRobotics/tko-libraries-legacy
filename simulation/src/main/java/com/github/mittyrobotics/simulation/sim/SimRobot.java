@@ -1,6 +1,7 @@
 package com.github.mittyrobotics.simulation.sim;
 
-public interface SimRobot{
+public interface SimRobot {
 	void robotInit();
+
 	void robotPeriodic();
 }

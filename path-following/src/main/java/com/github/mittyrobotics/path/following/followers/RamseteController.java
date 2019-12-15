@@ -6,38 +6,36 @@ import com.github.mittyrobotics.datatypes.units.Conversions;
 import com.github.mittyrobotics.path.following.datatypes.DifferentialDriveKinematics;
 
 public class RamseteController {
+	public static double DEFAULT_AGGRESSIVE_GAIN = 2.0;
+	public static double DEFAULT_DAMPING_GAIN = 0.7;
 	private static RamseteController instance = new RamseteController();
-	
 	private double aggressiveGain; //(x > 0), makes turning more aggressive
 	private double dampingGain; //(0 < x < 1) provides more damping
 	
-	public static double DEFAULT_AGGRESSIVE_GAIN = 2.0;
-	public static double DEFAULT_DAMPING_GAIN = 0.7;
+	private RamseteController() {
+		setGains();
+	}
 	
 	public static RamseteController getInstance() {
 		return instance;
 	}
 	
-	private RamseteController(){
-		setGains();
+	public void setGains() {
+		setGains(DEFAULT_AGGRESSIVE_GAIN, DEFAULT_DAMPING_GAIN);
 	}
 	
-	public void setGains(){
-		setGains(DEFAULT_AGGRESSIVE_GAIN,DEFAULT_DAMPING_GAIN);
-	}
-	
-	public void setGains(double aggressiveGain, double dampingGain){
+	public void setGains(double aggressiveGain, double dampingGain) {
 		this.aggressiveGain = aggressiveGain;
 		this.dampingGain = dampingGain;
 	}
 	
-	public DrivetrainVelocities calculate(Transform robotTransform, Transform desiredTransform, double robotVelocity, double turningRadius){
+	public DrivetrainVelocities calculate(Transform robotTransform, Transform desiredTransform, double robotVelocity, double turningRadius) {
 		//Get the transform error in meters.
 		Transform error = desiredTransform.relativeTo(robotTransform).inToM();
 		//Calculate the angular velocity in radians per second given the turning radius and the robot velocity.
-		double angularVelocity = robotVelocity/turningRadius;
+		double angularVelocity = robotVelocity / turningRadius;
 		//Calculate linear velocity in meters per second given robot velocity in inches per second
-		double linearVelocity = robotVelocity* Conversions.IN_TO_M;
+		double linearVelocity = robotVelocity * Conversions.IN_TO_M;
 		
 		double eX = error.getPosition().getX();
 		double eY = error.getPosition().getY();
@@ -55,7 +53,7 @@ public class RamseteController {
 		double adjustedAngularVelocity = angularVelocity + k * eTheta + aggressiveGain * linearVelocity * error.getRotation().sinc() * eY;
 		
 		//Use differential drive kinematics given linear velocity in inches per second and angular velocity in radians per second
-		return DifferentialDriveKinematics.getInstance().calculateFromAngularVelocity(adjustedLinearVelocity,adjustedAngularVelocity);
+		return DifferentialDriveKinematics.getInstance().calculateFromAngularVelocity(adjustedLinearVelocity, adjustedAngularVelocity);
 	}
 	
 }

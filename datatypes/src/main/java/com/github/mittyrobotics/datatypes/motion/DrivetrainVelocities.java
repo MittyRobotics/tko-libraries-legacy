@@ -4,7 +4,7 @@ public class DrivetrainVelocities {
 	private final double leftVelocity;
 	private final double rightVelocity;
 	
-	public DrivetrainVelocities(double leftVelocity, double rightVelocity){
+	public DrivetrainVelocities(double leftVelocity, double rightVelocity) {
 		
 		this.leftVelocity = leftVelocity;
 		this.rightVelocity = rightVelocity;
@@ -18,8 +18,8 @@ public class DrivetrainVelocities {
 		return rightVelocity;
 	}
 	
-	public double getAvgVelocity(){
-		return (rightVelocity + leftVelocity)/2;
+	public double getAvgVelocity() {
+		return (rightVelocity + leftVelocity) / 2;
 	}
 	
 	@Override

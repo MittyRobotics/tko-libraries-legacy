@@ -6,54 +6,44 @@ import com.github.mittyrobotics.visualization.graphs.RobotGraph;
 
 import javax.swing.*;
 
-public class RobotSimManager implements Runnable{
+public class RobotSimManager implements Runnable {
 	
-
+	
+	private static RobotSimManager instance = new RobotSimManager();
 	private double periodTime;
-	
 	private double mass;
 	private double driveGearRatio;
 	private double driveWheelRadius;
 	private double robotWidth;
 	private double robotLength;
-	
 	private SimRobot robot;
 	private SimDrivetrain drivetrain;
-	
-	private RobotGraph robotGraph = new RobotGraph();
-
 	private boolean calledInit = false;
 	
-	private static RobotSimManager instance = new RobotSimManager();
 	
+	private RobotSimManager() {
+	
+	}
 	
 	public static RobotSimManager getInstance() {
 		return instance;
 	}
 	
-	private RobotSimManager(){
-
-	}
-	
-	public void setupRobotSimManager(SimRobot robot, SimDrivetrain drivetrain, double robotMass, double driveGearRatio, double driveWheelRadius, double robotWidth, double robotLength, double periodTime){
+	public void setupRobotSimManager(SimRobot robot, SimDrivetrain drivetrain, double robotMass, double driveGearRatio, double driveWheelRadius, double robotWidth, double robotLength, double periodTime) {
 		calledInit = false;
-		setupDrivetrainProperties(robotMass,driveGearRatio,driveWheelRadius,robotWidth,robotLength);
-		setupRobot(robot,drivetrain);
+		setupDrivetrainProperties(robotMass, driveGearRatio, driveWheelRadius, robotWidth, robotLength);
+		setupRobot(robot, drivetrain);
 		setPeriodTime(periodTime);
 		initHardware();
 		init();
 	}
 	
-	private void setupRobot(SimRobot robot, SimDrivetrain drivetrain){
+	private void setupRobot(SimRobot robot, SimDrivetrain drivetrain) {
 		this.robot = robot;
 		this.drivetrain = drivetrain;
 	}
 	
-	private void setPeriodTime(double periodTime){
-		this.periodTime = periodTime;
-	}
-	
-	private void setupDrivetrainProperties(double mass, double gearRatio, double wheelRadius, double width, double length){
+	private void setupDrivetrainProperties(double mass, double gearRatio, double wheelRadius, double width, double length) {
 		this.mass = mass;
 		this.driveGearRatio = gearRatio;
 		this.driveWheelRadius = wheelRadius;
@@ -61,11 +51,10 @@ public class RobotSimManager implements Runnable{
 		this.robotLength = length;
 	}
 	
-	
 	@Override
 	public void run() {
-		while(true){
-			while(!calledInit) {
+		while (true) {
+			while (!calledInit) {
 			}
 			periodic();
 			try {
@@ -76,12 +65,12 @@ public class RobotSimManager implements Runnable{
 		}
 	}
 	
-	private void initHardware(){
+	private void initHardware() {
 		drivetrain.initDrivetrain();
 		new Thread(this).start();
 	}
 	
-	private void init(){
+	private void init() {
 		robot.robotInit();
 		calledInit = true;
 	}
@@ -89,17 +78,20 @@ public class RobotSimManager implements Runnable{
 	/**
 	 * Place all of the updated functions in this
 	 */
-	private void periodic(){
+	private void periodic() {
 		robot.robotPeriodic();
 		drivetrain.odometry();
 		SwingUtilities.invokeLater(() -> {
-			robotGraph.graphRobot(new Transform(drivetrain.getRobotX(), drivetrain.getRobotY(), drivetrain.getHeading()),robotWidth,robotLength);
+			RobotGraph.getInstance().graphRobot(new Transform(drivetrain.getRobotX(), drivetrain.getRobotY(), drivetrain.getHeading()), robotWidth, robotLength);
 		});
 	}
 	
-	
 	public double getPeriodTime() {
 		return periodTime;
+	}
+	
+	private void setPeriodTime(double periodTime) {
+		this.periodTime = periodTime;
 	}
 	
 	public double getMass() {

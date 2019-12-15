@@ -22,33 +22,33 @@ public class MotionState {
 		this.acceleration = acceleration;
 		this.t = t;
 	}
-
+	
 	public double getPosition() {
 		return position;
-	}
-
-	public double getVelocity() {
-		return velocity;
-	}
-
-	public double getAcceleration() {
-		return acceleration;
-	}
-
-	public double getT() {
-		return t;
 	}
 	
 	public void setPosition(double position) {
 		this.position = position;
 	}
 	
+	public double getVelocity() {
+		return velocity;
+	}
+	
 	public void setVelocity(double velocity) {
 		this.velocity = velocity;
 	}
 	
+	public double getAcceleration() {
+		return acceleration;
+	}
+	
 	public void setAcceleration(double acceleration) {
 		this.acceleration = acceleration;
+	}
+	
+	public double getT() {
+		return t;
 	}
 	
 	public void setT(double t) {

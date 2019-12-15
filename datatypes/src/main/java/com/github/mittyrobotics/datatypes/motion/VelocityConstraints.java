@@ -4,7 +4,7 @@ public class VelocityConstraints {
 	private double maxAcceleration;
 	private double maxDeceleration;
 	private double maxVelocity;
-
+	
 	public VelocityConstraints(double maxAcceleration, double maxDeceleration, double maxVelocity) {
 		this.maxAcceleration = Math.abs(maxAcceleration);
 		this.maxDeceleration = Math.abs(maxDeceleration);

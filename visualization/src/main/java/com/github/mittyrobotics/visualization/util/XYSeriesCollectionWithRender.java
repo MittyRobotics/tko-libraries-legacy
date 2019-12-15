@@ -10,11 +10,11 @@ public class XYSeriesCollectionWithRender extends XYSeriesCollection {
 	private Color color;
 	private Shape shape;
 	
-	public XYSeriesCollectionWithRender(){
-		this(true,true, Color.white, new Rectangle(2,2));
+	public XYSeriesCollectionWithRender() {
+		this(true, true, Color.white, new Rectangle(2, 2));
 	}
 	
-	public XYSeriesCollectionWithRender(boolean showLines, boolean showPoints, Color color, Shape shape){
+	public XYSeriesCollectionWithRender(boolean showLines, boolean showPoints, Color color, Shape shape) {
 		super();
 		this.showLines = showLines;
 		this.showPoints = showPoints;

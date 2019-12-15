@@ -2,7 +2,6 @@ package com.github.mittyrobotics.datatypes.geometry;
 
 import com.github.mittyrobotics.datatypes.enums.RoundMode;
 import com.github.mittyrobotics.datatypes.positioning.Position;
-import com.github.mittyrobotics.datatypes.positioning.Rotation;
 import com.github.mittyrobotics.datatypes.positioning.Transform;
 
 import java.util.Optional;

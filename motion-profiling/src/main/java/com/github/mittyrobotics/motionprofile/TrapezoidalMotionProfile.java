@@ -1,10 +1,10 @@
 package com.github.mittyrobotics.motionprofile;
 
+import com.github.mittyrobotics.datatypes.motion.MotionState;
 import com.github.mittyrobotics.datatypes.motion.VelocityConstraints;
 import com.github.mittyrobotics.motionprofile.util.Function;
 import com.github.mittyrobotics.motionprofile.util.IntegralMath;
 import com.github.mittyrobotics.motionprofile.util.datatypes.MechanismBounds;
-import com.github.mittyrobotics.datatypes.motion.MotionState;
 import com.github.mittyrobotics.motionprofile.util.datatypes.MotionSegment;
 
 public class TrapezoidalMotionProfile {
@@ -13,15 +13,14 @@ public class TrapezoidalMotionProfile {
 	private final MotionState endMotionState;
 	private final VelocityConstraints velocityConstraints;
 	private final MechanismBounds mechanismBounds;
-	
+	//Keep track of the previous velocity and time for getting acceleration
+	double prevVelocity;
+	double prevTime;
 	private MotionSegment accelerationSegment;
 	private MotionSegment cruiseSegment;
 	private MotionSegment decelerationSegment;
-	
 	private double tTotal;
-	
 	private double startPosition, startVelocity, endPosition, endVelocity, maxAcceleration, maxDeceleration, maxVelocity, minPosition, maxPosition;
-	
 	private boolean reversed;
 	private boolean isFinished;
 	
@@ -341,7 +340,7 @@ public class TrapezoidalMotionProfile {
 		
 		return output + startPosition;
 	}
-	
+
 	/**
 	 * Only works with starting and ending velocity of 0.
 	 *
@@ -360,10 +359,6 @@ public class TrapezoidalMotionProfile {
 					Math.sqrt((2 * (position - accelerationSegment.getDistance() - cruiseSegment.getDistance())) / maxAcceleration);
 		}
 	}
-	
-	//Keep track of the previous velocity and time for getting acceleration
-	double prevVelocity;
-	double prevTime;
 	
 	/**
 	 * Returns the acceleration of the motion profile at time t.

@@ -16,6 +16,7 @@ repositories {
 dependencies {
     compile(project(":datatypes"))
     compile(project(":path-generation"))
+    compile(project(":simulation"))
 }
 
 

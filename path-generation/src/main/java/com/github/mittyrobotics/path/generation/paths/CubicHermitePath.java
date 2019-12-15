@@ -90,7 +90,7 @@ public class CubicHermitePath extends Path {
 					//Create a new line segment with a and a+2 as the end points
 					LineSegment line = new LineSegment(points[a].getPosition(), points[a + 2].getPosition());
 					segment = new LinePathSegment(line);
-		
+					
 				} else {
 					//Create a new arc segment with a and a+2 as the end points and a+1 and the intermediate point
 					ArcSegment arc = new ArcSegment(points[a].getPosition(), points[a + 2].getPosition(), points[a + 1].getPosition());

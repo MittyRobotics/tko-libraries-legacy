@@ -94,8 +94,8 @@ public class Line {
 	 *
 	 * @return the {@link Rotation} of this line.
 	 */
-	public Rotation getLineAngle(){
-		return new Rotation(Math.toDegrees(Math.atan2(getSlope(),1)));
+	public Rotation getLineAngle() {
+		return new Rotation(Math.toDegrees(Math.atan2(getSlope(), 1)));
 	}
 	
 	/**

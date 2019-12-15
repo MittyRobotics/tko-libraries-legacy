@@ -48,8 +48,8 @@ public class Transform {
 	 *
 	 * @return this {@link Transform} from inches to meters.
 	 */
-	public Transform inToM(){
-		return new Transform(position.inToM(),rotation);
+	public Transform inToM() {
+		return new Transform(position.inToM(), rotation);
 	}
 	
 	/**
@@ -57,8 +57,8 @@ public class Transform {
 	 *
 	 * @return this {@link Transform} from meters to inches.
 	 */
-	public Transform mToIn(){
-		return new Transform(position.mToIn(),rotation);
+	public Transform mToIn() {
+		return new Transform(position.mToIn(), rotation);
 	}
 	
 	/**

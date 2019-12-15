@@ -196,7 +196,7 @@ public class Rotation {
 	 *
 	 * @return a new {@link Rotation} with the heading mapped between -180 and 180;
 	 */
-	public Rotation mapHeading180(){
+	public Rotation mapHeading180() {
 		double angle = getHeading();
 		double sign = Math.signum(angle);
 		angle = Math.abs(angle % 360);
@@ -206,17 +206,17 @@ public class Rotation {
 			return new Rotation((sign * ((angle % 360) % 180 - 180)));
 		}
 	}
+	
 	/**
 	 * Maps the heading value of the {@link Rotation} between 0 and 360;
 	 *
 	 * @return a new {@link Rotation} with the heading mapped between 0 and 360;
 	 */
-	public Rotation mapHeading360(){
+	public Rotation mapHeading360() {
 		double angle = mapHeading180().getHeading();
-		if(angle < 0){
+		if (angle < 0) {
 			return new Rotation(angle + 360);
-		}
-		else{
+		} else {
 			return new Rotation(angle);
 		}
 	}

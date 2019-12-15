@@ -11,7 +11,7 @@ public class GraphTheme {
 	private Color labelColor;
 	private Color tickLabelColor;
 	
-	public GraphTheme(Color graphBackgroundColor, Color gridColor, Color frameBackgroundColor, Color titleColor, Color labelColor, Color tickLabelColor){
+	public GraphTheme(Color graphBackgroundColor, Color gridColor, Color frameBackgroundColor, Color titleColor, Color labelColor, Color tickLabelColor) {
 		this.graphBackgroundColor = graphBackgroundColor;
 		this.gridColor = gridColor;
 		this.frameBackgroundColor = frameBackgroundColor;

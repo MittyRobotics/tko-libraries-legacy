@@ -18,13 +18,13 @@ public class IntegralMath {
 	public static double integral(double a, double b, Function function) {
 		double area = 0;
 		double modifier = 1;
-		if(a > b) {
+		if (a > b) {
 			double tempA = a;
 			a = b;
 			b = tempA;
 			modifier = -1;
 		}
-		for(double i = a + INCREMENT; i < b; i += INCREMENT) {
+		for (double i = a + INCREMENT; i < b; i += INCREMENT) {
 			double dFromA = i - a;
 			area += (INCREMENT / 2) * (function.f(a + dFromA) + function.f(a + dFromA - INCREMENT));
 		}

@@ -1,6 +1,5 @@
 package com.github.mittyrobotics.path.generation.paths;
 
-import com.github.mittyrobotics.datacollection.performance.TimeMonitor;
 import com.github.mittyrobotics.datatypes.enums.RoundMode;
 import com.github.mittyrobotics.datatypes.geometry.ArcSegment;
 import com.github.mittyrobotics.datatypes.geometry.LineSegment;
@@ -121,6 +120,10 @@ public abstract class Path {
 			}
 		}
 		
+		if (reversed) {
+			actualClosestSegment.getTransform().setRotation(actualClosestSegment.getTransform().getRotation().rotateBy(180));
+		}
+		
 		//If the distance to the actual closest point is greater than the distance shift, return the actual closest point
 		if (distanceShift == 0) {
 			return actualClosestSegment;
@@ -131,19 +134,19 @@ public abstract class Path {
 		for (int i = 0; i < segments.size(); i++) {
 			PathSegment segment = segments.get(i);
 			Optional<Transform> transform = segment.getClosestPointOnSegment(referenceTransform);
-			double distance = Math.abs(transform.get().getPosition().distance(referenceTransform.getPosition()) - distanceShift);
-			Transform relative = transform.get().relativeTo(actualClosestSegment.getTransform());
-			boolean correctSide;
-			if (reversed) {
-				correctSide = relative.getPosition().getX() < 0;
-				transform.get().setRotation(transform.get().getRotation().rotateBy(new Rotation(180)));
-			} else {
-				correctSide = relative.getPosition().getX() > 0;
-			}
-			if (transform.isPresent() && (Double.isNaN(closestDist) || distance < closestDist) && correctSide) {
-				shiftedClosestSegment = new TransformWithSegment(transform.get(), segments.get(i));
-				closestDist = distance;
-				
+			if (transform.isPresent()) {
+				double distance = Math.abs(transform.get().getPosition().distance(referenceTransform.getPosition()) - distanceShift);
+				Transform relative = transform.get().relativeTo(actualClosestSegment.getTransform());
+				boolean correctSide;
+				if (reversed) {
+					correctSide = relative.getPosition().getX() < 0;
+				} else {
+					correctSide = relative.getPosition().getX() > 0;
+				}
+				if ((Double.isNaN(closestDist) || distance < closestDist) && correctSide) {
+					shiftedClosestSegment = new TransformWithSegment(transform.get(), segments.get(i));
+					closestDist = distance;
+				}
 			}
 		}
 		

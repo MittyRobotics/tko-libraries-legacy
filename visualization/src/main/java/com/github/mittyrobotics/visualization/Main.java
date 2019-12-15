@@ -10,6 +10,6 @@ public class Main {
 	public static void main(String[] args) {
 		Graph graph = new Graph();
 		graph.setVisible(true);
-		graph.addDataset(GraphManager.getInstance().graphRectangle(new Transform(5,5,34),20,30,"adsf", Color.white));
+		graph.addDataset(GraphManager.getInstance().graphRectangle(new Transform(5, 5, 34), 20, 30, "adsf", Color.white));
 	}
 }

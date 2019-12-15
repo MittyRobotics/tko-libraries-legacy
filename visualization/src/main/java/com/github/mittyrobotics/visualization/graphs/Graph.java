@@ -1,9 +1,9 @@
 package com.github.mittyrobotics.visualization.graphs;
 
-import com.github.mittyrobotics.visualization.util.XYLineShapeColorRenderer;
-import com.github.mittyrobotics.visualization.util.XYSeriesCollectionWithRender;
 import com.github.mittyrobotics.visualization.themes.GraphTheme;
 import com.github.mittyrobotics.visualization.themes.TKOTheme;
+import com.github.mittyrobotics.visualization.util.XYLineShapeColorRenderer;
+import com.github.mittyrobotics.visualization.util.XYSeriesCollectionWithRender;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
@@ -27,9 +27,10 @@ public class Graph extends JFrame {
 	private ChartPanel chartPanel;
 	private JFreeChart chart;
 	private XYPlot plot;
+	private int lastIndex = 0;
 	
-	public Graph(){
-		this("Graph", "X","Y");
+	public Graph() {
+		this("Graph", "X", "Y");
 	}
 	
 	public Graph(String titleName, String yAxisName, String xAxisName) {
@@ -44,7 +45,7 @@ public class Graph extends JFrame {
 	
 	private void initUI() {
 		JFreeChart chart = createChart();
-
+		
 		ChartPanel chartPanel = new ChartPanel(chart);
 		chartPanel.setBorder(BorderFactory.createEmptyBorder(15, 15, 15, 15));
 		add(chartPanel);
@@ -69,7 +70,7 @@ public class Graph extends JFrame {
 				true,
 				false
 		);
-
+		
 		XYPlot plot = chart.getXYPlot();
 		
 		plot.setBackgroundPaint(Color.white);
@@ -80,10 +81,9 @@ public class Graph extends JFrame {
 		plot.setDomainGridlinesVisible(true);
 		plot.setDomainGridlinePaint(Color.BLACK);
 		
-		( (NumberAxis)plot.getDomainAxis()).setNumberFormatOverride(new DecimalFormat());
-		( (NumberAxis)plot.getRangeAxis()).setNumberFormatOverride(new DecimalFormat());
-
-
+		((NumberAxis) plot.getDomainAxis()).setNumberFormatOverride(new DecimalFormat());
+		((NumberAxis) plot.getRangeAxis()).setNumberFormatOverride(new DecimalFormat());
+		
 		
 		this.chart = chart;
 		this.plot = plot;
@@ -91,7 +91,7 @@ public class Graph extends JFrame {
 		return chart;
 	}
 	
-	public void setGraphTheme(GraphTheme theme){
+	public void setGraphTheme(GraphTheme theme) {
 		chartPanel.setBackground(theme.getFrameBackgroundColor());
 		plot.setBackgroundPaint(theme.getGraphBackgroundColor());
 		plot.setDomainGridlinePaint(theme.getGridColor());
@@ -106,59 +106,56 @@ public class Graph extends JFrame {
 		plot.getRangeAxis().setTickLabelPaint(theme.getTickLabelColor());
 	}
 	
-	public void scaleGraphToFit(){
+	public void scaleGraphToFit() {
 		double lowerBound = 9999;
 		double upperBound = -9999;
 		double leftBound = 9999;
 		double rightBound = -9999;
-		for(int i = 0; i < plot.getDatasetCount(); i++){
-			for(int a = 0; a < plot.getDataset(i).getSeriesCount(); a++){
-				for(int j = 0; j < plot.getDataset(i).getItemCount(a); j++){
-					if(plot.getDataset(i).getYValue(a,j) < lowerBound){
-						lowerBound = plot.getDataset(i).getYValue(a,j);
+		for (int i = 0; i < plot.getDatasetCount(); i++) {
+			for (int a = 0; a < plot.getDataset(i).getSeriesCount(); a++) {
+				for (int j = 0; j < plot.getDataset(i).getItemCount(a); j++) {
+					if (plot.getDataset(i).getYValue(a, j) < lowerBound) {
+						lowerBound = plot.getDataset(i).getYValue(a, j);
 					}
-					if(plot.getDataset(i).getYValue(a,j) > upperBound){
-						upperBound = plot.getDataset(i).getYValue(a,j);
+					if (plot.getDataset(i).getYValue(a, j) > upperBound) {
+						upperBound = plot.getDataset(i).getYValue(a, j);
 					}
-					if(plot.getDataset(i).getXValue(a,j) < leftBound){
-						leftBound = plot.getDataset(i).getXValue(a,j);
+					if (plot.getDataset(i).getXValue(a, j) < leftBound) {
+						leftBound = plot.getDataset(i).getXValue(a, j);
 					}
-					if(plot.getDataset(i).getXValue(a,j) > rightBound){
-						rightBound = plot.getDataset(i).getXValue(a,j);
+					if (plot.getDataset(i).getXValue(a, j) > rightBound) {
+						rightBound = plot.getDataset(i).getXValue(a, j);
 					}
 				}
 			}
 		}
 		
-		double lowerRange=0;
-		double upperRange=0;
+		double lowerRange = 0;
+		double upperRange = 0;
 		
 		
-		if(lowerBound < leftBound){
+		if (lowerBound < leftBound) {
 			lowerRange = lowerBound;
-		}
-		else{
+		} else {
 			lowerRange = leftBound;
 		}
 		
-		if(upperBound > rightBound){
+		if (upperBound > rightBound) {
 			upperRange = upperBound;
-		}
-		else{
+		} else {
 			upperRange = rightBound;
 		}
 		
 		
-		
 		NumberAxis domain = (NumberAxis) plot.getDomainAxis();
-		domain.setRange(lowerRange-20, upperRange+20);
+		domain.setRange(lowerRange - 20, upperRange + 20);
 		domain.setVerticalTickLabels(true);
 		NumberAxis range = (NumberAxis) plot.getRangeAxis();
-		range.setRange(lowerRange-20, upperRange+20);
+		range.setRange(lowerRange - 20, upperRange + 20);
 		
 	}
 	
-	public void resizeGraph(double lowerBound, double upperBound, double leftBound, double rightBound){
+	public void resizeGraph(double lowerBound, double upperBound, double leftBound, double rightBound) {
 		NumberAxis domain = (NumberAxis) plot.getDomainAxis();
 		domain.setRange(leftBound, rightBound);
 		domain.setVerticalTickLabels(true);
@@ -166,38 +163,36 @@ public class Graph extends JFrame {
 		range.setRange(lowerBound, upperBound);
 	}
 	
-	public void clearGraph(){
-		for(int i = 0; i < plot.getDatasetCount(); i++){
+	public void clearGraph() {
+		for (int i = 0; i < plot.getDatasetCount(); i++) {
 			plot.setDataset(0, null);
 		}
+		lastIndex = 0;
 	}
 	
-	public void updateGraph(){
+	public void updateGraph() {
 		clearGraph();
-		if(datasets != null){
-			for(int i = 0; i < datasets.length; i++){
-				plot.setDataset(i,datasets[i]);
+		if (datasets != null) {
+			for (int i = 0; i < datasets.length; i++) {
+				plot.setDataset(i, datasets[i]);
 				plot.setRenderer(i, new XYLineShapeColorRenderer(datasets[i].isShowPoints(), datasets[i].isShowLines(), datasets[i].getColor()));
 			}
 		}
-
-		
 	}
 	
-	public void setDatasets(XYSeriesCollectionWithRender[] datasets) {
-		this.datasets = datasets;
-		updateGraph();
-	}
-
-	public void addDataset(XYSeriesCollectionWithRender dataset){
-		plot.setDataset(plot.getDatasetCount(),dataset);
-		plot.setRenderer(plot.getDatasetCount()-1, new XYLineShapeColorRenderer(dataset.isShowPoints(), dataset.isShowLines(), dataset.getColor()));
+	public void addDataset(XYSeriesCollectionWithRender dataset) {
+		plot.setDataset(lastIndex, dataset);
+		plot.setRenderer(plot.getDatasetCount() - 1, new XYLineShapeColorRenderer(dataset.isShowPoints(), dataset.isShowLines(), dataset.getColor()));
 	}
 	
 	public XYDataset[] getDatasets() {
 		return datasets;
 	}
 	
+	public void setDatasets(XYSeriesCollectionWithRender[] datasets) {
+		this.datasets = datasets;
+		updateGraph();
+	}
 	
 	public ChartPanel getChartPanel() {
 		return chartPanel;
@@ -211,5 +206,5 @@ public class Graph extends JFrame {
 		return plot;
 	}
 	
-
+	
 }

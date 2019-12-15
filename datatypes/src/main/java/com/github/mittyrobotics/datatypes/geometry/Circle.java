@@ -4,8 +4,6 @@ import com.github.mittyrobotics.datatypes.positioning.Position;
 import com.github.mittyrobotics.datatypes.positioning.Rotation;
 import com.github.mittyrobotics.datatypes.positioning.Transform;
 
-import java.util.Optional;
-
 /**
  * Represents a 2d circle on a standard cartesian coordinate plane.
  */
@@ -111,7 +109,15 @@ public class Circle {
 				(b + d) / 2 - (c - a) / (d - b) * (cX - ((a + c) * (theta.tan() * (c - a) + b - d)) / (2 * (theta.tan()
 						* (c - a) + b - d)));
 		
-		return new Circle(new Position(cX, cY), new Position(cX, cY).distance(tangentPoint.getPosition()));
+		Position center = new Position(cX, cY);
+		double distance = center.distance(tangentPoint.getPosition());
+		
+		if (Double.isNaN(distance)) {
+			center = new Position(2e16, 2e16);
+			distance = 2e16;
+		}
+		
+		return new Circle(center, distance);
 	}
 	
 	/**
@@ -179,8 +185,8 @@ public class Circle {
 	 * @param pointOfTangency the {@link Position} on the circle to find the {@link Line} of tangency.
 	 * @return the {@link Line} of tangency.
 	 */
-	public Line getTangentLineAtPoint(Position pointOfTangency){
-		Line centerToPointLine = new Line(getCenter(),pointOfTangency);
+	public Line getTangentLineAtPoint(Position pointOfTangency) {
+		Line centerToPointLine = new Line(getCenter(), pointOfTangency);
 		return centerToPointLine.getParallelLine(pointOfTangency);
 	}
 	
@@ -209,7 +215,7 @@ public class Circle {
 				currentClosestPosition = positions[i];
 			}
 		}
-
+		
 		return currentClosestPosition;
 	}
 	

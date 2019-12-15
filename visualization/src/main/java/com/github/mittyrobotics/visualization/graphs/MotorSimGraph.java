@@ -11,7 +11,7 @@ public class MotorSimGraph extends Graph {
 	XYSeries setpointSeries;
 	XYSeries errorSeries;
 	
-	public MotorSimGraph(){
+	public MotorSimGraph() {
 		super();
 		positionSeries = new XYSeries("Position", false);
 		velocitySeries = new XYSeries("Velocity", false);
@@ -32,8 +32,9 @@ public class MotorSimGraph extends Graph {
 	
 	public void addPosition(double position, double time) {
 		//convert to inches
-		positionSeries.add(time, position  * Conversions.M_TO_IN);
+		positionSeries.add(time, position * Conversions.M_TO_IN);
 	}
+
 	public void addVelocity(double velocity, double time) {
 		//convert to inches
 		velocitySeries.add(time, velocity * Conversions.M_TO_IN);
@@ -43,10 +44,12 @@ public class MotorSimGraph extends Graph {
 		//convert to inches
 		voltageSeries.add(time, voltage);
 	}
+
 	public void addSetpoint(double setpoint, double time) {
 		//convert to inches
-		setpointSeries.add(time, setpoint  * Conversions.M_TO_IN);
+		setpointSeries.add(time, setpoint * Conversions.M_TO_IN);
 	}
+
 	public void addError(double error, double time) {
 		//convert to inches
 		errorSeries.add(time, error);

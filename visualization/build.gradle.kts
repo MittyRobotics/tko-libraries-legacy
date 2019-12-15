@@ -11,7 +11,7 @@ version = "0.1.0"
 repositories {
     jcenter()
     mavenLocal()
-    maven (url = "https://jitpack.io")
+    maven(url = "https://jitpack.io")
 }
 
 dependencies {

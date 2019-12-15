@@ -28,7 +28,7 @@ public class Position {
 	 * @return the distance from this {@link Position} to <code>other</code>.
 	 */
 	public double distance(Position other) {
-		return Math.sqrt(Math.pow(other.x - x,2) + Math.pow(other.y - y,2));
+		return Math.sqrt(Math.pow(other.x - x, 2) + Math.pow(other.y - y, 2));
 	}
 	
 	/**
@@ -36,7 +36,7 @@ public class Position {
 	 *
 	 * @return this {@link Position} from inches to meters.
 	 */
-	public Position inToM(){
+	public Position inToM() {
 		return multiply(Conversions.IN_TO_M);
 	}
 	
@@ -45,7 +45,7 @@ public class Position {
 	 *
 	 * @return this {@link Position} from meters to inches.
 	 */
-	public Position mToIn(){
+	public Position mToIn() {
 		return multiply(Conversions.M_TO_IN);
 	}
 	

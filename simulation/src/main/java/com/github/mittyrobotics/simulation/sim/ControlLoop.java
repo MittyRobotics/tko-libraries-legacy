@@ -5,14 +5,13 @@ import com.github.mittyrobotics.simulation.enums.ControlLoopType;
 
 public class ControlLoop {
 	
+	double integral = 0;
 	private double lastError = 0;
 	private double lastMeasured = 0;
 	private double totalError = 0;
-	
 	private ControlLoopType type;
 	private double iterationTime;
 	private double maxVoltage;
-	
 	private double Kv;
 	private double Ka;
 	private double Kp;
@@ -20,70 +19,67 @@ public class ControlLoop {
 	private double Kd;
 	private double Kf;
 	
-	public ControlLoop(ControlLoopType type, double maxVoltage, double iterationTime){
+	public ControlLoop(ControlLoopType type, double maxVoltage, double iterationTime) {
 		this.type = type;
 		this.maxVoltage = maxVoltage;
 		this.iterationTime = iterationTime;
 	}
 	
-	public void setupVelocityController(double Kv, double Ka, double Kp){
+	public void setupVelocityController(double Kv, double Ka, double Kp) {
 		this.Kv = Kv;
 		this.Ka = Ka;
 		this.Kp = Kp;
 	}
 	
-	
-	public void setupPIDFController(double Kp, double Ki, double Kd, double Kf){
+	public void setupPIDFController(double Kp, double Ki, double Kd, double Kf) {
 		this.Kp = Kp;
 		this.Ki = Ki;
 		this.Kd = Kd;
 		this.Kf = Kf;
 	}
 	
-	public double update(double target, double measured){
+	public double update(double target, double measured) {
 		target = target * Conversions.M_TO_IN;
 		measured = measured * Conversions.M_TO_IN;
-		switch(type){
+		switch (type) {
 			case PIDF:
-				return PIDFControl(target,measured);
+				return PIDFControl(target, measured);
 			case VELOCITY:
-				return velocityControl(target,measured);
+				return velocityControl(target, measured);
 		}
 		return 0;
 	}
 	
-	private double velocityControl(double target, double measured){
+	private double velocityControl(double target, double measured) {
 		double voltage = 0;
-		
-		double FF = Kv * target + Ka * ((measured - lastMeasured)/iterationTime);
-		
+
+		double FF = Kv * target + Ka * ((measured - lastMeasured) / iterationTime);
+
 		double error = target - measured;
-		
+
 		double FB = Kp * error;
 
 		voltage = FF + FB;
-		
-		voltage = Math.max(-maxVoltage, Math.min(maxVoltage,voltage));
-		
+
+		voltage = Math.max(-maxVoltage, Math.min(maxVoltage, voltage));
+
 		lastMeasured = measured;
 		lastError = error;
-		
+
 		return voltage;
 	}
 	
-	double integral = 0;
-	
-	private double PIDFControl(double target, double measured){
+	private double PIDFControl(double target, double measured) {
 		double voltage = 0;
 		
 		double error = target - measured;
 		
 		integral = integral + error * iterationTime;
-		double derivative = (error-lastError) / iterationTime;
+		double derivative = (error - lastError) / iterationTime;
 		
 		voltage = Kp * error + Ki * integral + Kd * derivative + Kf * target;
 		
-		voltage = Math.max(-maxVoltage, Math.min(maxVoltage,voltage));
+		voltage = Math.max(-maxVoltage, Math.min(maxVoltage, voltage));
 		
 		lastMeasured = measured;
 		lastError = error;

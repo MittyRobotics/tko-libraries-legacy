@@ -20,7 +20,7 @@ allprojects {
         maven(url = "https://jitpack.io")
     }
 
-    dependencies{
+    dependencies {
         // WPILib
         wpi.deps.wpilib().forEach { compile(it) }
         wpi.deps.vendor.java().forEach { compile(it) }
@@ -33,8 +33,8 @@ allprojects {
     }
 }
 
-publishing{
-    repositories{
+publishing {
+    repositories {
         mavenLocal()
     }
 }

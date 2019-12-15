@@ -6,37 +6,33 @@ public class SimSampleRobot implements SimRobot {
 	
 	@Override
 	public void robotInit() {
-
-
+	
+	
 	}
 	
 	@Override
 	public void robotPeriodic() {
-		arcadeDrive();
+		//arcadeDrive();
 //		System.out.println(SimSampleDrivetrain.getInstance().getLeftMasterTalon().getVelocity() + " "  + SimSampleDrivetrain.getInstance().getRightMasterTalon().getVelocity());
 	}
-
-	private void arcadeDrive(){
+	
+	private void arcadeDrive() {
 		double drive;
 		double turn;
-		if(SimOI.getInstance().isUpKey()){
+		if (SimOI.getInstance().isUpKey()) {
 			drive = 0.5;
-		}
-		else if(SimOI.getInstance().isDownKey()){
+		} else if (SimOI.getInstance().isDownKey()) {
 			drive = -0.5;
-		}
-		else{
+		} else {
 			drive = 0;
 		}
-		if(SimOI.getInstance().isLeftKey()){
+		if (SimOI.getInstance().isLeftKey()) {
 			turn = -0.2;
-		}
-		else if(SimOI.getInstance().isRightKey()){
+		} else if (SimOI.getInstance().isRightKey()) {
 			turn = 0.2;
-		}
-		else{
+		} else {
 			turn = 0;
 		}
-		SimSampleDrivetrain.getInstance().setSpeeds(drive + turn,drive - turn);
+		SimSampleDrivetrain.getInstance().setSpeeds(drive + turn, drive - turn);
 	}
 }

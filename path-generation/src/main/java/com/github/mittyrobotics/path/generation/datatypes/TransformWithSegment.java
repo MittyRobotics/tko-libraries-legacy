@@ -6,7 +6,7 @@ public class TransformWithSegment {
 	private Transform transform;
 	private PathSegment segment;
 	
-	public TransformWithSegment(Transform transform,PathSegment segment){
+	public TransformWithSegment(Transform transform, PathSegment segment) {
 		this.segment = segment;
 		this.transform = transform;
 	}
@@ -14,6 +14,7 @@ public class TransformWithSegment {
 	public Transform getTransform() {
 		return transform;
 	}
+	
 	public PathSegment getSegment() {
 		return segment;
 	}

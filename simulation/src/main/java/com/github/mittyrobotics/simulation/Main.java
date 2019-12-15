@@ -1,13 +1,12 @@
 package com.github.mittyrobotics.simulation;
 
 
-
 import com.github.mittyrobotics.datatypes.units.Conversions;
-import com.github.mittyrobotics.simulation.sim.ControlLoop;
-import com.github.mittyrobotics.simulation.sim.MotorSimulator;
 import com.github.mittyrobotics.simulation.enums.ControlLoopType;
 import com.github.mittyrobotics.simulation.enums.ControlType;
 import com.github.mittyrobotics.simulation.motors.CIMMotor;
+import com.github.mittyrobotics.simulation.sim.ControlLoop;
+import com.github.mittyrobotics.simulation.sim.MotorSimulator;
 import com.github.mittyrobotics.visualization.graphs.MotorSimGraph;
 
 import java.io.FileWriter;
@@ -32,10 +31,9 @@ public class Main {
 		MotorSimulator motorSimulator = new MotorSimulator(new CIMMotor(), 2, mass, gearRatio, wheelRadius, controlLoop, controlType, "CIM motor");
 		MotorSimGraph graph = new MotorSimGraph();
 		
-		double setpoint = 10  * Conversions.IN_TO_M;
+		double setpoint = 10 * Conversions.IN_TO_M;
 		
 		double t = 0.0;
-		
 		
 		
 		while (t < 20) {
