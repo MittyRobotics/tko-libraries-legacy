@@ -95,7 +95,11 @@ public class Line {
 	 * @return the {@link Rotation} of this line.
 	 */
 	public Rotation getLineAngle() {
-		return new Rotation(Math.toDegrees(Math.atan2(getSlope(), 1)));
+		double angle = Math.toDegrees(Math.atan2(getSlope(), 1));
+		if (Double.isNaN(angle)) {
+			angle = 0;
+		}
+		return new Rotation(angle);
 	}
 	
 	/**

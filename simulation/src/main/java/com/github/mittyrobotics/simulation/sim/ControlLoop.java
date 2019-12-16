@@ -52,20 +52,20 @@ public class ControlLoop {
 	
 	private double velocityControl(double target, double measured) {
 		double voltage = 0;
-
+		
 		double FF = Kv * target + Ka * ((measured - lastMeasured) / iterationTime);
-
+		
 		double error = target - measured;
-
+		
 		double FB = Kp * error;
-
+		
 		voltage = FF + FB;
-
+		
 		voltage = Math.max(-maxVoltage, Math.min(maxVoltage, voltage));
-
+		
 		lastMeasured = measured;
 		lastError = error;
-
+		
 		return voltage;
 	}
 	
