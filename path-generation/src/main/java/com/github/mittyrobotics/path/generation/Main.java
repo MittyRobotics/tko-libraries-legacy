@@ -20,19 +20,21 @@ public class Main {
 		graph.getChart().removeLegend();
 		CubicHermitePath path = new CubicHermitePath(new Transform[]{
 				new Transform(0, 0, 0),
-				new Transform(100, 24, 0)
+				new Transform(100, 24, 0),
+				new Transform(100,100,0)
 		});
 		Transform transform = new Transform(0,0);
+		double t = 0;
 		while(true){
 			graph.clearGraph();
 			graph.addDataset(GraphManager.getInstance().graphParametric(path.getParametrics(), 2, 1, "spline", Color.cyan));
-			Position closestPos = path.getClosestPoint(transform.getPosition(),0,false,3);
+			Position closestPos = path.getClosestPoint(transform.getPosition(),0,false,10);
 			graph.addDataset(GraphManager.getInstance().graphArrow(new Transform(closestPos,90),5,2,"asdf",Color.green));
 			
-			transform.setPosition(transform.getPosition().add(new Position(.5,0)));
-			
+			transform.setPosition(path.getPosition(t));
+
 			graph.addDataset(GraphManager.getInstance().graphArrow(transform,5,2,"asdf",Color.white));
-			
+			t += 0.001;
 			try {
 				Thread.sleep(30);
 			} catch (InterruptedException e) {

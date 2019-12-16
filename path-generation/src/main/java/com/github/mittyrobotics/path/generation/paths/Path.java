@@ -4,6 +4,8 @@ import com.github.mittyrobotics.datatypes.path.Parametric;
 import com.github.mittyrobotics.datatypes.positioning.Position;
 import com.github.mittyrobotics.datatypes.positioning.Transform;
 
+import javax.xml.transform.Transformer;
+
 public abstract class Path {
 	private Transform[] waypoints;
 	private Parametric[] parametrics;
@@ -49,27 +51,21 @@ public abstract class Path {
 		double minT = 0;
 		double maxT = 0;
 		double closestDistance = 9999;
-		for(int i = 1; i < steps+1; i++){
+		for(int i = 0; i < steps+1; i++){
 			double t = i/steps;
-			double distanceClosest = getPosition(t).distance(referencePosition);
-			double distanceBehind = getPosition((i-1)/steps).distance(referencePosition);
-			double distanceAhead = getPosition((i+1)/steps).distance(referencePosition);
-			if(distanceBehind + distanceClosest > distanceAhead+distanceClosest){
-				if(distanceBehind < closestDistance){
-					closestDistance = distanceBehind;
-					minT = (i)/steps;
-				}
-			}
-			else{
-				if(distanceClosest < closestDistance){
-					closestDistance = distanceClosest;
-					minT = (i-1)/steps;
-					maxT = i/steps;
+			Transform transform = getTransform(t);
+			double distance = transform.getPosition().distance(referencePosition);
+			if(new Transform(referencePosition).relativeTo(transform).getPosition().getX() > 0){
+				if(distance < closestDistance){
+					closestDistance = distance;
+					minT = t;
+					maxT = t + 1/steps;
 				}
 			}
 		}
-		
-		double secondSteps = 1000;
+
+		System.out.println(minT + " " + maxT);
+
 		closestDistance = 9999;
 		for(double t = minT; t < maxT; t += 0.001){
 			double distance = getPosition(t).distance(referencePosition);
@@ -78,7 +74,7 @@ public abstract class Path {
 				minT = t;
 			}
 		}
-		
+
 		return getPosition(minT);
 	}
 	
