@@ -11,13 +11,15 @@ import com.github.mittyrobotics.simulation.sim.RobotSimManager;
 import com.github.mittyrobotics.simulation.util.SimSampleDrivetrain;
 import com.github.mittyrobotics.simulation.util.SimSampleRobot;
 
+import java.util.Random;
+
 public class Main {
 	public static void main(String[] args) {
 		Path path = new CubicHermitePath(new Transform[]{new Transform(0, 0, 0), new Transform(100, 24, 0), new Transform(150, 24, 0)});
 		PathFollower.getInstance().setupPurePursuit(
 				path,
-				20,
-				1.2,
+				30,
+				0,
 				20,
 				false,
 				new PathVelocityController(
@@ -35,11 +37,27 @@ public class Main {
 		
 		SimSampleDrivetrain.getInstance().setupPIDFValues(0.001, 0, 0, 0.1);
 		DifferentialDriveKinematics.getInstance().setTrackWidth(20);
+		try {
+			Thread.sleep(500);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+		
+		Random random = new Random();
+		
+		double x = random.nextInt(200) - 150.0;
+		double y = random.nextInt(200) - 100.0;
+		double heading = random.nextInt(90) - 45;
+		
+		SimSampleDrivetrain.getInstance().setOdometry(x, y, heading);
+		
+		path = new CubicHermitePath(new Transform[]{SimSampleDrivetrain.getInstance().getRobotTransform(), new Transform(100, 24, 0), new Transform(150, 24, 0)});
+		
+		PathFollower.getInstance().changePath(path);
 		
 		while (true) {
 			DrivetrainVelocities wheelVelocities = PathFollower.getInstance().updatePathFollower(SimSampleDrivetrain.getInstance().getRobotTransform(), SimSampleDrivetrain.getInstance().getAverageVelocity(), RobotSimManager.getInstance().getPeriodTime());
 			
-			System.out.println(wheelVelocities);
 			
 			SimSampleDrivetrain.getInstance().setVelocities(wheelVelocities.getLeftVelocity(), wheelVelocities.getRightVelocity());
 			

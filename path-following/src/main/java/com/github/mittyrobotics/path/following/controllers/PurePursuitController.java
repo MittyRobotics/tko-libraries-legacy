@@ -9,7 +9,7 @@ import com.github.mittyrobotics.datatypes.positioning.Transform;
 import com.github.mittyrobotics.path.following.util.DifferentialDriveKinematics;
 
 public class PurePursuitController {
-	public static final double DEFAULT_CURVATURE_SLOWDOWN_GAIN = .8;
+	public static final double DEFAULT_CURVATURE_SLOWDOWN_GAIN = 0;
 	public static final double DEFAULT_MIN_SLOWDOWN_VELOCITY = 10;
 	public static double DEFAULT_LOOKAHEAD_DISTANCE = 20.0;
 	private static PurePursuitController instance = new PurePursuitController();
@@ -61,6 +61,9 @@ public class PurePursuitController {
 	}
 	
 	private double calculateSlowdownVelocity(double curvature, double currentVelocity, double minSlowdownVelocity) {
+		if (curvatureSlowdownGain == 0) {
+			return currentVelocity;
+		}
 		double absVelocity = Math.abs(currentVelocity);
 		double velSign = Math.signum(currentVelocity);
 		double vel = Math.min(absVelocity, Math.max(minSlowdownVelocity, curvatureSlowdownGain / curvature));

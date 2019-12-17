@@ -62,6 +62,10 @@ public class PathFollower {
 		this.pathVelocityController = pathVelocityController;
 	}
 	
+	public void changePath(Path path) {
+		this.path = path;
+	}
+	
 	public DrivetrainVelocities updatePathFollower(Transform robotTransform, double currentVelocity, double deltaTime) {
 		if (path == null) {
 			System.out.println("WARNING: The current path follower path is null!");

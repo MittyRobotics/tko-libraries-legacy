@@ -18,8 +18,6 @@ public class SafeVelocityController {
 			finalVelocity = currentVelocity + velocityConstraints.getMaxAcceleration() * deltaTime;
 		}
 		
-		System.out.println(finalVelocity);
-		
 		return Math.min(finalVelocity, desiredVelocity);
 	}
 	
