@@ -9,6 +9,7 @@ public class RamseteController {
 	public static double DEFAULT_AGGRESSIVE_GAIN = 2.0;
 	public static double DEFAULT_DAMPING_GAIN = 0.7;
 	private static RamseteController instance = new RamseteController();
+	
 	private double aggressiveGain; //(x > 0), makes turning more aggressive
 	private double dampingGain; //(0 < x < 1) provides more damping
 	
@@ -54,5 +55,13 @@ public class RamseteController {
 		
 		//Use differential drive kinematics given linear velocity in inches per second and angular velocity in radians per second
 		return DifferentialDriveKinematics.getInstance().calculateFromAngularVelocity(adjustedLinearVelocity, adjustedAngularVelocity);
+	}
+	
+	public double getAggressiveGain() {
+		return aggressiveGain;
+	}
+	
+	public double getDampingGain() {
+		return dampingGain;
 	}
 }
