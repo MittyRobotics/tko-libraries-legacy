@@ -6,8 +6,8 @@ public class SimSampleRobot implements SimRobot {
 	
 	@Override
 	public void robotInit() {
-
-
+	
+	
 	}
 	
 	@Override

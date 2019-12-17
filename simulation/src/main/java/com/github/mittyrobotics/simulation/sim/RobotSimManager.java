@@ -22,7 +22,7 @@ public class RobotSimManager implements Runnable {
 	
 	
 	private RobotSimManager() {
-
+	
 	}
 	
 	public static RobotSimManager getInstance() {

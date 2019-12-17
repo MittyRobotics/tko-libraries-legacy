@@ -58,38 +58,36 @@ public abstract class Path {
 		
 		if (reversed && relativeStart.getPosition().getX() < 0.3) {
 			Transform waypoint = waypoints[0];
-			return waypoint.getPosition().add(new Position(waypoint.getRotation().add(new Rotation(180)).cos()*distanceShift,waypoint.getRotation().add(new Rotation(180)).sin()*distanceShift));
+			return waypoint.getPosition().add(new Position(waypoint.getRotation().add(new Rotation(180)).cos() * distanceShift, waypoint.getRotation().add(new Rotation(180)).sin() * distanceShift));
 		} else if (!reversed && relativeEnd.getPosition().getX() > -0.3) {
 			Transform waypoint = waypoints[waypoints.length - 1];
-			return waypoint.getPosition().add(new Position(waypoint.getRotation().cos()*distanceShift,waypoint.getRotation().sin()*distanceShift));
+			return waypoint.getPosition().add(new Position(waypoint.getRotation().cos() * distanceShift, waypoint.getRotation().sin() * distanceShift));
 		}
-
-		if(distanceToStartWaypoint <= distanceShift || distanceToEndWaypoint <= distanceShift ){
+		
+		if (distanceToStartWaypoint <= distanceShift || distanceToEndWaypoint <= distanceShift) {
 			Line line = null;
 			Transform closestWaypoint = null;
-			if(distanceToStartWaypoint <= distanceShift && reversed){
-				line = new Line(waypoints[0].getPosition(),waypoints[0].getPosition().add(new Position(waypoints[0].getRotation().cos(),waypoints[0].getRotation().sin())));
+			if (distanceToStartWaypoint <= distanceShift && reversed) {
+				line = new Line(waypoints[0].getPosition(), waypoints[0].getPosition().add(new Position(waypoints[0].getRotation().cos(), waypoints[0].getRotation().sin())));
 				closestWaypoint = waypoints[0];
+			} else if (distanceToEndWaypoint <= distanceShift && !reversed) {
+				line = new Line(waypoints[waypoints.length - 1].getPosition(), waypoints[waypoints.length - 1].getPosition().add(new Position(waypoints[waypoints.length - 1].getRotation().cos(), waypoints[waypoints.length - 1].getRotation().sin())));
+				closestWaypoint = waypoints[waypoints.length - 1];
 			}
-			else if(distanceToEndWaypoint <= distanceShift && !reversed){
-				line = new Line(waypoints[waypoints.length-1].getPosition(),waypoints[waypoints.length-1].getPosition().add(new Position(waypoints[waypoints.length-1].getRotation().cos(),waypoints[waypoints.length-1].getRotation().sin())));
-				closestWaypoint = waypoints[waypoints.length-1];
-			}
-
-			if(line != null){
-				Circle circle = new Circle(referencePosition,distanceShift);
+			
+			if (line != null) {
+				Circle circle = new Circle(referencePosition, distanceShift);
 				Position[] positions = circle.circleLineIntersection(line);
 				Position position = new Position();
-				for(int i = 0; i < positions.length; i++){
-					double distance = Math.abs(positions[i].distance(referencePosition)-distanceShift);
+				for (int i = 0; i < positions.length; i++) {
+					double distance = Math.abs(positions[i].distance(referencePosition) - distanceShift);
 					Position relative = new Transform(positions[i]).relativeTo(closestWaypoint).getPosition();
-					if(reversed){
-						if(relative.getX() < 0){
+					if (reversed) {
+						if (relative.getX() < 0) {
 							position = positions[i];
 						}
-					}
-					else{
-						if(relative.getX() > 0){
+					} else {
+						if (relative.getX() > 0) {
 							position = positions[i];
 						}
 					}
@@ -97,7 +95,7 @@ public abstract class Path {
 				return position;
 			}
 		}
-
+		
 		
 		double minT = 0;
 		double maxT = 0;
@@ -131,7 +129,7 @@ public abstract class Path {
 		
 		double tFinal = 0;
 		
-		double secondStepRate = 1/refinedSteps;
+		double secondStepRate = 1 / refinedSteps;
 		
 		closestDistance = 9999;
 		if (reversed) {

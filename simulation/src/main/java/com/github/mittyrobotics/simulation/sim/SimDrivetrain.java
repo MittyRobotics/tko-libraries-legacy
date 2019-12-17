@@ -74,8 +74,8 @@ public abstract class SimDrivetrain {
 		return heading;
 	}
 	
-	public double getAverageVelocity(){
-		return (getLeftMasterTalon().getVelocity()+getRightMasterTalon().getVelocity())/2;
+	public double getAverageVelocity() {
+		return (getLeftMasterTalon().getVelocity() + getRightMasterTalon().getVelocity()) / 2;
 	}
 	
 	public SimTalon getLeftMasterTalon() {

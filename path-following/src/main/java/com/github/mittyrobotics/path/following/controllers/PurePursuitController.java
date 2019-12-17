@@ -24,7 +24,7 @@ public class PurePursuitController {
 		return instance;
 	}
 	
-	public void setGains(double curvatureSlowdownGain, double minSlowdownVelocity){
+	public void setGains(double curvatureSlowdownGain, double minSlowdownVelocity) {
 		this.curvatureSlowdownGain = curvatureSlowdownGain;
 		this.minSlowdownVelocity = minSlowdownVelocity;
 	}
@@ -38,7 +38,6 @@ public class PurePursuitController {
 			robotTransform.setRotation(robotTransform.getRotation().add(new Rotation(180)));
 		}
 		
-		
 		//Calculate the pursuit circle to follow, calculated by finding the circle tangent to the robot transform that
 		//intersects the target position.
 		Circle pursuitCircle = new Circle(robotTransform, targetPosition);
@@ -51,7 +50,7 @@ public class PurePursuitController {
 								robotTransform.getRotation().sin() * 5)
 				)).findSide(pursuitCircle.getCenter());
 		
-		robotVelocity = calculateSlowdownVelocity(1/(pursuitCircle.getRadius()*side),robotVelocity,minSlowdownVelocity);
+		robotVelocity = calculateSlowdownVelocity(1 / (pursuitCircle.getRadius() * side), robotVelocity, minSlowdownVelocity);
 		
 		//Use differential drive kinematics to calculate the left and right wheel velocity given the base robot
 		//velocity and the radius of the pursuit circle
@@ -61,10 +60,10 @@ public class PurePursuitController {
 		);
 	}
 	
-	private double calculateSlowdownVelocity(double curvature, double currentVelocity, double minSlowdownVelocity){
+	private double calculateSlowdownVelocity(double curvature, double currentVelocity, double minSlowdownVelocity) {
 		double absVelocity = Math.abs(currentVelocity);
 		double velSign = Math.signum(currentVelocity);
-		double vel = Math.min(absVelocity,Math.max(minSlowdownVelocity,curvatureSlowdownGain/curvature));
+		double vel = Math.min(absVelocity, Math.max(minSlowdownVelocity, curvatureSlowdownGain / curvature));
 		return vel * velSign;
 	}
 	
