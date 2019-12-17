@@ -4,8 +4,6 @@ import com.github.mittyrobotics.datatypes.path.Parametric;
 import com.github.mittyrobotics.datatypes.positioning.Position;
 import com.github.mittyrobotics.datatypes.positioning.Transform;
 
-import javax.xml.transform.Transformer;
-
 public abstract class Path {
 	private Transform[] waypoints;
 	private Parametric[] parametrics;
@@ -47,35 +45,69 @@ public abstract class Path {
 		return new Transform();
 	}
 	
-	public Position getClosestPoint(Position referencePosition, double distanceShift, boolean reversed, double steps){
+	public Position getClosestPoint(Position referencePosition, double distanceShift, boolean reversed, double steps) {
 		double minT = 0;
 		double maxT = 0;
 		double closestDistance = 9999;
-		for(int i = 0; i < steps+1; i++){
-			double t = i/steps;
+		for (int i = 0; i < steps + 1; i++) {
+			double t = i / steps;
 			Transform transform = getTransform(t);
-			double distance = transform.getPosition().distance(referencePosition);
-			if(new Transform(referencePosition).relativeTo(transform).getPosition().getX() > 0){
-				if(distance < closestDistance){
-					closestDistance = distance;
-					minT = t;
-					maxT = t + 1/steps;
+			double distance = Math.abs(transform.getPosition().distance(referencePosition));
+			if (distance < closestDistance) {
+				if (reversed) {
+					if (new Transform(referencePosition).relativeTo(transform).getPosition().getX() < 0) {
+						closestDistance = distance;
+						maxT = t;
+						minT = t - 1 / steps;
+						while(referencePosition.distance(getPosition(minT)) < distanceShift){
+							minT -= 1/steps;
+						}
+					}
+				} else {
+					if (new Transform(referencePosition).relativeTo(transform).getPosition().getX() > 0) {
+						closestDistance = distance;
+						minT = t;
+						maxT = t + 1 / steps;
+						while(referencePosition.distance(getPosition(maxT)) < distanceShift){
+							maxT += 1/steps;
+						}
+					}
 				}
 			}
 		}
 
-		System.out.println(minT + " " + maxT);
-
+		double tFinal = 0;
+		
+		double secondStepRate = 0.001;
+		
 		closestDistance = 9999;
-		for(double t = minT; t < maxT; t += 0.001){
-			double distance = getPosition(t).distance(referencePosition);
-			if(distance < closestDistance){
-				closestDistance = distance;
-				minT = t;
+		if(reversed){
+			for (double t = minT; t < maxT; t += secondStepRate) {
+				Transform transform = getTransform(t);
+				double distance = Math.abs(transform.getPosition().distance(referencePosition) - distanceShift);
+				if (distance < closestDistance) {
+					if (new Transform(referencePosition).relativeTo(transform).getPosition().getX() > 0) {
+						closestDistance = distance;
+						tFinal = t;
+					}
+				}
 			}
 		}
-
-		return getPosition(minT);
+		else{
+			for (double t = minT; t < maxT; t += secondStepRate) {
+				Transform transform = getTransform(t);
+				double distance = Math.abs(transform.getPosition().distance(referencePosition) - distanceShift);
+				if (distance < closestDistance) {
+					if (new Transform(referencePosition).relativeTo(transform).getPosition().getX() < 0) {
+						closestDistance = distance;
+						tFinal = t;
+					}
+				}
+			}
+		}
+		//System.out.println(tFinal);
+		
+		return getPosition(tFinal);
 	}
 	
 	public Transform[] getWaypoints() {
