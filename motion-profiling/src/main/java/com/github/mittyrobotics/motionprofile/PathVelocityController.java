@@ -19,6 +19,10 @@ public class PathVelocityController {
 		safeVelocityController = new SafeVelocityController(velocityConstraints);
 	}
 	
+	public double getVelocity(double currentVelocity, double distanceToEnd, double deltaTime){
+		return  getVelocity(currentVelocity,distanceToEnd,2e-16,deltaTime);
+	}
+	
 	public double getVelocity(double currentVelocity, double distanceToEnd, double curvature, double deltaTime){
 		double maxDistanceVelocity = Math.sqrt(2*velocityConstraints.getMaxDeceleration()*distanceToEnd);
 		double maxCurvatureVelocity = Math.max(curvatureSlowdownGain/curvature,minSlowdownVelocity);
