@@ -50,7 +50,7 @@ public class PurePursuitController {
 								robotTransform.getRotation().sin() * 5)
 				)).findSide(pursuitCircle.getCenter());
 		
-		robotVelocity = calculateSlowdownVelocity(1 / (pursuitCircle.getRadius() * side), robotVelocity, minSlowdownVelocity);
+		robotVelocity = calculateSlowdownVelocity(1 / (pursuitCircle.getRadius() ), robotVelocity, minSlowdownVelocity);
 		
 		//Use differential drive kinematics to calculate the left and right wheel velocity given the base robot
 		//velocity and the radius of the pursuit circle

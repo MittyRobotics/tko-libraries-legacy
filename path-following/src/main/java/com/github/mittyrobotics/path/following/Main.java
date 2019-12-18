@@ -1,13 +1,16 @@
 package com.github.mittyrobotics.path.following;
 
+import com.github.mittyrobotics.datacollection.performance.TimeMonitor;
 import com.github.mittyrobotics.datatypes.motion.DrivetrainVelocities;
 import com.github.mittyrobotics.datatypes.motion.VelocityConstraints;
+import com.github.mittyrobotics.datatypes.positioning.Position;
 import com.github.mittyrobotics.datatypes.positioning.Transform;
 import com.github.mittyrobotics.motionprofile.PathVelocityController;
 import com.github.mittyrobotics.path.following.util.DifferentialDriveKinematics;
 import com.github.mittyrobotics.path.generation.paths.CubicHermitePath;
 import com.github.mittyrobotics.path.generation.paths.Path;
 import com.github.mittyrobotics.simulation.sim.RobotSimManager;
+import com.github.mittyrobotics.simulation.util.SimOI;
 import com.github.mittyrobotics.simulation.util.SimSampleDrivetrain;
 import com.github.mittyrobotics.simulation.util.SimSampleRobot;
 import com.github.mittyrobotics.visualization.graphs.RobotGraph;
@@ -22,8 +25,7 @@ public class Main {
 		Path path = new CubicHermitePath(new Transform[]{new Transform(0, 0, 0), new Transform(100, 24, 0), new Transform(150, 24, 0)});
 		PathFollower.getInstance().setupPurePursuit(
 				path,
-				30,
-				0,
+				30, 1.2,
 				20,
 				false,
 				new PathVelocityController(
@@ -62,31 +64,32 @@ public class Main {
 		RobotGraph.getInstance().getChart().removeLegend();
 		
 
-
 		
 		double adjustPathCount = 0;
 		
 		while (true) {
+
+
 			adjustPathCount++;
-			if(adjustPathCount >=1000){
-				adjustPathCount = 0;
-				path = new CubicHermitePath(new Transform[]{SimSampleDrivetrain.getInstance().getRobotTransform(), new Transform(150, 24, 0)});
-				PathFollower.getInstance().changePath(path);
+			if(adjustPathCount >=2000){
 				RobotGraph.getInstance().clearGraph();
+				
+				adjustPathCount = 0;
+				path = new CubicHermitePath(new Transform[]{SimSampleDrivetrain.getInstance().getRobotTransform(),new Transform(150, 0,0)});
+				PathFollower.getInstance().changePath(path);
+	
 				Path finalPath = path;
 				SwingUtilities.invokeLater(new Runnable() {
 					@Override
 					public void run() {
-						RobotGraph.getInstance().addDataset(GraphManager.getInstance().graphParametricFast(finalPath, 0.05,  "spline", Color.cyan));
+						RobotGraph.getInstance().addDataset(GraphManager.getInstance().graphParametricFast(finalPath, 0.1,  "spline", Color.cyan));
 					}
 				});
 			}
+			
 
-			
-			
 			DrivetrainVelocities wheelVelocities = PathFollower.getInstance().updatePathFollower(SimSampleDrivetrain.getInstance().getRobotTransform(), SimSampleDrivetrain.getInstance().getAverageVelocity(), RobotSimManager.getInstance().getPeriodTime());
-			
-			
+
 			SimSampleDrivetrain.getInstance().setVelocities(wheelVelocities.getLeftVelocity(), wheelVelocities.getRightVelocity());
 			
 
