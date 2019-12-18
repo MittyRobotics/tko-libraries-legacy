@@ -80,6 +80,17 @@ public class GraphManager {
 		return dataset;
 	}
 	
+	public XYSeriesCollectionWithRender graphParametricFast(Parametric parametric, double increment, String seriesName, Color color) {
+		XYSeriesCollectionWithRender dataset = new XYSeriesCollectionWithRender(true, false, color, new Rectangle(2, 2));
+		XYSeries series = new XYSeries(seriesName,false);
+		for (double t = 0; t < 1; t += increment) {
+			Position position = parametric.getPosition(t);
+			series.add(position.getX(),position.getY());
+		}
+		dataset.addSeries(series);
+		return dataset;
+	}
+	
 	/**
 	 * Returns an {@link XYSeriesCollection} with an arrow drawn on it starting at position (x,y), extending length long, having an arrow pointer width of arrowWidth, and pointing at angle degrees
 	 *

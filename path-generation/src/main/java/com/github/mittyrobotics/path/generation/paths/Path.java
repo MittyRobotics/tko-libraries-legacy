@@ -7,7 +7,7 @@ import com.github.mittyrobotics.datatypes.positioning.Position;
 import com.github.mittyrobotics.datatypes.positioning.Rotation;
 import com.github.mittyrobotics.datatypes.positioning.Transform;
 
-public abstract class Path {
+public abstract class Path implements Parametric{
 	private Transform[] waypoints;
 	private Parametric[] parametrics;
 	
@@ -18,6 +18,7 @@ public abstract class Path {
 	
 	public abstract void generateParametricEquations();
 	
+	@Override
 	public Position getPosition(double t) {
 		//Convert t from 0 to 1 to 0 to waypoints.length-1 so that the t value represents all parametric equation
 		//segments of the total path.
@@ -33,6 +34,7 @@ public abstract class Path {
 		return new Position();
 	}
 	
+	@Override
 	public Transform getTransform(double t) {
 		//Convert t from 0 to 1 to 0 to waypoints.length-1 so that the t value represents all parametric equation
 		//segments of the total path.

@@ -10,7 +10,11 @@ import com.github.mittyrobotics.path.generation.paths.Path;
 import com.github.mittyrobotics.simulation.sim.RobotSimManager;
 import com.github.mittyrobotics.simulation.util.SimSampleDrivetrain;
 import com.github.mittyrobotics.simulation.util.SimSampleRobot;
+import com.github.mittyrobotics.visualization.graphs.RobotGraph;
+import com.github.mittyrobotics.visualization.util.GraphManager;
 
+import javax.swing.*;
+import java.awt.*;
 import java.util.Random;
 
 public class Main {
@@ -25,7 +29,7 @@ public class Main {
 				new PathVelocityController(
 						new VelocityConstraints(
 								50,
-								50,
+								20,
 								100),
 						5,
 						0
@@ -51,16 +55,41 @@ public class Main {
 		
 		SimSampleDrivetrain.getInstance().setOdometry(x, y, heading);
 		
-		path = new CubicHermitePath(new Transform[]{SimSampleDrivetrain.getInstance().getRobotTransform(), new Transform(100, 24, 0), new Transform(150, 24, 0)});
+	
 		
-		PathFollower.getInstance().changePath(path);
+
+		
+		RobotGraph.getInstance().getChart().removeLegend();
+		
+
+
+		
+		double adjustPathCount = 0;
 		
 		while (true) {
+			adjustPathCount++;
+			if(adjustPathCount >=1000){
+				adjustPathCount = 0;
+				path = new CubicHermitePath(new Transform[]{SimSampleDrivetrain.getInstance().getRobotTransform(), new Transform(150, 24, 0)});
+				PathFollower.getInstance().changePath(path);
+				RobotGraph.getInstance().clearGraph();
+				Path finalPath = path;
+				SwingUtilities.invokeLater(new Runnable() {
+					@Override
+					public void run() {
+						RobotGraph.getInstance().addDataset(GraphManager.getInstance().graphParametricFast(finalPath, 0.05,  "spline", Color.cyan));
+					}
+				});
+			}
+
+			
+			
 			DrivetrainVelocities wheelVelocities = PathFollower.getInstance().updatePathFollower(SimSampleDrivetrain.getInstance().getRobotTransform(), SimSampleDrivetrain.getInstance().getAverageVelocity(), RobotSimManager.getInstance().getPeriodTime());
 			
 			
 			SimSampleDrivetrain.getInstance().setVelocities(wheelVelocities.getLeftVelocity(), wheelVelocities.getRightVelocity());
 			
+
 			try {
 				Thread.sleep((long) RobotSimManager.getInstance().getPeriodTime() * 1000);
 			} catch (InterruptedException e) {
@@ -68,4 +97,5 @@ public class Main {
 			}
 		}
 	}
+	
 }

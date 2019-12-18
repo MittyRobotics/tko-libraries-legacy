@@ -26,7 +26,7 @@ public class Main {
 		graph.clearGraph();
 		Position closestPos = path.getClosestPoint(transform.getPosition(), 0, false, 10, 1000);
 		Position targetPos = path.getClosestPoint(closestPos, 20, false, 10, 1000);
-		graph.addDataset(GraphManager.getInstance().graphParametric(path.getParametrics(), 2, 1, "spline", Color.cyan));
+		graph.addDataset(GraphManager.getInstance().graphParametric(path, 2, 1, "spline", Color.cyan));
 		graph.addDataset(GraphManager.getInstance().graphArrow(new Transform(closestPos, 90), 5, 2, "asdf", Color.green));
 		graph.addDataset(GraphManager.getInstance().graphArrow(new Transform(targetPos, 90), 5, 2, "asdf", Color.yellow));
 		graph.addDataset(GraphManager.getInstance().graphArrow(transform, 5, 2, "asdf", Color.white));
