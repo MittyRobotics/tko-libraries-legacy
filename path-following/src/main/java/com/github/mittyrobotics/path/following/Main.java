@@ -25,7 +25,7 @@ public class Main {
 	public static void main(String[] args) {
 		//Setup the robot sim
 		SimSampleRobot robot = new SimSampleRobot();
-		RobotSimManager.getInstance().setupRobotSimManager(robot, SimSampleDrivetrain.getInstance(), 125, 7, 2, 20, 30, 0.06);
+		RobotSimManager.getInstance().setupRobotSimManager(robot, SimSampleDrivetrain.getInstance(), 125, 7, 2, 20, 30, 0.02);
 		RobotGraph.getInstance().getChart().removeLegend();
 		SimSampleDrivetrain.getInstance().setupPIDFValues(0.001, 0, 0, 0.1);
 		
