@@ -100,6 +100,10 @@ public class PathFollower {
 		return new DrivetrainVelocities(0, 0);
 	}
 	
+	public boolean isFinished(Transform robotTransform, double distanceTolerance){
+		return getDistanceToEnd(robotTransform) < distanceTolerance;
+	}
+	
 	private double getDistanceToEnd(Transform robotTransform) {
 		double distance = robotTransform.getPosition().distance(path.getWaypoints()[path.getWaypoints().length - 1].getPosition());
 		if (path.getWaypoints()[path.getWaypoints().length - 1].relativeTo(robotTransform).getPosition().getX() <= 0) {
