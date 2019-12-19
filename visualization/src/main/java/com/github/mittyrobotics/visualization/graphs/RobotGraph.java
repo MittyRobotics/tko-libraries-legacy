@@ -46,7 +46,7 @@ public class RobotGraph extends Graph {
 	@Override
 	public void clearGraph() {
 		for (int i =3; i < getPlot().getDatasetCount(); i++) {
-			getPlot().setDataset(3, null);
+			getPlot().setDataset(i, null);
 		}
 		lastIndex = 3;
 	}

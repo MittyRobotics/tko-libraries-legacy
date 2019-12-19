@@ -65,7 +65,7 @@ public class Main {
 		//Create new adjusted path
 		Path path = originalPath;
 		PathFollower.getInstance().changePath(path);
-		RobotGraph.getInstance().addPath((GraphManager.getInstance().graphParametric(originalPath, .1,10,3,  "spline", Color.green)));
+		RobotGraph.getInstance().addPath((GraphManager.getInstance().graphParametric(originalPath, .1,2,.1,  "spline", Color.green)));
 		
 		//Delay before starting
 		try {
@@ -87,17 +87,18 @@ public class Main {
 				lastTransforms.remove(0);
 				PathFollower.getInstance().changePath(path);
 			}
-			
-			if (adjustPathCount%4000 == 0) {
-				RobotGraph.getInstance().clearGraph();
+
+
 				SwingUtilities.invokeLater(new Runnable() {
 					@Override
 					public void run() {
-						RobotGraph.getInstance().addDataset(GraphManager.getInstance().graphParametric(PathFollower.getInstance().getPath(), .05,10,3,  "spline", Color.cyan));
+						RobotGraph.getInstance().clearGraph();
+						RobotGraph.getInstance().addDataset(GraphManager.getInstance().graphParametricFast(PathFollower.getInstance().getPath(), .01,  "spline", Color.cyan));
 					}
 				});
 				
-			}
+			
+			
 
 			//Update pure pursuit controller and set velocities
 			DrivetrainVelocities wheelVelocities = PathFollower.getInstance().updatePathFollower(SimSampleDrivetrain.getInstance().getRobotTransform(), SimSampleDrivetrain.getInstance().getAverageVelocity(), RobotSimManager.getInstance().getPeriodTime());
