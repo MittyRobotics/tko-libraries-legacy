@@ -30,7 +30,7 @@ public class RobotGraph extends Graph {
 		getPlot().setDataset(1,datasets[1]);
 	}
 	
-	private int lastIndex = 2;
+	private int lastIndex = 3;
 	@Override
 	public void addDataset(XYSeriesCollectionWithRender dataset) {
 		getPlot().setDataset(lastIndex, dataset);
@@ -38,11 +38,16 @@ public class RobotGraph extends Graph {
 		lastIndex++;
 	}
 	
+	public void addPath(XYSeriesCollectionWithRender dataset){
+		getPlot().setDataset(2, dataset);
+		getPlot().setRenderer(2, new XYLineShapeColorRenderer(dataset.isShowPoints(), dataset.isShowLines(), dataset.getColor()));
+	}
+	
 	@Override
 	public void clearGraph() {
-		for (int i =2; i < getPlot().getDatasetCount(); i++) {
-			getPlot().setDataset(2, null);
+		for (int i =3; i < getPlot().getDatasetCount(); i++) {
+			getPlot().setDataset(3, null);
 		}
-		lastIndex = 2;
+		lastIndex = 3;
 	}
 }

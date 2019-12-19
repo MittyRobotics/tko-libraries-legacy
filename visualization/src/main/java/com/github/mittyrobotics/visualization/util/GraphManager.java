@@ -72,9 +72,9 @@ public class GraphManager {
 	}
 	
 	
-	public XYSeriesCollectionWithRender graphParametric(Parametric parametric, double arrowLength, double arrowWidth, String seriesName, Color color) {
+	public XYSeriesCollectionWithRender graphParametric(Parametric parametric, double increment, double arrowLength, double arrowWidth,  String seriesName, Color color) {
 		XYSeriesCollectionWithRender dataset = new XYSeriesCollectionWithRender(true, false, color, new Rectangle(2, 2));
-		for (double t = 0; t < 1; t += 0.01) {
+		for (double t = 0; t < 1; t += increment) {
 			dataset.addSeries(arrowSeries(parametric.getTransform(t), arrowLength, arrowWidth, seriesName + "" + t));
 		}
 		return dataset;

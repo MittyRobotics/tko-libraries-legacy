@@ -15,18 +15,18 @@ public class Main {
 		
 		Graph graph = new Graph();
 		
-		graph.resizeGraph(-20, 120, -20, 120);
+		//graph.resizeGraph(-20, 120, -20, 120);
 		
 		graph.getChart().removeLegend();
 		CubicHermitePath path = new CubicHermitePath(new Transform[]{
-				new Transform(0, 0, 0),
-				new Transform(100, 100, 0)
+				new Transform(-100, 50, 0),
+				new Transform(100, 0, 90)
 		});
-		Transform transform = new Transform(40, 34);
+		Transform transform = new Transform(-100, 50);
 		graph.clearGraph();
 		Position closestPos = path.getClosestPoint(transform.getPosition(), 0, false, 10, 1000);
 		Position targetPos = path.getClosestPoint(closestPos, 20, false, 10, 1000);
-		graph.addDataset(GraphManager.getInstance().graphParametric(path, 2, 1, "spline", Color.cyan));
+		graph.addDataset(GraphManager.getInstance().graphParametric(path,0.01,2, 1, "spline", Color.cyan));
 		graph.addDataset(GraphManager.getInstance().graphArrow(new Transform(closestPos, 90), 5, 2, "asdf", Color.green));
 		graph.addDataset(GraphManager.getInstance().graphArrow(new Transform(targetPos, 90), 5, 2, "asdf", Color.yellow));
 		graph.addDataset(GraphManager.getInstance().graphArrow(transform, 5, 2, "asdf", Color.white));

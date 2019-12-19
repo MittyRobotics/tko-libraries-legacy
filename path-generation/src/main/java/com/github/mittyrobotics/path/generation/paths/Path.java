@@ -54,18 +54,17 @@ public abstract class Path implements Parametric{
 		double closestDistance;
 		double distanceToStartWaypoint = referencePosition.distance(waypoints[0].getPosition());
 		double distanceToEndWaypoint = referencePosition.distance(waypoints[waypoints.length - 1].getPosition());
-		
 		Transform relativeStart = new Transform(referencePosition).relativeTo(waypoints[0]);
 		Transform relativeEnd = new Transform(referencePosition).relativeTo(waypoints[waypoints.length - 1]);
-		
-		if (reversed && relativeStart.getPosition().getX() < 0.3) {
+
+		if (reversed && relativeStart.getPosition().getX() < 0.3 && distanceToStartWaypoint < distanceShift) {
 			Transform waypoint = waypoints[0];
 			return waypoint.getPosition().add(new Position(waypoint.getRotation().add(new Rotation(180)).cos() * distanceShift, waypoint.getRotation().add(new Rotation(180)).sin() * distanceShift));
-		} else if (!reversed && relativeEnd.getPosition().getX() > -0.3) {
+		} else if (!reversed && relativeEnd.getPosition().getX() > -0.3 && distanceToEndWaypoint < distanceShift) {
 			Transform waypoint = waypoints[waypoints.length - 1];
 			return waypoint.getPosition().add(new Position(waypoint.getRotation().cos() * distanceShift, waypoint.getRotation().sin() * distanceShift));
 		}
-		
+
 		if (distanceToStartWaypoint <= distanceShift || distanceToEndWaypoint <= distanceShift) {
 			Line line = null;
 			Transform closestWaypoint = null;
@@ -108,7 +107,7 @@ public abstract class Path implements Parametric{
 			double distance = Math.abs(transform.getPosition().distance(referencePosition));
 			if (distance < closestDistance) {
 				if (reversed) {
-					if (new Transform(referencePosition).relativeTo(transform).getPosition().getX() < 0) {
+					if (new Transform(referencePosition).relativeTo(transform).getPosition().getX() <= 0) {
 						closestDistance = distance;
 						maxT = t;
 						minT = t - 1 / initialSteps;
@@ -117,7 +116,7 @@ public abstract class Path implements Parametric{
 						}
 					}
 				} else {
-					if (new Transform(referencePosition).relativeTo(transform).getPosition().getX() > 0) {
+					if (new Transform(referencePosition).relativeTo(transform).getPosition().getX() >= 0) {
 						closestDistance = distance;
 						minT = t;
 						maxT = t + 1 / initialSteps;
@@ -157,6 +156,7 @@ public abstract class Path implements Parametric{
 				}
 			}
 		}
+		
 		Position position = getPosition(tFinal);
 		return position;
 	}

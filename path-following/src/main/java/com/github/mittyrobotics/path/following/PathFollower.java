@@ -19,6 +19,7 @@ public class PathFollower {
 	private VelocityConstraints velocityConstraints;
 	private double curvatureSlowdownGain;
 	private PathVelocityController pathVelocityController;
+
 	private Path path;
 	
 	private PathFollower() {
@@ -110,4 +111,10 @@ public class PathFollower {
 	public double getCurvatureSlowdownGain() {
 		return curvatureSlowdownGain;
 	}
+	
+	
+	public Path getPath() {
+		return path;
+	}
+	
 }
