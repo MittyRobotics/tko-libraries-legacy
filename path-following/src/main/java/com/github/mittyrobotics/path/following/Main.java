@@ -27,7 +27,7 @@ public class Main {
 		SimSampleRobot robot = new SimSampleRobot();
 		RobotSimManager.getInstance().setupRobotSimManager(robot, SimSampleDrivetrain.getInstance(), 125, 7, 2, 20, 30, 0.02);
 		RobotGraph.getInstance().getChart().removeLegend();
-		SimSampleDrivetrain.getInstance().setupPIDFValues(0.001, 0, 0, 0.1);
+		SimSampleDrivetrain.getInstance().setupPIDFValues(0.01, 0, 0, 0.08);
 		
 		//Set track width of differential drive kinematics
 		DifferentialDriveKinematics.getInstance().setTrackWidth(20);
@@ -103,6 +103,8 @@ public class Main {
 			//Update pure pursuit controller and set velocities
 			DrivetrainVelocities wheelVelocities = PathFollower.getInstance().updatePathFollower(SimSampleDrivetrain.getInstance().getRobotTransform(), SimSampleDrivetrain.getInstance().getAverageVelocity(), RobotSimManager.getInstance().getPeriodTime());
 			SimSampleDrivetrain.getInstance().setVelocities(wheelVelocities.getLeftVelocity(), wheelVelocities.getRightVelocity());
+			
+			System.out.println(wheelVelocities + " " + new DrivetrainVelocities(SimSampleDrivetrain.getInstance().getLeftMasterTalon().getVelocity(),SimSampleDrivetrain.getInstance().getRightMasterTalon().getVelocity()));
 			
 			
 			lastTransforms.add(SimSampleDrivetrain.getInstance().getRobotTransform());
