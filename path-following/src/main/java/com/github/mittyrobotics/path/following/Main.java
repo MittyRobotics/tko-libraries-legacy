@@ -42,7 +42,7 @@ public class Main {
 		SimSampleDrivetrain.getInstance().setOdometry(x,y,heading);
 		
 		//Create the original path from the robot position to the point
-		Path originalPath = new CubicHermitePath(new Transform[]{SimSampleDrivetrain.getInstance().getRobotTransform(),new Transform(150, 0,90)});
+		Path originalPath = new CubicHermitePath(new Transform[]{SimSampleDrivetrain.getInstance().getRobotTransform(),new Transform(150, 0,0)});
 		
 		//Setup the pure pursuit controller
 		PathFollower.getInstance().setupPurePursuit(
@@ -89,7 +89,7 @@ public class Main {
 						SimSampleDrivetrain.getInstance().getRobotTransform().getPosition().angleTo(
 								originalPath.getClosestPoint(SimSampleDrivetrain.getInstance().getRobotTransform().getPosition(),
 										30,false,10,100))),
-						new Transform(150, 0,90)});
+						new Transform(150, 0,0)});
 				//lastTransforms.remove(0);
 				PathFollower.getInstance().changePath(path);
 		//	}
