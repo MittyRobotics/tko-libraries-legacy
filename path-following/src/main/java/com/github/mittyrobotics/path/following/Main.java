@@ -10,6 +10,7 @@ import com.github.mittyrobotics.path.following.util.DifferentialDriveKinematics;
 import com.github.mittyrobotics.path.generation.paths.CubicHermitePath;
 import com.github.mittyrobotics.path.generation.paths.Path;
 import com.github.mittyrobotics.simulation.sim.RobotSimManager;
+import com.github.mittyrobotics.simulation.sim.SimDrivetrain;
 import com.github.mittyrobotics.simulation.util.SimOI;
 import com.github.mittyrobotics.simulation.util.SimSampleDrivetrain;
 import com.github.mittyrobotics.simulation.util.SimSampleRobot;
@@ -41,7 +42,7 @@ public class Main {
 		SimSampleDrivetrain.getInstance().setOdometry(x,y,heading);
 		
 		//Create the original path from the robot position to the point
-		Path originalPath = new CubicHermitePath(new Transform[]{SimSampleDrivetrain.getInstance().getRobotTransform(),new Transform(150, 0,0)});
+		Path originalPath = new CubicHermitePath(new Transform[]{SimSampleDrivetrain.getInstance().getRobotTransform(),new Transform(150, 0,90)});
 		
 		//Setup the pure pursuit controller
 		PathFollower.getInstance().setupPurePursuit(
@@ -51,7 +52,7 @@ public class Main {
 				false,
 				new PathVelocityController(
 						new VelocityConstraints(
-								50,
+								200,
 								20,
 								100),
 						5,
@@ -82,11 +83,16 @@ public class Main {
 			//Increase the adjust path calculation
 			adjustPathCount++;
 			
-			if(adjustPathCount >= 4000){
-				path = new CubicHermitePath(new Transform[]{lastTransforms.get(0),new Transform(150, 0,0)});
-				lastTransforms.remove(0);
+			//if(adjustPathCount >= 4000){
+				//path = new CubicHermitePath(new Transform[]{lastTransforms.get(0),new Transform(150, 0,0)});
+				path = new CubicHermitePath(new Transform[]{new Transform(SimSampleDrivetrain.getInstance().getRobotTransform().getPosition(),
+						SimSampleDrivetrain.getInstance().getRobotTransform().getPosition().angleTo(
+								originalPath.getClosestPoint(SimSampleDrivetrain.getInstance().getRobotTransform().getPosition(),
+										30,false,10,100))),
+						new Transform(150, 0,90)});
+				//lastTransforms.remove(0);
 				PathFollower.getInstance().changePath(path);
-			}
+		//	}
 
 
 				SwingUtilities.invokeLater(new Runnable() {
