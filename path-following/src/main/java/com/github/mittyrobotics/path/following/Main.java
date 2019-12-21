@@ -6,6 +6,7 @@ import com.github.mittyrobotics.datatypes.motion.VelocityConstraints;
 import com.github.mittyrobotics.datatypes.positioning.Transform;
 import com.github.mittyrobotics.motionprofile.PathVelocityController;
 import com.github.mittyrobotics.path.following.util.DifferentialDriveKinematics;
+import com.github.mittyrobotics.path.following.util.PathFollowerProperties;
 import com.github.mittyrobotics.path.generation.paths.CubicHermitePath;
 import com.github.mittyrobotics.path.generation.paths.Path;
 import com.github.mittyrobotics.simulation.sim.RobotSimManager;
@@ -41,28 +42,27 @@ public class Main {
 		//Create the original path from the robot position to the point
 		Path originalPath = new CubicHermitePath(new Transform[]{SimSampleDrivetrain.getInstance().getRobotTransform(), new Transform(100, 0, 0),new Transform(150, 0, 0)});
 		
-		//Setup the pure pursuit controller
-		PathFollower.getInstance().setupPurePursuit(
+		//Create velocity controller
+		PathVelocityController velocityController = new PathVelocityController(new VelocityConstraints(50,20,100),5,0);
+		
+		//Create path properties
+		PathFollowerProperties.PurePursuitProperties properties = new PathFollowerProperties.PurePursuitProperties(
 				originalPath,
-				20, 1.2,
-				20,
+				velocityController,
 				false,
-				new PathVelocityController(
-						new VelocityConstraints(
-								200,
-								50,
-								100),
-						5,
-						0
-				)
+				20,
+				1.2,
+				20,
+				true,
+				true,
+				40
 		);
+		
+		//Setup the pure pursuit controller
+		PathFollower.getInstance().setupPurePursuit(properties);
 
 		//Create new adjusted path
-		Path path = originalPath;
-		PathFollower.getInstance().changePath(path);
 		RobotGraph.getInstance().addPath((GraphManager.getInstance().graphParametric(originalPath, .1, 2, .1, "spline", Color.green)));
-		
-		
 		
 		//Delay before starting
 		try {
@@ -71,18 +71,12 @@ public class Main {
 			e.printStackTrace();
 		}
 		
-		
 		//Loop
 		while (true) {
-			path = originalPath.calculateAdaptedPath(SimSampleDrivetrain.getInstance().getRobotTransform(),40,false);
-			PathFollower.getInstance().changePath(path);
-			
-			SwingUtilities.invokeLater(new Runnable() {
-				@Override
-				public void run() {
-					RobotGraph.getInstance().clearGraph();
-					RobotGraph.getInstance().addDataset(GraphManager.getInstance().graphParametricFast(PathFollower.getInstance().getPath(), .05, "spline", Color.cyan));
-				}
+			//Graph
+			SwingUtilities.invokeLater(() -> {
+				RobotGraph.getInstance().clearGraph();
+				RobotGraph.getInstance().addDataset(GraphManager.getInstance().graphParametricFast(PathFollower.getInstance().getCurrentPath(), .05, "spline", Color.cyan));
 			});
 			
 			//Update pure pursuit controller and set velocities

@@ -8,7 +8,9 @@ import com.github.mittyrobotics.motionprofile.PathVelocityController;
 import com.github.mittyrobotics.path.following.controllers.PurePursuitController;
 import com.github.mittyrobotics.path.following.controllers.RamseteController;
 import com.github.mittyrobotics.path.following.enums.PathFollowingType;
+import com.github.mittyrobotics.path.following.util.PathFollowerProperties;
 import com.github.mittyrobotics.path.generation.paths.Path;
+import com.github.mittyrobotics.simulation.util.SimSampleDrivetrain;
 import com.github.mittyrobotics.visualization.graphs.RobotGraph;
 import com.github.mittyrobotics.visualization.util.GraphManager;
 
@@ -18,14 +20,13 @@ import java.awt.*;
 public class PathFollower {
 	private static PathFollower instance = new PathFollower();
 	
-	private double purePursuitLookaheadDistance;
 	private PathFollowingType pathFollowingType;
-	private boolean reversed;
-	private VelocityConstraints velocityConstraints;
-	private double curvatureSlowdownGain;
-	private PathVelocityController pathVelocityController;
-
-	private Path path;
+	
+	private PathFollowerProperties pathFollowerProperties;
+	private PathFollowerProperties.PurePursuitProperties purePursuitProperties;
+	private PathFollowerProperties.RamseteProperties ramseteProperties;
+	
+	private Path currentPath;
 	
 	private PathFollower() {
 	
@@ -35,45 +36,37 @@ public class PathFollower {
 		return instance;
 	}
 	
-	public void setupPurePursuit(Path path, boolean reversed, PathVelocityController pathVelocityController) {
-		setupPurePursuit(path, PurePursuitController.DEFAULT_LOOKAHEAD_DISTANCE, PurePursuitController.DEFAULT_CURVATURE_SLOWDOWN_GAIN, PurePursuitController.DEFAULT_MIN_SLOWDOWN_VELOCITY, reversed, pathVelocityController);
-	}
-	
-	public void setupPurePursuit(Path path, double curvatureSlowdownGain, boolean reversed, PathVelocityController pathVelocityController) {
-		setupPurePursuit(path, PurePursuitController.DEFAULT_LOOKAHEAD_DISTANCE, curvatureSlowdownGain, PurePursuitController.DEFAULT_MIN_SLOWDOWN_VELOCITY, reversed, pathVelocityController);
-	}
-	
-	public void setupPurePursuit(Path path, double lookaheadDistance, double curvatureSlowdownGain, double minSlowdownVelocity, boolean reversed, PathVelocityController pathVelocityController) {
-		this.curvatureSlowdownGain = curvatureSlowdownGain;
-		this.pathFollowingType = PathFollowingType.PURE_PURSUIT_CONTROLLER;
-		this.purePursuitLookaheadDistance = lookaheadDistance;
-		PurePursuitController.getInstance().setGains(curvatureSlowdownGain, minSlowdownVelocity);
-		followerSetup(path, reversed, pathVelocityController);
-	}
-	
-	public void setupRamseteController(Path path, boolean reversed, PathVelocityController pathVelocityController) {
-		setupRamseteController(path, RamseteController.DEFAULT_AGGRESSIVE_GAIN, RamseteController.DEFAULT_DAMPING_GAIN, reversed, pathVelocityController);
-	}
-	
-	public void setupRamseteController(Path path, double aggressiveGain, double dampingGain, boolean reversed, PathVelocityController pathVelocityController) {
-		this.pathFollowingType = PathFollowingType.RAMSETE_CONTROLLER;
-		RamseteController.getInstance().setGains(aggressiveGain, dampingGain);
+	public void setupPurePursuit(PathFollowerProperties.PurePursuitProperties properties){
+		pathFollowingType = PathFollowingType.PURE_PURSUIT_CONTROLLER;
 		
-		followerSetup(path, reversed, pathVelocityController);
+		setupPathFollower(properties);
+		this.purePursuitProperties = properties;
+		
+		PurePursuitController.getInstance().setGains(purePursuitProperties.curvatureSlowdownGain,purePursuitProperties.minSlowdownVelocity);
 	}
 	
-	private void followerSetup(Path path, boolean reversed, PathVelocityController pathVelocityController) {
-		this.path = path;
-		this.reversed = reversed;
-		this.pathVelocityController = pathVelocityController;
+	public void setupRamseteController(PathFollowerProperties.RamseteProperties properties) {
+		this.pathFollowingType = PathFollowingType.RAMSETE_CONTROLLER;
+		
+		setupPathFollower(properties);
+		this.ramseteProperties = properties;
+		
+		RamseteController.getInstance().setGains(ramseteProperties.aggressiveGain,ramseteProperties.dampingGain);
 	}
 	
-	public void changePath(Path path) {
-		this.path = path;
+	private void setupPathFollower(PathFollowerProperties properties){
+		this.pathFollowerProperties = properties;
+		this.currentPath = properties.path;
+	}
+	
+	public void changePath(Path newPath) {
+		this.currentPath = newPath;
 	}
 	
 	public DrivetrainVelocities updatePathFollower(Transform robotTransform, double currentVelocity, double deltaTime) {
-		if (path == null) {
+		calculateAdaptivePath(robotTransform);
+		
+		if (currentPath == null) {
 			System.out.println("WARNING: The current path follower path is null!");
 			return new DrivetrainVelocities(0, 0);
 		}
@@ -88,14 +81,26 @@ public class PathFollower {
 	}
 	
 	private DrivetrainVelocities updatePurePursuit(Transform robotTransform, double currentVelocity, double deltaTime) {
-		Position closestPosition = path.getClosestTransform(robotTransform.getPosition(), 0, reversed, 10, 1000).getPosition();
-		Position targetPosition = path.getClosestTransform(closestPosition, purePursuitLookaheadDistance, reversed, 10, 1000).getPosition();
+		double lookaheadDistance = purePursuitProperties.lookaheadDistance;
+		boolean reversed = pathFollowerProperties.reversed;
+		
+		Position lookaheadCalculationStartPosition;
+		
+		if(purePursuitProperties.adaptiveLookahead){
+			Position closestPosition = currentPath.getClosestTransform(robotTransform.getPosition(), 0, reversed, 10, 1000).getPosition();
+			lookaheadCalculationStartPosition = closestPosition;
+		}
+		else{
+			lookaheadCalculationStartPosition = robotTransform.getPosition();
+		}
+		
+		Position targetPosition = currentPath.getClosestTransform(lookaheadCalculationStartPosition, lookaheadDistance, reversed, 10, 1000).getPosition();
 		
 		//Find the rough distance to the end of the path
 		double distanceToEnd = getDistanceToEnd(robotTransform);
 		
 		//Calculate the robot velocity using the path velocity controller
-		double robotVelocity = pathVelocityController.getVelocity(currentVelocity, distanceToEnd, deltaTime);
+		double robotVelocity = pathFollowerProperties.velocityController.getVelocity(currentVelocity, distanceToEnd, deltaTime);
 		
 		//Calculate the pure pursuit controller
 		return PurePursuitController.getInstance().calculate(robotTransform, targetPosition, robotVelocity);
@@ -105,25 +110,26 @@ public class PathFollower {
 		return new DrivetrainVelocities(0, 0);
 	}
 	
+	private void calculateAdaptivePath(Transform robotTransform){
+		if(pathFollowerProperties.adaptivePath){
+			changePath(currentPath.calculateAdaptedPath(robotTransform,pathFollowerProperties.robotToPathAdaptiveDistance,pathFollowerProperties.reversed));
+		}
+	}
+	
 	public boolean isFinished(Transform robotTransform, double distanceTolerance){
 		return getDistanceToEnd(robotTransform) < distanceTolerance;
 	}
 	
 	private double getDistanceToEnd(Transform robotTransform) {
-		double distance = robotTransform.getPosition().distance(path.getWaypoints()[path.getWaypoints().length - 1].getPosition());
-		if (path.getWaypoints()[path.getWaypoints().length - 1].relativeTo(robotTransform).getPosition().getX() <= 0) {
+		double distance = robotTransform.getPosition().distance(currentPath.getWaypoints()[currentPath.getWaypoints().length - 1].getPosition());
+		if (currentPath.getWaypoints()[currentPath.getWaypoints().length - 1].relativeTo(robotTransform).getPosition().getX() <= 0) {
 			return 0;
 		}
 		return distance;
 	}
 	
-	public double getCurvatureSlowdownGain() {
-		return curvatureSlowdownGain;
-	}
-	
-	
-	public Path getPath() {
-		return path;
+	public Path getCurrentPath() {
+		return currentPath;
 	}
 	
 }
