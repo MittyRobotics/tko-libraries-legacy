@@ -7,7 +7,7 @@ import com.github.mittyrobotics.datatypes.positioning.Position;
 import com.github.mittyrobotics.datatypes.positioning.Rotation;
 import com.github.mittyrobotics.datatypes.positioning.Transform;
 
-public abstract class Path implements Parametric{
+public abstract class Path implements Parametric {
 	private Transform[] waypoints;
 	private Parametric[] parametrics;
 	
@@ -50,21 +50,23 @@ public abstract class Path implements Parametric{
 		return new Transform();
 	}
 	
-	public Position getClosestPoint(Position referencePosition, double distanceShift, boolean reversed, double initialSteps, double refinedSteps) {
+	public Transform getClosestTransform(Position referencePosition, double distanceShift, boolean reversed, double initialSteps, double refinedSteps) {
 		double closestDistance;
 		double distanceToStartWaypoint = referencePosition.distance(waypoints[0].getPosition());
 		double distanceToEndWaypoint = referencePosition.distance(waypoints[waypoints.length - 1].getPosition());
 		Transform relativeStart = new Transform(referencePosition).relativeTo(waypoints[0]);
 		Transform relativeEnd = new Transform(referencePosition).relativeTo(waypoints[waypoints.length - 1]);
-
+		
 		if (reversed && relativeStart.getPosition().getX() < 0.3 && distanceToStartWaypoint < distanceShift) {
 			Transform waypoint = waypoints[0];
-			return waypoint.getPosition().add(new Position(waypoint.getRotation().add(new Rotation(180)).cos() * distanceShift, waypoint.getRotation().add(new Rotation(180)).sin() * distanceShift));
+			Position position = waypoint.getPosition().add(new Position(waypoint.getRotation().add(new Rotation(180)).cos() * distanceShift, waypoint.getRotation().add(new Rotation(180)).sin() * distanceShift));
+			return new Transform(position, waypoint.getRotation().add(new Rotation(180)));
 		} else if (!reversed && relativeEnd.getPosition().getX() > -0.3 && distanceToEndWaypoint < distanceShift) {
 			Transform waypoint = waypoints[waypoints.length - 1];
-			return waypoint.getPosition().add(new Position(waypoint.getRotation().cos() * distanceShift, waypoint.getRotation().sin() * distanceShift));
+			Position position = waypoint.getPosition().add(new Position(waypoint.getRotation().cos() * distanceShift, waypoint.getRotation().sin() * distanceShift));
+			return new Transform(position, waypoint.getRotation());
 		}
-
+		
 		if (distanceToStartWaypoint <= distanceShift || distanceToEndWaypoint <= distanceShift) {
 			Line line = null;
 			Transform closestWaypoint = null;
@@ -93,14 +95,29 @@ public abstract class Path implements Parametric{
 						}
 					}
 				}
-				return position;
+				return new Transform(position, line.getLineAngle());
 			}
 		}
 		
 		
+		double tFinal = getClosestT(referencePosition, distanceShift, reversed, initialSteps, refinedSteps);
+		
+		Transform transform = getTransform(tFinal);
+		return transform;
+	}
+	
+	private double getClosestT(Position referencePosition, double distanceShift, boolean reversed, double initialSteps, double refinedSteps) {
 		double minT = 0;
 		double maxT = 0;
-		closestDistance = 9999;
+		double closestDistance = 9999;
+		
+		if (waypoints[0].getPosition().distance(referencePosition) < 0.001 && distanceShift == 0) {
+			return 0;
+		}
+		if(waypoints[waypoints.length-1].getPosition().distance(referencePosition) < 0.001 && distanceShift == 0){
+			return 1;
+		}
+		
 		for (int i = 0; i < initialSteps + 1; i++) {
 			double t = i / initialSteps;
 			Transform transform = getTransform(t);
@@ -129,9 +146,7 @@ public abstract class Path implements Parametric{
 		}
 		
 		double tFinal = 0;
-		
 		double secondStepRate = 1 / refinedSteps;
-		
 		closestDistance = 9999;
 		if (reversed) {
 			for (double t = minT; t < maxT; t += secondStepRate) {
@@ -156,9 +171,45 @@ public abstract class Path implements Parametric{
 				}
 			}
 		}
+		return tFinal;
+	}
+	
+	public Path calculateAdaptedPath(Transform newStartTransform, double adjustPathDistance, boolean reversed) {
+		Transform onPathPoint = getClosestTransform(newStartTransform.getPosition(), adjustPathDistance, reversed, 10, 100);
+		Transform[] waypoints = getWaypoints();
 		
-		Position position = getPosition(tFinal);
-		return position;
+		double pathPointT = getClosestT(onPathPoint.getPosition(), 0, reversed, 10, 100);
+		
+		int startWaypointIndex = 0;
+		double currentClosest = 9999;
+		for (int i = 0; i < waypoints.length; i++) {
+			double waypointT = getClosestT(waypoints[i].getPosition(), 0, reversed, 10, 100);
+			double distance = waypoints[i].getPosition().distance(onPathPoint.getPosition());
+			if (distance < currentClosest && waypointT > pathPointT) {
+				currentClosest = distance;
+				startWaypointIndex = i;
+			}
+		}
+		
+		Transform[] adjustedPathWaypoints;
+		
+		if(onPathPoint.getPosition().distance(waypoints[waypoints.length-1].getPosition()) > adjustPathDistance){
+			adjustedPathWaypoints = new Transform[waypoints.length-startWaypointIndex+2];
+			adjustedPathWaypoints[0] = new Transform(newStartTransform.getPosition(),newStartTransform.getPosition().angleTo(onPathPoint.getPosition()));
+			adjustedPathWaypoints[1] = onPathPoint;
+			for (int i = 2; i < adjustedPathWaypoints.length; i++) {
+				adjustedPathWaypoints[i] = waypoints[(i-2) + startWaypointIndex];
+			}
+		}
+		else{
+			adjustedPathWaypoints = new Transform[waypoints.length-startWaypointIndex+1];
+			adjustedPathWaypoints[0] = new Transform(newStartTransform.getPosition(),newStartTransform.getPosition().angleTo(waypoints[waypoints.length-1].getPosition()));
+			for (int i = 1; i < adjustedPathWaypoints.length; i++) {
+				adjustedPathWaypoints[i] = waypoints[(i-1) + startWaypointIndex];
+			}
+		}
+		
+		return new CubicHermitePath(adjustedPathWaypoints);
 	}
 	
 	public Transform[] getWaypoints() {

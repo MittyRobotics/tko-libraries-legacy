@@ -22,10 +22,10 @@ public class Main {
 				new Transform(-100, 50, 0),
 				new Transform(100, 0, 90)
 		});
-		Transform transform = new Transform(-100, 50);
+		Transform transform = new Transform(-50, 50);
 		graph.clearGraph();
-		Position closestPos = path.getClosestPoint(transform.getPosition(), 0, false, 10, 1000);
-		Position targetPos = path.getClosestPoint(closestPos, 20, false, 10, 1000);
+		Position closestPos = path.getClosestTransform(transform.getPosition(), 0, false, 10, 1000).getPosition();
+		Position targetPos = path.getClosestTransform(closestPos, 20, false, 10, 1000).getPosition();
 		graph.addDataset(GraphManager.getInstance().graphParametric(path,0.01,2, 1, "spline", Color.cyan));
 		graph.addDataset(GraphManager.getInstance().graphArrow(new Transform(closestPos, 90), 5, 2, "asdf", Color.green));
 		graph.addDataset(GraphManager.getInstance().graphArrow(new Transform(targetPos, 90), 5, 2, "asdf", Color.yellow));

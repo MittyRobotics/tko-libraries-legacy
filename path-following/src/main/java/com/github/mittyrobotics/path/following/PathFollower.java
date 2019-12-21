@@ -9,6 +9,11 @@ import com.github.mittyrobotics.path.following.controllers.PurePursuitController
 import com.github.mittyrobotics.path.following.controllers.RamseteController;
 import com.github.mittyrobotics.path.following.enums.PathFollowingType;
 import com.github.mittyrobotics.path.generation.paths.Path;
+import com.github.mittyrobotics.visualization.graphs.RobotGraph;
+import com.github.mittyrobotics.visualization.util.GraphManager;
+
+import javax.swing.*;
+import java.awt.*;
 
 public class PathFollower {
 	private static PathFollower instance = new PathFollower();
@@ -83,8 +88,8 @@ public class PathFollower {
 	}
 	
 	private DrivetrainVelocities updatePurePursuit(Transform robotTransform, double currentVelocity, double deltaTime) {
-		Position closestPosition = path.getClosestPoint(robotTransform.getPosition(), 0, reversed, 10, 1000);
-		Position targetPosition = path.getClosestPoint(closestPosition, purePursuitLookaheadDistance, reversed, 10, 1000);
+		Position closestPosition = path.getClosestTransform(robotTransform.getPosition(), 0, reversed, 10, 1000).getPosition();
+		Position targetPosition = path.getClosestTransform(closestPosition, purePursuitLookaheadDistance, reversed, 10, 1000).getPosition();
 		
 		//Find the rough distance to the end of the path
 		double distanceToEnd = getDistanceToEnd(robotTransform);
