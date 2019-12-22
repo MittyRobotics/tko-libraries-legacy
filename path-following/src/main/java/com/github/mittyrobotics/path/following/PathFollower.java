@@ -97,10 +97,12 @@ public class PathFollower {
 		Position targetPosition = currentPath.getClosestTransform(lookaheadCalculationStartPosition, lookaheadDistance, reversed, 10, 3).getPosition();
 		
 		//Find the rough distance to the end of the path
-		double distanceToEnd = getDistanceToEnd(robotTransform);
+		double distanceToEnd = getDistanceToEnd(robotTransform,20);
 		
 		//Calculate the robot velocity using the path velocity controller
 		double robotVelocity = pathFollowerProperties.velocityController.getVelocity(currentVelocity, distanceToEnd, deltaTime);
+		
+		System.out.println(robotVelocity + " robot");
 		
 		//Calculate the pure pursuit controller
 		return PurePursuitController.getInstance().calculate(robotTransform, targetPosition, robotVelocity);
@@ -117,12 +119,12 @@ public class PathFollower {
 	}
 	
 	public boolean isFinished(Transform robotTransform, double distanceTolerance){
-		return getDistanceToEnd(robotTransform) < distanceTolerance;
+		return getDistanceToEnd(robotTransform,0) < distanceTolerance;
 	}
 	
-	private double getDistanceToEnd(Transform robotTransform) {
+	private double getDistanceToEnd(Transform robotTransform, double stopDistanceTolerance) {
 		double distance = robotTransform.getPosition().distance(currentPath.getWaypoints()[currentPath.getWaypoints().length - 1].getPosition());
-		if (currentPath.getWaypoints()[currentPath.getWaypoints().length - 1].relativeTo(robotTransform).getPosition().getX() <= 0) {
+		if (currentPath.getWaypoints()[currentPath.getWaypoints().length - 1].relativeTo(robotTransform).getPosition().getX() <= 0 && distance <= stopDistanceTolerance) {
 			return 0;
 		}
 		return distance;

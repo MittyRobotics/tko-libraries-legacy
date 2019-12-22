@@ -154,15 +154,15 @@ public abstract class Path implements Parametric {
 	
 	
 	public Path calculateAdaptedPath(Transform newStartTransform, double adjustPathDistance, boolean reversed) {
-		Transform onPathPoint = getClosestTransform(newStartTransform.getPosition(), adjustPathDistance, reversed, 10, 100);
+		Transform onPathPoint = getClosestTransform(newStartTransform.getPosition(), adjustPathDistance, reversed, 10, 3);
 		Transform[] waypoints = getWaypoints();
 		
-		double pathPointT = getClosestT(onPathPoint.getPosition(), 0, reversed, 10, 100);
+		double pathPointT = getClosestT(onPathPoint.getPosition(), 0, reversed, 10, 3);
 		
 		int startWaypointIndex = 0;
 		double currentClosest = 9999;
 		for (int i = 0; i < waypoints.length; i++) {
-			double waypointT = getClosestT(waypoints[i].getPosition(), 0, reversed, 10, 100);
+			double waypointT = getClosestT(waypoints[i].getPosition(), 0, reversed, 10, 3);
 			double distance = waypoints[i].getPosition().distance(onPathPoint.getPosition());
 			if (distance < currentClosest && waypointT > pathPointT) {
 				currentClosest = distance;

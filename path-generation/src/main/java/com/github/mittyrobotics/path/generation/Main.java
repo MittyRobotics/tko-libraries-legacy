@@ -19,10 +19,10 @@ public class Main {
 		
 		graph.getChart().removeLegend();
 		CubicHermitePath path = new CubicHermitePath(new Transform[]{
-				new Transform(0, 100, 0),
-				new Transform(100, 0, 90)
+				new Transform(0, 0, 0),
+				new Transform(100, 100, 0)
 		});
-		Transform transform = new Transform(0, 100);
+		Transform transform = new Transform(0, 0);
 	while(true){
 
 			PathTransform closestPos = path.getClosestTransform(transform.getPosition(), 10, 3);
@@ -40,7 +40,7 @@ public class Main {
 					
 				}
 			});
-			transform = transform.add(new Transform(.1,-.1));
+			//transform = transform.add(new Transform(.1,-.1));
 			
 			try {
 				Thread.sleep(30);

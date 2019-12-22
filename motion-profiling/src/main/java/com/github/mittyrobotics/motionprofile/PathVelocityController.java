@@ -20,6 +20,8 @@ public class PathVelocityController {
 		double maxDistanceVelocity = Math.sqrt(2 * velocityConstraints.getMaxDeceleration() * distanceToEnd);
 		double desiredVelocity = Math.min(velocityConstraints.getMaxVelocity(), maxDistanceVelocity);
 		
+		System.out.println( maxDistanceVelocity + " " + desiredVelocity + " velocityController"  + " " + distanceToEnd);
+		
 		return safeVelocityController.getVelocity(currentVelocity, desiredVelocity, deltaTime);
 	}
 	
