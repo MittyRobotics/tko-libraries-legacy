@@ -37,13 +37,13 @@ public class Main {
 		double y = random.nextInt(200) - 100.0;
 		double heading = random.nextInt(90) - 45;
 		//Set robot transform to random values
-		SimSampleDrivetrain.getInstance().setOdometry(x, y, heading);
+		SimSampleDrivetrain.getInstance().setOdometry(-100,50,0);
 		
 		//Create the original path from the robot position to the point
 		Path originalPath = new CubicHermitePath(new Transform[]{SimSampleDrivetrain.getInstance().getRobotTransform(), new Transform(100, 0, 0),new Transform(150, 0, 0)});
 		
 		//Create velocity controller
-		PathVelocityController velocityController = new PathVelocityController(new VelocityConstraints(50,20,100),5,0);
+		PathVelocityController velocityController = new PathVelocityController(new VelocityConstraints(200,50,100),5,0);
 		
 		//Create path properties
 		PathFollowerProperties.PurePursuitProperties properties = new PathFollowerProperties.PurePursuitProperties(
@@ -51,10 +51,10 @@ public class Main {
 				velocityController,
 				false,
 				20,
-				1.2,
+				2,
 				20,
 				true,
-				true,
+				false,
 				40
 		);
 		

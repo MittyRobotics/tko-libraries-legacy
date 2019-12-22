@@ -43,6 +43,11 @@ public class Transform {
 		this.rotation = rotation;
 	}
 	
+	public Transform(Transform transform) {
+		this.position = transform.getPosition();
+		this.rotation = transform.getRotation();
+	}
+	
 	/**
 	 * Converts this {@link Transform} from inches to meters.
 	 *
