@@ -82,7 +82,7 @@ public class SimTalon implements Runnable {
 	}
 	
 	public double getPosition() {
-		return (double) model.getPosition() * Conversions.M_TO_IN ;
+		return (double) model.getPosition() * Conversions.M_TO_IN;
 	}
 	
 	public void setPosition(double position) {
@@ -90,7 +90,7 @@ public class SimTalon implements Runnable {
 	}
 	
 	public double getVelocity() {
-		return (double) model.getVelocity() * Conversions.M_TO_IN ;
+		return (double) model.getVelocity() * Conversions.M_TO_IN;
 	}
 	
 	public void setVelocity(double velocity) {

@@ -4,7 +4,6 @@ import com.github.mittyrobotics.datatypes.positioning.Position;
 import com.github.mittyrobotics.datatypes.positioning.Transform;
 import com.github.mittyrobotics.path.generation.datatypes.PathTransform;
 import com.github.mittyrobotics.path.generation.paths.CubicHermitePath;
-import com.github.mittyrobotics.path.generation.splines.CubicHermiteSpline;
 import com.github.mittyrobotics.visualization.graphs.Graph;
 import com.github.mittyrobotics.visualization.util.GraphManager;
 
@@ -23,8 +22,8 @@ public class Main {
 				new Transform(100, 100, 0)
 		});
 		Transform transform = new Transform(0, 0);
-	while(true){
-
+		while (true) {
+			
 			PathTransform closestPos = path.getClosestTransform(transform.getPosition(), 10, 3);
 			Position targetPos = path.getClosestTransform(closestPos.getPosition(), 20, false, 10, 3).getPosition();
 			
@@ -33,7 +32,7 @@ public class Main {
 				@Override
 				public void run() {
 					graph.clearGraph();
-					graph.addDataset(GraphManager.getInstance().graphParametric(path,0.01,2, 1, "spline", Color.cyan));
+					graph.addDataset(GraphManager.getInstance().graphParametric(path, 0.01, 2, 1, "spline", Color.cyan));
 					graph.addDataset(GraphManager.getInstance().graphArrow(new Transform(closestPos.getPosition(), 90), 5, 2, "asdf", Color.green));
 					graph.addDataset(GraphManager.getInstance().graphArrow(new Transform(targetPos, 90), 5, 2, "asdf", Color.yellow));
 					graph.addDataset(GraphManager.getInstance().graphArrow(finalTransform, 5, 2, "asdf", Color.white));
@@ -48,6 +47,6 @@ public class Main {
 				e.printStackTrace();
 			}
 		}
-
+		
 	}
 }

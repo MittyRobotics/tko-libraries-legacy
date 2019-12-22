@@ -1,7 +1,6 @@
 package com.github.mittyrobotics.path.generation.paths;
 
 import com.github.mittyrobotics.datatypes.geometry.Circle;
-import com.github.mittyrobotics.datatypes.geometry.Line;
 import com.github.mittyrobotics.datatypes.path.Parametric;
 import com.github.mittyrobotics.datatypes.positioning.Position;
 import com.github.mittyrobotics.datatypes.positioning.Rotation;
@@ -52,7 +51,7 @@ public abstract class Path implements Parametric {
 	}
 	
 	public PathTransform getClosestTransform(Position referencePosition, double searchIncrement, double searches) {
-		return getClosestTransform(referencePosition,0,false,searchIncrement,searches);
+		return getClosestTransform(referencePosition, 0, false, searchIncrement, searches);
 	}
 	
 	
@@ -60,29 +59,27 @@ public abstract class Path implements Parametric {
 		double distanceToStartWaypoint = referencePosition.distance(waypoints[0].getPosition());
 		double distanceToEndWaypoint = referencePosition.distance(waypoints[waypoints.length - 1].getPosition());
 		
-		if(reversed && distanceToStartWaypoint <= distanceShift){
-			double distanceOffset = distanceShift-distanceToStartWaypoint;
+		if (reversed && distanceToStartWaypoint <= distanceShift) {
+			double distanceOffset = distanceShift - distanceToStartWaypoint;
 			Rotation rotation = waypoints[0].getRotation().add(new Rotation(180));
-			Position position = waypoints[0].getPosition().add(new Position(rotation.cos()*distanceOffset,rotation.sin()*distanceOffset));
-			return new PathTransform(new Transform(position),1);
-		}
-		else if(!reversed && distanceToEndWaypoint <= distanceShift){
-			double distanceOffset = distanceShift-distanceToEndWaypoint;
-			Rotation rotation = waypoints[waypoints.length-1].getRotation();
-			Position position = waypoints[waypoints.length-1].getPosition().add(new Position(rotation.cos()*distanceOffset,rotation.sin()*distanceOffset));
-			return new PathTransform(new Transform(position),1);
+			Position position = waypoints[0].getPosition().add(new Position(rotation.cos() * distanceOffset, rotation.sin() * distanceOffset));
+			return new PathTransform(new Transform(position), 1);
+		} else if (!reversed && distanceToEndWaypoint <= distanceShift) {
+			double distanceOffset = distanceShift - distanceToEndWaypoint;
+			Rotation rotation = waypoints[waypoints.length - 1].getRotation();
+			Position position = waypoints[waypoints.length - 1].getPosition().add(new Position(rotation.cos() * distanceOffset, rotation.sin() * distanceOffset));
+			return new PathTransform(new Transform(position), 1);
 		}
 		
 		double tFinal;
-		if(distanceShift == 0){
-			tFinal = getClosestT(referencePosition,searchIncrement,searches);
-		}
-		else{
+		if (distanceShift == 0) {
+			tFinal = getClosestT(referencePosition, searchIncrement, searches);
+		} else {
 			tFinal = getClosestT(referencePosition, distanceShift, reversed, searchIncrement, searches);
 		}
 		
 		Transform transform = getTransform(tFinal);
-		return new PathTransform(transform,tFinal);
+		return new PathTransform(transform, tFinal);
 	}
 	
 	public double getClosestT(Position referencePosition, double searchIncrement, double searches) {
@@ -92,15 +89,15 @@ public abstract class Path implements Parametric {
 		double finalMinSearchT = 0;
 		double finalMaxSearchT = 1;
 		double closestDistance = Double.POSITIVE_INFINITY;
-		for(int j = 1; j < searches+1; j++){
-			double currentIncrement = 1/Math.pow(searchIncrement,j);
-			for(double t = finalMinSearchT; t < finalMaxSearchT; t+=currentIncrement){
+		for (int j = 1; j < searches + 1; j++) {
+			double currentIncrement = 1 / Math.pow(searchIncrement, j);
+			for (double t = finalMinSearchT; t < finalMaxSearchT; t += currentIncrement) {
 				Transform transform = getTransform(t);
 				double distance = Math.abs(transform.getPosition().distance(referencePosition));
-				if(distance < closestDistance){
+				if (distance < closestDistance) {
 					closestDistance = distance;
-					minSearchT = t-currentIncrement;
-					maxSearchT = t+currentIncrement;
+					minSearchT = t - currentIncrement;
+					maxSearchT = t + currentIncrement;
 					tFinal = t;
 				}
 			}
@@ -112,9 +109,9 @@ public abstract class Path implements Parametric {
 	}
 	
 	public double getClosestT(Position referencePosition, double distanceShift, boolean reversed, double searchIncrement, double searches) {
-		double actualClosestT = getClosestT(referencePosition,searchIncrement,searches);
+		double actualClosestT = getClosestT(referencePosition, searchIncrement, searches);
 		
-		if(distanceShift == 0){
+		if (distanceShift == 0) {
 			return actualClosestT;
 		}
 		
@@ -124,15 +121,15 @@ public abstract class Path implements Parametric {
 		double maxSearchT = 1;
 		double finalMinSearchT = 0;
 		double finalMaxSearchT = 1;
-		for(int j = 1; j < searches+1; j++){
-			double currentIncrement = 1/Math.pow(searchIncrement,j);
-			for(double t = finalMinSearchT; t < finalMaxSearchT; t+=currentIncrement){
+		for (int j = 1; j < searches + 1; j++) {
+			double currentIncrement = 1 / Math.pow(searchIncrement, j);
+			for (double t = finalMinSearchT; t < finalMaxSearchT; t += currentIncrement) {
 				Transform transform = getTransform(t);
 				double distance = Math.abs(transform.getPosition().distance(referencePosition) - distanceShift);
-				if(distance < closestDistance && ((reversed && actualClosestT >= t) || (!reversed && actualClosestT <= t))){
+				if (distance < closestDistance && ((reversed && actualClosestT >= t) || (!reversed && actualClosestT <= t))) {
 					closestDistance = distance;
-					minSearchT = t-currentIncrement;
-					maxSearchT = t+currentIncrement;
+					minSearchT = t - currentIncrement;
+					maxSearchT = t + currentIncrement;
 					tFinal = t;
 				}
 			}
@@ -143,13 +140,13 @@ public abstract class Path implements Parametric {
 		return tFinal;
 	}
 	
-	private double map(double val, double valMin, double valMax, double desiredMin, double desiredMax){
-		return (val-valMin)/(valMax-valMin) * (desiredMax-desiredMin)+desiredMin;
+	private double map(double val, double valMin, double valMax, double desiredMin, double desiredMax) {
+		return (val - valMin) / (valMax - valMin) * (desiredMax - desiredMin) + desiredMin;
 	}
 	
-	public double getCurvatureAtT(double t){
-		Circle circle = new Circle(getPosition(t-0.01),getPosition(t),getPosition(t+0.01));
-		return 1/circle.getRadius();
+	public double getCurvatureAtT(double t) {
+		Circle circle = new Circle(getPosition(t - 0.01), getPosition(t), getPosition(t + 0.01));
+		return 1 / circle.getRadius();
 	}
 	
 	
@@ -172,19 +169,18 @@ public abstract class Path implements Parametric {
 		
 		Transform[] adjustedPathWaypoints;
 		
-		if(onPathPoint.getPosition().distance(waypoints[waypoints.length-1].getPosition()) > adjustPathDistance){
-			adjustedPathWaypoints = new Transform[waypoints.length-startWaypointIndex+2];
-			adjustedPathWaypoints[0] = new Transform(newStartTransform.getPosition(),newStartTransform.getPosition().angleTo(onPathPoint.getPosition()));
+		if (onPathPoint.getPosition().distance(waypoints[waypoints.length - 1].getPosition()) > adjustPathDistance) {
+			adjustedPathWaypoints = new Transform[waypoints.length - startWaypointIndex + 2];
+			adjustedPathWaypoints[0] = new Transform(newStartTransform.getPosition(), newStartTransform.getPosition().angleTo(onPathPoint.getPosition()));
 			adjustedPathWaypoints[1] = onPathPoint;
 			for (int i = 2; i < adjustedPathWaypoints.length; i++) {
-				adjustedPathWaypoints[i] = waypoints[(i-2) + startWaypointIndex];
+				adjustedPathWaypoints[i] = waypoints[(i - 2) + startWaypointIndex];
 			}
-		}
-		else{
-			adjustedPathWaypoints = new Transform[waypoints.length-startWaypointIndex+1];
-			adjustedPathWaypoints[0] = new Transform(newStartTransform.getPosition(),newStartTransform.getPosition().angleTo(waypoints[waypoints.length-1].getPosition()));
+		} else {
+			adjustedPathWaypoints = new Transform[waypoints.length - startWaypointIndex + 1];
+			adjustedPathWaypoints[0] = new Transform(newStartTransform.getPosition(), newStartTransform.getPosition().angleTo(waypoints[waypoints.length - 1].getPosition()));
 			for (int i = 1; i < adjustedPathWaypoints.length; i++) {
-				adjustedPathWaypoints[i] = waypoints[(i-1) + startWaypointIndex];
+				adjustedPathWaypoints[i] = waypoints[(i - 1) + startWaypointIndex];
 			}
 		}
 		
