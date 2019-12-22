@@ -7,7 +7,7 @@ import com.github.mittyrobotics.path.following.util.DifferentialDriveKinematics;
 
 public class RamseteController {
 	public static double DEFAULT_AGGRESSIVE_GAIN = 2.0;
-	public static double DEFAULT_DAMPING_GAIN = 0.7;
+	public static double DEFAULT_DAMPING_GAIN = 0.2;
 	private static RamseteController instance = new RamseteController();
 	
 	private double aggressiveGain; //(x > 0), makes turning more aggressive
@@ -47,11 +47,14 @@ public class RamseteController {
 		
 		//Calculate the adjusted linear velocity from the Ramsete algorithm
 		double adjustedLinearVelocity = linearVelocity * error.getRotation().cos() + k * eX;
+		
 		//Convert linear velocity back into inches per second
 		adjustedLinearVelocity = adjustedLinearVelocity * Conversions.M_TO_IN;
 		
 		//Calculate the adjusted angular velocity from the Ramsete algorithm (stays in radians per second)
 		double adjustedAngularVelocity = angularVelocity + k * eTheta + aggressiveGain * linearVelocity * error.getRotation().sinc() * eY;
+		
+		System.out.println(adjustedLinearVelocity + " " + k + " " + linearVelocity + " " + adjustedAngularVelocity + " " + turningRadius);
 		
 		//Use differential drive kinematics given linear velocity in inches per second and angular velocity in radians per second
 		return DifferentialDriveKinematics.getInstance().calculateFromAngularVelocity(adjustedLinearVelocity, adjustedAngularVelocity);

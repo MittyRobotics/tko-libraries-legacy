@@ -1,6 +1,5 @@
 package com.github.mittyrobotics.path.following;
 
-import com.github.mittyrobotics.datacollection.performance.TimeMonitor;
 import com.github.mittyrobotics.datatypes.motion.DrivetrainVelocities;
 import com.github.mittyrobotics.datatypes.motion.VelocityConstraints;
 import com.github.mittyrobotics.datatypes.positioning.Transform;
@@ -17,7 +16,6 @@ import com.github.mittyrobotics.visualization.util.GraphManager;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.ArrayList;
 import java.util.Random;
 
 public class Main {
@@ -40,30 +38,26 @@ public class Main {
 		y = 0;
 		heading = 0;
 		//Set robot transform to random values
-		SimSampleDrivetrain.getInstance().setOdometry(-100,50,0);
+		SimSampleDrivetrain.getInstance().setOdometry(-100, 50, 0);
 		
 		//Create the original path from the robot position to the point
 		Path originalPath = new CubicHermitePath(new Transform[]{SimSampleDrivetrain.getInstance().getRobotTransform(), new Transform(0, 0, 0)});
 		
 		//Create velocity controller
-		PathVelocityController velocityController = new PathVelocityController(new VelocityConstraints(200,50,100),10,0);
+		PathVelocityController velocityController = new PathVelocityController(new VelocityConstraints(200, 50, 150), 10, 0);
 		
 		//Create path properties
-		PathFollowerProperties.PurePursuitProperties properties = new PathFollowerProperties.PurePursuitProperties(
+		PathFollowerProperties.RamseteProperties properties = new PathFollowerProperties.RamseteProperties(
 				originalPath,
 				velocityController,
 				false,
-				20,
-				2,
-				20,
-				true,
-				true,
-				40
+				1.5,
+				.1
 		);
 		
 		//Setup the pure pursuit controller
-		PathFollower.getInstance().setupPurePursuit(properties);
-
+		PathFollower.getInstance().setupRamseteController(properties);
+		
 		//Create new adjusted path
 		//RobotGraph.getInstance().addPath((GraphManager.getInstance().graphParametric(originalPath, .1, 2, .1, "spline", Color.green)));
 		
@@ -80,18 +74,18 @@ public class Main {
 		//Loop
 		while (true) {
 			
-			count ++;
-			if(count%20000 == 0){
-				x = random.nextInt(400)-200;
-				y = random.nextInt(200)-100.0;
-				heading = random.nextInt(90) - 45;
-				
-				Transform onPathPoint = PathFollower.getInstance().getCurrentPath().getClosestTransform(SimSampleDrivetrain.getInstance().getRobotTransform().getPosition(), 40, false, 10, 3);
-				//new Transform(SimSampleDrivetrain.getInstance().getRobotTransform().getPosition(),SimSampleDrivetrain.getInstance().getRobotTransform().getPosition().angleTo(onPathPoint.getPosition()))
-				Path path = new CubicHermitePath(new Transform[]{new Transform(x-Math.cos(Math.toRadians(heading))*50,y-Math.sin(Math.toRadians(heading))*50,heading) , new Transform(x,y,heading)});
-				PathFollower.getInstance().changePath(path);
-			}
-
+			count++;
+//			if(count%20000 == 0){
+//				x = random.nextInt(400)-200;
+//				y = random.nextInt(200)-100.0;
+//				heading = random.nextInt(90) - 45;
+//
+//				Transform onPathPoint = PathFollower.getInstance().getCurrentPath().getClosestTransform(SimSampleDrivetrain.getInstance().getRobotTransform().getPosition(), 40, false, 10, 3);
+//				//new Transform(SimSampleDrivetrain.getInstance().getRobotTransform().getPosition(),SimSampleDrivetrain.getInstance().getRobotTransform().getPosition().angleTo(onPathPoint.getPosition()))
+//				Path path = new CubicHermitePath(new Transform[]{SimSampleDrivetrain.getInstance().getRobotTransform(),new Transform(x-Math.cos(Math.toRadians(heading))*50,y-Math.sin(Math.toRadians(heading))*50,heading), new Transform(x,y,heading)});
+//				PathFollower.getInstance().changePath(path);
+//			}
+			
 			//Graph
 			double finalX = x;
 			double finalY = y;
@@ -100,7 +94,7 @@ public class Main {
 				RobotGraph.getInstance().clearGraph();
 				RobotGraph.getInstance().addDataset(GraphManager.getInstance().graphParametricFast(PathFollower.getInstance().getCurrentPath(), .05, "spline", Color.cyan));
 				
-				RobotGraph.getInstance().addDataset(GraphManager.getInstance().graphArrow(new Transform(finalX, finalY, finalHeading),5,2,"asdfasdf",Color.red));
+				RobotGraph.getInstance().addDataset(GraphManager.getInstance().graphArrow(new Transform(finalX, finalY, finalHeading), 5, 2, "asdfasdf", Color.red));
 				
 			});
 			

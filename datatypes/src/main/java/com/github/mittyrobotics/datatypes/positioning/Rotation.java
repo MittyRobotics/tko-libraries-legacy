@@ -99,6 +99,9 @@ public class Rotation {
 	 * @return the sinc of the radians
 	 */
 	public double sinc() {
+		if (getRadians() == 0) {
+			return 0;
+		}
 		return sin() / getRadians();
 	}
 	

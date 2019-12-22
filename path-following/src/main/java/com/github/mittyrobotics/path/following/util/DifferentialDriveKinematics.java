@@ -55,6 +55,10 @@ public class DifferentialDriveKinematics {
 	 * @return the calculated {@link DrivetrainVelocities}.
 	 */
 	public DrivetrainVelocities calculateFromAngularVelocity(double linearVelocity, double angularVelocity) {
+		if (linearVelocity == 0 && angularVelocity == 0) {
+			return new DrivetrainVelocities(0, 0);
+		}
+		
 		//Calculate the radius given linear velocity and angular velocity
 		double radius = linearVelocity / angularVelocity;
 		

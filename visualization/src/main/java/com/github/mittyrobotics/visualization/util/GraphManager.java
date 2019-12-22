@@ -72,7 +72,7 @@ public class GraphManager {
 	}
 	
 	
-	public XYSeriesCollectionWithRender graphParametric(Parametric parametric, double increment, double arrowLength, double arrowWidth,  String seriesName, Color color) {
+	public XYSeriesCollectionWithRender graphParametric(Parametric parametric, double increment, double arrowLength, double arrowWidth, String seriesName, Color color) {
 		XYSeriesCollectionWithRender dataset = new XYSeriesCollectionWithRender(true, false, color, new Rectangle(2, 2));
 		for (double t = 0; t < 1; t += increment) {
 			dataset.addSeries(arrowSeries(parametric.getTransform(t), arrowLength, arrowWidth, seriesName + "" + t));
@@ -82,10 +82,10 @@ public class GraphManager {
 	
 	public XYSeriesCollectionWithRender graphParametricFast(Parametric parametric, double increment, String seriesName, Color color) {
 		XYSeriesCollectionWithRender dataset = new XYSeriesCollectionWithRender(true, false, color, new Rectangle(2, 2));
-		XYSeries series = new XYSeries(seriesName,false);
+		XYSeries series = new XYSeries(seriesName, false);
 		for (double t = 0; t < 1; t += increment) {
 			Position position = parametric.getPosition(t);
-			series.add(position.getX(),position.getY());
+			series.add(position.getX(), position.getY());
 		}
 		dataset.addSeries(series);
 		return dataset;

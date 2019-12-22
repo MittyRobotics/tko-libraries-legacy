@@ -15,14 +15,15 @@ public abstract class PathFollowerProperties {
 	                              boolean reversed,
 	                              boolean adaptivePath,
 	                              double robotToPathAdaptiveDistance
-	){
+	) {
 		this.path = path;
 		this.velocityController = velocityController;
 		this.reversed = reversed;
 		this.adaptivePath = adaptivePath;
 		this.robotToPathAdaptiveDistance = robotToPathAdaptiveDistance;
 	}
-	public static class PurePursuitProperties extends PathFollowerProperties{
+	
+	public static class PurePursuitProperties extends PathFollowerProperties {
 		public final double lookaheadDistance;
 		public final double curvatureSlowdownGain;
 		public final double minSlowdownVelocity;
@@ -37,15 +38,16 @@ public abstract class PathFollowerProperties {
 		                             boolean adaptiveLookahead,
 		                             boolean adaptivePath,
 		                             double robotToPathAdaptiveDistance
-		){
-			super(path,velocityController,reversed,adaptivePath,robotToPathAdaptiveDistance);
+		) {
+			super(path, velocityController, reversed, adaptivePath, robotToPathAdaptiveDistance);
 			this.lookaheadDistance = lookaheadDistance;
 			this.curvatureSlowdownGain = curvatureSlowdownGain;
 			this.minSlowdownVelocity = minSlowdownVelocity;
 			this.adaptiveLookahead = adaptiveLookahead;
 		}
 	}
-	public static class RamseteProperties extends PathFollowerProperties{
+	
+	public static class RamseteProperties extends PathFollowerProperties {
 		public final double aggressiveGain;
 		public final double dampingGain;
 		
@@ -53,11 +55,9 @@ public abstract class PathFollowerProperties {
 		                         PathVelocityController velocityController,
 		                         boolean reversed,
 		                         double aggressiveGain,
-		                         double dampingGain,
-		                         boolean adaptivePath,
-		                         double robotToPathAdaptiveDistance
-		){
-			super(path,velocityController,reversed,adaptivePath,robotToPathAdaptiveDistance);
+		                         double dampingGain
+		) {
+			super(path, velocityController, reversed, false, 0);
 			this.aggressiveGain = aggressiveGain;
 			this.dampingGain = dampingGain;
 		}
