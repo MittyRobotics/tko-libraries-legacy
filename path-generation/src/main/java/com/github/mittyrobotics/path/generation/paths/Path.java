@@ -87,20 +87,20 @@ public abstract class Path implements Parametric {
 	
 	public double getClosestT(Position referencePosition, double searchIncrement, double searches) {
 		double tFinal = 0;
-		double closestDistance = Double.POSITIVE_INFINITY;
 		double minSearchT = 0;
 		double maxSearchT = 1;
 		double finalMinSearchT = 0;
 		double finalMaxSearchT = 1;
-		for(int j = 0; j < searches; j++){
-			for(int i = 0; i < searchIncrement+1; i++){
-				double t = i / (searchIncrement / (finalMaxSearchT - finalMinSearchT)) + finalMinSearchT;
+		double closestDistance = Double.POSITIVE_INFINITY;
+		for(int j = 1; j < searches+1; j++){
+			double currentIncrement = 1/Math.pow(searchIncrement,j);
+			for(double t = finalMinSearchT; t < finalMaxSearchT; t+=currentIncrement){
 				Transform transform = getTransform(t);
 				double distance = Math.abs(transform.getPosition().distance(referencePosition));
 				if(distance < closestDistance){
 					closestDistance = distance;
-					minSearchT = t-(1/searchIncrement);
-					maxSearchT = t+(1/searchIncrement);
+					minSearchT = t-currentIncrement;
+					maxSearchT = t+currentIncrement;
 					tFinal = t;
 				}
 			}
@@ -124,15 +124,15 @@ public abstract class Path implements Parametric {
 		double maxSearchT = 1;
 		double finalMinSearchT = 0;
 		double finalMaxSearchT = 1;
-		for(int j = 0; j < searches; j++){
-			for(int i = 0; i < searchIncrement+1; i++){
-				double t = i / (searchIncrement / (finalMaxSearchT - finalMinSearchT)) + finalMinSearchT;
+		for(int j = 1; j < searches+1; j++){
+			double currentIncrement = 1/Math.pow(searchIncrement,j);
+			for(double t = finalMinSearchT; t < finalMaxSearchT; t+=currentIncrement){
 				Transform transform = getTransform(t);
 				double distance = Math.abs(transform.getPosition().distance(referencePosition) - distanceShift);
 				if(distance < closestDistance && ((reversed && actualClosestT >= t) || (!reversed && actualClosestT <= t))){
 					closestDistance = distance;
-					minSearchT = t-(1/searchIncrement);
-					maxSearchT = t+(1/searchIncrement);
+					minSearchT = t-currentIncrement;
+					maxSearchT = t+currentIncrement;
 					tFinal = t;
 				}
 			}
@@ -141,6 +141,10 @@ public abstract class Path implements Parametric {
 		}
 		
 		return tFinal;
+	}
+	
+	private double map(double val, double valMin, double valMax, double desiredMin, double desiredMax){
+		return (val-valMin)/(valMax-valMin) * (desiredMax-desiredMin)+desiredMin;
 	}
 	
 	public double getCurvatureAtT(double t){

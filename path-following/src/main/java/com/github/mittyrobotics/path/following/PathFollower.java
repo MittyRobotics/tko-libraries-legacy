@@ -87,14 +87,14 @@ public class PathFollower {
 		Position lookaheadCalculationStartPosition;
 		
 		if(purePursuitProperties.adaptiveLookahead){
-			Position closestPosition = currentPath.getClosestTransform(robotTransform.getPosition(), 0, reversed, 10, 1000).getPosition();
+			Position closestPosition = currentPath.getClosestTransform(robotTransform.getPosition(),  10, 3).getPosition();
 			lookaheadCalculationStartPosition = closestPosition;
 		}
 		else{
 			lookaheadCalculationStartPosition = robotTransform.getPosition();
 		}
 		
-		Position targetPosition = currentPath.getClosestTransform(lookaheadCalculationStartPosition, lookaheadDistance, reversed, 10, 1000).getPosition();
+		Position targetPosition = currentPath.getClosestTransform(lookaheadCalculationStartPosition, lookaheadDistance, reversed, 10, 3).getPosition();
 		
 		//Find the rough distance to the end of the path
 		double distanceToEnd = getDistanceToEnd(robotTransform);

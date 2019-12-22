@@ -22,11 +22,11 @@ public class Main {
 				new Transform(0, 100, 0),
 				new Transform(100, 0, 90)
 		});
-		Transform transform = new Transform(-20, 120);
+		Transform transform = new Transform(0, 100);
 	while(true){
 
-			PathTransform closestPos = path.getClosestTransform(transform.getPosition(), 1,false,1000, 1);
-			Position targetPos = path.getClosestTransform(closestPos.getPosition(), 20, false, 1000, 1).getPosition();
+			PathTransform closestPos = path.getClosestTransform(transform.getPosition(), 10, 3);
+			Position targetPos = path.getClosestTransform(closestPos.getPosition(), 20, false, 10, 3).getPosition();
 			
 			Transform finalTransform = transform;
 			SwingUtilities.invokeLater(new Runnable() {
@@ -40,7 +40,6 @@ public class Main {
 					
 				}
 			});
-
 			transform = transform.add(new Transform(.1,-.1));
 			
 			try {
