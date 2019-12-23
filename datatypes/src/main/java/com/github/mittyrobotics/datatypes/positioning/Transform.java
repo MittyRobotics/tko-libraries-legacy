@@ -72,8 +72,8 @@ public class Transform {
 	 * @param other the {@link Rotation} to rotate this {@link Rotation} by.
 	 * @return a new {@link Transform} with the {@link Rotation} rotated by <code>rotation</code>.
 	 */
-	public Transform rotateBy(Rotation other){
-		return new Transform(position,rotation.add(other));
+	public Transform rotateBy(Rotation other) {
+		return new Transform(position, rotation.add(other));
 	}
 	
 	/**

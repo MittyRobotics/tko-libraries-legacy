@@ -5,16 +5,14 @@ public class DrivetrainVelocities {
 	private final double rightVelocity;
 	
 	public DrivetrainVelocities(double leftVelocity, double rightVelocity) {
-		if(Double.isNaN(leftVelocity) || Double.isInfinite(leftVelocity)){
+		if (Double.isNaN(leftVelocity) || Double.isInfinite(leftVelocity)) {
 			this.leftVelocity = 0;
-		}
-		else{
+		} else {
 			this.leftVelocity = leftVelocity;
 		}
-		if(Double.isNaN(rightVelocity) || Double.isInfinite(rightVelocity)){
+		if (Double.isNaN(rightVelocity) || Double.isInfinite(rightVelocity)) {
 			this.rightVelocity = 0;
-		}
-		else{
+		} else {
 			this.rightVelocity = rightVelocity;
 		}
 	}

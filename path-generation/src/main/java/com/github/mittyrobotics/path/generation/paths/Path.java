@@ -93,6 +93,47 @@ public abstract class Path implements Parametric {
 	 * The {@link PathTransform} contains the {@link Transform} of the point as well as the <code>t</code> value of it
 	 * along the {@link Parametric}.
 	 * <p>
+	 * This function defaults to a <code>searchIncrement</code> of 10 and a <code>searches</code> of 3.
+	 * <p>
+	 * If the point is outside the start and end of the path, either the start or end {@link Transform} will be picked.
+	 *
+	 * @param referencePosition the {@link Position} to find the closest {@link PathTransform} to.
+	 * @return the closest {@link PathTransform} to the <code>referencePosition</code>.
+	 */
+	public PathTransform getClosestTransform(Position referencePosition) {
+		return getClosestTransform(referencePosition, 0, true, 10, 3);
+	}
+	
+	/**
+	 * Finds the closest {@link PathTransform} to the <code>referencePosition</code> given a <code>distanceShift</code>.
+	 * <p>
+	 * The {@link PathTransform} contains the {@link Transform} of the point as well as the <code>t</code> value of it
+	 * along the {@link Parametric}.
+	 * <p>
+	 * This function defaults to a <code>searchIncrement</code> of 10 and a <code>searches</code> of 3.
+	 * <p>
+	 * If the point is outside the start and end of the path, either the start or end {@link Transform} will be picked.
+	 * If the distance shifted point is off the path, it will be interpolated on a line extending either the start or
+	 * end {@link Transform} of the path.
+	 * <p>
+	 * Since there is a <code>distanceShift</code> in this search, it first finds the actual closest point to the
+	 * <code>referencePosition</code> and then performs the distance shifted search using the actual closest point as a
+	 * guide of whether or not the point is in front or behind the <code>referencePosition</code>.
+	 *
+	 * @param referencePosition the {@link Position} to find the closest {@link PathTransform} to.
+	 * @param distanceShift     the distance away from the <code>referencePosition</code> the closest point should be.
+	 * @return the closest {@link PathTransform} to the <code>referencePosition</code>.
+	 */
+	public PathTransform getClosestTransform(Position referencePosition, double distanceShift) {
+		return getClosestTransform(referencePosition, distanceShift, true, 10, 3);
+	}
+	
+	/**
+	 * Finds the closest {@link PathTransform} to the <code>referencePosition</code>.
+	 * <p>
+	 * The {@link PathTransform} contains the {@link Transform} of the point as well as the <code>t</code> value of it
+	 * along the {@link Parametric}.
+	 * <p>
 	 * The closest point is found by sampling <code>searchIncrement</code> amount of points on the {@link Parametric}.
 	 * After the initial points are sampled, it finds the closest point and creates a smaller bound to search within.
 	 * It then repeats the same process within the smaller bound for a total of <code>searches</code> loops. Therefore,

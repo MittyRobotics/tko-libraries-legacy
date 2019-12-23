@@ -21,7 +21,7 @@ public class SimOI extends JFrame implements Runnable {
 		addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyTyped(KeyEvent e) {
-
+			
 			}
 			
 			public void keyReleased(KeyEvent e) {

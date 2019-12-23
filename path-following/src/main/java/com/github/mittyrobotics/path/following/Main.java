@@ -9,7 +9,6 @@ import com.github.mittyrobotics.path.following.util.PathFollowerProperties;
 import com.github.mittyrobotics.path.generation.paths.CubicHermitePath;
 import com.github.mittyrobotics.path.generation.paths.Path;
 import com.github.mittyrobotics.simulation.sim.RobotSimManager;
-import com.github.mittyrobotics.simulation.util.SimOI;
 import com.github.mittyrobotics.simulation.util.SimSampleDrivetrain;
 import com.github.mittyrobotics.simulation.util.SimSampleRobot;
 import com.github.mittyrobotics.visualization.graphs.RobotGraph;
@@ -43,9 +42,9 @@ public class Main {
 		//Create the original path from the robot position to the point
 		Path originalPath = new CubicHermitePath(new Transform[]{SimSampleDrivetrain.getInstance().getRobotTransform(), new Transform(100, -24, 0)});
 		
-		if(reversed){
+		if (reversed) {
 			originalPath = new CubicHermitePath(originalPath.getReversedWaypoints());
-			SimSampleDrivetrain.getInstance().setOdometry(originalPath.getStartWaypoint().getPosition().getX(),originalPath.getStartWaypoint().getPosition().getY(),SimSampleDrivetrain.getInstance().getHeading());
+			SimSampleDrivetrain.getInstance().setOdometry(originalPath.getStartWaypoint().getPosition().getX(), originalPath.getStartWaypoint().getPosition().getY(), SimSampleDrivetrain.getInstance().getHeading());
 		}
 		
 		//Create velocity controller
@@ -61,14 +60,14 @@ public class Main {
 				20,
 				true,
 				false,
-				0
+				50
 		);
 		
 		PathFollowerProperties.RamseteProperties ramseteProperties = new PathFollowerProperties.RamseteProperties(
 				originalPath,
 				velocityController,
 				reversed,
-				2.0,
+				4.0,
 				.7
 		);
 		
@@ -76,7 +75,7 @@ public class Main {
 		PathFollower.getInstance().setupRamseteController(ramseteProperties);
 		
 		//Add original path to graph
-		RobotGraph.getInstance().addPath((GraphManager.getInstance().graphParametric(originalPath, .1, 2, .1, "spline", Color.green)));
+		RobotGraph.getInstance().addPath((GraphManager.getInstance().graphParametric(originalPath, .05, 3, .2, "spline", Color.green)));
 		
 		//Delay before starting
 		try {

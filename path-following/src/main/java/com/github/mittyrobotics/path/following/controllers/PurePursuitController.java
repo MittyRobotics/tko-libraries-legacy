@@ -56,7 +56,7 @@ public class PurePursuitController {
 		//velocity and the radius of the pursuit circle
 		return DifferentialDriveKinematics.getInstance().calculateFromRadius(
 				robotVelocity,
-				pursuitCircle.getRadius() * side * (reversed ? -1:1)
+				pursuitCircle.getRadius() * side * (reversed ? -1 : 1)
 		);
 	}
 	

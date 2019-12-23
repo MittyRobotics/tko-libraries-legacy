@@ -8,7 +8,7 @@ public class Target {
 	private Rotation relativePitch;
 	private Rotation relativeYaw;
 	
-	public Target(Transform transform, Rotation relativePitch, Rotation relativeYaw){
+	public Target(Transform transform, Rotation relativePitch, Rotation relativeYaw) {
 		this.transform = transform;
 		this.relativePitch = relativePitch;
 		this.relativeYaw = relativeYaw;

@@ -36,7 +36,7 @@ public class RamseteController {
 		//Calculate linear velocity in meters per second given robot velocity in inches per second
 		double linearVelocity = robotVelocity * Conversions.IN_TO_M;
 		//Calculate the angular velocity in radians per second given the turning radius and the robot velocity.
-		double angularVelocity = linearVelocity / (turningRadius*Conversions.IN_TO_M);
+		double angularVelocity = linearVelocity / (turningRadius * Conversions.IN_TO_M);
 		
 		double eX = error.getPosition().getX();
 		double eY = error.getPosition().getY();

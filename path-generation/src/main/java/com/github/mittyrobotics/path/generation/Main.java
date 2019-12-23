@@ -20,7 +20,7 @@ public class Main {
 		CubicHermitePath path = new CubicHermitePath(new Transform[]{
 				new Transform(100, 100, 180),
 				new Transform(0, 0, 180)
-
+			
 		});
 		Transform transform = new Transform(0, 0);
 		while (true) {
