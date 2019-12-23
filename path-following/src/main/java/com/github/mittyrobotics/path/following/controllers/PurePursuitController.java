@@ -100,6 +100,16 @@ public class PurePursuitController {
 		);
 	}
 	
+	/**
+	 * Calculates the velocity of the robot after applying the <code>curvatureSlowdownGain</code> to the
+	 * <code>curvature</code>.
+	 *
+	 * @param curvature           the curvature (1/radius) of the arc the robot is following.
+	 * @param currentVelocity     the current velocity that the robot is or should be moving at.
+	 * @param minSlowdownVelocity the minimum allowed velocity to slow down to.
+	 * @return the velocity of the robot after applying the <code>curvatureSlowdownGain</code> to the
+	 * <code>curvature</code>.
+	 */
 	private double calculateSlowdownVelocity(double curvature, double currentVelocity, double minSlowdownVelocity) {
 		if (curvatureSlowdownGain == 0) {
 			return currentVelocity;
