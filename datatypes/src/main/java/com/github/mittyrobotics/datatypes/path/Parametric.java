@@ -23,4 +23,12 @@ public interface Parametric {
 	 * @return the {@link Transform} at the parameter <code>t</code>.
 	 */
 	public abstract Transform getTransform(double t);
+	
+	/**
+	 * Returns the curvature at point <code>t</code> on the {@link Parametric}.
+	 *
+	 * @param t the parameter
+	 * @return the curvature at the parameter <code>t</code>.
+	 */
+	public abstract double getCurvature(double t);
 }

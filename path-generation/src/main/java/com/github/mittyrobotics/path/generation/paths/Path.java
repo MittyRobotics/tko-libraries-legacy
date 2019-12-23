@@ -1,6 +1,5 @@
 package com.github.mittyrobotics.path.generation.paths;
 
-import com.github.mittyrobotics.datatypes.geometry.Circle;
 import com.github.mittyrobotics.datatypes.path.Parametric;
 import com.github.mittyrobotics.datatypes.positioning.Position;
 import com.github.mittyrobotics.datatypes.positioning.Rotation;
@@ -50,24 +49,41 @@ public abstract class Path implements Parametric {
 		return new Transform();
 	}
 	
+	@Override
+	public double getCurvature(double t) {
+		//Convert t from 0 to 1 to 0 to waypoints.length-1 so that the t value represents all parametric equation
+		//segments of the total path.
+		t = t * parametrics.length;
+		
+		for (int i = 0; i < parametrics.length; i++) {
+			//Find which parametric equation segment that t falls in
+			if (t >= i && t <= i + 1) {
+				//return the Transform from the segment that it falls in
+				return parametrics[i].getCurvature(t - i);
+			}
+		}
+		
+		return 1 / 2e16;
+	}
+	
 	public PathTransform getClosestTransform(Position referencePosition, double searchIncrement, double searches) {
 		return getClosestTransform(referencePosition, 0, false, searchIncrement, searches);
 	}
 	
 	
 	public PathTransform getClosestTransform(Position referencePosition, double distanceShift, boolean reversed, double searchIncrement, double searches) {
-		double distanceToStartWaypoint = referencePosition.distance(waypoints[0].getPosition());
-		double distanceToEndWaypoint = referencePosition.distance(waypoints[waypoints.length - 1].getPosition());
+		double distanceToStartWaypoint = referencePosition.distance(getStartWaypoint().getPosition());
+		double distanceToEndWaypoint = referencePosition.distance(getEndWaypoint().getPosition());
 		
 		if (reversed && distanceToStartWaypoint <= distanceShift) {
 			double distanceOffset = distanceShift - distanceToStartWaypoint;
-			Rotation rotation = waypoints[0].getRotation().add(new Rotation(180));
-			Position position = waypoints[0].getPosition().add(new Position(rotation.cos() * distanceOffset, rotation.sin() * distanceOffset));
+			Rotation rotation = getStartWaypoint().getRotation().add(new Rotation(180));
+			Position position = getStartWaypoint().getPosition().add(new Position(rotation.cos() * distanceOffset, rotation.sin() * distanceOffset));
 			return new PathTransform(new Transform(position), 1);
 		} else if (!reversed && distanceToEndWaypoint <= distanceShift) {
 			double distanceOffset = distanceShift - distanceToEndWaypoint;
-			Rotation rotation = waypoints[waypoints.length - 1].getRotation();
-			Position position = waypoints[waypoints.length - 1].getPosition().add(new Position(rotation.cos() * distanceOffset, rotation.sin() * distanceOffset));
+			Rotation rotation = getEndWaypoint().getRotation();
+			Position position = getEndWaypoint().getPosition().add(new Position(rotation.cos() * distanceOffset, rotation.sin() * distanceOffset));
 			return new PathTransform(new Transform(position), 1);
 		}
 		
@@ -144,12 +160,6 @@ public abstract class Path implements Parametric {
 		return (val - valMin) / (valMax - valMin) * (desiredMax - desiredMin) + desiredMin;
 	}
 	
-	public double getCurvatureAtT(double t) {
-		Circle circle = new Circle(getPosition(t - 0.01), getPosition(t), getPosition(t + 0.01));
-		return 1 / circle.getRadius();
-	}
-	
-	
 	public Path calculateAdaptedPath(Transform newStartTransform, double adjustPathDistance, boolean reversed) {
 		Transform onPathPoint = getClosestTransform(newStartTransform.getPosition(), adjustPathDistance, reversed, 10, 3);
 		Transform[] waypoints = getWaypoints();
@@ -169,7 +179,7 @@ public abstract class Path implements Parametric {
 		
 		Transform[] adjustedPathWaypoints;
 		
-		if (onPathPoint.getPosition().distance(waypoints[waypoints.length - 1].getPosition()) > adjustPathDistance) {
+		if (onPathPoint.getPosition().distance(getEndWaypoint().getPosition()) > adjustPathDistance) {
 			adjustedPathWaypoints = new Transform[waypoints.length - startWaypointIndex + 2];
 			adjustedPathWaypoints[0] = new Transform(newStartTransform.getPosition(), newStartTransform.getPosition().angleTo(onPathPoint.getPosition()));
 			adjustedPathWaypoints[1] = onPathPoint;
@@ -178,7 +188,7 @@ public abstract class Path implements Parametric {
 			}
 		} else {
 			adjustedPathWaypoints = new Transform[waypoints.length - startWaypointIndex + 1];
-			adjustedPathWaypoints[0] = new Transform(newStartTransform.getPosition(), newStartTransform.getPosition().angleTo(waypoints[waypoints.length - 1].getPosition()));
+			adjustedPathWaypoints[0] = new Transform(newStartTransform.getPosition(), newStartTransform.getPosition().angleTo(getEndWaypoint().getPosition()));
 			for (int i = 1; i < adjustedPathWaypoints.length; i++) {
 				adjustedPathWaypoints[i] = waypoints[(i - 1) + startWaypointIndex];
 			}
@@ -189,6 +199,14 @@ public abstract class Path implements Parametric {
 	
 	public Transform[] getWaypoints() {
 		return waypoints;
+	}
+	
+	public Transform getStartWaypoint() {
+		return waypoints[0];
+	}
+	
+	public Transform getEndWaypoint() {
+		return waypoints[waypoints.length - 1];
 	}
 	
 	public Parametric[] getParametrics() {

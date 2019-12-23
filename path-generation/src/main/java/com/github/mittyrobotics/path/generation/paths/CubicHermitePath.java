@@ -16,4 +16,5 @@ public class CubicHermitePath extends Path {
 		}
 		setParametrics(splines);
 	}
+	
 }
