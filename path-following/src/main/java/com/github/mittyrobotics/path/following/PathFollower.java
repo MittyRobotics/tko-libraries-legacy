@@ -115,8 +115,6 @@ public class PathFollower {
 			turningRadius = 2e16;
 		}
 		
-		System.out.println(robotVelocity);
-		
 		return RamseteController.getInstance().calculate(robotTransform, desiredTransform, robotVelocity, turningRadius);
 	}
 	
