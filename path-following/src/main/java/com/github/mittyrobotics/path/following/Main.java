@@ -96,7 +96,7 @@ public class Main {
 		);
 		
 		//Setup the path follower
-		PathFollower.getInstance().setupRamseteController(ramseteProperties);
+		PathFollower follower = new PathFollower(ramseteProperties);
 		
 		//Add original path to graph
 		RobotGraph.getInstance().addPath((GraphManager.getInstance().graphParametric(originalPath, .05, 3, .2, "spline", Color.green)));
@@ -113,11 +113,11 @@ public class Main {
 			//Graph
 			SwingUtilities.invokeLater(() -> {
 				RobotGraph.getInstance().clearGraph();
-				RobotGraph.getInstance().addDataset(GraphManager.getInstance().graphParametricFast(PathFollower.getInstance().getCurrentPath(), .05, "spline", Color.cyan));
+				RobotGraph.getInstance().addDataset(GraphManager.getInstance().graphParametricFast(follower.getCurrentPath(), .05, "spline", Color.cyan));
 			});
 			
 			//Update pure pursuit controller and set velocities
-			DrivetrainVelocities wheelVelocities = PathFollower.getInstance().updatePathFollower(SimSampleDrivetrain.getInstance().getRobotTransform(), SimSampleDrivetrain.getInstance().getAverageVelocity(), RobotSimManager.getInstance().getPeriodTime());
+			DrivetrainVelocities wheelVelocities = follower.updatePathFollower(SimSampleDrivetrain.getInstance().getRobotTransform(), SimSampleDrivetrain.getInstance().getAverageVelocity(), RobotSimManager.getInstance().getPeriodTime());
 			SimSampleDrivetrain.getInstance().setVelocities(wheelVelocities.getLeftVelocity(), wheelVelocities.getRightVelocity());
 			
 			try {

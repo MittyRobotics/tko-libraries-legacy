@@ -36,8 +36,6 @@ import com.github.mittyrobotics.path.generation.datatypes.PathTransform;
 import com.github.mittyrobotics.path.generation.paths.Path;
 
 public class PathFollower {
-	private static PathFollower instance = new PathFollower();
-	
 	private PathFollowingType pathFollowingType;
 	
 	private PathFollowerProperties properties;
@@ -48,12 +46,22 @@ public class PathFollower {
 	
 	private boolean unAdaptedPath;
 	
-	private PathFollower() {
-	
+	/**
+	 * Constructs a {@link PathFollower} and sets it up for use with the {@link PurePursuitController}.
+	 *
+	 * @param properties the {@link PathFollowerProperties.PurePursuitProperties} for the {@link PathFollower}.
+	 */
+	public PathFollower(PathFollowerProperties.PurePursuitProperties properties) {
+		setupPurePursuit(properties);
 	}
 	
-	public static PathFollower getInstance() {
-		return instance;
+	/**
+	 * Constructs a {@link PathFollower} and sets it up for use with the {@link RamseteController}.
+	 *
+	 * @param properties the {@link PathFollowerProperties.RamseteProperties} for the {@link PathFollower}.
+	 */
+	public PathFollower(PathFollowerProperties.RamseteProperties properties) {
+		setupRamseteController(properties);
 	}
 	
 	/**
@@ -61,7 +69,7 @@ public class PathFollower {
 	 *
 	 * @param properties the {@link PathFollowerProperties.PurePursuitProperties} for the {@link PurePursuitController}.
 	 */
-	public void setupPurePursuit(PathFollowerProperties.PurePursuitProperties properties) {
+	private void setupPurePursuit(PathFollowerProperties.PurePursuitProperties properties) {
 		pathFollowingType = PathFollowingType.PURE_PURSUIT_CONTROLLER;
 		
 		setupPathFollower(properties);
@@ -75,7 +83,7 @@ public class PathFollower {
 	 *
 	 * @param properties the {@link PathFollowerProperties.RamseteProperties} for the {@link RamseteController}.
 	 */
-	public void setupRamseteController(PathFollowerProperties.RamseteProperties properties) {
+	private void setupRamseteController(PathFollowerProperties.RamseteProperties properties) {
 		this.pathFollowingType = PathFollowingType.RAMSETE_CONTROLLER;
 		
 		setupPathFollower(properties);
