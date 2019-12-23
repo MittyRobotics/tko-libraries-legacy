@@ -18,8 +18,9 @@ public class Main {
 		
 		graph.getChart().removeLegend();
 		CubicHermitePath path = new CubicHermitePath(new Transform[]{
-				new Transform(0, 0, 0),
-				new Transform(100, 100, 0)
+				new Transform(100, 100, 180),
+				new Transform(0, 0, 180)
+
 		});
 		Transform transform = new Transform(0, 0);
 		while (true) {

@@ -111,7 +111,41 @@ public abstract class Path implements Parametric {
 	 * @return the closest {@link PathTransform} to the <code>referencePosition</code>.
 	 */
 	public PathTransform getClosestTransform(Position referencePosition, double searchIncrement, double searches) {
-		return getClosestTransform(referencePosition, 0, false, searchIncrement, searches);
+		return getClosestTransform(referencePosition, 0, true, searchIncrement, searches);
+	}
+	
+	/**
+	 * Finds the closest {@link PathTransform} to the <code>referencePosition</code> given a <code>distanceShift</code>.
+	 * <p>
+	 * The {@link PathTransform} contains the {@link Transform} of the point as well as the <code>t</code> value of it
+	 * along the {@link Parametric}.
+	 * <p>
+	 * The closest point is found by sampling <code>searchIncrement</code> amount of points on the {@link Parametric}.
+	 * After the initial points are sampled, it finds the closest point and creates a smaller bound to search within.
+	 * It then repeats the same process within the smaller bound for a total of <code>searches</code> loops. Therefore,
+	 * the total resolution of the closest point is <code>searchIncrement</code> to the power of <code>searches</code>.
+	 * <p>
+	 * For example, if <code>searchIncrement</code> is 10 and <code>searches</code> is 3, it will get 10 points,
+	 * create a smaller boundary, get another 10 points within the boundary, create a smaller boundary again, and lastly
+	 * find the closest point within 10 points within the final smaller boundary. This would find a point within the
+	 * accuracy of 1000 points, although it only does 30 total samples.
+	 * <p>
+	 * If the point is outside the start and end of the path, either the start or end {@link Transform} will be picked.
+	 * If the distance shifted point is off the path, it will be interpolated on a line extending either the start or
+	 * end {@link Transform} of the path.
+	 * <p>
+	 * Since there is a <code>distanceShift</code> in this search, it first finds the actual closest point to the
+	 * <code>referencePosition</code> and then performs the distance shifted search using the actual closest point as a
+	 * guide of whether or not the point is in front or behind the <code>referencePosition</code>.
+	 *
+	 * @param referencePosition the {@link Position} to find the closest {@link PathTransform} to.
+	 * @param distanceShift     the distance away from the <code>referencePosition</code> the closest point should be.
+	 * @param searchIncrement   the samples within each search.
+	 * @param searches          the amount of searches to perform to get the final closest value.
+	 * @return the closest {@link PathTransform} to the <code>referencePosition</code>.
+	 */
+	public PathTransform getClosestTransform(Position referencePosition, double distanceShift, double searchIncrement, double searches) {
+		return getClosestTransform(referencePosition, distanceShift, true, searchIncrement, searches);
 	}
 	
 	/**
@@ -137,27 +171,21 @@ public abstract class Path implements Parametric {
 	 * Since there is a <code>distanceShift</code> in this search, it first finds the actual closest point to the
 	 * <code>referencePosition</code> and then performs the distance shifted search using the actual closest point as a
 	 * guide of whether or not the point is in front or behind the <code>referencePosition</code>. It will only pick
-	 * points in front of the actual closest point on the path if reversed is <code>false</code>, and only behind the
-	 * actual closest point on the path if reversed is <code>true</code>.
+	 * points in front of the actual closest point on the path if pointInFront is <code>false</code>, and only behind the
+	 * actual closest point on the path if pointInFront is <code>true</code>.
 	 *
 	 * @param referencePosition the {@link Position} to find the closest {@link PathTransform} to.
 	 * @param distanceShift     the distance away from the <code>referencePosition</code> the closest point should be.
-	 * @param reversed          whether to find the closest {@link Position} behind or in front of the
+	 * @param pointInFront      whether to find the closest {@link Position} behind or in front of the
 	 *                          <code>referencePosition</code>.
 	 * @param searchIncrement   the samples within each search.
 	 * @param searches          the amount of searches to perform to get the final closest value.
 	 * @return the closest {@link PathTransform} to the <code>referencePosition</code>.
 	 */
-	public PathTransform getClosestTransform(Position referencePosition, double distanceShift, boolean reversed, double searchIncrement, double searches) {
-		double distanceToStartWaypoint = referencePosition.distance(getStartWaypoint().getPosition());
-		double distanceToEndWaypoint = referencePosition.distance(getEndWaypoint().getPosition());
+	public PathTransform getClosestTransform(Position referencePosition, double distanceShift, boolean pointInFront, double searchIncrement, double searches) {
 		
-		if (reversed && distanceToStartWaypoint <= distanceShift) {
-			double distanceOffset = distanceShift - distanceToStartWaypoint;
-			Rotation rotation = getStartWaypoint().getRotation().add(new Rotation(180));
-			Position position = getStartWaypoint().getPosition().add(new Position(rotation.cos() * distanceOffset, rotation.sin() * distanceOffset));
-			return new PathTransform(new Transform(position), 1);
-		} else if (!reversed && distanceToEndWaypoint <= distanceShift) {
+		double distanceToEndWaypoint = referencePosition.distance(getEndWaypoint().getPosition());
+		if (distanceToEndWaypoint <= distanceShift) {
 			double distanceOffset = distanceShift - distanceToEndWaypoint;
 			Rotation rotation = getEndWaypoint().getRotation();
 			Position position = getEndWaypoint().getPosition().add(new Position(rotation.cos() * distanceOffset, rotation.sin() * distanceOffset));
@@ -168,7 +196,7 @@ public abstract class Path implements Parametric {
 		if (distanceShift == 0) {
 			tFinal = getClosestT(referencePosition, searchIncrement, searches);
 		} else {
-			tFinal = getClosestT(referencePosition, distanceShift, reversed, searchIncrement, searches);
+			tFinal = getClosestT(referencePosition, distanceShift, pointInFront, searchIncrement, searches);
 		}
 		
 		Transform transform = getTransform(tFinal);
@@ -249,20 +277,56 @@ public abstract class Path implements Parametric {
 	 * <p>
 	 * Since there is a <code>distanceShift</code> in this search, it first finds the actual closest point to the
 	 * <code>referencePosition</code> and then performs the distance shifted search using the actual closest point as a
-	 * guide of whether or not the point is in front or behind the <code>referencePosition</code>. It will only pick
-	 * points in front of the actual closest point on the path if reversed is <code>false</code>, and only behind the
-	 * actual closest point on the path if reversed is <code>true</code>.
+	 * guide of whether or not the point is in front or behind the <code>referencePosition</code>.
 	 *
 	 * @param referencePosition the {@link Position} to find the closest <code>t</code> value to.
 	 * @param distanceShift     the distance away from the <code>referencePosition</code> the closest point should be.
-	 * @param reversed          whether to find the closest {@link Position} behind or in front of the
+	 * @param searchIncrement   the samples within each search.
+	 * @param searches          the amount of searches to perform to get the final closest value.
+	 * @return the closest <code>t</code> value on the {@link Parametric} that is closest to the
+	 * <code>referencePosition</code>.
+	 */
+	public double getClosestT(Position referencePosition, double distanceShift, double searchIncrement, double searches) {
+		return getClosestT(referencePosition, distanceShift, searchIncrement, searches);
+	}
+	
+	/**
+	 * Finds the closest <code>t</code> value on the {@link Parametric} to the <code>referencePosition</code> given a
+	 * <code>distanceShift</code>.
+	 * <p>
+	 * The {@link PathTransform} contains the {@link Transform} of the point as well as the <code>t</code> value of it
+	 * along the {@link Parametric}.
+	 * <p>
+	 * The closest point is found by sampling <code>searchIncrement</code> amount of points on the {@link Parametric}.
+	 * After the initial points are sampled, it finds the closest point and creates a smaller bound to search within.
+	 * It then repeats the same process within the smaller bound for a total of <code>searches</code> loops. Therefore,
+	 * the total resolution of the closest point is <code>searchIncrement</code> to the power of <code>searches</code>.
+	 * <p>
+	 * For example, if <code>searchIncrement</code> is 10 and <code>searches</code> is 3, it will get 10 points,
+	 * create a smaller boundary, get another 10 points within the boundary, create a smaller boundary again, and lastly
+	 * find the closest point within 10 points within the final smaller boundary. This would find a point within the
+	 * accuracy of 1000 points, although it only does 30 total samples.
+	 * <p>
+	 * If the point is outside the start and end of the path, either 0 or 1 will be picked, representing the first or
+	 * last point on the {@link Parametric}. If the distance shifted point is off the path, it will also either choose
+	 * 0 or 1.
+	 * <p>
+	 * Since there is a <code>distanceShift</code> in this search, it first finds the actual closest point to the
+	 * <code>referencePosition</code> and then performs the distance shifted search using the actual closest point as a
+	 * guide of whether or not the point is in front or behind the <code>referencePosition</code>. It will only pick
+	 * points in front of the actual closest point on the path if pointInFront is <code>false</code>, and only behind the
+	 * actual closest point on the path if pointInFront is <code>true</code>.
+	 *
+	 * @param referencePosition the {@link Position} to find the closest <code>t</code> value to.
+	 * @param distanceShift     the distance away from the <code>referencePosition</code> the closest point should be.
+	 * @param pointInFront      whether to find the closest {@link Position} behind or in front of the
 	 *                          <code>referencePosition</code>.
 	 * @param searchIncrement   the samples within each search.
 	 * @param searches          the amount of searches to perform to get the final closest value.
 	 * @return the closest <code>t</code> value on the {@link Parametric} that is closest to the
 	 * <code>referencePosition</code>.
 	 */
-	public double getClosestT(Position referencePosition, double distanceShift, boolean reversed, double searchIncrement, double searches) {
+	public double getClosestT(Position referencePosition, double distanceShift, boolean pointInFront, double searchIncrement, double searches) {
 		double actualClosestT = getClosestT(referencePosition, searchIncrement, searches);
 		
 		if (distanceShift == 0) {
@@ -280,7 +344,7 @@ public abstract class Path implements Parametric {
 			for (double t = finalMinSearchT; t < finalMaxSearchT; t += currentIncrement) {
 				Transform transform = getTransform(t);
 				double distance = Math.abs(transform.getPosition().distance(referencePosition) - distanceShift);
-				if (distance < closestDistance && ((reversed && actualClosestT >= t) || (!reversed && actualClosestT <= t))) {
+				if (distance < closestDistance && ((!pointInFront && actualClosestT >= t) || (pointInFront && actualClosestT <= t))) {
 					closestDistance = distance;
 					minSearchT = t - currentIncrement;
 					maxSearchT = t + currentIncrement;
@@ -294,16 +358,16 @@ public abstract class Path implements Parametric {
 		return tFinal;
 	}
 	
-	public Path calculateAdaptedPath(Transform newStartTransform, double adjustPathDistance, boolean reversed) {
-		Transform onPathPoint = getClosestTransform(newStartTransform.getPosition(), adjustPathDistance, reversed, 10, 3);
+	public Path calculateAdaptedPath(Transform newStartTransform, double adjustPathDistance) {
+		Transform onPathPoint = getClosestTransform(newStartTransform.getPosition(), adjustPathDistance, true, 10, 3);
 		Transform[] waypoints = getWaypoints();
 		
-		double pathPointT = getClosestT(onPathPoint.getPosition(), 0, reversed, 10, 3);
+		double pathPointT = getClosestT(onPathPoint.getPosition(), 10, 3);
 		
 		int startWaypointIndex = 0;
 		double currentClosest = 9999;
 		for (int i = 0; i < waypoints.length; i++) {
-			double waypointT = getClosestT(waypoints[i].getPosition(), 0, reversed, 10, 3);
+			double waypointT = getClosestT(waypoints[i].getPosition(), 10, 3);
 			double distance = waypoints[i].getPosition().distance(onPathPoint.getPosition());
 			if (distance < currentClosest && waypointT > pathPointT) {
 				currentClosest = distance;
@@ -329,6 +393,14 @@ public abstract class Path implements Parametric {
 		}
 		
 		return new CubicHermitePath(adjustedPathWaypoints);
+	}
+	
+	public Transform[] getReversedWaypoints() {
+		Transform[] newWaypoints = new Transform[waypoints.length];
+		for (int i = 0; i < newWaypoints.length; i++) {
+			newWaypoints[i] = waypoints[waypoints.length - 1 - i].rotateBy(new Rotation(180));
+		}
+		return newWaypoints;
 	}
 	
 	public Transform[] getWaypoints() {

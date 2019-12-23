@@ -9,6 +9,7 @@ import com.github.mittyrobotics.path.following.util.PathFollowerProperties;
 import com.github.mittyrobotics.path.generation.paths.CubicHermitePath;
 import com.github.mittyrobotics.path.generation.paths.Path;
 import com.github.mittyrobotics.simulation.sim.RobotSimManager;
+import com.github.mittyrobotics.simulation.util.SimOI;
 import com.github.mittyrobotics.simulation.util.SimSampleDrivetrain;
 import com.github.mittyrobotics.simulation.util.SimSampleRobot;
 import com.github.mittyrobotics.visualization.graphs.RobotGraph;
@@ -37,8 +38,15 @@ public class Main {
 		//Set robot transform to random values
 		SimSampleDrivetrain.getInstance().setOdometry(x, y, heading);
 		
+		boolean reversed = true;
+		
 		//Create the original path from the robot position to the point
-		Path originalPath = new CubicHermitePath(new Transform[]{new Transform(0,0), new Transform(100, -24, 0)});
+		Path originalPath = new CubicHermitePath(new Transform[]{SimSampleDrivetrain.getInstance().getRobotTransform(), new Transform(100, -24, 0)});
+		
+		if(reversed){
+			originalPath = new CubicHermitePath(originalPath.getReversedWaypoints());
+			SimSampleDrivetrain.getInstance().setOdometry(originalPath.getStartWaypoint().getPosition().getX(),originalPath.getStartWaypoint().getPosition().getY(),SimSampleDrivetrain.getInstance().getHeading());
+		}
 		
 		//Create velocity controller
 		PathVelocityController velocityController = new PathVelocityController(new VelocityConstraints(200, 50, 150), 10, 0);
@@ -47,7 +55,7 @@ public class Main {
 		PathFollowerProperties.PurePursuitProperties purePursuitProperties = new PathFollowerProperties.PurePursuitProperties(
 				originalPath,
 				velocityController,
-				true,
+				reversed,
 				20,
 				1.2,
 				20,
@@ -59,7 +67,7 @@ public class Main {
 		PathFollowerProperties.RamseteProperties ramseteProperties = new PathFollowerProperties.RamseteProperties(
 				originalPath,
 				velocityController,
-				false,
+				reversed,
 				2.0,
 				.1
 		);

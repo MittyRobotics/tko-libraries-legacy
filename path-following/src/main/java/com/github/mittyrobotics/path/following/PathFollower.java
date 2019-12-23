@@ -2,6 +2,7 @@ package com.github.mittyrobotics.path.following;
 
 import com.github.mittyrobotics.datatypes.motion.DrivetrainVelocities;
 import com.github.mittyrobotics.datatypes.positioning.Position;
+import com.github.mittyrobotics.datatypes.positioning.Rotation;
 import com.github.mittyrobotics.datatypes.positioning.Transform;
 import com.github.mittyrobotics.path.following.controllers.PurePursuitController;
 import com.github.mittyrobotics.path.following.controllers.RamseteController;
@@ -9,6 +10,11 @@ import com.github.mittyrobotics.path.following.enums.PathFollowingType;
 import com.github.mittyrobotics.path.following.util.PathFollowerProperties;
 import com.github.mittyrobotics.path.generation.datatypes.PathTransform;
 import com.github.mittyrobotics.path.generation.paths.Path;
+import com.github.mittyrobotics.visualization.graphs.RobotGraph;
+import com.github.mittyrobotics.visualization.util.GraphManager;
+
+import javax.swing.*;
+import java.awt.*;
 
 public class PathFollower {
 	private static PathFollower instance = new PathFollower();
@@ -75,7 +81,6 @@ public class PathFollower {
 	
 	private DrivetrainVelocities updatePurePursuit(Transform robotTransform, double currentVelocity, double deltaTime) {
 		double lookaheadDistance = purePursuitProperties.lookaheadDistance;
-		boolean reversed = properties.reversed;
 		
 		Position lookaheadCalculationStartPosition;
 		
@@ -86,7 +91,7 @@ public class PathFollower {
 			lookaheadCalculationStartPosition = robotTransform.getPosition();
 		}
 		
-		Position targetPosition = currentPath.getClosestTransform(lookaheadCalculationStartPosition, lookaheadDistance, reversed, 10, 3).getPosition();
+		Position targetPosition = currentPath.getClosestTransform(lookaheadCalculationStartPosition, lookaheadDistance, 10, 3).getPosition();
 		
 		//Find the rough distance to the end of the path
 		double distanceToEnd = getDistanceToEnd(robotTransform, 20);
@@ -100,6 +105,8 @@ public class PathFollower {
 	
 	private DrivetrainVelocities updateRamsete(Transform robotTransform, double currentVelocity, double deltaTime) {
 		PathTransform desiredTransform = currentPath.getClosestTransform(robotTransform.getPosition(), 10, 3);
+		
+		desiredTransform.setRotation(desiredTransform.getRotation().rotateBy(new Rotation((properties.reversed ? 180 : 0))));
 		
 		//Find the rough distance to the end of the path
 		double distanceToEnd = getDistanceToEnd(robotTransform, 20);
@@ -119,7 +126,7 @@ public class PathFollower {
 	
 	private void calculateAdaptivePath(Transform robotTransform) {
 		if (properties.adaptivePath) {
-			changePath(currentPath.calculateAdaptedPath(robotTransform, properties.robotToPathAdaptiveDistance, properties.reversed));
+			changePath(currentPath.calculateAdaptedPath(robotTransform, properties.robotToPathAdaptiveDistance));
 		}
 	}
 	
@@ -129,19 +136,12 @@ public class PathFollower {
 	
 	private double getDistanceToEnd(Transform robotTransform, double stopDistanceTolerance) {
 		double distance;
-		if(properties.reversed){
-			distance = robotTransform.getPosition().distance(currentPath.getWaypoints()[0].getPosition());
-			if (currentPath.getStartWaypoint().relativeTo(robotTransform).getPosition().getX() >= 0 && distance <= stopDistanceTolerance) {
-				return 0;
-			}
+		
+		distance = robotTransform.getPosition().distance(currentPath.getEndWaypoint().getPosition());
+		if (currentPath.getEndWaypoint().relativeTo(robotTransform).getPosition().getX() <= 0 && distance <= stopDistanceTolerance) {
+			return 0;
 		}
-		else{
-			distance = robotTransform.getPosition().distance(currentPath.getWaypoints()[currentPath.getWaypoints().length - 1].getPosition());
-			if (currentPath.getEndWaypoint().relativeTo(robotTransform).getPosition().getX() <= 0 && distance <= stopDistanceTolerance) {
-				return 0;
-			}
-		}
-
+		
 		return distance;
 	}
 	

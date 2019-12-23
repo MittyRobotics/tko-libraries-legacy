@@ -67,6 +67,16 @@ public class Transform {
 	}
 	
 	/**
+	 * Rotates the {@link Rotation} of this {@link Transform} by <code>rotation</code>.
+	 *
+	 * @param other the {@link Rotation} to rotate this {@link Rotation} by.
+	 * @return a new {@link Transform} with the {@link Rotation} rotated by <code>rotation</code>.
+	 */
+	public Transform rotateBy(Rotation other){
+		return new Transform(position,rotation.add(other));
+	}
+	
+	/**
 	 * Finds this {@link Transform} relative to {@link Transform} <code>other</code>.
 	 * <p>
 	 * In other words, it finds where this {@link Transform} is if <code>other</code> becomes the new origin
