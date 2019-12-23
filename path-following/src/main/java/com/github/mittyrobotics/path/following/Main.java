@@ -38,16 +38,28 @@ public class Main {
 		y = 0;
 		heading = 0;
 		//Set robot transform to random values
-		SimSampleDrivetrain.getInstance().setOdometry(-100, 50, 0);
+		SimSampleDrivetrain.getInstance().setOdometry(100, -24, 0);
 		
 		//Create the original path from the robot position to the point
-		Path originalPath = new CubicHermitePath(new Transform[]{SimSampleDrivetrain.getInstance().getRobotTransform(), new Transform(100, -24, 0)});
+		Path originalPath = new CubicHermitePath(new Transform[]{new Transform(0,0), new Transform(100, -24, 0)});
 		
 		//Create velocity controller
 		PathVelocityController velocityController = new PathVelocityController(new VelocityConstraints(200, 50, 150), 10, 0);
 		
 		//Create path properties
-		PathFollowerProperties.RamseteProperties properties = new PathFollowerProperties.RamseteProperties(
+		PathFollowerProperties.PurePursuitProperties purePursuitProperties = new PathFollowerProperties.PurePursuitProperties(
+				originalPath,
+				velocityController,
+				true,
+				20,
+				1.2,
+				20,
+				true,
+				false,
+				0
+		);
+		
+		PathFollowerProperties.RamseteProperties ramseteProperties = new PathFollowerProperties.RamseteProperties(
 				originalPath,
 				velocityController,
 				false,
@@ -56,7 +68,7 @@ public class Main {
 		);
 		
 		//Setup the pure pursuit controller
-		PathFollower.getInstance().setupRamseteController(properties);
+		PathFollower.getInstance().setupRamseteController(ramseteProperties);
 		
 		//Create new adjusted path
 		//RobotGraph.getInstance().addPath((GraphManager.getInstance().graphParametric(originalPath, .1, 2, .1, "spline", Color.green)));

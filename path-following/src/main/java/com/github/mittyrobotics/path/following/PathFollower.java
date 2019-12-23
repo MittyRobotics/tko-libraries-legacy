@@ -92,7 +92,7 @@ public class PathFollower {
 		double distanceToEnd = getDistanceToEnd(robotTransform, 20);
 		
 		//Calculate the robot velocity using the path velocity controller
-		double robotVelocity = pathFollowerProperties.velocityController.getVelocity(currentVelocity, distanceToEnd, deltaTime);
+		double robotVelocity = pathFollowerProperties.velocityController.getVelocity(Math.abs(currentVelocity), distanceToEnd, deltaTime) * (pathFollowerProperties.reversed ? -1 : 1);
 		
 		//Calculate the pure pursuit controller
 		return PurePursuitController.getInstance().calculate(robotTransform, targetPosition, robotVelocity);
@@ -105,9 +105,8 @@ public class PathFollower {
 		double distanceToEnd = getDistanceToEnd(robotTransform, 20);
 		
 		//Calculate the robot velocity using the path velocity controller
-		double robotVelocity = pathFollowerProperties.velocityController.getVelocity(currentVelocity, distanceToEnd, deltaTime);
-		
-		double curvature = currentPath.getCurvature(desiredTransform.getTOnPath());
+		double robotVelocity = pathFollowerProperties.velocityController.getVelocity(Math.abs(currentVelocity), distanceToEnd, deltaTime)
+				* (pathFollowerProperties.reversed ? -1 : 1);
 		
 		double turningRadius = 1 / currentPath.getCurvature(desiredTransform.getTOnPath());
 		
@@ -129,10 +128,20 @@ public class PathFollower {
 	}
 	
 	private double getDistanceToEnd(Transform robotTransform, double stopDistanceTolerance) {
-		double distance = robotTransform.getPosition().distance(currentPath.getWaypoints()[currentPath.getWaypoints().length - 1].getPosition());
-		if (currentPath.getWaypoints()[currentPath.getWaypoints().length - 1].relativeTo(robotTransform).getPosition().getX() <= 0 && distance <= stopDistanceTolerance) {
-			return 0;
+		double distance;
+		if(pathFollowerProperties.reversed){
+			distance = robotTransform.getPosition().distance(currentPath.getWaypoints()[0].getPosition());
+			if (currentPath.getStartWaypoint().relativeTo(robotTransform).getPosition().getX() >= 0 && distance <= stopDistanceTolerance) {
+				return 0;
+			}
 		}
+		else{
+			distance = robotTransform.getPosition().distance(currentPath.getWaypoints()[currentPath.getWaypoints().length - 1].getPosition());
+			if (currentPath.getEndWaypoint().relativeTo(robotTransform).getPosition().getX() <= 0 && distance <= stopDistanceTolerance) {
+				return 0;
+			}
+		}
+
 		return distance;
 	}
 	
