@@ -34,11 +34,8 @@ public class Main {
 		double x = random.nextInt(200) - 200;
 		double y = random.nextInt(200) - 100.0;
 		double heading = random.nextInt(90) - 45;
-		x = 0;
-		y = 0;
-		heading = 0;
 		//Set robot transform to random values
-		SimSampleDrivetrain.getInstance().setOdometry(100, -24, 0);
+		SimSampleDrivetrain.getInstance().setOdometry(x, y, heading);
 		
 		//Create the original path from the robot position to the point
 		Path originalPath = new CubicHermitePath(new Transform[]{new Transform(0,0), new Transform(100, -24, 0)});
@@ -67,11 +64,11 @@ public class Main {
 				.1
 		);
 		
-		//Setup the pure pursuit controller
+		//Setup the path follower
 		PathFollower.getInstance().setupRamseteController(ramseteProperties);
 		
-		//Create new adjusted path
-		//RobotGraph.getInstance().addPath((GraphManager.getInstance().graphParametric(originalPath, .1, 2, .1, "spline", Color.green)));
+		//Add original path to graph
+		RobotGraph.getInstance().addPath((GraphManager.getInstance().graphParametric(originalPath, .1, 2, .1, "spline", Color.green)));
 		
 		//Delay before starting
 		try {
@@ -80,34 +77,12 @@ public class Main {
 			e.printStackTrace();
 		}
 		
-		int count = 0;
-		
-		
 		//Loop
 		while (true) {
-			
-			count++;
-//			if(count%20000 == 0){
-//				x = random.nextInt(400)-200;
-//				y = random.nextInt(200)-100.0;
-//				heading = random.nextInt(90) - 45;
-//
-//				Transform onPathPoint = PathFollower.getInstance().getCurrentPath().getClosestTransform(SimSampleDrivetrain.getInstance().getRobotTransform().getPosition(), 40, false, 10, 3);
-//				//new Transform(SimSampleDrivetrain.getInstance().getRobotTransform().getPosition(),SimSampleDrivetrain.getInstance().getRobotTransform().getPosition().angleTo(onPathPoint.getPosition()))
-//				Path path = new CubicHermitePath(new Transform[]{SimSampleDrivetrain.getInstance().getRobotTransform(),new Transform(x-Math.cos(Math.toRadians(heading))*50,y-Math.sin(Math.toRadians(heading))*50,heading), new Transform(x,y,heading)});
-//				PathFollower.getInstance().changePath(path);
-//			}
-			
 			//Graph
-			double finalX = x;
-			double finalY = y;
-			double finalHeading = heading;
 			SwingUtilities.invokeLater(() -> {
 				RobotGraph.getInstance().clearGraph();
 				RobotGraph.getInstance().addDataset(GraphManager.getInstance().graphParametricFast(PathFollower.getInstance().getCurrentPath(), .05, "spline", Color.cyan));
-				
-				RobotGraph.getInstance().addDataset(GraphManager.getInstance().graphArrow(new Transform(finalX, finalY, finalHeading), 5, 2, "asdfasdf", Color.red));
-				
 			});
 			
 			//Update pure pursuit controller and set velocities

@@ -15,7 +15,7 @@ public class PathFollower {
 	
 	private PathFollowingType pathFollowingType;
 	
-	private PathFollowerProperties pathFollowerProperties;
+	private PathFollowerProperties properties;
 	private PathFollowerProperties.PurePursuitProperties purePursuitProperties;
 	private PathFollowerProperties.RamseteProperties ramseteProperties;
 	
@@ -48,7 +48,7 @@ public class PathFollower {
 	}
 	
 	private void setupPathFollower(PathFollowerProperties properties) {
-		this.pathFollowerProperties = properties;
+		this.properties = properties;
 		this.currentPath = properties.path;
 	}
 	
@@ -75,7 +75,7 @@ public class PathFollower {
 	
 	private DrivetrainVelocities updatePurePursuit(Transform robotTransform, double currentVelocity, double deltaTime) {
 		double lookaheadDistance = purePursuitProperties.lookaheadDistance;
-		boolean reversed = pathFollowerProperties.reversed;
+		boolean reversed = properties.reversed;
 		
 		Position lookaheadCalculationStartPosition;
 		
@@ -92,7 +92,7 @@ public class PathFollower {
 		double distanceToEnd = getDistanceToEnd(robotTransform, 20);
 		
 		//Calculate the robot velocity using the path velocity controller
-		double robotVelocity = pathFollowerProperties.velocityController.getVelocity(Math.abs(currentVelocity), distanceToEnd, deltaTime) * (pathFollowerProperties.reversed ? -1 : 1);
+		double robotVelocity = properties.velocityController.getVelocity(Math.abs(currentVelocity), distanceToEnd, deltaTime) * (properties.reversed ? -1 : 1);
 		
 		//Calculate the pure pursuit controller
 		return PurePursuitController.getInstance().calculate(robotTransform, targetPosition, robotVelocity);
@@ -105,8 +105,8 @@ public class PathFollower {
 		double distanceToEnd = getDistanceToEnd(robotTransform, 20);
 		
 		//Calculate the robot velocity using the path velocity controller
-		double robotVelocity = pathFollowerProperties.velocityController.getVelocity(Math.abs(currentVelocity), distanceToEnd, deltaTime)
-				* (pathFollowerProperties.reversed ? -1 : 1);
+		double robotVelocity = properties.velocityController.getVelocity(Math.abs(currentVelocity), distanceToEnd, deltaTime)
+				* (properties.reversed ? -1 : 1);
 		
 		double turningRadius = 1 / currentPath.getCurvature(desiredTransform.getTOnPath());
 		
@@ -118,8 +118,8 @@ public class PathFollower {
 	}
 	
 	private void calculateAdaptivePath(Transform robotTransform) {
-		if (pathFollowerProperties.adaptivePath) {
-			changePath(currentPath.calculateAdaptedPath(robotTransform, pathFollowerProperties.robotToPathAdaptiveDistance, pathFollowerProperties.reversed));
+		if (properties.adaptivePath) {
+			changePath(currentPath.calculateAdaptedPath(robotTransform, properties.robotToPathAdaptiveDistance, properties.reversed));
 		}
 	}
 	
@@ -129,7 +129,7 @@ public class PathFollower {
 	
 	private double getDistanceToEnd(Transform robotTransform, double stopDistanceTolerance) {
 		double distance;
-		if(pathFollowerProperties.reversed){
+		if(properties.reversed){
 			distance = robotTransform.getPosition().distance(currentPath.getWaypoints()[0].getPosition());
 			if (currentPath.getStartWaypoint().relativeTo(robotTransform).getPosition().getX() >= 0 && distance <= stopDistanceTolerance) {
 				return 0;
