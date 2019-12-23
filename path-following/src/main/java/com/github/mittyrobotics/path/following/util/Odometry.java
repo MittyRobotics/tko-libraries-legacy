@@ -94,6 +94,7 @@ public class Odometry {
 		calibrateGyroVal = robotTransform.getRotation().getHeading();
 		lastLeftEncoderPos = leftEncoder;
 		lastRightEncoderPos = rightEncoder;
+		setRobotTransform(new Transform(0,0,0));
 	}
 	
 	public Transform getRobotTransform(){
@@ -102,6 +103,9 @@ public class Odometry {
 	
 	public void setRobotTransform(Transform robotTransform) {
 		this.robotTransform = robotTransform;
+		robotX = robotTransform.getPosition().getX();
+		robotY = robotTransform.getPosition().getY();
+		robotHeading = robotTransform.getRotation().getHeading();
 	}
 	
 	public double getTicksPerInch() {
