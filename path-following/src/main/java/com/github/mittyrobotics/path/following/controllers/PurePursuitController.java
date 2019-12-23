@@ -48,11 +48,27 @@ public class PurePursuitController {
 		return instance;
 	}
 	
+	/**
+	 * Sets the gains for the {@link PurePursuitController}.
+	 *
+	 * @param curvatureSlowdownGain (x > 0), the gain to slow down the robot when it turns at a sharper curvature.
+	 *                              Smaller values make it go slower.
+	 * @param minSlowdownVelocity   (x > 0), the minimum velocity that the robot is allowed to slow down to at sharp
+	 *                              curvature.
+	 */
 	public void setGains(double curvatureSlowdownGain, double minSlowdownVelocity) {
 		this.curvatureSlowdownGain = curvatureSlowdownGain;
 		this.minSlowdownVelocity = minSlowdownVelocity;
 	}
 	
+	/**
+	 * Calculates the {@link DrivetrainVelocities} based on the {@link PurePursuitController} path following algorithm.
+	 *
+	 * @param robotTransform the robot's current {@link Transform}.
+	 * @param targetPosition the {@link Position} in front of the robot it is targeting (the look ahead position).
+	 * @param robotVelocity  the desired base velocity for the robot to be going.
+	 * @return the {@link DrivetrainVelocities} based on the {@link PurePursuitController} path following algorithm.
+	 */
 	public DrivetrainVelocities calculate(Transform robotTransform, Position targetPosition, double robotVelocity) {
 		//Determine if reversed
 		boolean reversed = robotVelocity < 0;

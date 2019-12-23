@@ -34,8 +34,8 @@ public class RamseteController {
 	public static double DEFAULT_DAMPING_GAIN = 0.2;
 	private static RamseteController instance = new RamseteController();
 	
-	private double aggressiveGain; //(x > 0), makes turning more aggressive
-	private double dampingGain; //(0 < x < 1) provides more damping
+	private double aggressiveGain; //(x > 0), makes movement more aggressive
+	private double dampingGain; //(0 < x < 1) provides damping
 	
 	private RamseteController() {
 		setGains();
@@ -49,11 +49,28 @@ public class RamseteController {
 		setGains(DEFAULT_AGGRESSIVE_GAIN, DEFAULT_DAMPING_GAIN);
 	}
 	
+	/**
+	 * Sets the gains for the {@link PurePursuitController}.
+	 *
+	 * @param aggressiveGain (x > 0), makes the robot's movement more aggressive to follow the path. Larger values
+	 *                       result in more aggressive movement.
+	 * @param dampingGain    (0 < x < 1), provides damping to the controller. Larger values results in more damping.
+	 */
 	public void setGains(double aggressiveGain, double dampingGain) {
 		this.aggressiveGain = aggressiveGain;
 		this.dampingGain = dampingGain;
 	}
 	
+	/**
+	 * Calculates the {@link DrivetrainVelocities} based on the {@link RamseteController} path following algorithm.
+	 *
+	 * @param robotTransform   the robot's current {@link Transform}.
+	 * @param desiredTransform the current desired {@link Transform} of the robot, the position on the path you want
+	 *                         the robot to be at.
+	 * @param robotVelocity    the current desired linear velocity of the robot.
+	 * @param turningRadius    the current desired radius the robot should be turning.
+	 * @return
+	 */
 	public DrivetrainVelocities calculate(Transform robotTransform, Transform desiredTransform, double robotVelocity, double turningRadius) {
 		//Get the transform error in meters.
 		Transform error = desiredTransform.relativeTo(robotTransform).inToM();
