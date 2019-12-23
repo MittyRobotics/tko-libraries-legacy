@@ -41,7 +41,7 @@ public class Main {
 		SimSampleDrivetrain.getInstance().setOdometry(-100, 50, 0);
 		
 		//Create the original path from the robot position to the point
-		Path originalPath = new CubicHermitePath(new Transform[]{SimSampleDrivetrain.getInstance().getRobotTransform(), new Transform(0, 0, 0)});
+		Path originalPath = new CubicHermitePath(new Transform[]{SimSampleDrivetrain.getInstance().getRobotTransform(), new Transform(100, -24, 0)});
 		
 		//Create velocity controller
 		PathVelocityController velocityController = new PathVelocityController(new VelocityConstraints(200, 50, 150), 10, 0);
@@ -51,7 +51,7 @@ public class Main {
 				originalPath,
 				velocityController,
 				false,
-				1.5,
+				2.0,
 				.1
 		);
 		
