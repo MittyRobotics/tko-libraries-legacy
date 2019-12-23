@@ -38,7 +38,7 @@ public class Main {
 		//Set robot transform to random values
 		SimSampleDrivetrain.getInstance().setOdometry(x, y, heading);
 		
-		boolean reversed = true;
+		boolean reversed = false;
 		
 		//Create the original path from the robot position to the point
 		Path originalPath = new CubicHermitePath(new Transform[]{SimSampleDrivetrain.getInstance().getRobotTransform(), new Transform(100, -24, 0)});

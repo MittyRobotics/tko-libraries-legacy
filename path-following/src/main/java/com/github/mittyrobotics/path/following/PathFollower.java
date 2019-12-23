@@ -138,7 +138,7 @@ public class PathFollower {
 		double distance;
 		
 		distance = robotTransform.getPosition().distance(currentPath.getEndWaypoint().getPosition());
-		if (currentPath.getEndWaypoint().relativeTo(robotTransform).getPosition().getX() <= 0 && distance <= stopDistanceTolerance) {
+		if (robotTransform.relativeTo(currentPath.getEndWaypoint()).getPosition().getX() >= 0 && distance <= stopDistanceTolerance) {
 			return 0;
 		}
 		
