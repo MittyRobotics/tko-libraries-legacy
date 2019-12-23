@@ -134,11 +134,13 @@ public class PathFollower {
 	
 	/**
 	 * Universal update function for the {@link PathFollower}.
+	 * <p>
+	 * Will update the respective path following controller depending on which {@link PathFollowerProperties} was input.
 	 *
-	 * @param robotTransform
-	 * @param currentVelocity
-	 * @param deltaTime
-	 * @return
+	 * @param robotTransform  the robot's current {@link Transform}.
+	 * @param currentVelocity the robot's current velocity in inches/s.
+	 * @param deltaTime       the change in time since the last update call in seconds.
+	 * @return the {@link DrivetrainVelocities} to follow based on the path following algorithm.
 	 */
 	public DrivetrainVelocities updatePathFollower(Transform robotTransform, double currentVelocity, double deltaTime) {
 		if (properties.continuouslyAdaptivePath) {
