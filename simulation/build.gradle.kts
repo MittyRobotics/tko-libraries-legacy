@@ -28,6 +28,7 @@ plugins {
     id("maven")
     `maven-publish`
 }
+
 group = "com.github.MittyRobotics"
 version = "0.1.0"
 
