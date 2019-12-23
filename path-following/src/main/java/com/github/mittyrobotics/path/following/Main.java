@@ -102,8 +102,6 @@ public class Main {
 			DrivetrainVelocities wheelVelocities = PathFollower.getInstance().updatePathFollower(SimSampleDrivetrain.getInstance().getRobotTransform(), SimSampleDrivetrain.getInstance().getAverageVelocity(), RobotSimManager.getInstance().getPeriodTime());
 			SimSampleDrivetrain.getInstance().setVelocities(wheelVelocities.getLeftVelocity(), wheelVelocities.getRightVelocity());
 			
-			System.out.println(wheelVelocities + " wheel");
-			
 			try {
 				Thread.sleep((long) RobotSimManager.getInstance().getPeriodTime() * 1000);
 			} catch (InterruptedException e) {

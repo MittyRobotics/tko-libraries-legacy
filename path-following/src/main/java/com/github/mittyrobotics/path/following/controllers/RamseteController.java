@@ -54,8 +54,6 @@ public class RamseteController {
 		//Calculate the adjusted angular velocity from the Ramsete algorithm (stays in radians per second)
 		double adjustedAngularVelocity = angularVelocity + k * eTheta + aggressiveGain * linearVelocity * error.getRotation().sinc() * eY;
 		
-		System.out.println(adjustedLinearVelocity + " " + k + " " + linearVelocity + " " + adjustedAngularVelocity + " " + turningRadius);
-		
 		//Use differential drive kinematics given linear velocity in inches per second and angular velocity in radians per second
 		return DifferentialDriveKinematics.getInstance().calculateFromAngularVelocity(adjustedLinearVelocity, adjustedAngularVelocity);
 	}
