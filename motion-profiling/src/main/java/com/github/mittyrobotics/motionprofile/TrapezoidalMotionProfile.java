@@ -340,7 +340,7 @@ public class TrapezoidalMotionProfile {
 		
 		return output + startPosition;
 	}
-
+	
 	/**
 	 * Only works with starting and ending velocity of 0.
 	 *

@@ -1,6 +1,7 @@
 package com.github.mittyrobotics.visualization.util;
 
 import com.github.mittyrobotics.datatypes.geometry.ArcSegment;
+import com.github.mittyrobotics.datatypes.path.Parametric;
 import com.github.mittyrobotics.datatypes.positioning.Position;
 import com.github.mittyrobotics.datatypes.positioning.Transform;
 import org.jfree.data.xy.XYSeries;
@@ -54,6 +55,42 @@ public class GraphManager {
 		return dataset;
 	}
 	
+	
+	public XYSeriesCollectionWithRender graphParametric(Parametric[] parametrics, double arrowLength, double arrowWidth, String seriesName, Color color) {
+		XYSeriesCollectionWithRender dataset = new XYSeriesCollectionWithRender(true, false, color, new Rectangle(2, 2));
+		
+		for (double t = 0; t < 1; t += 0.01) {
+			double newT = t * parametrics.length;
+			
+			for (int i = 0; i < parametrics.length; i++) {
+				if (newT >= i && newT <= i + 1) {
+					dataset.addSeries(arrowSeries(parametrics[i].getTransform(newT - i), arrowLength, arrowWidth, seriesName + "" + newT));
+				}
+			}
+		}
+		return dataset;
+	}
+	
+	
+	public XYSeriesCollectionWithRender graphParametric(Parametric parametric, double increment, double arrowLength, double arrowWidth, String seriesName, Color color) {
+		XYSeriesCollectionWithRender dataset = new XYSeriesCollectionWithRender(true, false, color, new Rectangle(2, 2));
+		for (double t = 0; t < 1; t += increment) {
+			dataset.addSeries(arrowSeries(parametric.getTransform(t), arrowLength, arrowWidth, seriesName + "" + t));
+		}
+		return dataset;
+	}
+	
+	public XYSeriesCollectionWithRender graphParametricFast(Parametric parametric, double increment, String seriesName, Color color) {
+		XYSeriesCollectionWithRender dataset = new XYSeriesCollectionWithRender(true, false, color, new Rectangle(2, 2));
+		XYSeries series = new XYSeries(seriesName, false);
+		for (double t = 0; t < 1; t += increment) {
+			Position position = parametric.getPosition(t);
+			series.add(position.getX(), position.getY());
+		}
+		dataset.addSeries(series);
+		return dataset;
+	}
+	
 	/**
 	 * Returns an {@link XYSeriesCollection} with an arrow drawn on it starting at position (x,y), extending length long, having an arrow pointer width of arrowWidth, and pointing at angle degrees
 	 *
@@ -65,7 +102,12 @@ public class GraphManager {
 	 */
 	public XYSeriesCollectionWithRender graphArrow(Transform transform, double length, double arrowWidth, String seriesName, Color color) {
 		XYSeriesCollectionWithRender dataset = new XYSeriesCollectionWithRender(true, false, color, new Rectangle(2, 2));
+		dataset.addSeries(arrowSeries(transform, length, arrowWidth, seriesName));
 		
+		return dataset;
+	}
+	
+	public XYSeries arrowSeries(Transform transform, double length, double arrowWidth, String seriesName) {
 		XYSeries series = new XYSeries(seriesName, false);
 		
 		double halfWidth = arrowWidth / 2;
@@ -89,10 +131,7 @@ public class GraphManager {
 		series.add(p2.getPosition().getX(), p2.getPosition().getY());
 		series.add(p1.getPosition().getX(), p1.getPosition().getY());
 		series.add(p3.getPosition().getX(), p3.getPosition().getY());
-		
-		dataset.addSeries(series);
-		
-		return dataset;
+		return series;
 	}
 	
 	public XYSeriesCollectionWithRender graphArc(ArcSegment arcSegment, String seriesName, Color color) {

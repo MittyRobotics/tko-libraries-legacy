@@ -1,4 +1,4 @@
-package com.github.mittyrobotics.path.following.datatypes;
+package com.github.mittyrobotics.path.following.util;
 
 import com.github.mittyrobotics.datatypes.motion.DrivetrainVelocities;
 
@@ -32,16 +32,15 @@ public class DifferentialDriveKinematics {
 		//Calculate the angular velocity of the robot in radians per second
 		double angularVelocity = linearVelocity / radius;
 		
-		
 		//If track width has not been set, send a warning and return velocities of 0 to avoid any damage
 		if (trackWidth == 0) {
 			System.out.println("WARNING: Track width in DifferentialDriveKinematics.java has not been set!");
 			return new DrivetrainVelocities(0, 0);
 		}
 		
+		//Calculate left and right drivetrain velocities
 		double left = angularVelocity * (radius - (trackWidth / 2));
 		double right = angularVelocity * (radius + (trackWidth / 2));
-		
 		
 		//Return the calculated drivetrain velocities
 		return new DrivetrainVelocities(left, right);
@@ -56,6 +55,10 @@ public class DifferentialDriveKinematics {
 	 * @return the calculated {@link DrivetrainVelocities}.
 	 */
 	public DrivetrainVelocities calculateFromAngularVelocity(double linearVelocity, double angularVelocity) {
+		if (linearVelocity == 0 && angularVelocity == 0) {
+			return new DrivetrainVelocities(0, 0);
+		}
+		
 		//Calculate the radius given linear velocity and angular velocity
 		double radius = linearVelocity / angularVelocity;
 		

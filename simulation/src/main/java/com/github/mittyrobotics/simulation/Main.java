@@ -21,9 +21,9 @@ public class Main {
 		double gearRatio = 42.0 / 11.0 * 50.0 / 24.0;
 		double wheelRadius = 2 * Conversions.IN_TO_M; //Meters
 		double maxVoltage = 12;
-
+		
 		double iterationTime = 0.02;
-
+		
 		ControlLoop controlLoop = new ControlLoop(ControlLoopType.VELOCITY, maxVoltage, iterationTime);
 		controlLoop.setupVelocityController(1, 0, 0);
 		ControlType controlType = ControlType.VELOCITY;

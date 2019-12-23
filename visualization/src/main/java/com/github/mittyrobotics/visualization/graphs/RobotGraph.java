@@ -2,6 +2,7 @@ package com.github.mittyrobotics.visualization.graphs;
 
 import com.github.mittyrobotics.datatypes.positioning.Transform;
 import com.github.mittyrobotics.visualization.util.GraphManager;
+import com.github.mittyrobotics.visualization.util.XYLineShapeColorRenderer;
 import com.github.mittyrobotics.visualization.util.XYSeriesCollectionWithRender;
 
 import java.awt.*;
@@ -9,6 +10,7 @@ import java.awt.*;
 public class RobotGraph extends Graph {
 	
 	private static RobotGraph instance = new RobotGraph();
+	private int lastIndex = 3;
 	
 	public RobotGraph() {
 		super("Robot Graph", "x", "y");
@@ -25,6 +27,27 @@ public class RobotGraph extends Graph {
 				GraphManager.getInstance().graphRectangle(robotTransform, width, length, "robot", Color.white),
 				GraphManager.getInstance().graphArrow(robotTransform, length / 2, 1, "robot Transform", Color.white)
 		};
-		setDatasets(datasets);
+		getPlot().setDataset(0, datasets[0]);
+		getPlot().setDataset(1, datasets[1]);
+	}
+	
+	@Override
+	public void addDataset(XYSeriesCollectionWithRender dataset) {
+		getPlot().setDataset(lastIndex, dataset);
+		getPlot().setRenderer(lastIndex, new XYLineShapeColorRenderer(dataset.isShowPoints(), dataset.isShowLines(), dataset.getColor()));
+		lastIndex++;
+	}
+	
+	public void addPath(XYSeriesCollectionWithRender dataset) {
+		getPlot().setDataset(2, dataset);
+		getPlot().setRenderer(2, new XYLineShapeColorRenderer(dataset.isShowPoints(), dataset.isShowLines(), dataset.getColor()));
+	}
+	
+	@Override
+	public void clearGraph() {
+		for (int i = 3; i < getPlot().getDatasetCount(); i++) {
+			getPlot().setDataset(i, null);
+		}
+		lastIndex = 3;
 	}
 }

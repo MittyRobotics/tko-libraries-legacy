@@ -1,83 +1,52 @@
 package com.github.mittyrobotics.path.generation;
 
-import com.github.mittyrobotics.datacollection.performance.TimeMonitor;
-import com.github.mittyrobotics.datatypes.motion.MotionState;
-import com.github.mittyrobotics.datatypes.motion.VelocityConstraints;
 import com.github.mittyrobotics.datatypes.positioning.Position;
 import com.github.mittyrobotics.datatypes.positioning.Transform;
-import com.github.mittyrobotics.path.generation.datatypes.PathSegment;
-import com.github.mittyrobotics.path.generation.datatypes.TransformWithSegment;
-import com.github.mittyrobotics.path.generation.enums.PathSegmentType;
+import com.github.mittyrobotics.path.generation.datatypes.PathTransform;
 import com.github.mittyrobotics.path.generation.paths.CubicHermitePath;
 import com.github.mittyrobotics.visualization.graphs.Graph;
 import com.github.mittyrobotics.visualization.util.GraphManager;
 
+import javax.swing.*;
 import java.awt.*;
 
 public class Main {
-	public static void main(String[] args) throws InterruptedException {
-		Transform[] waypoints = new Transform[]{
-				new Transform(0, 0, 0),
-				//new Transform(50, 100, 0),
-				new Transform(100, 100, 0)
-		};
+	public static void main(String[] args) {
+		Graph graph = new Graph();
 		
-		TimeMonitor timeMonitor1 = new TimeMonitor("Generate Path");
-		timeMonitor1.start();
-		CubicHermitePath path = new CubicHermitePath(waypoints, new MotionState(0), new MotionState(0), new VelocityConstraints(5, 5, 20), 8, .2, 10);
-		timeMonitor1.end();
-		timeMonitor1.printMillis();
+		graph.resizeGraph(-20, 120, -20, 120);
 		
-		
-		Graph graph = new Graph("graph", "y", "x");
-		
-		graph.setSize(800, 800);
 		graph.getChart().removeLegend();
-		graph.setVisible(true);
-		//graph.resizeGraph(-20,100,-20,100);
-		
-		Transform transform = new Transform(0, 0, 0);
-		
+		CubicHermitePath path = new CubicHermitePath(new Transform[]{
+				new Transform(100, 100, 180),
+				new Transform(0, 0, 180)
+			
+		});
+		Transform transform = new Transform(0, 0);
 		while (true) {
 			
-			graph.clearGraph();
-			TransformWithSegment closestTransformWithSegment = path.getClosestTransformWithSegment(transform, 0, false);
-			PathSegment closestSegment = closestTransformWithSegment.getSegment();
-			Transform closestTransform = closestTransformWithSegment.getTransform();
-			TransformWithSegment targetTransformWithSegment = path.getClosestTransformWithSegment(transform, 10, false);
-			PathSegment targetSegment = targetTransformWithSegment.getSegment();
-			Transform targetTransform = targetTransformWithSegment.getTransform();
-			Color color = Color.red;
-			if (closestSegment.getPathSegmentType() == PathSegmentType.ARC) {
-				graph.addDataset(GraphManager.getInstance().graphArc(closestSegment.getArcSegment(), "arcdfg", color));
-			} else if (closestSegment.getPathSegmentType() == PathSegmentType.LINE) {
-				graph.addDataset(GraphManager.getInstance().graphArrow(new Transform(closestSegment.getStartPoint(), closestSegment.getStartPoint().angleTo(closestSegment.getEndPoint())), closestSegment.getLineSegment().getFirstPoint().distance(closestSegment.getLineSegment().getSecondPoint()), 0, "arsdfgc", color));
-			}
+			PathTransform closestPos = path.getClosestTransform(transform.getPosition(), 10, 3);
+			Position targetPos = path.getClosestTransform(closestPos.getPosition(), 20, false, 10, 3).getPosition();
 			
-			graph.addDataset(GraphManager.getInstance().graphArrow(closestTransform, 5, 2, "adsf", Color.white));
-			color = Color.white;
-			if (targetSegment.getPathSegmentType() == PathSegmentType.ARC) {
-				graph.addDataset(GraphManager.getInstance().graphArc(targetSegment.getArcSegment(), "arcdfg", color));
-			} else if (targetSegment.getPathSegmentType() == PathSegmentType.LINE) {
-				graph.addDataset(GraphManager.getInstance().graphArrow(new Transform(targetSegment.getStartPoint(), targetSegment.getStartPoint().angleTo(targetSegment.getEndPoint())), targetSegment.getLineSegment().getFirstPoint().distance(targetSegment.getLineSegment().getSecondPoint()), 0, "arsdfgc", color));
-			}
-			
-			graph.addDataset(GraphManager.getInstance().graphArrow(targetTransform, 5, 2, "adsf", Color.green));
-			
-			
-			double b = path.getSegments().size();
-			for (int i = 0; i < b; i++) {
-				color = Color.cyan;
-				if (path.getSegments().get(i).getPathSegmentType() == PathSegmentType.ARC) {
-					graph.addDataset(GraphManager.getInstance().graphArc(path.getSegments().get(i).getArcSegment(), "arc" + i, color));
-				} else if (path.getSegments().get(i).getPathSegmentType() == PathSegmentType.LINE) {
-					graph.addDataset(GraphManager.getInstance().graphArrow(new Transform(path.getSegments().get(i).getStartPoint(), path.getSegments().get(i).getStartPoint().angleTo(path.getSegments().get(i).getEndPoint())), path.getSegments().get(i).getLineSegment().getFirstPoint().distance(path.getSegments().get(i).getLineSegment().getSecondPoint()), 0, "arc" + i, color));
+			Transform finalTransform = transform;
+			SwingUtilities.invokeLater(new Runnable() {
+				@Override
+				public void run() {
+					graph.clearGraph();
+					graph.addDataset(GraphManager.getInstance().graphParametric(path, 0.01, 2, 1, "spline", Color.cyan));
+					graph.addDataset(GraphManager.getInstance().graphArrow(new Transform(closestPos.getPosition(), 90), 5, 2, "asdf", Color.green));
+					graph.addDataset(GraphManager.getInstance().graphArrow(new Transform(targetPos, 90), 5, 2, "asdf", Color.yellow));
+					graph.addDataset(GraphManager.getInstance().graphArrow(finalTransform, 5, 2, "asdf", Color.white));
+					
 				}
+			});
+			//transform = transform.add(new Transform(.1,-.1));
+			
+			try {
+				Thread.sleep(30);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
 			}
-			
-			
-			transform.setPosition(closestTransform.getPosition().add(new Position(.1, .1)));
-			Thread.sleep(20);
 		}
 		
 	}

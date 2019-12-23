@@ -165,7 +165,7 @@ public class Graph extends JFrame {
 	
 	public void clearGraph() {
 		for (int i = 0; i < plot.getDatasetCount(); i++) {
-			plot.setDataset(0, null);
+			plot.setDataset(i, null);
 		}
 		lastIndex = 0;
 	}

@@ -5,9 +5,16 @@ public class DrivetrainVelocities {
 	private final double rightVelocity;
 	
 	public DrivetrainVelocities(double leftVelocity, double rightVelocity) {
-		
-		this.leftVelocity = leftVelocity;
-		this.rightVelocity = rightVelocity;
+		if (Double.isNaN(leftVelocity) || Double.isInfinite(leftVelocity)) {
+			this.leftVelocity = 0;
+		} else {
+			this.leftVelocity = leftVelocity;
+		}
+		if (Double.isNaN(rightVelocity) || Double.isInfinite(rightVelocity)) {
+			this.rightVelocity = 0;
+		} else {
+			this.rightVelocity = rightVelocity;
+		}
 	}
 	
 	public double getLeftVelocity() {

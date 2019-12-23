@@ -53,7 +53,7 @@ public class SimSampleDrivetrain extends SimDrivetrain {
 		this.d = d;
 		this.f = f;
 	}
-
+	
 	private double calculatePID(double target, double measured) {
 		double voltage = 0;
 		

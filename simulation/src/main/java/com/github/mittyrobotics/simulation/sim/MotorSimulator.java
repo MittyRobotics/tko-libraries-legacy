@@ -31,6 +31,7 @@ public class MotorSimulator {
 	private double velocity = 0;
 	private double position = 0;
 	private double voltage = 0;
+	
 	/**
 	 * Motor Simulator Constructor
 	 * <p>
@@ -47,6 +48,7 @@ public class MotorSimulator {
 	public MotorSimulator(Motor motor, double numMotors, double mass, double gearRatio, double wheelRadius, ControlLoop controlLoop, ControlType controlType) {
 		this(motor, numMotors, mass, gearRatio, wheelRadius, controlLoop, controlType, "Motor Sim");
 	}
+	
 	/**
 	 * Motor Simulator Constructor
 	 * <p>
@@ -70,7 +72,7 @@ public class MotorSimulator {
 		this.controlLoop = controlLoop;
 		this.controlType = controlType;
 		this.name = name;
-
+		
 		double stallTorque = motor.getStallTorque();
 		double stallCurrent = motor.getStallCurrent();
 		double freeSpeed = motor.getFreeSpeed();
@@ -149,5 +151,5 @@ public class MotorSimulator {
 		return voltage;
 	}
 	
-
+	
 }
