@@ -33,14 +33,14 @@ public class RamseteController {
 	public DrivetrainVelocities calculate(Transform robotTransform, Transform desiredTransform, double robotVelocity, double turningRadius) {
 		//Get the transform error in meters.
 		Transform error = desiredTransform.relativeTo(robotTransform).inToM();
-		//Calculate the angular velocity in radians per second given the turning radius and the robot velocity.
-		double angularVelocity = robotVelocity / turningRadius;
 		//Calculate linear velocity in meters per second given robot velocity in inches per second
 		double linearVelocity = robotVelocity * Conversions.IN_TO_M;
+		//Calculate the angular velocity in radians per second given the turning radius and the robot velocity.
+		double angularVelocity = linearVelocity / (turningRadius*Conversions.IN_TO_M);
 		
 		double eX = error.getPosition().getX();
 		double eY = error.getPosition().getY();
-		double eTheta = error.getRotation().getHeading();
+		double eTheta = error.getRotation().getRadians();
 		
 		//Calculate the Ramsete k value
 		double k = 2.0 * dampingGain * Math.sqrt(Math.pow(angularVelocity, 2) + aggressiveGain * Math.pow(linearVelocity, 2));

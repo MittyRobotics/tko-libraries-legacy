@@ -69,7 +69,7 @@ public class Main {
 				velocityController,
 				reversed,
 				2.0,
-				.1
+				.7
 		);
 		
 		//Setup the path follower

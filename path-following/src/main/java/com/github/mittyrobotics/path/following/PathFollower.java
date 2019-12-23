@@ -115,7 +115,8 @@ public class PathFollower {
 		double robotVelocity = properties.velocityController.getVelocity(Math.abs(currentVelocity), distanceToEnd, deltaTime)
 				* (properties.reversed ? -1 : 1);
 		
-		double turningRadius = 1 / currentPath.getCurvature(desiredTransform.getTOnPath());
+		//Get radius from curvature is 1/curvature
+		double turningRadius = 1/currentPath.getCurvature(desiredTransform.getTOnPath());
 		
 		if (Double.isNaN(turningRadius)) {
 			turningRadius = 2e16;
