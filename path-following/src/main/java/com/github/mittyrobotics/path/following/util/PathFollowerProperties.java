@@ -31,19 +31,19 @@ public abstract class PathFollowerProperties {
 	public final Path path;
 	public final PathVelocityController velocityController;
 	public final boolean reversed;
-	public final boolean adaptivePath;
+	public final boolean continuouslyAdaptivePath;
 	public final double robotToPathAdaptiveDistance;
 	
 	public PathFollowerProperties(Path path,
 	                              PathVelocityController velocityController,
 	                              boolean reversed,
-	                              boolean adaptivePath,
+	                              boolean continuouslyAdaptivePath,
 	                              double robotToPathAdaptiveDistance
 	) {
 		this.path = path;
 		this.velocityController = velocityController;
 		this.reversed = reversed;
-		this.adaptivePath = adaptivePath;
+		this.continuouslyAdaptivePath = continuouslyAdaptivePath;
 		this.robotToPathAdaptiveDistance = robotToPathAdaptiveDistance;
 	}
 	
@@ -60,10 +60,10 @@ public abstract class PathFollowerProperties {
 		                             double curvatureSlowdownGain,
 		                             double minSlowdownVelocity,
 		                             boolean adaptiveLookahead,
-		                             boolean adaptivePath,
+		                             boolean continuouslyAdaptivePath,
 		                             double robotToPathAdaptiveDistance
 		) {
-			super(path, velocityController, reversed, adaptivePath, robotToPathAdaptiveDistance);
+			super(path, velocityController, reversed, continuouslyAdaptivePath, robotToPathAdaptiveDistance);
 			this.lookaheadDistance = lookaheadDistance;
 			this.curvatureSlowdownGain = curvatureSlowdownGain;
 			this.minSlowdownVelocity = minSlowdownVelocity;

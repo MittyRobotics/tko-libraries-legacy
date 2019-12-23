@@ -141,14 +141,13 @@ public class PathFollower {
 	 * @return
 	 */
 	public DrivetrainVelocities updatePathFollower(Transform robotTransform, double currentVelocity, double deltaTime) {
-		if (properties.adaptivePath) {
+		if (properties.continuouslyAdaptivePath) {
 			calculateAdaptivePath(robotTransform);
 		}
 		if (unAdaptedPath) {
 			calculateAdaptivePath(robotTransform);
 			unAdaptedPath = false;
 		}
-		
 		
 		if (currentPath == null) {
 			System.out.println("WARNING: The current path follower path is null!");
