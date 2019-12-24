@@ -437,14 +437,23 @@ public abstract class Path implements Parametric {
 	/**
 	 * Generates an adaptive {@link Path} that makes <code>newStartTransform</code> the starting {@link Transform} of
 	 * the {@link Path}.
+	 * <p>
+	 * It will adapt the waypoints of the {@link Path} to get from the <code>newStartTransform</code> to the current
+	 * {@link Path} with a distance of <code>adjustPathDistance</code> ahead of the <code>newStartTransform</code>.
+	 * Maintains all waypoints after the <code>newStartTransform</code>.
+	 * <p>
+	 * In other words, it will set the first waypoint of the new {@link Path} to <code>newStartTransform</code>. Then,
+	 * it will set the next waypoint of the new {@link Path} to a point on the original {@link Path} that is
+	 * <code>adjustedPathDistance</code> away from the <code>newStartTransform</code>. After those two waypoints, all
+	 * remaining waypoints of the path stay the same, maintaining the original structure of the path after the
+	 * <code>newStartTransform</code>.
 	 *
 	 * @param newStartTransform
 	 * @param adjustPathDistance
 	 * @return
 	 */
 	public Path generateAdaptivePath(Transform newStartTransform, double adjustPathDistance) {
-		Transform closestPathPoint = getClosestTransform(newStartTransform.getPosition(), 10, 3);
-		Transform onPathPoint = getClosestTransform(closestPathPoint.getPosition(), adjustPathDistance, true, 10, 3);
+		Transform onPathPoint = getClosestTransform(newStartTransform.getPosition(), adjustPathDistance, true, 10, 3);
 		Transform[] waypoints = getWaypoints();
 		
 		double pathPointT = getClosestT(onPathPoint.getPosition(), 10, 3);
@@ -488,6 +497,14 @@ public abstract class Path implements Parametric {
 		return new CubicHermitePath(adjustedPathWaypoints);
 	}
 	
+	/**
+	 * Returns an array of {@link Transform}s that make up the waypoints of this {@link Path} in reverse.
+	 * <p>
+	 * The first waypoint becomes the last waypoint, and all following waypoints are reversed in order from front to
+	 * back.
+	 *
+	 * @returnan array of {@link Transform}s that make up the waypoints of this {@link Path} in reverse.
+	 */
 	public Transform[] getReversedWaypoints() {
 		Transform[] newWaypoints = new Transform[waypoints.length];
 		for (int i = 0; i < newWaypoints.length; i++) {
@@ -496,22 +513,51 @@ public abstract class Path implements Parametric {
 		return newWaypoints;
 	}
 	
+	/**
+	 * Returns the array of waypoint {@link Transform}s that make up the {@link Path}.
+	 *
+	 * @return the array of waypoint {@link Transform}s that make up the {@link Path}.
+	 */
 	public Transform[] getWaypoints() {
 		return waypoints;
 	}
 	
+	/**
+	 * Returns the first waypoint {@link Transform} in the {@link Path}.
+	 *
+	 * @return the first waypoint {@link Transform} in the {@link Path}.
+	 */
 	public Transform getStartWaypoint() {
 		return waypoints[0];
 	}
 	
+	/**
+	 * Returns the last waypoint {@link Transform} in the {@link Path}.
+	 *
+	 * @return the last waypoint {@link Transform} in the {@link Path}.
+	 */
 	public Transform getEndWaypoint() {
 		return waypoints[waypoints.length - 1];
 	}
 	
+	/**
+	 * Returns the array of {@link Parametric}s that make up the different {@link Parametric} segments of the {@link
+	 * Path}.
+	 *
+	 * @return the array of {@link Parametric}s that make up the different {@link Parametric} segments of the {@link
+	 * Path}.
+	 */
 	public Parametric[] getParametrics() {
 		return parametrics;
 	}
 	
+	/**
+	 * Sets the array of {@link Parametric}s that make up the different {@link Parametric} segments of the {@link
+	 * Path}.
+	 *
+	 * @param parametrics the new array of {@link Parametric}s that make up the different {@link Parametric} segments of
+	 *                    the {@link Path}.
+	 */
 	public void setParametrics(Parametric[] parametrics) {
 		this.parametrics = parametrics;
 	}
