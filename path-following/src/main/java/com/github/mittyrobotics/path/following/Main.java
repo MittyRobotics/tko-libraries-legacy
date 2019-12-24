@@ -79,7 +79,7 @@ public class Main {
 				originalPath,
 				velocityController,
 				reversed,
-				20,
+				30,
 				1.2,
 				20,
 				true,
@@ -96,7 +96,7 @@ public class Main {
 		);
 		
 		//Setup the path follower
-		PathFollower follower = new PathFollower(purePursuitProperties);
+		PathFollower follower = new PathFollower(ramseteProperties);
 		
 		//Add original path to graph
 		RobotGraph.getInstance().addPath((GraphManager.getInstance().graphParametric(originalPath, .05, 3, .2, "spline", Color.green)));

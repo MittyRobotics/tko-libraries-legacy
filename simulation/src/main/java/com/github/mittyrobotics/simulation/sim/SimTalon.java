@@ -106,7 +106,7 @@ public class SimTalon implements Runnable {
 	}
 	
 	public double getPosition() {
-		return (double) model.getPosition() * Conversions.M_TO_IN;
+		return (double) Math.round(model.getPosition() * Conversions.M_TO_IN*100)/100;
 	}
 	
 	public void setPosition(double position) {
