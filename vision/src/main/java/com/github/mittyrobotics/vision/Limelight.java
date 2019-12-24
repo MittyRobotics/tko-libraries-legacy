@@ -49,8 +49,9 @@ public class Limelight {
 	private double[] targetCornerX;
 	private double[] targetCornerY;
 	private double DEFAULT_VALUE = -1000;
-	private Limelight() {
 	
+	private Limelight() {
+
 	}
 	
 	public static Limelight getInstance() {
@@ -94,10 +95,7 @@ public class Limelight {
 	/**
 	 * Sets the LED mode on the Limelight camera.
 	 * <p>
-	 * 0	use the LED Mode set in the current pipeline
-	 * 1	force off
-	 * 2	force blink
-	 * 3	force on
+	 * 0	use the LED Mode set in the current pipeline 1	force off 2	force blink 3	force on
 	 *
 	 * @param ledMode enum containing the different modes for leds.
 	 */
@@ -112,8 +110,8 @@ public class Limelight {
 	/**
 	 * Sets the camera mode on the Limelight camera.
 	 * <p>
-	 * 0	Vision processor
-	 * 1	Driver Camera (Increases exposure, disables vision processing) pipeline	Sets limelight’s current pipeline
+	 * 0	Vision processor 1	Driver Camera (Increases exposure, disables vision processing) pipeline	Sets limelight’s
+	 * current pipeline
 	 *
 	 * @param cameraMode enum containing the different modes of camera
 	 */
@@ -126,8 +124,8 @@ public class Limelight {
 	}
 	
 	/**
-	 * Sets the active pipeline on the Limelight camera. These pipelines are
-	 * configured in the limelight configuration tool and range from 0-9.
+	 * Sets the active pipeline on the Limelight camera. These pipelines are configured in the limelight configuration
+	 * tool and range from 0-9.
 	 *
 	 * @param pipelineID ID of new active pipeline
 	 */
@@ -145,9 +143,9 @@ public class Limelight {
 	/**
 	 * Sets the stream configuration on the Limelight camera.
 	 * <p>
-	 * 0	Standard - Side-by-side streams if a webcam is attached to Limelight
-	 * 1	PiP Main - The secondary camera stream is placed in the lower-right corner of the primary camera stream
-	 * 2	PiP Secondary - The primary camera stream is placed in the lower-right corner of the secondary camera stream
+	 * 0	Standard - Side-by-side streams if a webcam is attached to Limelight 1	PiP Main - The secondary camera stream
+	 * is placed in the lower-right corner of the primary camera stream 2	PiP Secondary - The primary camera stream is
+	 * placed in the lower-right corner of the secondary camera stream
 	 *
 	 * @param streamMode enum containing the different streaming configurations
 	 */
@@ -162,8 +160,7 @@ public class Limelight {
 	/**
 	 * Sets the snapshot mode on the Limelight camera.
 	 * <p>
-	 * 0	Stop taking snapshots
-	 * 1	Take two snapshots per second
+	 * 0	Stop taking snapshots 1	Take two snapshots per second
 	 *
 	 * @param snapshotMode enum containing the different snapshot modes
 	 */
@@ -172,11 +169,11 @@ public class Limelight {
 	}
 	
 	/**
-	 * Puts the Limelight into vision mode, with the camera settings turned to vision mode (low exposure)
-	 * and the LEDs on.
+	 * Puts the Limelight into vision mode, with the camera settings turned to vision mode (low exposure) and the LEDs
+	 * on.
 	 * <p>
-	 * Vision mode sets the camera properties to allow for optimum vision tracking and turns the LEDs on so the
-	 * target can be tracked.
+	 * Vision mode sets the camera properties to allow for optimum vision tracking and turns the LEDs on so the target
+	 * can be tracked.
 	 */
 	public void enableVisionMode() {
 		setCameraMode(LimelightCameraMode.Vision);
@@ -184,11 +181,11 @@ public class Limelight {
 	}
 	
 	/**
-	 * Puts the Limelight into driver mode, with the camera settings turned to driver mode (regular exposure)
-	 * and the LEDs off.
+	 * Puts the Limelight into driver mode, with the camera settings turned to driver mode (regular exposure) and the
+	 * LEDs off.
 	 * <p>
-	 * Driver mode allows the driver to see through the Limelight camera and turns off the LEDs so it does not
-	 * distract others on the field.
+	 * Driver mode allows the driver to see through the Limelight camera and turns off the LEDs so it does not distract
+	 * others on the field.
 	 */
 	public void enableDriverMode() {
 		setCameraMode(LimelightCameraMode.Driver);

@@ -35,7 +35,7 @@ public enum LimelightCameraMode {
 	Driver(1);
 	
 	private static Map map = new HashMap<>();
-
+	
 	static {
 		for (LimelightCameraMode pageType : LimelightCameraMode.values()) {
 			map.put(pageType.value, pageType);

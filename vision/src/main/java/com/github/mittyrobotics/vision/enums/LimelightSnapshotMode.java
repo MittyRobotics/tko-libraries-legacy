@@ -35,7 +35,7 @@ public enum LimelightSnapshotMode {
 	On(1);
 	
 	private static Map map = new HashMap<>();
-
+	
 	static {
 		for (LimelightSnapshotMode pageType : LimelightSnapshotMode.values()) {
 			map.put(pageType.value, pageType);

@@ -124,7 +124,15 @@ public class PurePursuitController {
 		return curvatureSlowdownGain;
 	}
 	
+	public void setCurvatureSlowdownGain(double curvatureSlowdownGain) {
+		this.curvatureSlowdownGain = curvatureSlowdownGain;
+	}
+	
 	public double getMinSlowdownVelocity() {
 		return minSlowdownVelocity;
+	}
+	
+	public void setMinSlowdownVelocity(double minSlowdownVelocity) {
+		this.minSlowdownVelocity = minSlowdownVelocity;
 	}
 }

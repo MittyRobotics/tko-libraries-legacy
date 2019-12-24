@@ -44,8 +44,8 @@ public class ArcSegment extends Circle {
 	 *
 	 * @param startPoint        the starting {@link Position} of the arc
 	 * @param endPoint          the ending {@link Position} of the arc
-	 * @param intermediatePoint a {@link Position} in between the start and end point of the arc used to determine
-	 *                          which way the arc is filled in and defines the {@link Circle}.
+	 * @param intermediatePoint a {@link Position} in between the start and end point of the arc used to determine which
+	 *                          way the arc is filled in and defines the {@link Circle}.
 	 */
 	public ArcSegment(Position startPoint, Position endPoint, Position intermediatePoint) {
 		super(startPoint, intermediatePoint, endPoint);
@@ -82,13 +82,14 @@ public class ArcSegment extends Circle {
 	 * <code>distanceShift</code> and finding the points that it intersects with this {@link Circle}. It then gets the
 	 * point that falls within the {@link ArcSegment}.
 	 * <p>
-	 * If two intersection points fall within the {@link ArcSegment}, it will pick the point either in front of,
-	 * behind, or closest to the <code>referenceTransform</code> based on the {@link RoundMode}.
+	 * If two intersection points fall within the {@link ArcSegment}, it will pick the point either in front of, behind,
+	 * or closest to the <code>referenceTransform</code> based on the {@link RoundMode}.
 	 * <p>
 	 * If no intersection points fall within the {@link ArcSegment} or exist, it will return an empty {@link Optional}.
 	 *
 	 * @param referenceTransform the {@link Position} to find the closest point to.
-	 * @param distanceShift      the distance away from the <code>referencePosition</code> to find the closest point to.
+	 * @param distanceShift      the distance away from the <code>referencePosition</code> to find the closest point
+	 *                           to.
 	 * @param roundMode          the {@link RoundMode}
 	 * @return an {@link Optional} containing the closest {@link Position} to the <code>referencePosition</code> that is
 	 * <code>distanceShift</code> away.
@@ -192,7 +193,8 @@ public class ArcSegment extends Circle {
 	/**
 	 * Determines whether or not a point is on this {@link ArcSegment} segment.
 	 * <p>
-	 * This checks for both if the point is on the circle and if the point is within the defining end points of the arc.
+	 * This checks for both if the point is on the circle and if the point is within the defining end points of the
+	 * arc.
 	 *
 	 * @param point the {@link Position} to determine if it is on the arc or not
 	 * @return whether or not <code>point</code> is on this {@link ArcSegment} segment.

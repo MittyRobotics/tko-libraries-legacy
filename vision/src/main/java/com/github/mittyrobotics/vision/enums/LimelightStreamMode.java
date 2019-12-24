@@ -45,7 +45,7 @@ public enum LimelightStreamMode {
 	Secondary(2);
 	
 	private static Map map = new HashMap<>();
-
+	
 	static {
 		for (LimelightStreamMode pageType : LimelightStreamMode.values()) {
 			map.put(pageType.value, pageType);

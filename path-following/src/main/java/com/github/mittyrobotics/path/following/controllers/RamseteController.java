@@ -65,8 +65,8 @@ public class RamseteController {
 	 * Calculates the {@link DrivetrainVelocities} based on the {@link RamseteController} path following algorithm.
 	 *
 	 * @param robotTransform   the robot's current {@link Transform}.
-	 * @param desiredTransform the current desired {@link Transform} of the robot, the position on the path you want
-	 *                         the robot to be at.
+	 * @param desiredTransform the current desired {@link Transform} of the robot, the position on the path you want the
+	 *                         robot to be at.
 	 * @param robotVelocity    the current desired linear velocity of the robot.
 	 * @param turningRadius    the current desired radius the robot should be turning.
 	 * @return
@@ -103,7 +103,15 @@ public class RamseteController {
 		return aggressiveGain;
 	}
 	
+	public void setAggressiveGain(double aggressiveGain) {
+		this.aggressiveGain = aggressiveGain;
+	}
+	
 	public double getDampingGain() {
 		return dampingGain;
+	}
+	
+	public void setDampingGain(double dampingGain) {
+		this.dampingGain = dampingGain;
 	}
 }

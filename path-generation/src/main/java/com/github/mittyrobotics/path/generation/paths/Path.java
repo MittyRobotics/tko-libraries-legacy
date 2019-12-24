@@ -29,6 +29,11 @@ import com.github.mittyrobotics.datatypes.positioning.Position;
 import com.github.mittyrobotics.datatypes.positioning.Rotation;
 import com.github.mittyrobotics.datatypes.positioning.Transform;
 import com.github.mittyrobotics.path.generation.datatypes.PathTransform;
+import com.github.mittyrobotics.visualization.graphs.RobotGraph;
+import com.github.mittyrobotics.visualization.util.GraphManager;
+
+import javax.swing.*;
+import java.awt.*;
 
 public abstract class Path implements Parametric {
 	private Transform[] waypoints;
@@ -119,7 +124,8 @@ public abstract class Path implements Parametric {
 	 * <p>
 	 * This function defaults to a <code>searchIncrement</code> of 10 and a <code>searches</code> of 3.
 	 * <p>
-	 * If the point is outside the start and end of the path, either the start or end {@link Transform} will be picked.
+	 * If the point is outside the start and end of the {@link Path}, either the start or end {@link Transform} will be
+	 * picked.
 	 *
 	 * @param referencePosition the {@link Position} to find the closest {@link PathTransform} to.
 	 * @return the closest {@link PathTransform} to the <code>referencePosition</code>.
@@ -129,16 +135,17 @@ public abstract class Path implements Parametric {
 	}
 	
 	/**
-	 * Finds the closest {@link PathTransform} to the <code>referencePosition</code> given a <code>distanceShift</code>.
+	 * Finds the closest {@link PathTransform} to the <code>referencePosition</code> given a
+	 * <code>distanceShift</code>.
 	 * <p>
 	 * The {@link PathTransform} contains the {@link Transform} of the point as well as the <code>t</code> value of it
 	 * along the {@link Parametric}.
 	 * <p>
 	 * This function defaults to a <code>searchIncrement</code> of 10 and a <code>searches</code> of 3.
 	 * <p>
-	 * If the point is outside the start and end of the path, either the start or end {@link Transform} will be picked.
-	 * If the distance shifted point is off the path, it will be interpolated on a line extending either the start or
-	 * end {@link Transform} of the path.
+	 * If the point is outside the start and end of the {@link Path}, either the start or end {@link Transform} will be
+	 * picked. If the distance shifted point is off the {@link Path}, it will be interpolated on a line extending either
+	 * the start or end {@link Transform} of the {@link Path}.
 	 * <p>
 	 * Since there is a <code>distanceShift</code> in this search, it first finds the actual closest point to the
 	 * <code>referencePosition</code> and then performs the distance shifted search using the actual closest point as a
@@ -159,16 +166,17 @@ public abstract class Path implements Parametric {
 	 * along the {@link Parametric}.
 	 * <p>
 	 * The closest point is found by sampling <code>searchIncrement</code> amount of points on the {@link Parametric}.
-	 * After the initial points are sampled, it finds the closest point and creates a smaller bound to search within.
-	 * It then repeats the same process within the smaller bound for a total of <code>searches</code> loops. Therefore,
-	 * the total resolution of the closest point is <code>searchIncrement</code> to the power of <code>searches</code>.
+	 * After the initial points are sampled, it finds the closest point and creates a smaller bound to search within. It
+	 * then repeats the same process within the smaller bound for a total of <code>searches</code> loops. Therefore, the
+	 * total resolution of the closest point is <code>searchIncrement</code> to the power of <code>searches</code>.
 	 * <p>
-	 * For example, if <code>searchIncrement</code> is 10 and <code>searches</code> is 3, it will get 10 points,
-	 * create a smaller boundary, get another 10 points within the boundary, create a smaller boundary again, and lastly
-	 * find the closest point within 10 points within the final smaller boundary. This would find a point within the
-	 * accuracy of 1000 points, although it only does 30 total samples.
+	 * For example, if <code>searchIncrement</code> is 10 and <code>searches</code> is 3, it will get 10 points, create
+	 * a smaller boundary, get another 10 points within the boundary, create a smaller boundary again, and lastly find
+	 * the closest point within 10 points within the final smaller boundary. This would find a point within the accuracy
+	 * of 1000 points, although it only does 30 total samples.
 	 * <p>
-	 * If the point is outside the start and end of the path, either the start or end {@link Transform} will be picked.
+	 * If the point is outside the start and end of the {@link Path}, either the start or end {@link Transform} will be
+	 * picked.
 	 *
 	 * @param referencePosition the {@link Position} to find the closest {@link PathTransform} to.
 	 * @param searchIncrement   the samples within each search.
@@ -180,24 +188,25 @@ public abstract class Path implements Parametric {
 	}
 	
 	/**
-	 * Finds the closest {@link PathTransform} to the <code>referencePosition</code> given a <code>distanceShift</code>.
+	 * Finds the closest {@link PathTransform} to the <code>referencePosition</code> given a
+	 * <code>distanceShift</code>.
 	 * <p>
 	 * The {@link PathTransform} contains the {@link Transform} of the point as well as the <code>t</code> value of it
 	 * along the {@link Parametric}.
 	 * <p>
 	 * The closest point is found by sampling <code>searchIncrement</code> amount of points on the {@link Parametric}.
-	 * After the initial points are sampled, it finds the closest point and creates a smaller bound to search within.
-	 * It then repeats the same process within the smaller bound for a total of <code>searches</code> loops. Therefore,
-	 * the total resolution of the closest point is <code>searchIncrement</code> to the power of <code>searches</code>.
+	 * After the initial points are sampled, it finds the closest point and creates a smaller bound to search within. It
+	 * then repeats the same process within the smaller bound for a total of <code>searches</code> loops. Therefore, the
+	 * total resolution of the closest point is <code>searchIncrement</code> to the power of <code>searches</code>.
 	 * <p>
-	 * For example, if <code>searchIncrement</code> is 10 and <code>searches</code> is 3, it will get 10 points,
-	 * create a smaller boundary, get another 10 points within the boundary, create a smaller boundary again, and lastly
-	 * find the closest point within 10 points within the final smaller boundary. This would find a point within the
-	 * accuracy of 1000 points, although it only does 30 total samples.
+	 * For example, if <code>searchIncrement</code> is 10 and <code>searches</code> is 3, it will get 10 points, create
+	 * a smaller boundary, get another 10 points within the boundary, create a smaller boundary again, and lastly find
+	 * the closest point within 10 points within the final smaller boundary. This would find a point within the accuracy
+	 * of 1000 points, although it only does 30 total samples.
 	 * <p>
-	 * If the point is outside the start and end of the path, either the start or end {@link Transform} will be picked.
-	 * If the distance shifted point is off the path, it will be interpolated on a line extending either the start or
-	 * end {@link Transform} of the path.
+	 * If the point is outside the start and end of the {@link Path}, either the start or end {@link Transform} will be
+	 * picked. If the distance shifted point is off the {@link Path}, it will be interpolated on a line extending either
+	 * the start or end {@link Transform} of the {@link Path}.
 	 * <p>
 	 * Since there is a <code>distanceShift</code> in this search, it first finds the actual closest point to the
 	 * <code>referencePosition</code> and then performs the distance shifted search using the actual closest point as a
@@ -214,30 +223,32 @@ public abstract class Path implements Parametric {
 	}
 	
 	/**
-	 * Finds the closest {@link PathTransform} to the <code>referencePosition</code> given a <code>distanceShift</code>.
+	 * Finds the closest {@link PathTransform} to the <code>referencePosition</code> given a
+	 * <code>distanceShift</code>.
 	 * <p>
 	 * The {@link PathTransform} contains the {@link Transform} of the point as well as the <code>t</code> value of it
 	 * along the {@link Parametric}.
 	 * <p>
 	 * The closest point is found by sampling <code>searchIncrement</code> amount of points on the {@link Parametric}.
-	 * After the initial points are sampled, it finds the closest point and creates a smaller bound to search within.
-	 * It then repeats the same process within the smaller bound for a total of <code>searches</code> loops. Therefore,
-	 * the total resolution of the closest point is <code>searchIncrement</code> to the power of <code>searches</code>.
+	 * After the initial points are sampled, it finds the closest point and creates a smaller bound to search within. It
+	 * then repeats the same process within the smaller bound for a total of <code>searches</code> loops. Therefore, the
+	 * total resolution of the closest point is <code>searchIncrement</code> to the power of <code>searches</code>.
 	 * <p>
-	 * For example, if <code>searchIncrement</code> is 10 and <code>searches</code> is 3, it will get 10 points,
-	 * create a smaller boundary, get another 10 points within the boundary, create a smaller boundary again, and lastly
-	 * find the closest point within 10 points within the final smaller boundary. This would find a point within the
-	 * accuracy of 1000 points, although it only does 30 total samples.
+	 * For example, if <code>searchIncrement</code> is 10 and <code>searches</code> is 3, it will get 10 points, create
+	 * a smaller boundary, get another 10 points within the boundary, create a smaller boundary again, and lastly find
+	 * the closest point within 10 points within the final smaller boundary. This would find a point within the accuracy
+	 * of 1000 points, although it only does 30 total samples.
 	 * <p>
-	 * If the point is outside the start and end of the path, either the start or end {@link Transform} will be picked.
-	 * If the distance shifted point is off the path, it will be interpolated on a line extending either the start or
-	 * end {@link Transform} of the path.
+	 * If the point is outside the start and end of the {@link Path}, either the start or end {@link Transform} of the
+	 * {@link Path} will be picked. If the distance shifted point is off the {@link Path}, it will be interpolated on a
+	 * line extending either the start or end {@link Transform} of the {@link Path}.
 	 * <p>
 	 * Since there is a <code>distanceShift</code> in this search, it first finds the actual closest point to the
 	 * <code>referencePosition</code> and then performs the distance shifted search using the actual closest point as a
 	 * guide of whether or not the point is in front or behind the <code>referencePosition</code>. It will only pick
-	 * points in front of the actual closest point on the path if pointInFront is <code>false</code>, and only behind the
-	 * actual closest point on the path if pointInFront is <code>true</code>.
+	 * points in front of the actual closest point on the {@link Path} if <code>pointInFront</code> is
+	 * <code>false</code>, and only behind the actual closest point on the {@link Path} if <code>pointInFront</code> is
+	 * <code>true</code>.
 	 *
 	 * @param referencePosition the {@link Position} to find the closest {@link PathTransform} to.
 	 * @param distanceShift     the distance away from the <code>referencePosition</code> the closest point should be.
@@ -273,19 +284,19 @@ public abstract class Path implements Parametric {
 	 * <p>
 	 * The <code>t</code> value contains the position along the {@link Parametric} between 0 and 1.
 	 * <p>
-	 * The closest <code>t</code> value of the point is found by sampling <code>searchIncrement</code> amount of points on the
-	 * {@link Parametric}. After the initial points are sampled, it finds the closest point and creates a smaller bound
-	 * to search within. It then repeats the same process within the smaller bound for a total of <code>searches</code>
-	 * loops. Therefore, the total resolution of the closest point is <code>searchIncrement</code> to the power of
-	 * <code>searches</code>.
+	 * The closest <code>t</code> value of the point is found by sampling <code>searchIncrement</code> amount of points
+	 * on the {@link Parametric}. After the initial points are sampled, it finds the closest point and creates a smaller
+	 * bound to search within. It then repeats the same process within the smaller bound for a total of
+	 * <code>searches</code> loops. Therefore, the total resolution of the closest point is
+	 * <code>searchIncrement</code> to the power of <code>searches</code>.
 	 * <p>
-	 * For example, if <code>searchIncrement</code> is 10 and <code>searches</code> is 3, it will get 10 points,
-	 * create a smaller boundary, get another 10 points within the boundary, create a smaller boundary again, and lastly
-	 * find the closest point within 10 points within the final smaller boundary. This would find a point within the
-	 * accuracy of 1000 points, although it only does 30 total samples.
+	 * For example, if <code>searchIncrement</code> is 10 and <code>searches</code> is 3, it will get 10 points, create
+	 * a smaller boundary, get another 10 points within the boundary, create a smaller boundary again, and lastly find
+	 * the closest point within 10 points within the final smaller boundary. This would find a point within the accuracy
+	 * of 1000 points, although it only does 30 total samples.
 	 * <p>
-	 * If the point is outside the start and end of the path, either 0 or 1 will be picked, representing the first or
-	 * last point on the {@link Parametric}.
+	 * If the point is outside the start and end of the {@link Path}, either 0 or 1 will be picked, representing the
+	 * first or last point on the {@link Parametric}.
 	 *
 	 * @param referencePosition the {@link Position} to find the closest <code>t</code> value to.
 	 * @param searchIncrement   the samples within each search.
@@ -327,18 +338,18 @@ public abstract class Path implements Parametric {
 	 * along the {@link Parametric}.
 	 * <p>
 	 * The closest point is found by sampling <code>searchIncrement</code> amount of points on the {@link Parametric}.
-	 * After the initial points are sampled, it finds the closest point and creates a smaller bound to search within.
-	 * It then repeats the same process within the smaller bound for a total of <code>searches</code> loops. Therefore,
-	 * the total resolution of the closest point is <code>searchIncrement</code> to the power of <code>searches</code>.
+	 * After the initial points are sampled, it finds the closest point and creates a smaller bound to search within. It
+	 * then repeats the same process within the smaller bound for a total of <code>searches</code> loops. Therefore, the
+	 * total resolution of the closest point is <code>searchIncrement</code> to the power of <code>searches</code>.
 	 * <p>
-	 * For example, if <code>searchIncrement</code> is 10 and <code>searches</code> is 3, it will get 10 points,
-	 * create a smaller boundary, get another 10 points within the boundary, create a smaller boundary again, and lastly
-	 * find the closest point within 10 points within the final smaller boundary. This would find a point within the
-	 * accuracy of 1000 points, although it only does 30 total samples.
+	 * For example, if <code>searchIncrement</code> is 10 and <code>searches</code> is 3, it will get 10 points, create
+	 * a smaller boundary, get another 10 points within the boundary, create a smaller boundary again, and lastly find
+	 * the closest point within 10 points within the final smaller boundary. This would find a point within the accuracy
+	 * of 1000 points, although it only does 30 total samples.
 	 * <p>
-	 * If the point is outside the start and end of the path, either 0 or 1 will be picked, representing the first or
-	 * last point on the {@link Parametric}. If the distance shifted point is off the path, it will also either choose
-	 * 0 or 1.
+	 * If the point is outside the start and end of the {@link Path}, either 0 or 1 will be picked, representing the
+	 * first or last point on the {@link Parametric}. If the distance shifted point is off the {@link Path}, it will
+	 * also either choose 0 or 1.
 	 * <p>
 	 * Since there is a <code>distanceShift</code> in this search, it first finds the actual closest point to the
 	 * <code>referencePosition</code> and then performs the distance shifted search using the actual closest point as a
@@ -363,24 +374,24 @@ public abstract class Path implements Parametric {
 	 * along the {@link Parametric}.
 	 * <p>
 	 * The closest point is found by sampling <code>searchIncrement</code> amount of points on the {@link Parametric}.
-	 * After the initial points are sampled, it finds the closest point and creates a smaller bound to search within.
-	 * It then repeats the same process within the smaller bound for a total of <code>searches</code> loops. Therefore,
-	 * the total resolution of the closest point is <code>searchIncrement</code> to the power of <code>searches</code>.
+	 * After the initial points are sampled, it finds the closest point and creates a smaller bound to search within. It
+	 * then repeats the same process within the smaller bound for a total of <code>searches</code> loops. Therefore, the
+	 * total resolution of the closest point is <code>searchIncrement</code> to the power of <code>searches</code>.
 	 * <p>
-	 * For example, if <code>searchIncrement</code> is 10 and <code>searches</code> is 3, it will get 10 points,
-	 * create a smaller boundary, get another 10 points within the boundary, create a smaller boundary again, and lastly
-	 * find the closest point within 10 points within the final smaller boundary. This would find a point within the
-	 * accuracy of 1000 points, although it only does 30 total samples.
+	 * For example, if <code>searchIncrement</code> is 10 and <code>searches</code> is 3, it will get 10 points, create
+	 * a smaller boundary, get another 10 points within the boundary, create a smaller boundary again, and lastly find
+	 * the closest point within 10 points within the final smaller boundary. This would find a point within the accuracy
+	 * of 1000 points, although it only does 30 total samples.
 	 * <p>
-	 * If the point is outside the start and end of the path, either 0 or 1 will be picked, representing the first or
-	 * last point on the {@link Parametric}. If the distance shifted point is off the path, it will also either choose
-	 * 0 or 1.
+	 * If the point is outside the start and end of the {@link Path}, either 0 or 1 will be picked, representing the
+	 * first or last point on the {@link Parametric}. If the distance shifted point is off the {@link Path}, it will
+	 * also either choose 0 or 1.
 	 * <p>
 	 * Since there is a <code>distanceShift</code> in this search, it first finds the actual closest point to the
 	 * <code>referencePosition</code> and then performs the distance shifted search using the actual closest point as a
 	 * guide of whether or not the point is in front or behind the <code>referencePosition</code>. It will only pick
-	 * points in front of the actual closest point on the path if pointInFront is <code>false</code>, and only behind the
-	 * actual closest point on the path if pointInFront is <code>true</code>.
+	 * points in front of the actual closest point on the {@link Path} if pointInFront is <code>false</code>, and only
+	 * behind the actual closest point on the {@link Path} if pointInFront is <code>true</code>.
 	 *
 	 * @param referencePosition the {@link Position} to find the closest <code>t</code> value to.
 	 * @param distanceShift     the distance away from the <code>referencePosition</code> the closest point should be.
@@ -423,8 +434,17 @@ public abstract class Path implements Parametric {
 		return tFinal;
 	}
 	
-	public Path calculateAdaptedPath(Transform newStartTransform, double adjustPathDistance) {
-		Transform onPathPoint = getClosestTransform(newStartTransform.getPosition(), adjustPathDistance, true, 10, 3);
+	/**
+	 * Generates an adaptive {@link Path} that makes <code>newStartTransform</code> the starting {@link Transform} of
+	 * the {@link Path}.
+	 *
+	 * @param newStartTransform
+	 * @param adjustPathDistance
+	 * @return
+	 */
+	public Path generateAdaptivePath(Transform newStartTransform, double adjustPathDistance) {
+		Transform closestPathPoint = getClosestTransform(newStartTransform.getPosition(), 10, 3);
+		Transform onPathPoint = getClosestTransform(closestPathPoint.getPosition(), adjustPathDistance, true, 10, 3);
 		Transform[] waypoints = getWaypoints();
 		
 		double pathPointT = getClosestT(onPathPoint.getPosition(), 10, 3);
@@ -439,6 +459,14 @@ public abstract class Path implements Parametric {
 				startWaypointIndex = i;
 			}
 		}
+		
+		
+		SwingUtilities.invokeLater(new Runnable() {
+			@Override
+			public void run() {
+				RobotGraph.getInstance().addDataset(GraphManager.getInstance().graphArrow(onPathPoint, 5, 3, "asdfasdf", Color.red));
+			}
+		});
 		
 		Transform[] adjustedPathWaypoints;
 		

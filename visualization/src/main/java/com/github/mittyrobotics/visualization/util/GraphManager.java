@@ -42,13 +42,15 @@ public class GraphManager {
 	}
 	
 	/**
-	 * Returns a dataset with a rectangle drawn on it at position (x,y) that is size width and height and rotated angle degrees
+	 * Returns a dataset with a rectangle drawn on it at position (x,y) that is size width and height and rotated angle
+	 * degrees
 	 *
 	 * @param transform  the {@link Transform} that defines the position and rotation of the rectangle
 	 * @param width      width of the rectangle
 	 * @param height     height of the rectangle
 	 * @param seriesName the name of the {@link XYSeries} containing the rectangle
-	 * @return an {@link XYSeriesCollection} dataset containing an {@link XYSeries} with the coordinates that make up the rectangle
+	 * @return an {@link XYSeriesCollection} dataset containing an {@link XYSeries} with the coordinates that make up
+	 * the rectangle
 	 */
 	public XYSeriesCollectionWithRender graphRectangle(Transform transform, double width, double height, String seriesName, Color color) {
 		XYSeriesCollectionWithRender dataset = new XYSeriesCollectionWithRender(true, true, color, new Rectangle(2, 2));
@@ -116,13 +118,15 @@ public class GraphManager {
 	}
 	
 	/**
-	 * Returns an {@link XYSeriesCollection} with an arrow drawn on it starting at position (x,y), extending length long, having an arrow pointer width of arrowWidth, and pointing at angle degrees
+	 * Returns an {@link XYSeriesCollection} with an arrow drawn on it starting at position (x,y), extending length
+	 * long, having an arrow pointer width of arrowWidth, and pointing at angle degrees
 	 *
 	 * @param transform  the {@link Transform} that defines the position and rotation of the arrow
 	 * @param length     length of arrow
 	 * @param arrowWidth width of arrow pointer
 	 * @param seriesName the name of the {@link XYSeries} containing the rectangle
-	 * @return an {@link XYSeriesCollection} dataset containing an {@link XYSeries} with the coordinates that make up the arrow
+	 * @return an {@link XYSeriesCollection} dataset containing an {@link XYSeries} with the coordinates that make up
+	 * the arrow
 	 */
 	public XYSeriesCollectionWithRender graphArrow(Transform transform, double length, double arrowWidth, String seriesName, Color color) {
 		XYSeriesCollectionWithRender dataset = new XYSeriesCollectionWithRender(true, false, color, new Rectangle(2, 2));

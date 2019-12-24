@@ -33,8 +33,7 @@ import com.github.mittyrobotics.visualization.graphs.MotorSimGraph;
  * Simulates a mechanism given data on the motors that drive it.
  * <p>
  * The motor modeling calculations are from 971's series about control system modeling and test driven development:
- * https://www.youtube.com/watch?v=uGtT8ojgSzg
- * https://www.youtube.com/watch?v=RLrZzSpHP4E
+ * https://www.youtube.com/watch?v=uGtT8ojgSzg https://www.youtube.com/watch?v=RLrZzSpHP4E
  */
 
 public class MotorSimulator {

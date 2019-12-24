@@ -37,7 +37,7 @@ public enum LimelightLEDMode {
 	On(3);
 	
 	private static Map map = new HashMap<>();
-
+	
 	static {
 		for (LimelightLEDMode pageType : LimelightLEDMode.values()) {
 			map.put(pageType.value, pageType);

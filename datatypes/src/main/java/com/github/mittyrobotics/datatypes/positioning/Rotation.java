@@ -28,10 +28,8 @@ package com.github.mittyrobotics.datatypes.positioning;
  * Represents a 2d rotation (heading) value in degrees or radians and contains the tangent, cosine, or sine of that
  * value.
  * <p>
- * For performance, the trig functions are only calculated on demand, and are only calculated once in each
- * {@link Rotation}.
- * Inspired by team 254's geometry system:
- * https://github.com/Team254/FRC-2019-Public/blob/master/src/main/java/com/team254/lib/geometry/
+ * For performance, the trig functions are only calculated on demand, and are only calculated once in each {@link
+ * Rotation}. Inspired by team 254's geometry system: https://github.com/Team254/FRC-2019-Public/blob/master/src/main/java/com/team254/lib/geometry/
  */
 public class Rotation {
 	private double heading;

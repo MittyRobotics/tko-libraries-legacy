@@ -64,7 +64,7 @@ public class Main {
 		boolean reversed = false;
 		
 		//Create the original path from the robot position to the point
-		Path originalPath = new CubicHermitePath(new Transform[]{SimSampleDrivetrain.getInstance().getRobotTransform(), new Transform(100, -24, 0)});
+		Path originalPath = new CubicHermitePath(new Transform[]{new Transform(0, 50, 0), new Transform(50, -24, 0), new Transform(100, -24, 0)});
 		
 		if (reversed) {
 			originalPath = new CubicHermitePath(originalPath.getReversedWaypoints());
@@ -83,8 +83,8 @@ public class Main {
 				1.2,
 				20,
 				true,
-				false,
-				50
+				true,
+				40
 		);
 		
 		PathFollowerProperties.RamseteProperties ramseteProperties = new PathFollowerProperties.RamseteProperties(
@@ -96,7 +96,7 @@ public class Main {
 		);
 		
 		//Setup the path follower
-		PathFollower follower = new PathFollower(ramseteProperties);
+		PathFollower follower = new PathFollower(purePursuitProperties);
 		
 		//Add original path to graph
 		RobotGraph.getInstance().addPath((GraphManager.getInstance().graphParametric(originalPath, .05, 3, .2, "spline", Color.green)));

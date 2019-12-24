@@ -52,7 +52,7 @@ public abstract class SimDrivetrain {
 		heading = Math.toRadians(heading);
 		
 		heading -= Math.atan2((deltaLeftPos - deltaRightPos), RobotSimManager.getInstance().getRobotWidth());
-
+		
 		x += Math.cos(heading) * deltaPos;
 		y += Math.sin(heading) * deltaPos;
 		

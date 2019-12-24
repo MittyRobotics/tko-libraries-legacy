@@ -57,6 +57,26 @@ public abstract class PathFollowerProperties {
 		                             PathVelocityController velocityController,
 		                             boolean reversed,
 		                             double lookaheadDistance,
+		                             boolean adaptiveLookahead
+		) {
+			this(path, velocityController, reversed, -1, -1, lookaheadDistance, adaptiveLookahead, false, 0);
+		}
+		
+		public PurePursuitProperties(Path path,
+		                             PathVelocityController velocityController,
+		                             boolean reversed,
+		                             double lookaheadDistance,
+		                             boolean adaptiveLookahead,
+		                             boolean continuouslyAdaptivePath,
+		                             double robotToPathAdaptiveDistance
+		) {
+			this(path, velocityController, reversed, -1, -1, lookaheadDistance, adaptiveLookahead, continuouslyAdaptivePath, robotToPathAdaptiveDistance);
+		}
+		
+		public PurePursuitProperties(Path path,
+		                             PathVelocityController velocityController,
+		                             boolean reversed,
+		                             double lookaheadDistance,
 		                             double curvatureSlowdownGain,
 		                             double minSlowdownVelocity,
 		                             boolean adaptiveLookahead,
@@ -74,6 +94,13 @@ public abstract class PathFollowerProperties {
 	public static class RamseteProperties extends PathFollowerProperties {
 		public final double aggressiveGain;
 		public final double dampingGain;
+		
+		public RamseteProperties(Path path,
+		                         PathVelocityController velocityController,
+		                         boolean reversed
+		) {
+			this(path, velocityController, reversed, -1, -1);
+		}
 		
 		public RamseteProperties(Path path,
 		                         PathVelocityController velocityController,
