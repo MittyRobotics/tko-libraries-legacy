@@ -73,18 +73,21 @@ public class Limelight {
 	 */
 	public void updateLimelightValues(){
 		hasValidTarget = NetworkTableInstance.getDefault().getTable("limelight").getEntry("tv").getDouble(DEFAULT_VALUE) == 1;
-		yawToTarget = NetworkTableInstance.getDefault().getTable("limelight").getEntry("tx").getDouble(DEFAULT_VALUE);
-		pitchToTarget = NetworkTableInstance.getDefault().getTable("limelight").getEntry("ty").getDouble(DEFAULT_VALUE);
-		targetArea = NetworkTableInstance.getDefault().getTable("limelight").getEntry("ta").getDouble(DEFAULT_VALUE);
-		targetScreenRotation = NetworkTableInstance.getDefault().getTable("limelight").getEntry("ts").getDouble(DEFAULT_VALUE);
-		limelightLatency = NetworkTableInstance.getDefault().getTable("limelight").getEntry("tl").getDouble(DEFAULT_VALUE);
-		boxShortestSide = NetworkTableInstance.getDefault().getTable("limelight").getEntry("tshort").getDouble(DEFAULT_VALUE);
-		boxLongestSide = NetworkTableInstance.getDefault().getTable("limelight").getEntry("tlong").getDouble(DEFAULT_VALUE);
-		boxHorizontalSide = NetworkTableInstance.getDefault().getTable("limelight").getEntry("thor").getDouble(DEFAULT_VALUE);
-		boxVerticalSide = NetworkTableInstance.getDefault().getTable("limelight").getEntry("tvert").getDouble(DEFAULT_VALUE);
-		target3DCamera = NetworkTableInstance.getDefault().getTable("limelight").getEntry("camtran").getDoubleArray(new double[]{DEFAULT_VALUE,DEFAULT_VALUE,DEFAULT_VALUE,DEFAULT_VALUE,DEFAULT_VALUE,DEFAULT_VALUE});
-		targetCornerX = NetworkTableInstance.getDefault().getTable("limelight").getEntry("tcornx").getDoubleArray(new double[]{DEFAULT_VALUE});
-		targetCornerY = NetworkTableInstance.getDefault().getTable("limelight").getEntry("tcorny").getDoubleArray(new double[]{DEFAULT_VALUE});
+		if(hasValidTarget == false){
+			System.out.println("WARNING: No valid Limelight targets, not updating values.");
+			yawToTarget = NetworkTableInstance.getDefault().getTable("limelight").getEntry("tx").getDouble(DEFAULT_VALUE);
+			pitchToTarget = NetworkTableInstance.getDefault().getTable("limelight").getEntry("ty").getDouble(DEFAULT_VALUE);
+			targetArea = NetworkTableInstance.getDefault().getTable("limelight").getEntry("ta").getDouble(DEFAULT_VALUE);
+			targetScreenRotation = NetworkTableInstance.getDefault().getTable("limelight").getEntry("ts").getDouble(DEFAULT_VALUE);
+			limelightLatency = NetworkTableInstance.getDefault().getTable("limelight").getEntry("tl").getDouble(DEFAULT_VALUE);
+			boxShortestSide = NetworkTableInstance.getDefault().getTable("limelight").getEntry("tshort").getDouble(DEFAULT_VALUE);
+			boxLongestSide = NetworkTableInstance.getDefault().getTable("limelight").getEntry("tlong").getDouble(DEFAULT_VALUE);
+			boxHorizontalSide = NetworkTableInstance.getDefault().getTable("limelight").getEntry("thor").getDouble(DEFAULT_VALUE);
+			boxVerticalSide = NetworkTableInstance.getDefault().getTable("limelight").getEntry("tvert").getDouble(DEFAULT_VALUE);
+			target3DCamera = NetworkTableInstance.getDefault().getTable("limelight").getEntry("camtran").getDoubleArray(new double[]{DEFAULT_VALUE,DEFAULT_VALUE,DEFAULT_VALUE,DEFAULT_VALUE,DEFAULT_VALUE,DEFAULT_VALUE});
+			targetCornerX = NetworkTableInstance.getDefault().getTable("limelight").getEntry("tcornx").getDoubleArray(new double[]{DEFAULT_VALUE});
+			targetCornerY = NetworkTableInstance.getDefault().getTable("limelight").getEntry("tcorny").getDoubleArray(new double[]{DEFAULT_VALUE});
+		}
 	}
 	
 	/**
