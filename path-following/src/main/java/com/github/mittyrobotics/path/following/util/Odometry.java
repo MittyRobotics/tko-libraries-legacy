@@ -26,7 +26,6 @@ package com.github.mittyrobotics.path.following.util;
 
 import com.github.mittyrobotics.datatypes.positioning.Rotation;
 import com.github.mittyrobotics.datatypes.positioning.Transform;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class Odometry {
 	private static Odometry instance;
@@ -49,21 +48,20 @@ public class Odometry {
 	/**
 	 * Updates the {@link Odometry}. This should be updated frequently with the current gencoder and gyro values.
 	 *
-	 * @param leftEncoder the left wheel encoder value of the drivetrain.
+	 * @param leftEncoder   the left wheel encoder value of the drivetrain.
 	 * @param rightEncocder the right wheel encoder value of the drivetrain.
-	 * @param heading the heading value of the gyro.
+	 * @param heading       the heading value of the gyro.
 	 */
-	public void update(double leftEncoder, double rightEncocder, double heading){
-		if(ticksPerInch == 0){
+	public void update(double leftEncoder, double rightEncocder, double heading) {
+		if (ticksPerInch == 0) {
 			System.out.println("WARNING: Odometry.java ticks per inch is not setup! Call Odometry.getInstance().setTicksPerInch to set the value.");
-		}
-		else{
+		} else {
 			//Update robot values based on encoder and gyro output
 			
 			//Get robot heading relative to the calibrated value
 			robotHeading = heading - calibrateGyroVal;
-			if(robotHeading < 0){
-				robotHeading = robotHeading+360;
+			if (robotHeading < 0) {
+				robotHeading = robotHeading + 360;
 			}
 			
 			//Get robot rotation
@@ -74,30 +72,30 @@ public class Odometry {
 			double deltaRightPos = rightEncocder - lastRightEncoderPos;
 			
 			//Get average delta encoder pos in inches
-			double deltaPosition = (deltaLeftPos + deltaRightPos)/2/ ticksPerInch;
+			double deltaPosition = (deltaLeftPos + deltaRightPos) / 2 / ticksPerInch;
 			
 			//Get x and y values from heading and delta pos
 			robotX += deltaPosition * robotRotation.cos();
 			robotY += deltaPosition * robotRotation.sin();
 			
 			//Set last encoder positions
-			lastLeftEncoderPos =  leftEncoder;
+			lastLeftEncoderPos = leftEncoder;
 			lastRightEncoderPos = rightEncocder;
 			
 			robotHeading = robotRotation.getHeading();
 			
-			robotTransform = new Transform(robotX,robotY,robotRotation);
+			robotTransform = new Transform(robotX, robotY, robotRotation);
 		}
 	}
 	
-	public void calibrateToZero(double leftEncoder, double rightEncoder, double heading){
+	public void calibrateToZero(double leftEncoder, double rightEncoder, double heading) {
 		calibrateGyroVal = robotTransform.getRotation().getHeading();
 		lastLeftEncoderPos = leftEncoder;
 		lastRightEncoderPos = rightEncoder;
-		setRobotTransform(new Transform(0,0,0));
+		setRobotTransform(new Transform(0, 0, 0));
 	}
 	
-	public Transform getRobotTransform(){
+	public Transform getRobotTransform() {
 		return robotTransform;
 	}
 	

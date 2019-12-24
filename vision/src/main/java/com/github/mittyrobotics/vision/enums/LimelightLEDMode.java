@@ -36,20 +36,21 @@ public enum LimelightLEDMode {
 	Blinking(2),
 	On(3);
 	
-	public int value;
 	private static Map map = new HashMap<>();
-	
-	LimelightLEDMode(int i) {
-		value = i;
-	}
-	
+
 	static {
 		for (LimelightLEDMode pageType : LimelightLEDMode.values()) {
 			map.put(pageType.value, pageType);
 		}
 	}
 	
-	public static LimelightLEDMode valueOf(int i){
-		return (LimelightLEDMode)map.get(i);
+	public int value;
+	
+	LimelightLEDMode(int i) {
+		value = i;
+	}
+	
+	public static LimelightLEDMode valueOf(int i) {
+		return (LimelightLEDMode) map.get(i);
 	}
 }

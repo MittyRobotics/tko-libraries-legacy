@@ -34,20 +34,21 @@ public enum LimelightSnapshotMode {
 	Off(0),
 	On(1);
 	
-	public int value;
 	private static Map map = new HashMap<>();
-	
-	private LimelightSnapshotMode(int value) {
-		value = value;
-	}
-	
+
 	static {
 		for (LimelightSnapshotMode pageType : LimelightSnapshotMode.values()) {
 			map.put(pageType.value, pageType);
 		}
 	}
 	
-	public static LimelightSnapshotMode valueOf(int i){
-		return (LimelightSnapshotMode)map.get(i);
+	public int value;
+	
+	private LimelightSnapshotMode(int value) {
+		value = value;
+	}
+	
+	public static LimelightSnapshotMode valueOf(int i) {
+		return (LimelightSnapshotMode) map.get(i);
 	}
 }

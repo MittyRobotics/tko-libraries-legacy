@@ -34,20 +34,21 @@ public enum LimelightCameraMode {
 	Vision(0),
 	Driver(1);
 	
-	public int value;
 	private static Map map = new HashMap<>();
-	
-	LimelightCameraMode(int i) {
-		value = i;
-	}
-	
+
 	static {
 		for (LimelightCameraMode pageType : LimelightCameraMode.values()) {
 			map.put(pageType.value, pageType);
 		}
 	}
 	
-	public static LimelightCameraMode valueOf(int i){
-		return (LimelightCameraMode)map.get(i);
+	public int value;
+	
+	LimelightCameraMode(int i) {
+		value = i;
+	}
+	
+	public static LimelightCameraMode valueOf(int i) {
+		return (LimelightCameraMode) map.get(i);
 	}
 }

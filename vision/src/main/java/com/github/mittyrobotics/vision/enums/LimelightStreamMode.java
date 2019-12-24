@@ -44,20 +44,21 @@ public enum LimelightStreamMode {
 	 */
 	Secondary(2);
 	
-	public int value;
 	private static Map map = new HashMap<>();
-	
-	LimelightStreamMode(int i) {
-		value = i;
-	}
-	
+
 	static {
 		for (LimelightStreamMode pageType : LimelightStreamMode.values()) {
 			map.put(pageType.value, pageType);
 		}
 	}
 	
-	public static LimelightStreamMode valueOf(int i){
-		return (LimelightStreamMode)map.get(i);
+	public int value;
+	
+	LimelightStreamMode(int i) {
+		value = i;
+	}
+	
+	public static LimelightStreamMode valueOf(int i) {
+		return (LimelightStreamMode) map.get(i);
 	}
 }
