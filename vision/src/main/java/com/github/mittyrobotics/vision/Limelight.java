@@ -58,6 +58,8 @@ public class Limelight {
 	private double[] targetCornerX;
 	private double[] targetCornerY;
 	
+	private double DEFAULT_VALUE = -1000;
+	
 	public void initDefaultLimelightSettings(){
 		setPipeline(0);
 		setLedMode(LimelightLEDMode.On);
@@ -70,19 +72,19 @@ public class Limelight {
 	 * Reads the Limelight's values from NetworkTables and does necessary calculations.
 	 */
 	public void updateLimelightValues(){
-		hasValidTarget = NetworkTableInstance.getDefault().getTable("limelight").getEntry("tv").getDouble(-1000) == 1;
-		yawToTarget = NetworkTableInstance.getDefault().getTable("limelight").getEntry("tx").getDouble(-1000);
-		pitchToTarget = NetworkTableInstance.getDefault().getTable("limelight").getEntry("ty").getDouble(-1000);
-		targetArea = NetworkTableInstance.getDefault().getTable("limelight").getEntry("ta").getDouble(-1000);
-		targetScreenRotation = NetworkTableInstance.getDefault().getTable("limelight").getEntry("ts").getDouble(-1000);
-		limelightLatency = NetworkTableInstance.getDefault().getTable("limelight").getEntry("tl").getDouble(-1000);
-		boxShortestSide = NetworkTableInstance.getDefault().getTable("limelight").getEntry("tshort").getDouble(-1000);
-		boxLongestSide = NetworkTableInstance.getDefault().getTable("limelight").getEntry("tlong").getDouble(-1000);
-		boxHorizontalSide = NetworkTableInstance.getDefault().getTable("limelight").getEntry("thor").getDouble(-1000);
-		boxVerticalSide = NetworkTableInstance.getDefault().getTable("limelight").getEntry("tvert").getDouble(-1000);
-		target3DCamera = NetworkTableInstance.getDefault().getTable("limelight").getEntry("camtran").getDoubleArray(new double[]{-1000,-1000,-1000,-1000,-1000,-1000});
-		targetCornerX = NetworkTableInstance.getDefault().getTable("limelight").getEntry("tcornx").getDoubleArray(new double[]{-1000});
-		targetCornerY = NetworkTableInstance.getDefault().getTable("limelight").getEntry("tcorny").getDoubleArray(new double[]{-1000});
+		hasValidTarget = NetworkTableInstance.getDefault().getTable("limelight").getEntry("tv").getDouble(DEFAULT_VALUE) == 1;
+		yawToTarget = NetworkTableInstance.getDefault().getTable("limelight").getEntry("tx").getDouble(DEFAULT_VALUE);
+		pitchToTarget = NetworkTableInstance.getDefault().getTable("limelight").getEntry("ty").getDouble(DEFAULT_VALUE);
+		targetArea = NetworkTableInstance.getDefault().getTable("limelight").getEntry("ta").getDouble(DEFAULT_VALUE);
+		targetScreenRotation = NetworkTableInstance.getDefault().getTable("limelight").getEntry("ts").getDouble(DEFAULT_VALUE);
+		limelightLatency = NetworkTableInstance.getDefault().getTable("limelight").getEntry("tl").getDouble(DEFAULT_VALUE);
+		boxShortestSide = NetworkTableInstance.getDefault().getTable("limelight").getEntry("tshort").getDouble(DEFAULT_VALUE);
+		boxLongestSide = NetworkTableInstance.getDefault().getTable("limelight").getEntry("tlong").getDouble(DEFAULT_VALUE);
+		boxHorizontalSide = NetworkTableInstance.getDefault().getTable("limelight").getEntry("thor").getDouble(DEFAULT_VALUE);
+		boxVerticalSide = NetworkTableInstance.getDefault().getTable("limelight").getEntry("tvert").getDouble(DEFAULT_VALUE);
+		target3DCamera = NetworkTableInstance.getDefault().getTable("limelight").getEntry("camtran").getDoubleArray(new double[]{DEFAULT_VALUE,DEFAULT_VALUE,DEFAULT_VALUE,DEFAULT_VALUE,DEFAULT_VALUE,DEFAULT_VALUE});
+		targetCornerX = NetworkTableInstance.getDefault().getTable("limelight").getEntry("tcornx").getDoubleArray(new double[]{DEFAULT_VALUE});
+		targetCornerY = NetworkTableInstance.getDefault().getTable("limelight").getEntry("tcorny").getDoubleArray(new double[]{DEFAULT_VALUE});
 	}
 	
 	/**
@@ -198,74 +200,146 @@ public class Limelight {
 	}
 	
 	public double getYawToTarget() {
+		if(yawToTarget == DEFAULT_VALUE){
+			System.out.println("WARNING: Limelight getYawToTarget() could not be could not be received!");
+			return 0;
+		}
 		return yawToTarget;
 	}
 	
 	public double getPitchToTarget() {
+		if(pitchToTarget == DEFAULT_VALUE){
+			System.out.println("WARNING: Limelight getPitchToTarget() could not be could not be received!");
+			return 0;
+		}
 		return pitchToTarget;
 	}
 	
 	public double getTargetArea() {
+		if(targetArea == DEFAULT_VALUE){
+			System.out.println("WARNING: Limelight getTargetArea() could not be could not be received!");
+			return 0;
+		}
 		return targetArea;
 	}
 	
 	public double getTargetScreenRotation() {
+		if(targetScreenRotation == DEFAULT_VALUE){
+			System.out.println("WARNING: Limelight getTargetScreenRotation() could not be could not be received!");
+			return 0;
+		}
 		return targetScreenRotation;
 	}
 	
 	public double getLimelightLatency() {
+		if(limelightLatency == DEFAULT_VALUE){
+			System.out.println("WARNING: Limelight getLimelightLatency() could not be could not be received!");
+			return 0;
+		}
 		return limelightLatency;
 	}
 	
 	public double getBoxShortestSide() {
+		if(boxShortestSide == DEFAULT_VALUE){
+			System.out.println("WARNING: Limelight getBoxShortestSide() could not be could not be received!");
+			return 0;
+		}
 		return boxShortestSide;
 	}
 	
 	public double getBoxLongestSide() {
+		if(boxLongestSide == DEFAULT_VALUE){
+			System.out.println("WARNING: Limelight getBoxLongestSide() could not be could not be received!");
+			return 0;
+		}
 		return boxLongestSide;
 	}
 	
 	public double getBoxHorizontalSide() {
+		if(boxHorizontalSide == DEFAULT_VALUE){
+			System.out.println("WARNING: Limelight getBoxHorizontalSide() could not be could not be received!");
+			return 0;
+		}
 		return boxHorizontalSide;
 	}
 	
 	public double getBoxVerticalSide() {
+		if(boxVerticalSide == DEFAULT_VALUE){
+			System.out.println("WARNING: Limelight getBoxVerticalSide() could not be could not be received!");
+			return 0;
+		}
 		return boxVerticalSide;
 	}
 	
 	public double get3DCameraX() {
+		if(target3DCamera[0] == DEFAULT_VALUE){
+			System.out.println("WARNING: Limelight get3DCameraX() could not be could not be received!");
+			return 0;
+		}
 		return target3DCamera[0];
 	}
 	
 	public double get3DCameraY() {
+		if( target3DCamera[1] == DEFAULT_VALUE){
+			System.out.println("WARNING: Limelight get3DCameraY() could not be could not be received!");
+			return 0;
+		}
 		return target3DCamera[1];
 	}
 	
 	public double get3DCameraZ() {
+		if(target3DCamera[2] == DEFAULT_VALUE){
+			System.out.println("WARNING: Limelight get3DCameraZ() could not be could not be received!");
+			return 0;
+		}
 		return target3DCamera[2];
 	}
 	
 	public double get3DCameraPitch() {
+		if(target3DCamera[3] == DEFAULT_VALUE){
+			System.out.println("WARNING: Limelight get3DCameraPitch() could not be could not be received!");
+			return 0;
+		}
 		return target3DCamera[3];
 	}
 	
 	public double get3DCameraYaw() {
+		if(target3DCamera[4] == DEFAULT_VALUE){
+			System.out.println("WARNING: Limelight get3DCameraYaw() could not be could not be received!");
+			return 0;
+		}
 		return target3DCamera[4];
 	}
 	
 	public double get3DCameraRoll() {
+		if(target3DCamera[5] == DEFAULT_VALUE){
+			System.out.println("WARNING: Limelight get3DCameraRoll() could not be could not be received!");
+			return 0;
+		}
 		return target3DCamera[5];
 	}
 	
 	public double[] get3DCamera() {
+		if(target3DCamera.length != 0 && target3DCamera[0] == DEFAULT_VALUE){
+			System.out.println("WARNING: Limelight get3DCamera() could not be could not be received!");
+			return new double[]{0,0,0,0,0,0};
+		}
 		return target3DCamera;
 	}
 	
 	public double[] getTargetCornerX() {
+		if(targetCornerX.length != 0 && targetCornerX[0] == DEFAULT_VALUE){
+			System.out.println("WARNING: Limelight getTargetCornerX() could not be could not be received!");
+			return new double[]{0};
+		}
 		return targetCornerX;
 	}
 	
 	public double[] getTargetCornerY() {
+		if(targetCornerY.length != 0 && targetCornerY[0] == DEFAULT_VALUE){
+			System.out.println("WARNING: Limelight getTargetCornerY() could not be could not be received!");
+			return new double[]{0};
+		}
 		return targetCornerY;
 	}
 }
