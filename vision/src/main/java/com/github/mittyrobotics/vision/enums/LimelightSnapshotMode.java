@@ -24,6 +24,9 @@
 
 package com.github.mittyrobotics.vision.enums;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * The snapshot mode for the Limelight camera
  */
@@ -32,8 +35,19 @@ public enum LimelightSnapshotMode {
 	On(1);
 	
 	public int value;
+	private static Map map = new HashMap<>();
 	
-	LimelightSnapshotMode(int i) {
-		value = i;
+	private LimelightSnapshotMode(int value) {
+		value = value;
+	}
+	
+	static {
+		for (LimelightSnapshotMode pageType : LimelightSnapshotMode.values()) {
+			map.put(pageType.value, pageType);
+		}
+	}
+	
+	public static LimelightSnapshotMode valueOf(int i){
+		return (LimelightSnapshotMode)map.get(i);
 	}
 }

@@ -23,6 +23,10 @@
  */
 
 package com.github.mittyrobotics.vision.enums;
+
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * The camera mode for the Limelight camera.
  */
@@ -31,8 +35,19 @@ public enum LimelightCameraMode {
 	Driver(1);
 	
 	public int value;
+	private static Map map = new HashMap<>();
 	
 	LimelightCameraMode(int i) {
 		value = i;
+	}
+	
+	static {
+		for (LimelightCameraMode pageType : LimelightCameraMode.values()) {
+			map.put(pageType.value, pageType);
+		}
+	}
+	
+	public static LimelightCameraMode valueOf(int i){
+		return (LimelightCameraMode)map.get(i);
 	}
 }

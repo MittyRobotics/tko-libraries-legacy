@@ -24,6 +24,9 @@
 
 package com.github.mittyrobotics.vision.enums;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * The stream mode for the Limelight camera
  */
@@ -42,8 +45,19 @@ public enum LimelightStreamMode {
 	Secondary(2);
 	
 	public int value;
+	private static Map map = new HashMap<>();
 	
 	LimelightStreamMode(int i) {
 		value = i;
+	}
+	
+	static {
+		for (LimelightStreamMode pageType : LimelightStreamMode.values()) {
+			map.put(pageType.value, pageType);
+		}
+	}
+	
+	public static LimelightStreamMode valueOf(int i){
+		return (LimelightStreamMode)map.get(i);
 	}
 }

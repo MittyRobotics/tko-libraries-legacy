@@ -24,6 +24,9 @@
 
 package com.github.mittyrobotics.vision.enums;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * The LED mode for the Limelight camera
  */
@@ -34,8 +37,19 @@ public enum LimelightLEDMode {
 	On(3);
 	
 	public int value;
+	private static Map map = new HashMap<>();
 	
 	LimelightLEDMode(int i) {
 		value = i;
+	}
+	
+	static {
+		for (LimelightLEDMode pageType : LimelightLEDMode.values()) {
+			map.put(pageType.value, pageType);
+		}
+	}
+	
+	public static LimelightLEDMode valueOf(int i){
+		return (LimelightLEDMode)map.get(i);
 	}
 }

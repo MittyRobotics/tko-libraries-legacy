@@ -40,8 +40,6 @@ public class Limelight {
 		return ourInstance;
 	}
 	
-	private int pipelineID = 0;
-	
 	private Limelight() {
 	
 	}
@@ -52,6 +50,13 @@ public class Limelight {
 		setCameraMode(LimelightCameraMode.Vision);
 		setStreamMode(LimelightStreamMode.Secondary);
 		setSnapshotMode(LimelightSnapshotMode.Off);
+	}
+	
+	/**
+	 * Reads the Limelight's values from NetworkTables and does necessary calculations.
+	 */
+	public void updateLimelightValues(){
+	
 	}
 	
 	/**
@@ -87,7 +92,6 @@ public class Limelight {
 	 * @param pipelineID ID of new active pipeline
 	 */
 	public void setPipeline(int pipelineID) {
-		this.pipelineID = pipelineID;
 		if (pipelineID > 9 || pipelineID < 0) {
 			pipelineID = 0;
 		}
@@ -117,6 +121,26 @@ public class Limelight {
 	 */
 	public void setSnapshotMode(LimelightSnapshotMode snapshotMode) {
 		NetworkTableInstance.getDefault().getTable("limelight").getEntry("snapshot").setNumber(snapshotMode.value); //Allows users to take snapshots during a match
+	}
+	
+	public LimelightLEDMode getLedMode() {
+		return LimelightLEDMode.valueOf((int)NetworkTableInstance.getDefault().getTable("limelight").getEntry("ledMode").getNumber(-1000));
+	}
+	
+	public LimelightCameraMode getCameraMode() {
+		return LimelightCameraMode.valueOf((int)NetworkTableInstance.getDefault().getTable("limelight").getEntry("camMode").getNumber(-1000));
+	}
+	
+	public double getPipeline() {
+		return (int)NetworkTableInstance.getDefault().getTable("limelight").getEntry("pipeline").getNumber(-1000);
+	}
+	
+	public LimelightStreamMode getStreamMode() {
+		return LimelightStreamMode.valueOf((int)NetworkTableInstance.getDefault().getTable("limelight").getEntry("stream").getNumber(-1000));
+	}
+	
+	public LimelightSnapshotMode getSnapshotMode() {
+		return LimelightSnapshotMode.valueOf((int)NetworkTableInstance.getDefault().getTable("limelight").getEntry("snapshot").getNumber(-1000));
 	}
 	
 	/**
