@@ -27,8 +27,7 @@ package com.github.mittyrobotics.datatypes.positioning;
 /**
  * Represents a 2d {@link Position} and {@link Rotation}
  * <p>
- * Inspired by team 254's geometry system:
- * https://github.com/Team254/FRC-2019-Public/blob/master/src/main/java/com/team254/lib/geometry/
+ * Inspired by team 254's geometry system: https://github.com/Team254/FRC-2019-Public/blob/master/src/main/java/com/team254/lib/geometry/
  */
 public class Transform {
 	private Position position;
@@ -103,8 +102,8 @@ public class Transform {
 	/**
 	 * Finds this {@link Transform} relative to {@link Transform} <code>other</code>.
 	 * <p>
-	 * In other words, it finds where this {@link Transform} is if <code>other</code> becomes the new origin
-	 * <code(x = 0, y = 0, heading = 0)</code>.
+	 * In other words, it finds where this {@link Transform} is if <code>other</code> becomes the new origin <code(x =
+	 * 0, y = 0, heading = 0)</code>.
 	 *
 	 * @param other the {@link Transform} to act as the new origin
 	 * @return a new {@link Transform} containing the point relative to <code>other</code>

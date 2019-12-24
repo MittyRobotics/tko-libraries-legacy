@@ -22,10 +22,33 @@
  * SOFTWARE.
  */
 
-package com.github.mittyrobotics.simulation.sim;
+package com.github.mittyrobotics.vision.enums;
 
-public class SimMechanism {
-	public SimMechanism() {
+import java.util.HashMap;
+import java.util.Map;
+
+/**
+ * The snapshot mode for the Limelight camera
+ */
+public enum LimelightSnapshotMode {
+	Off(0),
+	On(1);
 	
+	private static Map map = new HashMap<>();
+	
+	static {
+		for (LimelightSnapshotMode pageType : LimelightSnapshotMode.values()) {
+			map.put(pageType.value, pageType);
+		}
+	}
+	
+	public int value;
+	
+	private LimelightSnapshotMode(int value) {
+		value = value;
+	}
+	
+	public static LimelightSnapshotMode valueOf(int i) {
+		return (LimelightSnapshotMode) map.get(i);
 	}
 }

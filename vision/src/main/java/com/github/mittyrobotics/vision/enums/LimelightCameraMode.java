@@ -22,43 +22,33 @@
  * SOFTWARE.
  */
 
-package com.github.mittyrobotics.vision;
+package com.github.mittyrobotics.vision.enums;
 
-import com.github.mittyrobotics.datatypes.positioning.Rotation;
-import com.github.mittyrobotics.datatypes.positioning.Transform;
+import java.util.HashMap;
+import java.util.Map;
 
-public class Target {
-	private Transform transform;
-	private Rotation relativePitch;
-	private Rotation relativeYaw;
+/**
+ * The camera mode for the Limelight camera.
+ */
+public enum LimelightCameraMode {
+	Vision(0),
+	Driver(1);
 	
-	public Target(Transform transform, Rotation relativePitch, Rotation relativeYaw) {
-		this.transform = transform;
-		this.relativePitch = relativePitch;
-		this.relativeYaw = relativeYaw;
+	private static Map map = new HashMap<>();
+	
+	static {
+		for (LimelightCameraMode pageType : LimelightCameraMode.values()) {
+			map.put(pageType.value, pageType);
+		}
 	}
 	
-	public Transform getTransform() {
-		return transform;
+	public int value;
+	
+	LimelightCameraMode(int i) {
+		value = i;
 	}
 	
-	public void setTransform(Transform transform) {
-		this.transform = transform;
-	}
-	
-	public Rotation getRelativePitch() {
-		return relativePitch;
-	}
-	
-	public void setRelativePitch(Rotation relativePitch) {
-		this.relativePitch = relativePitch;
-	}
-	
-	public Rotation getRelativeYaw() {
-		return relativeYaw;
-	}
-	
-	public void setRelativeYaw(Rotation relativeYaw) {
-		this.relativeYaw = relativeYaw;
+	public static LimelightCameraMode valueOf(int i) {
+		return (LimelightCameraMode) map.get(i);
 	}
 }

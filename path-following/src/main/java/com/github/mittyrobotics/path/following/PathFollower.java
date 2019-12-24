@@ -36,8 +36,6 @@ import com.github.mittyrobotics.path.generation.datatypes.PathTransform;
 import com.github.mittyrobotics.path.generation.paths.Path;
 
 public class PathFollower {
-	private static PathFollower instance = new PathFollower();
-	
 	private PathFollowingType pathFollowingType;
 	
 	private PathFollowerProperties properties;
@@ -48,26 +46,43 @@ public class PathFollower {
 	
 	private boolean unAdaptedPath;
 	
-	private PathFollower() {
-	
+	/**
+	 * Constructs a {@link PathFollower} and sets it up for use with the {@link PurePursuitController}.
+	 *
+	 * @param properties the {@link PathFollowerProperties.PurePursuitProperties} for the {@link PathFollower}.
+	 */
+	public PathFollower(PathFollowerProperties.PurePursuitProperties properties) {
+		setupPurePursuit(properties);
 	}
 	
-	public static PathFollower getInstance() {
-		return instance;
+	/**
+	 * Constructs a {@link PathFollower} and sets it up for use with the {@link RamseteController}.
+	 *
+	 * @param properties the {@link PathFollowerProperties.RamseteProperties} for the {@link PathFollower}.
+	 */
+	public PathFollower(PathFollowerProperties.RamseteProperties properties) {
+		setupRamseteController(properties);
 	}
 	
 	/**
 	 * Sets up the {@link PurePursuitController} with the {@link PathFollowerProperties.PurePursuitProperties}.
 	 *
-	 * @param properties the {@link PathFollowerProperties.PurePursuitProperties} for the {@link PurePursuitController}.
+	 * @param properties the {@link PathFollowerProperties.PurePursuitProperties} for the {@link
+	 *                   PurePursuitController}.
 	 */
-	public void setupPurePursuit(PathFollowerProperties.PurePursuitProperties properties) {
+	private void setupPurePursuit(PathFollowerProperties.PurePursuitProperties properties) {
 		pathFollowingType = PathFollowingType.PURE_PURSUIT_CONTROLLER;
 		
 		setupPathFollower(properties);
 		this.purePursuitProperties = properties;
 		
-		PurePursuitController.getInstance().setGains(purePursuitProperties.curvatureSlowdownGain, purePursuitProperties.minSlowdownVelocity);
+		if (purePursuitProperties.curvatureSlowdownGain != -1) {
+			PurePursuitController.getInstance().setCurvatureSlowdownGain(purePursuitProperties.curvatureSlowdownGain);
+		}
+		if (purePursuitProperties.minSlowdownVelocity != -1) {
+			PurePursuitController.getInstance().setMinSlowdownVelocity(purePursuitProperties.minSlowdownVelocity);
+		}
+		
 	}
 	
 	/**
@@ -75,17 +90,23 @@ public class PathFollower {
 	 *
 	 * @param properties the {@link PathFollowerProperties.RamseteProperties} for the {@link RamseteController}.
 	 */
-	public void setupRamseteController(PathFollowerProperties.RamseteProperties properties) {
+	private void setupRamseteController(PathFollowerProperties.RamseteProperties properties) {
 		this.pathFollowingType = PathFollowingType.RAMSETE_CONTROLLER;
 		
 		setupPathFollower(properties);
 		this.ramseteProperties = properties;
 		
-		RamseteController.getInstance().setGains(ramseteProperties.aggressiveGain, ramseteProperties.dampingGain);
+		if (ramseteProperties.aggressiveGain != -1) {
+			RamseteController.getInstance().setAggressiveGain(ramseteProperties.aggressiveGain);
+		}
+		if (ramseteProperties.dampingGain != -1) {
+			RamseteController.getInstance().setDampingGain(ramseteProperties.dampingGain);
+		}
 	}
 	
 	/**
-	 * Universal setup function for all paths. Sets up the {@link PathFollower} with the {@link PathFollowerProperties}.
+	 * Universal setup function for all paths. Sets up the {@link PathFollower} with the {@link
+	 * PathFollowerProperties}.
 	 *
 	 * @param properties
 	 */
@@ -97,8 +118,8 @@ public class PathFollower {
 	/**
 	 * Changes the {@link Path} that the {@link PathFollower} is currently following.
 	 * <p>
-	 * This can be done at any time, even in the middle of following a path, and the {@link PathFollower} will adapt
-	 * to the new {@link Path}.
+	 * This can be done at any time, even in the middle of following a path, and the {@link PathFollower} will adapt to
+	 * the new {@link Path}.
 	 *
 	 * @param newPath the new {@link Path} to follow.
 	 */
@@ -110,8 +131,8 @@ public class PathFollower {
 	/**
 	 * Changes the {@link Path} that the {@link PathFollower} is currently following.
 	 * <p>
-	 * This can be done at any time, even in the middle of following a path, and the {@link PathFollower} will adapt
-	 * to the new {@link Path}.
+	 * This can be done at any time, even in the middle of following a path, and the {@link PathFollower} will adapt to
+	 * the new {@link Path}.
 	 *
 	 * @param newPath          the new {@link Path} to follow.
 	 * @param adaptPathToRobot whether or not to adapt the {@link Path} passed in to the robot's location at the next
@@ -126,21 +147,23 @@ public class PathFollower {
 	
 	/**
 	 * Universal update function for the {@link PathFollower}.
+	 * <p>
+	 * Will update the respective path following controller depending on which {@link PathFollowerProperties} was
+	 * input.
 	 *
-	 * @param robotTransform
-	 * @param currentVelocity
-	 * @param deltaTime
-	 * @return
+	 * @param robotTransform  the robot's current {@link Transform}.
+	 * @param currentVelocity the robot's current velocity in inches/s.
+	 * @param deltaTime       the change in time since the last update call in seconds.
+	 * @return the {@link DrivetrainVelocities} to follow based on the path following algorithm.
 	 */
 	public DrivetrainVelocities updatePathFollower(Transform robotTransform, double currentVelocity, double deltaTime) {
-		if (properties.adaptivePath) {
+		if (properties.continuouslyAdaptivePath) {
 			calculateAdaptivePath(robotTransform);
 		}
 		if (unAdaptedPath) {
 			calculateAdaptivePath(robotTransform);
 			unAdaptedPath = false;
 		}
-		
 		
 		if (currentPath == null) {
 			System.out.println("WARNING: The current path follower path is null!");
@@ -226,15 +249,17 @@ public class PathFollower {
 	 * @param robotTransform the robot's {@link Transform}.
 	 */
 	private void calculateAdaptivePath(Transform robotTransform) {
-		changePath(currentPath.calculateAdaptedPath(robotTransform, properties.robotToPathAdaptiveDistance));
+		changePath(currentPath.generateAdaptivePath(robotTransform, properties.robotToPathAdaptiveDistance));
 	}
 	
 	/**
-	 * Returns whether the robot is within the <code>distanceTolerance</code> of the ending location of the {@link Path}.
+	 * Returns whether the robot is within the <code>distanceTolerance</code> of the ending location of the {@link
+	 * Path}.
 	 *
 	 * @param robotTransform    the robot's {@link Transform}.
 	 * @param distanceTolerance the distance threshold to end
-	 * @return whether the robot is within the <code>distanceTolerance</code> of the ending location of the {@link Path}.
+	 * @return whether the robot is within the <code>distanceTolerance</code> of the ending location of the {@link
+	 * Path}.
 	 */
 	public boolean isFinished(Transform robotTransform, double distanceTolerance) {
 		return getDistanceToEnd(robotTransform, 0) < distanceTolerance;

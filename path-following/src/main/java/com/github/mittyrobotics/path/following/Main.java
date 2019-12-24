@@ -64,7 +64,7 @@ public class Main {
 		boolean reversed = false;
 		
 		//Create the original path from the robot position to the point
-		Path originalPath = new CubicHermitePath(new Transform[]{SimSampleDrivetrain.getInstance().getRobotTransform(), new Transform(100, -24, 0)});
+		Path originalPath = new CubicHermitePath(new Transform[]{new Transform(0, 50, 0), new Transform(50, -24, 0), new Transform(100, -24, 0)});
 		
 		if (reversed) {
 			originalPath = new CubicHermitePath(originalPath.getReversedWaypoints());
@@ -79,12 +79,12 @@ public class Main {
 				originalPath,
 				velocityController,
 				reversed,
-				20,
+				30,
 				1.2,
 				20,
 				true,
-				false,
-				50
+				true,
+				40
 		);
 		
 		PathFollowerProperties.RamseteProperties ramseteProperties = new PathFollowerProperties.RamseteProperties(
@@ -96,7 +96,7 @@ public class Main {
 		);
 		
 		//Setup the path follower
-		PathFollower.getInstance().setupRamseteController(ramseteProperties);
+		PathFollower follower = new PathFollower(purePursuitProperties);
 		
 		//Add original path to graph
 		RobotGraph.getInstance().addPath((GraphManager.getInstance().graphParametric(originalPath, .05, 3, .2, "spline", Color.green)));
@@ -113,11 +113,11 @@ public class Main {
 			//Graph
 			SwingUtilities.invokeLater(() -> {
 				RobotGraph.getInstance().clearGraph();
-				RobotGraph.getInstance().addDataset(GraphManager.getInstance().graphParametricFast(PathFollower.getInstance().getCurrentPath(), .05, "spline", Color.cyan));
+				RobotGraph.getInstance().addDataset(GraphManager.getInstance().graphParametricFast(follower.getCurrentPath(), .05, "spline", Color.cyan));
 			});
 			
 			//Update pure pursuit controller and set velocities
-			DrivetrainVelocities wheelVelocities = PathFollower.getInstance().updatePathFollower(SimSampleDrivetrain.getInstance().getRobotTransform(), SimSampleDrivetrain.getInstance().getAverageVelocity(), RobotSimManager.getInstance().getPeriodTime());
+			DrivetrainVelocities wheelVelocities = follower.updatePathFollower(SimSampleDrivetrain.getInstance().getRobotTransform(), SimSampleDrivetrain.getInstance().getAverageVelocity(), RobotSimManager.getInstance().getPeriodTime());
 			SimSampleDrivetrain.getInstance().setVelocities(wheelVelocities.getLeftVelocity(), wheelVelocities.getRightVelocity());
 			
 			try {

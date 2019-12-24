@@ -67,8 +67,8 @@ public class SimSampleDrivetrain extends SimDrivetrain {
 	}
 	
 	public void setVelocities(double leftVelocity, double rightVelocity) {
-		getLeftMasterTalon().set(calculatePID(leftVelocity, getLeftMasterTalon().getVelocity()));
-		getRightMasterTalon().set(calculatePID(rightVelocity, getRightMasterTalon().getVelocity()));
+		getLeftMasterTalon().set(calculatePID(leftVelocity, getLeftMasterTalon().getVelocity(), RobotSimManager.getInstance().getPeriodTime()));
+		getRightMasterTalon().set(calculatePID(rightVelocity, getRightMasterTalon().getVelocity(), RobotSimManager.getInstance().getPeriodTime()));
 	}
 	
 	public void setupPIDFValues(double p, double i, double d, double f) {
@@ -78,10 +78,10 @@ public class SimSampleDrivetrain extends SimDrivetrain {
 		this.f = f;
 	}
 	
-	private double calculatePID(double target, double measured) {
+	private double calculatePID(double target, double measured, double deltaTime) {
 		double voltage = 0;
 		
-		double FF = f * target + d * ((measured - lastMeasured) / RobotSimManager.getInstance().getPeriodTime());
+		double FF = f * target + d * ((measured - lastMeasured) / deltaTime);
 		
 		double error = target - measured;
 		

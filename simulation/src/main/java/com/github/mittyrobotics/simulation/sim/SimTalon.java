@@ -93,9 +93,9 @@ public class SimTalon implements Runnable {
 	public void run() {
 		while (true) {
 			if (follower) {
-				model.updateModel(master.getVoltage());
+				model.updateModel(master.getVoltage(), 0.01);
 			} else {
-				model.updateModel(voltage);
+				model.updateModel(voltage, 0.01);
 			}
 			try {
 				Thread.sleep(10);
@@ -106,7 +106,7 @@ public class SimTalon implements Runnable {
 	}
 	
 	public double getPosition() {
-		return (double) model.getPosition() * Conversions.M_TO_IN;
+		return (double) Math.round(model.getPosition() * Conversions.M_TO_IN * 100) / 100;
 	}
 	
 	public void setPosition(double position) {

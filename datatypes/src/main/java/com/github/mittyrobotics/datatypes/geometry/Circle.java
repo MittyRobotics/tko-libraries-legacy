@@ -77,8 +77,7 @@ public class Circle {
 	/**
 	 * Returns the {@link Circle} defined by the three {@link Position}s
 	 * <p>
-	 * Finds the center of the circle using the circumcenter formula.
-	 * https://www.desmos.com/calculator/tditgey5ot
+	 * Finds the center of the circle using the circumcenter formula. https://www.desmos.com/calculator/tditgey5ot
 	 *
 	 * @param p1 the first {@link Position}
 	 * @param p2 the second {@link Position}
@@ -111,8 +110,7 @@ public class Circle {
 	 * <code>intersection</code> {@link Position}
 	 * <p>
 	 * The tangent point contains a {@link Position} which is the point of tangency and a {@link Rotation} that defines
-	 * the angle of the tangent line.
-	 * https://www.desmos.com/calculator/dihvevz2n8
+	 * the angle of the tangent line. https://www.desmos.com/calculator/dihvevz2n8
 	 *
 	 * @param tangentPoint the {@link Transform} that defines the point of tangency and tangent line
 	 * @param intersection another point that the circle intersects
@@ -217,8 +215,8 @@ public class Circle {
 	/**
 	 * Finds the closest point on this {@link Circle} to the <code>referencePosition</code>.
 	 * <p>
-	 * This is done by finding the line that intersects the center of this {@link Circle} and the <code>referencePosition</code>.
-	 * https://www.desmos.com/calculator/mfywvuunva
+	 * This is done by finding the line that intersects the center of this {@link Circle} and the
+	 * <code>referencePosition</code>. https://www.desmos.com/calculator/mfywvuunva
 	 *
 	 * @param referencePosition the {@link Position} to find the closest point to.
 	 * @return the closest {@link Position} to the <code>referencePosition</code>.

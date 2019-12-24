@@ -48,10 +48,15 @@ public abstract class SimDrivetrain {
 		double deltaRightPos = getRightMasterTalon().getPosition() - prevRightPos;
 		
 		double deltaPos = (deltaLeftPos + deltaRightPos) / 2;
-		heading -= (double) Math.round(Math.toDegrees(Math.atan2((deltaLeftPos - deltaRightPos), RobotSimManager.getInstance().getRobotWidth())) * 1000.0) / 1000.0;
 		
-		x += Math.cos(Math.toRadians(heading)) * deltaPos;
-		y += Math.sin(Math.toRadians(heading)) * deltaPos;
+		heading = Math.toRadians(heading);
+		
+		heading -= Math.atan2((deltaLeftPos - deltaRightPos), RobotSimManager.getInstance().getRobotWidth());
+		
+		x += Math.cos(heading) * deltaPos;
+		y += Math.sin(heading) * deltaPos;
+		
+		heading = Math.toDegrees(heading);
 		
 		prevLeftPos = getLeftMasterTalon().getPosition();
 		prevRightPos = getRightMasterTalon().getPosition();
@@ -63,11 +68,11 @@ public abstract class SimDrivetrain {
 		double massPerRightSide = massPerSide / rightTalons.length;
 		for (int i = 0; i < leftTalons.length; i++) {
 			new Thread(leftTalons[i]).start();
-			leftTalons[i].getModel().initSystemModel(massPerLeftSide, RobotSimManager.getInstance().getDriveGearRatio(), RobotSimManager.getInstance().getDriveWheelRadius() * Conversions.IN_TO_M, 0.01);
+			leftTalons[i].getModel().initSystemModel(massPerLeftSide, RobotSimManager.getInstance().getDriveGearRatio(), RobotSimManager.getInstance().getDriveWheelRadius() * Conversions.IN_TO_M);
 		}
 		for (int i = 0; i < rightTalons.length; i++) {
 			new Thread(rightTalons[i]).start();
-			rightTalons[i].getModel().initSystemModel(massPerRightSide, RobotSimManager.getInstance().getDriveGearRatio(), RobotSimManager.getInstance().getDriveWheelRadius() * Conversions.IN_TO_M, 0.01);
+			rightTalons[i].getModel().initSystemModel(massPerRightSide, RobotSimManager.getInstance().getDriveGearRatio(), RobotSimManager.getInstance().getDriveWheelRadius() * Conversions.IN_TO_M);
 		}
 		this.leftTalons = leftTalons;
 		this.rightTalons = rightTalons;

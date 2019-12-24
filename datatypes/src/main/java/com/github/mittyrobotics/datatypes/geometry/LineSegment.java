@@ -80,10 +80,12 @@ public class LineSegment extends Line {
 	 * If two intersection points fall within the {@link LineSegment}, it will pick the point either in front of,
 	 * behind, or closest to the <code>referenceTransform</code> based on the {@link RoundMode}.
 	 * <p>
-	 * If no intersection points fall within the {@link LineSegment} or exist, it will return an empty {@link Optional}.
+	 * If no intersection points fall within the {@link LineSegment} or exist, it will return an empty {@link
+	 * Optional}.
 	 *
 	 * @param referenceTransform the {@link Position} to find the closest point to.
-	 * @param distanceShift      the distance away from the <code>referencePosition</code> to find the closest point to.
+	 * @param distanceShift      the distance away from the <code>referencePosition</code> to find the closest point
+	 *                           to.
 	 * @param roundMode          the {@link RoundMode}
 	 * @return an {@link Optional} containing the closest {@link Position} to the <code>referencePosition</code> that is
 	 * <code>distanceShift</code> away.
@@ -188,8 +190,8 @@ public class LineSegment extends Line {
 	/**
 	 * Returns whether or not the <code>point</code> is on this line segment.
 	 * <p>
-	 * This checks for both if the <code>point</code> is collinear with the line and if the <code>point</code> is
-	 * within the start and end points of the segment.
+	 * This checks for both if the <code>point</code> is collinear with the line and if the <code>point</code> is within
+	 * the start and end points of the segment.
 	 *
 	 * @param point the {@link Position} to determine if it is on the segment or not.
 	 * @return whether or not the <code>point</code> is on this line segment.

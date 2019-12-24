@@ -51,10 +51,10 @@ public class TrapezoidalMotionProfile {
 	/**
 	 * Constructs a new {@link TrapezoidalMotionProfile}.
 	 *
-	 * @param startMotionState    The starting {@link MotionState} (the current state of motion). Only uses the
-	 *                            position and velocity values from the {@link MotionState}.
-	 * @param endMotionState      The ending {@link MotionState} (the desired state of motion). Only uses the
-	 *                            position and velocity values from the {@link MotionState}.
+	 * @param startMotionState    The starting {@link MotionState} (the current state of motion). Only uses the position
+	 *                            and velocity values from the {@link MotionState}.
+	 * @param endMotionState      The ending {@link MotionState} (the desired state of motion). Only uses the position
+	 *                            and velocity values from the {@link MotionState}.
 	 * @param velocityConstraints The {@link VelocityConstraints} of the mechanism.
 	 */
 	public TrapezoidalMotionProfile(MotionState startMotionState, MotionState endMotionState, VelocityConstraints velocityConstraints) {
@@ -64,10 +64,10 @@ public class TrapezoidalMotionProfile {
 	/**
 	 * Constructs a new {@link TrapezoidalMotionProfile}.
 	 *
-	 * @param startMotionState    The starting {@link MotionState} (the current state of motion). Only uses the
-	 *                            position and velocity values from the {@link MotionState}.
-	 * @param endMotionState      The ending {@link MotionState} (the desired state of motion). Only uses the
-	 *                            position and velocity values from the {@link MotionState}.
+	 * @param startMotionState    The starting {@link MotionState} (the current state of motion). Only uses the position
+	 *                            and velocity values from the {@link MotionState}.
+	 * @param endMotionState      The ending {@link MotionState} (the desired state of motion). Only uses the position
+	 *                            and velocity values from the {@link MotionState}.
 	 * @param velocityConstraints The {@link VelocityConstraints} of the mechanism.
 	 * @param mechanismBounds     The {@link MechanismBounds} of the mechanism
 	 */
