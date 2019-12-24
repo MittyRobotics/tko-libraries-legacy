@@ -93,9 +93,9 @@ public class SimTalon implements Runnable {
 	public void run() {
 		while (true) {
 			if (follower) {
-				model.updateModel(master.getVoltage());
+				model.updateModel(master.getVoltage(), 0.01);
 			} else {
-				model.updateModel(voltage);
+				model.updateModel(voltage, 0.01);
 			}
 			try {
 				Thread.sleep(10);

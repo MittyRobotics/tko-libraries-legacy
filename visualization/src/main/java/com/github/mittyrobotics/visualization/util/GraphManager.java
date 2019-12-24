@@ -148,7 +148,6 @@ public class GraphManager {
 		//   |
 		//   0
 		
-		
 		Transform p0 = new Transform(0, 0).transformBy(transform).rotateAround(transform.getPosition(), transform.getRotation());
 		Transform p1 = new Transform(length, 0).transformBy(transform).rotateAround(transform.getPosition(), transform.getRotation());
 		Transform p2 = new Transform(length - halfWidth, halfWidth).transformBy(transform).rotateAround(transform.getPosition(), transform.getRotation());

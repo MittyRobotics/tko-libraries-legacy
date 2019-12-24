@@ -469,14 +469,6 @@ public abstract class Path implements Parametric {
 			}
 		}
 		
-		
-		SwingUtilities.invokeLater(new Runnable() {
-			@Override
-			public void run() {
-				RobotGraph.getInstance().addDataset(GraphManager.getInstance().graphArrow(onPathPoint, 5, 3, "asdfasdf", Color.red));
-			}
-		});
-		
 		Transform[] adjustedPathWaypoints;
 		
 		if (onPathPoint.getPosition().distance(getEndWaypoint().getPosition()) > adjustPathDistance) {

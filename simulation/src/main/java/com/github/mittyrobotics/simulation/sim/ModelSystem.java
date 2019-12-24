@@ -31,7 +31,6 @@ public class ModelSystem {
 	private double mass;
 	private double gearRatio;
 	private double wheelRadius;
-	private double periodTime;
 	
 	private double resistance;
 	private double Kv;
@@ -41,15 +40,26 @@ public class ModelSystem {
 	private double position;
 	private double voltage;
 	
+	/**
+	 * Constructs a system model given the {@link Motor} used in the system.
+	 *
+	 * @param motor the {@link Motor} used in the system.
+	 */
 	public ModelSystem(Motor motor) {
 		this.motor = motor;
 	}
 	
-	public void initSystemModel(double mass, double gearRatio, double wheelRadius, double periodTime) {
+	/**
+	 * Initializes the system model.
+	 *
+	 * @param mass        the mass of the system (kg)
+	 * @param gearRatio   the gear ratio of the system
+	 * @param wheelRadius the radius of the wheel or pulley in the system (meters)
+	 */
+	public void initSystemModel(double mass, double gearRatio, double wheelRadius) {
 		this.mass = mass;
 		this.gearRatio = gearRatio;
 		this.wheelRadius = wheelRadius;
-		this.periodTime = periodTime;
 		double numMotors = 1;
 		
 		double stallTorque = motor.getStallTorque();
@@ -61,11 +71,17 @@ public class ModelSystem {
 		this.Kt = (numMotors * stallTorque) / stallCurrent;
 	}
 	
-	public void updateModel(double voltage) {
+	/**
+	 * Updates the {@link ModelSystem} with a given voltage and delta time.
+	 *
+	 * @param voltage   the voltage applied to the motors of the {@link ModelSystem}.
+	 * @param deltaTime the change in time since the last update call.
+	 */
+	public void updateModel(double voltage, double deltaTime) {
 		this.voltage = voltage;
 		double acceleration = getAcceleration(voltage);
-		position += velocity * periodTime;
-		velocity += acceleration * periodTime;
+		position += velocity * deltaTime;
+		velocity += acceleration * deltaTime;
 	}
 	
 	/**
