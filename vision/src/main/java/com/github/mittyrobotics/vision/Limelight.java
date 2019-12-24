@@ -44,6 +44,20 @@ public class Limelight {
 	
 	}
 	
+	private boolean hasValidTarget;
+	private double yawToTarget;
+	private double pitchToTarget;
+	private double targetArea;
+	private double targetScreenRotation;
+	private double limelightLatency;
+	private double boxShortestSide;
+	private double boxLongestSide;
+	private double boxHorizontalSide;
+	private double boxVerticalSide;
+	private double[] target3DCamera;
+	private double[] targetCornerX;
+	private double[] targetCornerY;
+	
 	public void initDefaultLimelightSettings(){
 		setPipeline(0);
 		setLedMode(LimelightLEDMode.On);
@@ -56,7 +70,19 @@ public class Limelight {
 	 * Reads the Limelight's values from NetworkTables and does necessary calculations.
 	 */
 	public void updateLimelightValues(){
-	
+		hasValidTarget = NetworkTableInstance.getDefault().getTable("limelight").getEntry("tv").getDouble(-1000) == 1;
+		yawToTarget = NetworkTableInstance.getDefault().getTable("limelight").getEntry("tx").getDouble(-1000);
+		pitchToTarget = NetworkTableInstance.getDefault().getTable("limelight").getEntry("ty").getDouble(-1000);
+		targetArea = NetworkTableInstance.getDefault().getTable("limelight").getEntry("ta").getDouble(-1000);
+		targetScreenRotation = NetworkTableInstance.getDefault().getTable("limelight").getEntry("ts").getDouble(-1000);
+		limelightLatency = NetworkTableInstance.getDefault().getTable("limelight").getEntry("tl").getDouble(-1000);
+		boxShortestSide = NetworkTableInstance.getDefault().getTable("limelight").getEntry("tshort").getDouble(-1000);
+		boxLongestSide = NetworkTableInstance.getDefault().getTable("limelight").getEntry("tlong").getDouble(-1000);
+		boxHorizontalSide = NetworkTableInstance.getDefault().getTable("limelight").getEntry("thor").getDouble(-1000);
+		boxVerticalSide = NetworkTableInstance.getDefault().getTable("limelight").getEntry("tvert").getDouble(-1000);
+		target3DCamera = NetworkTableInstance.getDefault().getTable("limelight").getEntry("camtran").getDoubleArray(new double[]{-1000,-1000,-1000,-1000,-1000,-1000});
+		targetCornerX = NetworkTableInstance.getDefault().getTable("limelight").getEntry("tcornx").getDoubleArray(new double[]{-1000});
+		targetCornerY = NetworkTableInstance.getDefault().getTable("limelight").getEntry("tcorny").getDoubleArray(new double[]{-1000});
 	}
 	
 	/**
@@ -132,7 +158,7 @@ public class Limelight {
 	}
 	
 	public double getPipeline() {
-		return (int)NetworkTableInstance.getDefault().getTable("limelight").getEntry("pipeline").getNumber(-1000);
+		return (int)NetworkTableInstance.getDefault().getTable("limelight").getEntry("getpipe").getNumber(-1000);
 	}
 	
 	public LimelightStreamMode getStreamMode() {
@@ -167,4 +193,79 @@ public class Limelight {
 		setLedMode(LimelightLEDMode.Off);
 	}
 	
+	public boolean isHasValidTarget() {
+		return hasValidTarget;
+	}
+	
+	public double getYawToTarget() {
+		return yawToTarget;
+	}
+	
+	public double getPitchToTarget() {
+		return pitchToTarget;
+	}
+	
+	public double getTargetArea() {
+		return targetArea;
+	}
+	
+	public double getTargetScreenRotation() {
+		return targetScreenRotation;
+	}
+	
+	public double getLimelightLatency() {
+		return limelightLatency;
+	}
+	
+	public double getBoxShortestSide() {
+		return boxShortestSide;
+	}
+	
+	public double getBoxLongestSide() {
+		return boxLongestSide;
+	}
+	
+	public double getBoxHorizontalSide() {
+		return boxHorizontalSide;
+	}
+	
+	public double getBoxVerticalSide() {
+		return boxVerticalSide;
+	}
+	
+	public double get3DCameraX() {
+		return target3DCamera[0];
+	}
+	
+	public double get3DCameraY() {
+		return target3DCamera[1];
+	}
+	
+	public double get3DCameraZ() {
+		return target3DCamera[2];
+	}
+	
+	public double get3DCameraPitch() {
+		return target3DCamera[3];
+	}
+	
+	public double get3DCameraYaw() {
+		return target3DCamera[4];
+	}
+	
+	public double get3DCameraRoll() {
+		return target3DCamera[5];
+	}
+	
+	public double[] get3DCamera() {
+		return target3DCamera;
+	}
+	
+	public double[] getTargetCornerX() {
+		return targetCornerX;
+	}
+	
+	public double[] getTargetCornerY() {
+		return targetCornerY;
+	}
 }
