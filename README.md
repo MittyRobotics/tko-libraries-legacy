@@ -26,4 +26,4 @@ Main code libraries for FRC Team 1351, TKO.
  -  ### ```visualization```
 	 - Contains graphing and visualization utilities
 	 - Holds a universal [Graph](https://github.com/MittyRobotics/tko-libraries/blob/master/visualization/src/main/java/com/github/mittyrobotics/visualization/graphs/Graph.java) class that can be used to graph data as well as specific graphs, such as RobotGraph which can graph a representation of a chassis from the top down
-	 - Contains different, customizable [GraphTheme](https://github.com/MittyRobotics/tko-libraries/tree/master/visualization/src/main/java/com/github/mittyrobotics/visualization/themes)s, which we all know is the most important part!
+	 - Contains different, customizable [GraphThemes](https://github.com/MittyRobotics/tko-libraries/tree/master/visualization/src/main/java/com/github/mittyrobotics/visualization/themes), which we all know is the most important part!
