@@ -3,6 +3,9 @@
 Main code libraries for FRC Team 1351, TKO.
  
 ## Module Structure
+ - ### [```controls```](https://github.com/MittyRobotics/tko-libraries/tree/master/controls/src/main/java/com/github/mittyrobotics/controls)
+	 - Contains common teleop controllers and control code
+	 - Currently holds the [XboxWheel](https://github.com/MittyRobotics/tko-libraries/blob/master/controls/src/main/java/com/github/mittyrobotics/controls/controllers/XboxWheel.java) controller class for our steering wheel input
  - ### [```data-collection```](https://github.com/MittyRobotics/tko-libraries/tree/master/data-collection/src/main/java/com/github/mittyrobotics/datacollection)
 	 - Contains functions for collecting and managing data, such as the [TimeMonitor](https://github.com/MittyRobotics/tko-libraries), which can measure execution time of specific code
  -  ### [```datatypes```](https://github.com/MittyRobotics/tko-libraries/tree/master/datatypes/src/main/java/com/github/mittyrobotics/datatypes)
