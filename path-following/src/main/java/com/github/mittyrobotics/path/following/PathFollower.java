@@ -24,6 +24,7 @@
 
 package com.github.mittyrobotics.path.following;
 
+import com.github.mittyrobotics.datatypes.geometry.Line;
 import com.github.mittyrobotics.datatypes.motion.DrivetrainVelocities;
 import com.github.mittyrobotics.datatypes.positioning.Position;
 import com.github.mittyrobotics.datatypes.positioning.Rotation;
@@ -34,6 +35,11 @@ import com.github.mittyrobotics.path.following.enums.PathFollowingType;
 import com.github.mittyrobotics.path.following.util.PathFollowerProperties;
 import com.github.mittyrobotics.path.generation.datatypes.PathTransform;
 import com.github.mittyrobotics.path.generation.paths.Path;
+import com.github.mittyrobotics.visualization.graphs.RobotGraph;
+import com.github.mittyrobotics.visualization.util.GraphManager;
+
+import javax.swing.*;
+import java.awt.*;
 
 public class PathFollower {
 	private PathFollowingType pathFollowingType;

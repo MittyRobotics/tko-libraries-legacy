@@ -64,7 +64,7 @@ public class Main {
 		boolean reversed = false;
 		
 		//Create the original path from the robot position to the point
-		Path originalPath = new CubicHermitePath(new Transform[]{new Transform(0, 50, 0), new Transform(50, -24, 0), new Transform(100, -24, 0)});
+		Path originalPath = new CubicHermitePath(new Transform[]{SimSampleDrivetrain.getInstance().getRobotTransform(), new Transform(100, -24, 0)});
 		
 		if (reversed) {
 			originalPath = new CubicHermitePath(originalPath.getReversedWaypoints());
@@ -83,7 +83,7 @@ public class Main {
 				1.2,
 				20,
 				true,
-				true,
+				false,
 				40
 		);
 		
@@ -91,12 +91,12 @@ public class Main {
 				originalPath,
 				velocityController,
 				reversed,
-				4.0,
+				2.0,
 				.7
 		);
 		
 		//Setup the path follower
-		PathFollower follower = new PathFollower(purePursuitProperties);
+		PathFollower follower = new PathFollower(ramseteProperties);
 		
 		//Add original path to graph
 		RobotGraph.getInstance().addPath((GraphManager.getInstance().graphParametric(originalPath, .05, 3, .2, "spline", Color.green)));
@@ -111,11 +111,10 @@ public class Main {
 		//Loop
 		while (true) {
 			//Graph
-			SwingUtilities.invokeLater(() -> {
-				RobotGraph.getInstance().clearGraph();
-				RobotGraph.getInstance().addDataset(GraphManager.getInstance().graphParametricFast(follower.getCurrentPath(), .05, "spline", Color.cyan));
-			});
-			
+//			SwingUtilities.invokeLater(() -> {
+//				RobotGraph.getInstance().clearGraph();
+//				RobotGraph.getInstance().addDataset(GraphManager.getInstance().graphParametricFast(follower.getCurrentPath(), .07, "spline", Color.cyan));
+//			});
 			//Update pure pursuit controller and set velocities
 			DrivetrainVelocities wheelVelocities = follower.updatePathFollower(SimSampleDrivetrain.getInstance().getRobotTransform(), SimSampleDrivetrain.getInstance().getAverageVelocity(), RobotSimManager.getInstance().getPeriodTime());
 			SimSampleDrivetrain.getInstance().setVelocities(wheelVelocities.getLeftVelocity(), wheelVelocities.getRightVelocity());
