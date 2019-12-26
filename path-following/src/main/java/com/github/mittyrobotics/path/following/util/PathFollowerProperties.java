@@ -28,89 +28,90 @@ import com.github.mittyrobotics.motionprofile.PathVelocityController;
 import com.github.mittyrobotics.path.generation.paths.Path;
 
 public abstract class PathFollowerProperties {
-	public final Path path;
-	public final PathVelocityController velocityController;
-	public final boolean reversed;
-	public final boolean continuouslyAdaptivePath;
-	public final double robotToPathAdaptiveDistance;
-	
-	public PathFollowerProperties(Path path,
-	                              PathVelocityController velocityController,
-	                              boolean reversed,
-	                              boolean continuouslyAdaptivePath,
-	                              double robotToPathAdaptiveDistance
-	) {
-		this.path = path;
-		this.velocityController = velocityController;
-		this.reversed = reversed;
-		this.continuouslyAdaptivePath = continuouslyAdaptivePath;
-		this.robotToPathAdaptiveDistance = robotToPathAdaptiveDistance;
-	}
-	
-	public static class PurePursuitProperties extends PathFollowerProperties {
-		public final double lookaheadDistance;
-		public final double curvatureSlowdownGain;
-		public final double minSlowdownVelocity;
-		public final boolean adaptiveLookahead;
-		
-		public PurePursuitProperties(Path path,
-		                             PathVelocityController velocityController,
-		                             boolean reversed,
-		                             double lookaheadDistance,
-		                             boolean adaptiveLookahead
-		) {
-			this(path, velocityController, reversed, -1, -1, lookaheadDistance, adaptiveLookahead, false, 0);
-		}
-		
-		public PurePursuitProperties(Path path,
-		                             PathVelocityController velocityController,
-		                             boolean reversed,
-		                             double lookaheadDistance,
-		                             boolean adaptiveLookahead,
-		                             boolean continuouslyAdaptivePath,
-		                             double robotToPathAdaptiveDistance
-		) {
-			this(path, velocityController, reversed, -1, -1, lookaheadDistance, adaptiveLookahead, continuouslyAdaptivePath, robotToPathAdaptiveDistance);
-		}
-		
-		public PurePursuitProperties(Path path,
-		                             PathVelocityController velocityController,
-		                             boolean reversed,
-		                             double lookaheadDistance,
-		                             double curvatureSlowdownGain,
-		                             double minSlowdownVelocity,
-		                             boolean adaptiveLookahead,
-		                             boolean continuouslyAdaptivePath,
-		                             double robotToPathAdaptiveDistance
-		) {
-			super(path, velocityController, reversed, continuouslyAdaptivePath, robotToPathAdaptiveDistance);
-			this.lookaheadDistance = lookaheadDistance;
-			this.curvatureSlowdownGain = curvatureSlowdownGain;
-			this.minSlowdownVelocity = minSlowdownVelocity;
-			this.adaptiveLookahead = adaptiveLookahead;
-		}
-	}
-	
-	public static class RamseteProperties extends PathFollowerProperties {
-		public final double aggressiveGain;
-		public final double dampingGain;
-		
-		public RamseteProperties(Path path,
-		                         PathVelocityController velocityController,
-		                         boolean reversed
-		) {
-			this(path, velocityController, reversed, -1, -1);
-		}
-		
-		public RamseteProperties(Path path,
-		                         PathVelocityController velocityController,
-		                         boolean reversed,
-		                         double aggressiveGain,
-		                         double dampingGain
-		) {
-			super(path, velocityController, reversed, false, 0);
-			this.aggressiveGain = aggressiveGain;
-			this.dampingGain = dampingGain;
-		}
-	}
+    public final Path path;
+    public final PathVelocityController velocityController;
+    public final boolean reversed;
+    public final boolean continuouslyAdaptivePath;
+    public final double robotToPathAdaptiveDistance;
+
+    public PathFollowerProperties(Path path,
+                                  PathVelocityController velocityController,
+                                  boolean reversed,
+                                  boolean continuouslyAdaptivePath,
+                                  double robotToPathAdaptiveDistance
+    ) {
+        this.path = path;
+        this.velocityController = velocityController;
+        this.reversed = reversed;
+        this.continuouslyAdaptivePath = continuouslyAdaptivePath;
+        this.robotToPathAdaptiveDistance = robotToPathAdaptiveDistance;
+    }
+
+    public static class PurePursuitProperties extends PathFollowerProperties {
+        public final double lookaheadDistance;
+        public final double curvatureSlowdownGain;
+        public final double minSlowdownVelocity;
+        public final boolean adaptiveLookahead;
+
+        public PurePursuitProperties(Path path,
+                                     PathVelocityController velocityController,
+                                     boolean reversed,
+                                     double lookaheadDistance,
+                                     boolean adaptiveLookahead
+        ) {
+            this(path, velocityController, reversed, -1, -1, lookaheadDistance, adaptiveLookahead, false, 0);
+        }
+
+        public PurePursuitProperties(Path path,
+                                     PathVelocityController velocityController,
+                                     boolean reversed,
+                                     double lookaheadDistance,
+                                     boolean adaptiveLookahead,
+                                     boolean continuouslyAdaptivePath,
+                                     double robotToPathAdaptiveDistance
+        ) {
+            this(path, velocityController, reversed, -1, -1, lookaheadDistance, adaptiveLookahead,
+                    continuouslyAdaptivePath, robotToPathAdaptiveDistance);
+        }
+
+        public PurePursuitProperties(Path path,
+                                     PathVelocityController velocityController,
+                                     boolean reversed,
+                                     double lookaheadDistance,
+                                     double curvatureSlowdownGain,
+                                     double minSlowdownVelocity,
+                                     boolean adaptiveLookahead,
+                                     boolean continuouslyAdaptivePath,
+                                     double robotToPathAdaptiveDistance
+        ) {
+            super(path, velocityController, reversed, continuouslyAdaptivePath, robotToPathAdaptiveDistance);
+            this.lookaheadDistance = lookaheadDistance;
+            this.curvatureSlowdownGain = curvatureSlowdownGain;
+            this.minSlowdownVelocity = minSlowdownVelocity;
+            this.adaptiveLookahead = adaptiveLookahead;
+        }
+    }
+
+    public static class RamseteProperties extends PathFollowerProperties {
+        public final double aggressiveGain;
+        public final double dampingGain;
+
+        public RamseteProperties(Path path,
+                                 PathVelocityController velocityController,
+                                 boolean reversed
+        ) {
+            this(path, velocityController, reversed, -1, -1);
+        }
+
+        public RamseteProperties(Path path,
+                                 PathVelocityController velocityController,
+                                 boolean reversed,
+                                 double aggressiveGain,
+                                 double dampingGain
+        ) {
+            super(path, velocityController, reversed, false, 0);
+            this.aggressiveGain = aggressiveGain;
+            this.dampingGain = dampingGain;
+        }
+    }
 }
