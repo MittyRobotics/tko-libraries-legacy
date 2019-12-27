@@ -25,15 +25,13 @@
 package com.github.mittyrobotics.path.following;
 
 import com.github.mittyrobotics.datatypes.motion.DrivetrainVelocities;
-import com.github.mittyrobotics.datatypes.positioning.Position;
-import com.github.mittyrobotics.datatypes.positioning.Rotation;
-import com.github.mittyrobotics.datatypes.positioning.Transform;
-import com.github.mittyrobotics.datatypes.positioning.TransformWithT;
+import com.github.mittyrobotics.datatypes.positioning.*;
 import com.github.mittyrobotics.path.following.controllers.PurePursuitController;
 import com.github.mittyrobotics.path.following.controllers.RamseteController;
 import com.github.mittyrobotics.path.following.enums.PathFollowingType;
 import com.github.mittyrobotics.path.following.util.PathFollowerProperties;
 import com.github.mittyrobotics.path.generation.paths.Path;
+import com.github.mittyrobotics.path.generation.paths.QuinticHermitePath;
 import com.github.mittyrobotics.visualization.graphs.RobotGraph;
 import com.github.mittyrobotics.visualization.util.GraphManager;
 
@@ -170,7 +168,7 @@ public class PathFollower {
     public DrivetrainVelocities updatePathFollower(Transform robotTransform, double currentVelocity,
                                                    double deltaTime) {
         if (unAdaptedPath) {
-            calculateAdaptivePath(robotTransform, true);
+            calculateAdaptivePath(robotTransform, 0,true);
             unAdaptedPath = false;
         }
 
@@ -200,10 +198,14 @@ public class PathFollower {
                                                    double deltaTime) {
         double lookaheadDistance = purePursuitProperties.lookaheadDistance;
 
+        TransformWithT closestPosition = currentPath.getClosestTransform(robotTransform.getPosition());
+
+        currentPath.getCurvature(closestPosition.getT());
+
         Position lookaheadCalculationStartPosition;
         if (purePursuitProperties.adaptiveLookahead) {
-            Position closestPosition = currentPath.getClosestTransform(robotTransform.getPosition()).getPosition();
-            lookaheadCalculationStartPosition = closestPosition;
+            closestPosition = currentPath.getClosestTransform(robotTransform.getPosition());
+            lookaheadCalculationStartPosition = closestPosition.getPosition();
         } else {
             lookaheadCalculationStartPosition = robotTransform.getPosition();
         }
@@ -262,8 +264,9 @@ public class PathFollower {
      *
      * @param robotTransform the robot's {@link Transform}.
      */
-    private void calculateAdaptivePath(Transform robotTransform, boolean adaptToRobotHeading) {
-        changePath(currentPath.updatePathFromPoints(currentPath.generateAdaptivePathWaypoints(robotTransform,
+    private void calculateAdaptivePath(Transform robotTransform, double curvature, boolean adaptToRobotHeading) {
+        changePath(currentPath.updatePathFromPoints(currentPath.generateAdaptivePathWaypoints(new TransformWithVelocityAndCurvature(robotTransform,0
+                        ,curvature),
                 adaptToRobotHeading)));
     }
 

@@ -26,6 +26,7 @@ package com.github.mittyrobotics.path.generation.paths;
 
 import com.github.mittyrobotics.datatypes.positioning.Transform;
 import com.github.mittyrobotics.datatypes.positioning.TransformWithVelocity;
+import com.github.mittyrobotics.datatypes.positioning.TransformWithVelocityAndCurvature;
 import com.github.mittyrobotics.path.generation.splines.CubicHermiteSpline;
 
 public class CubicHermitePath extends Path {
@@ -62,7 +63,7 @@ public class CubicHermitePath extends Path {
     }
 
     @Override
-    public Path updatePathFromPoints(TransformWithVelocity[] waypoints) {
+    public Path updatePathFromPoints(TransformWithVelocityAndCurvature[] waypoints) {
         return new CubicHermitePath(waypoints);
     }
 }

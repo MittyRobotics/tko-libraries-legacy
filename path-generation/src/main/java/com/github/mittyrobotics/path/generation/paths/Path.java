@@ -28,24 +28,33 @@ import com.github.mittyrobotics.datatypes.path.Parametric;
 import com.github.mittyrobotics.datatypes.positioning.*;
 
 public abstract class Path implements Parametric {
-    private TransformWithVelocity[] waypoints;
+    private TransformWithVelocityAndCurvature[] waypoints;
     private Parametric[] parametrics;
 
 
     public Path(Transform[] waypoints) {
-        TransformWithVelocity[] waypointsWithVelocity = new TransformWithVelocity[waypoints.length];
-        for (int i = 0; i < waypointsWithVelocity.length; i++) {
-            waypointsWithVelocity[i] = new TransformWithVelocity(waypoints[i], 0);
+        TransformWithVelocityAndCurvature[] waypointsWithVelocityAndCurvature = new TransformWithVelocityAndCurvature[waypoints.length];
+        for (int i = 0; i < waypointsWithVelocityAndCurvature.length; i++) {
+            waypointsWithVelocityAndCurvature[i] = new TransformWithVelocityAndCurvature(waypoints[i], 0,0);
         }
-        this.waypoints = waypointsWithVelocity;
+        this.waypoints = waypointsWithVelocityAndCurvature;
         generateParametricEquations();
     }
 
     public Path(TransformWithVelocity[] waypoints) {
-        this.waypoints = waypoints;
+        TransformWithVelocityAndCurvature[] waypointsWithVelocityAndCurvature = new TransformWithVelocityAndCurvature[waypoints.length];
+        for (int i = 0; i < waypointsWithVelocityAndCurvature.length; i++) {
+            waypointsWithVelocityAndCurvature[i] = new TransformWithVelocityAndCurvature(waypoints[i],
+                    waypoints[i].getVelocity(),0);
+        }
+        this.waypoints = waypointsWithVelocityAndCurvature;
         generateParametricEquations();
     }
 
+    public Path(TransformWithVelocityAndCurvature[] waypoints) {
+        this.waypoints = waypoints;
+        generateParametricEquations();
+    }
 
     public abstract void generateParametricEquations();
 
@@ -495,10 +504,10 @@ public abstract class Path implements Parametric {
      * @param adaptToStartHeading
      * @return
      */
-    public TransformWithVelocity[] generateAdaptivePathWaypoints(Transform newStartTransform,
+    public TransformWithVelocityAndCurvature[] generateAdaptivePathWaypoints(TransformWithVelocityAndCurvature newStartTransform,
                                                                  boolean adaptToStartHeading) {
         TransformWithT onPathPoint = getClosestTransform(newStartTransform.getPosition(), 10, 3);
-        TransformWithVelocity[] waypoints = getWaypoints();
+        TransformWithVelocityAndCurvature[] waypoints = getWaypoints();
 
         int startWaypointIndex = 0;
         double currentClosest = 9999;
@@ -511,19 +520,19 @@ public abstract class Path implements Parametric {
             }
         }
 
-        TransformWithVelocity[] adjustedPathWaypoints;
-        Transform adaptiveStartTransform;
-        TransformWithVelocity nextWaypoint = waypoints[startWaypointIndex];
+        TransformWithVelocityAndCurvature[] adjustedPathWaypoints;
+        TransformWithVelocityAndCurvature adaptiveStartTransform;
+        TransformWithVelocityAndCurvature nextWaypoint = waypoints[startWaypointIndex];
 
         if (adaptToStartHeading) {
             adaptiveStartTransform = newStartTransform;
         } else {
-            adaptiveStartTransform = new Transform(newStartTransform.getPosition(),
-                    onPathPoint.getRotation());
+            adaptiveStartTransform = new TransformWithVelocityAndCurvature(new Transform(newStartTransform.getPosition(),
+                    onPathPoint.getRotation()),0,newStartTransform.getCurvature());
         }
 
-        adjustedPathWaypoints = new TransformWithVelocity[waypoints.length - startWaypointIndex + 1];
-        adjustedPathWaypoints[0] = new TransformWithVelocity(adaptiveStartTransform, 0);
+        adjustedPathWaypoints = new TransformWithVelocityAndCurvature[waypoints.length - startWaypointIndex + 1];
+        adjustedPathWaypoints[0] = adaptiveStartTransform;
         adjustedPathWaypoints[1] = nextWaypoint;
         for (int i = 2; i < adjustedPathWaypoints.length; i++) {
             adjustedPathWaypoints[i] = waypoints[(i - 1) + startWaypointIndex];
@@ -532,7 +541,7 @@ public abstract class Path implements Parametric {
         return adjustedPathWaypoints;
     }
 
-    public abstract Path updatePathFromPoints(TransformWithVelocity[] waypoints);
+    public abstract Path updatePathFromPoints(TransformWithVelocityAndCurvature[] waypoints);
 
     /**
      * Returns an array of {@link Transform}s that make up the waypoints of this {@link Path} in reverse.
@@ -555,7 +564,7 @@ public abstract class Path implements Parametric {
      *
      * @return the array of waypoint {@link Transform}s that make up the {@link Path}.
      */
-    public TransformWithVelocity[] getWaypoints() {
+    public TransformWithVelocityAndCurvature[] getWaypoints() {
         return waypoints;
     }
 
@@ -564,7 +573,7 @@ public abstract class Path implements Parametric {
      *
      * @return the first waypoint {@link Transform} in the {@link Path}.
      */
-    public TransformWithVelocity getStartWaypoint() {
+    public TransformWithVelocityAndCurvature getStartWaypoint() {
         return waypoints[0];
     }
 
@@ -573,7 +582,7 @@ public abstract class Path implements Parametric {
      *
      * @return the last waypoint {@link Transform} in the {@link Path}.
      */
-    public TransformWithVelocity getEndWaypoint() {
+    public TransformWithVelocityAndCurvature getEndWaypoint() {
         return waypoints[waypoints.length - 1];
     }
 

@@ -26,6 +26,7 @@ package com.github.mittyrobotics.path.generation.paths;
 
 import com.github.mittyrobotics.datatypes.positioning.Transform;
 import com.github.mittyrobotics.datatypes.positioning.TransformWithVelocity;
+import com.github.mittyrobotics.datatypes.positioning.TransformWithVelocityAndCurvature;
 import com.github.mittyrobotics.path.generation.splines.QuinticHermiteSpline;
 
 public class QuinticHermitePath extends Path {
@@ -34,7 +35,7 @@ public class QuinticHermitePath extends Path {
      *
      * @param waypoints an array of {@link Transform}s that act as waypoints for the path to pass through.
      */
-    public QuinticHermitePath(Transform[] waypoints) {
+    public QuinticHermitePath(TransformWithVelocityAndCurvature[] waypoints) {
         super(waypoints);
     }
 
@@ -62,7 +63,7 @@ public class QuinticHermitePath extends Path {
     }
 
     @Override
-    public Path updatePathFromPoints(TransformWithVelocity[] waypoints) {
+    public Path updatePathFromPoints(TransformWithVelocityAndCurvature[] waypoints) {
         return new QuinticHermitePath(waypoints);
     }
 

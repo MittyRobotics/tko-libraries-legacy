@@ -28,6 +28,7 @@ import com.github.mittyrobotics.datatypes.path.Parametric;
 import com.github.mittyrobotics.datatypes.positioning.Position;
 import com.github.mittyrobotics.datatypes.positioning.Rotation;
 import com.github.mittyrobotics.datatypes.positioning.Transform;
+import com.github.mittyrobotics.datatypes.positioning.TransformWithVelocityAndCurvature;
 
 /**
  * Quintic Hermite Spline class
@@ -40,14 +41,32 @@ public class QuinticHermiteSpline implements Parametric {
     private double x0, x1, y0, y1, vx0, vx1, vy0, vy1, ax0, ax1, ay0, ay1;
 
     public QuinticHermiteSpline(Transform startWaypoint, Transform endWaypoint) {
-        initSpline(startWaypoint, endWaypoint);
+        initSpline(startWaypoint, endWaypoint,0,0,0,0);
     }
 
-    private void initSpline(Transform startWaypoint, Transform endWaypoint) {
-        x0 = startWaypoint.getPosition().getX();
-        x1 = endWaypoint.getPosition().getX();
-        y0 = startWaypoint.getPosition().getY();
-        y1 = endWaypoint.getPosition().getY();
+    public QuinticHermiteSpline(TransformWithVelocityAndCurvature startWaypoint,
+                                TransformWithVelocityAndCurvature endWaypoint){
+        double d = startWaypoint.getPosition().distance(endWaypoint.getPosition());
+        double a0 = (startWaypoint.getCurvature())*(d*d);
+        double a1 = (endWaypoint.getCurvature())*(d*d);
+        initSpline(startWaypoint,endWaypoint,Math.sin(startWaypoint.getRotation().getRadians())*a0,
+                Math.cos(startWaypoint.getRotation().getRadians())*a0,
+                Math.sin(endWaypoint.getRotation().getRadians())*a1,
+                Math.cos(endWaypoint.getRotation().getRadians())*a1);
+    }
+
+    public QuinticHermiteSpline(Transform startWaypoint, Transform endWaypoint, double ax0, double ay0, double ax1,
+                                double ay1) {
+        initSpline(startWaypoint, endWaypoint,ax0,ay0,ax1,ay1);
+    }
+
+
+    private void initSpline(Transform startWaypoint, Transform endWaypoint, double ax0, double ay0, double ax1,
+                            double ay1) {
+        this.x0 = startWaypoint.getPosition().getX();
+        this.x1 = endWaypoint.getPosition().getX();
+        this.y0 = startWaypoint.getPosition().getY();
+        this.y1 = endWaypoint.getPosition().getY();
 
         //Get angles in radians
         double heading0 = Math.toRadians(startWaypoint.getRotation().getHeading());
@@ -56,16 +75,16 @@ public class QuinticHermiteSpline implements Parametric {
         double d = startWaypoint.getPosition().distance(endWaypoint.getPosition());
 
         //Create tangent vectors proportional to the distance between points
-        vx0 = Math.cos(heading0) * d;
-        vy0 = Math.sin(heading0) * d;
-        vx1 = Math.cos(heading1) * d;
-        vy1 = Math.sin(heading1) * d;
+        this.vx0 = Math.cos(heading0) * d;
+        this.vy0 = Math.sin(heading0) * d;
+        this.vx1 = Math.cos(heading1) * d;
+        this.vy1 = Math.sin(heading1) * d;
 
         //Create acceleration vectors
-        ax0 = 0;
-        ay0 = 0;
-        ax1 = 0;
-        ay1 = 0;
+        this.ax0 = ax0;
+        this.ay0 = ay0;
+        this.ax1 = ax1;
+        this.ay1 = ay1;
     }
 
     @Override
@@ -126,6 +145,17 @@ public class QuinticHermiteSpline implements Parametric {
         return computeFromCoefficients(h0, h1, h2, h3, h4, h5);
     }
 
+    /**
+     * Computes the {@link Position} from the 6 base coefficients.
+     *
+     * @param h0 base coefficient 1
+     * @param h1 base coefficient 2
+     * @param h2 base coefficient 3
+     * @param h3 base coefficient 4
+     * @param h4 base coefficient 5
+     * @param h5 base coefficient 6
+     * @return
+     */
     private Position computeFromCoefficients(double h0, double h1, double h2, double h3, double h4, double h5) {
         double x = h0 * x0 + h1 * vx0 + h2 * ax0 + h3 * ax1 + h4 * vx1 + h5 * x1;
         double y = h0 * y0 + h1 * vy0 + h2 * ay0 + h3 * ay1 + h4 * vy1 + h5 * y1;

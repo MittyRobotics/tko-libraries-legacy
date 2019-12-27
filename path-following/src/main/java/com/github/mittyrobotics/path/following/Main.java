@@ -27,6 +27,7 @@ package com.github.mittyrobotics.path.following;
 import com.github.mittyrobotics.datatypes.motion.DrivetrainVelocities;
 import com.github.mittyrobotics.datatypes.motion.VelocityConstraints;
 import com.github.mittyrobotics.datatypes.positioning.Transform;
+import com.github.mittyrobotics.datatypes.positioning.TransformWithVelocityAndCurvature;
 import com.github.mittyrobotics.motionprofile.PathVelocityController;
 import com.github.mittyrobotics.path.following.util.DifferentialDriveKinematics;
 import com.github.mittyrobotics.path.following.util.PathFollowerProperties;
@@ -66,10 +67,10 @@ public class Main {
 
         //Create the original path from the robot position to the point
         Path originalPath = new QuinticHermitePath(
-                new Transform[]{SimSampleDrivetrain.getInstance().getRobotTransform(), new Transform(100, -24, 0)});
+                new TransformWithVelocityAndCurvature[]{new TransformWithVelocityAndCurvature(SimSampleDrivetrain.getInstance().getRobotTransform(),0,0), new TransformWithVelocityAndCurvature(new Transform(100, -24, 0),0,0)});
 
         if (reversed) {
-            originalPath = new QuinticHermitePath(originalPath.getReversedWaypoints());
+           // originalPath = new QuinticHermitePath(originalPath.getReversedWaypoints());
             SimSampleDrivetrain.getInstance().setOdometry(originalPath.getStartWaypoint().getPosition().getX(),
                     originalPath.getStartWaypoint().getPosition().getY(),
                     SimSampleDrivetrain.getInstance().getHeading());
@@ -101,7 +102,7 @@ public class Main {
         );
 
         //Setup the path follower
-        PathFollower follower = new PathFollower(purePursuitProperties);
+        PathFollower follower = new PathFollower(ramseteProperties);
 
         //Add original path to graph
         RobotGraph.getInstance()
