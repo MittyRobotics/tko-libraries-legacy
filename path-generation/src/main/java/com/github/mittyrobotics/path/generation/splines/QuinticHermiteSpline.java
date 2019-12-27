@@ -32,32 +32,32 @@ import com.github.mittyrobotics.datatypes.positioning.TransformWithVelocityAndCu
 
 /**
  * Quintic Hermite Spline class
- *
+ * <p>
  * Reference: https://rose-hulman.edu/~finn/CCLI/Notes/day09.pdf
- *
+ * <p>
  * Desmos graph of spline: https://www.desmos.com/calculator/7rxnlvbt2j
  */
 public class QuinticHermiteSpline extends Parametric {
     private double x0, x1, y0, y1, vx0, vx1, vy0, vy1, ax0, ax1, ay0, ay1;
 
     public QuinticHermiteSpline(Transform startWaypoint, Transform endWaypoint) {
-        initSpline(startWaypoint, endWaypoint,0,0,0,0);
+        initSpline(startWaypoint, endWaypoint, 0, 0, 0, 0);
     }
 
     public QuinticHermiteSpline(TransformWithVelocityAndCurvature startWaypoint,
-                                TransformWithVelocityAndCurvature endWaypoint){
+                                TransformWithVelocityAndCurvature endWaypoint) {
         double d = startWaypoint.getPosition().distance(endWaypoint.getPosition());
-        double a0 = (startWaypoint.getCurvature())*(d*d);
-        double a1 = (endWaypoint.getCurvature())*(d*d);
-        initSpline(startWaypoint,endWaypoint,Math.sin(startWaypoint.getRotation().getRadians())*a0,
-                Math.cos(startWaypoint.getRotation().getRadians())*a0,
-                Math.sin(endWaypoint.getRotation().getRadians())*a1,
-                Math.cos(endWaypoint.getRotation().getRadians())*a1);
+        double a0 = (startWaypoint.getCurvature()) * (d * d);
+        double a1 = (endWaypoint.getCurvature()) * (d * d);
+        initSpline(startWaypoint, endWaypoint, Math.sin(startWaypoint.getRotation().getRadians()) * a0,
+                Math.cos(startWaypoint.getRotation().getRadians()) * a0,
+                Math.sin(endWaypoint.getRotation().getRadians()) * a1,
+                Math.cos(endWaypoint.getRotation().getRadians()) * a1);
     }
 
     public QuinticHermiteSpline(Transform startWaypoint, Transform endWaypoint, double ax0, double ay0, double ax1,
                                 double ay1) {
-        initSpline(startWaypoint, endWaypoint,ax0,ay0,ax1,ay1);
+        initSpline(startWaypoint, endWaypoint, ax0, ay0, ax1, ay1);
     }
 
 

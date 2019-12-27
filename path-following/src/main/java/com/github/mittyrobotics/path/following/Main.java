@@ -67,10 +67,12 @@ public class Main {
 
         //Create the original path from the robot position to the point
         Path originalPath = new QuinticHermitePath(
-                new TransformWithVelocityAndCurvature[]{new TransformWithVelocityAndCurvature(SimSampleDrivetrain.getInstance().getRobotTransform(),0,0), new TransformWithVelocityAndCurvature(new Transform(100, -24, 0),0,0)});
+                new TransformWithVelocityAndCurvature[]{
+                        new TransformWithVelocityAndCurvature(SimSampleDrivetrain.getInstance().getRobotTransform(), 0,
+                                0), new TransformWithVelocityAndCurvature(new Transform(100, -24, 0), 0, 0)});
 
         if (reversed) {
-           // originalPath = new QuinticHermitePath(originalPath.getReversedWaypoints());
+            // originalPath = new QuinticHermitePath(originalPath.getReversedWaypoints());
             SimSampleDrivetrain.getInstance().setOdometry(originalPath.getStartWaypoint().getPosition().getX(),
                     originalPath.getStartWaypoint().getPosition().getY(),
                     SimSampleDrivetrain.getInstance().getHeading());

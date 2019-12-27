@@ -24,13 +24,9 @@
 
 package com.github.mittyrobotics.path.generation;
 
-import com.github.mittyrobotics.datatypes.geometry.Circle;
-import com.github.mittyrobotics.datatypes.positioning.Position;
 import com.github.mittyrobotics.datatypes.positioning.Transform;
 import com.github.mittyrobotics.datatypes.positioning.TransformWithVelocityAndCurvature;
-import com.github.mittyrobotics.path.generation.paths.CubicHermitePath;
 import com.github.mittyrobotics.path.generation.paths.QuinticHermitePath;
-import com.github.mittyrobotics.path.generation.splines.QuinticHermiteSpline;
 import com.github.mittyrobotics.visualization.graphs.Graph;
 import com.github.mittyrobotics.visualization.util.GraphManager;
 
@@ -44,30 +40,16 @@ public class Main {
 
         graph.getChart().removeLegend();
 
-        TransformWithVelocityAndCurvature p1 = new TransformWithVelocityAndCurvature(new Transform(0,0,0), 0,
-                1.0/10.0);
-        TransformWithVelocityAndCurvature p2 = new TransformWithVelocityAndCurvature(new Transform(100,100,0), 0, 0);
+        TransformWithVelocityAndCurvature p1 = new TransformWithVelocityAndCurvature(new Transform(0, 0, 0), 0, 0);
+        TransformWithVelocityAndCurvature p2 = new TransformWithVelocityAndCurvature(new Transform(50, 50, 0), 0, 0);
+        TransformWithVelocityAndCurvature p3 = new TransformWithVelocityAndCurvature(new Transform(100, 30, -45), 0, 0);
 
-        double d = p1.getPosition().distance(p2.getPosition());
-
-        double radius = 10;
-
-        QuinticHermitePath spline = new QuinticHermitePath(new TransformWithVelocityAndCurvature[]{p1,p2}
-        );
-
-        QuinticHermiteSpline spline1 = new QuinticHermiteSpline(
-                p1,
-                p2
+        QuinticHermitePath spline = new QuinticHermitePath(new TransformWithVelocityAndCurvature[]{p1, p2, p3}
         );
 
         Transform transform = new Transform(0, 0);
 
-        graph.addDataset(GraphManager.getInstance().graphParametric(spline1, 0.01, 2, 1, "quintic", Color.red));
         graph.addDataset(GraphManager.getInstance().graphParametric(spline, 0.01, 2, 1, "quintic", Color.green));
-        Circle circle = new Circle(spline.getTransform(0),
-                1 / spline.getCurvature(0));
-        graph.addDataset(GraphManager.getInstance().graphCircle(circle, "curvatureCircle", Color.white));
-        System.out.println(circle.getRadius() + " " + circle.getCenter() + " " + (1.0/circle.getRadius() )*(d*d) + " " + 500/d);
 
 //        for (double i = 0; i < 1; i += 0.01) {
 //            graph.clearGraph();

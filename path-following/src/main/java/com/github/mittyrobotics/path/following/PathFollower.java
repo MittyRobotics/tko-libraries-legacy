@@ -31,12 +31,6 @@ import com.github.mittyrobotics.path.following.controllers.RamseteController;
 import com.github.mittyrobotics.path.following.enums.PathFollowingType;
 import com.github.mittyrobotics.path.following.util.PathFollowerProperties;
 import com.github.mittyrobotics.path.generation.paths.Path;
-import com.github.mittyrobotics.path.generation.paths.QuinticHermitePath;
-import com.github.mittyrobotics.visualization.graphs.RobotGraph;
-import com.github.mittyrobotics.visualization.util.GraphManager;
-
-import javax.swing.*;
-import java.awt.*;
 
 public class PathFollower {
     private PathFollowingType pathFollowingType;
@@ -168,7 +162,7 @@ public class PathFollower {
     public DrivetrainVelocities updatePathFollower(Transform robotTransform, double currentVelocity,
                                                    double deltaTime) {
         if (unAdaptedPath) {
-            calculateAdaptivePath(robotTransform, 0,true);
+            calculateAdaptivePath(robotTransform, 0, true);
             unAdaptedPath = false;
         }
 
@@ -265,9 +259,10 @@ public class PathFollower {
      * @param robotTransform the robot's {@link Transform}.
      */
     private void calculateAdaptivePath(Transform robotTransform, double curvature, boolean adaptToRobotHeading) {
-        changePath(currentPath.updatePathFromPoints(currentPath.generateAdaptivePathWaypoints(new TransformWithVelocityAndCurvature(robotTransform,0
-                        ,curvature),
-                adaptToRobotHeading)));
+        changePath(currentPath.updatePathFromPoints(
+                currentPath.generateAdaptivePathWaypoints(new TransformWithVelocityAndCurvature(robotTransform, 0
+                                , curvature),
+                        adaptToRobotHeading)));
     }
 
     /**

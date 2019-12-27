@@ -33,19 +33,21 @@ public abstract class Path extends Parametric {
 
 
     public Path(Transform[] waypoints) {
-        TransformWithVelocityAndCurvature[] waypointsWithVelocityAndCurvature = new TransformWithVelocityAndCurvature[waypoints.length];
+        TransformWithVelocityAndCurvature[] waypointsWithVelocityAndCurvature =
+                new TransformWithVelocityAndCurvature[waypoints.length];
         for (int i = 0; i < waypointsWithVelocityAndCurvature.length; i++) {
-            waypointsWithVelocityAndCurvature[i] = new TransformWithVelocityAndCurvature(waypoints[i], 0,0);
+            waypointsWithVelocityAndCurvature[i] = new TransformWithVelocityAndCurvature(waypoints[i], 0, 0);
         }
         this.waypoints = waypointsWithVelocityAndCurvature;
         generateParametricEquations();
     }
 
     public Path(TransformWithVelocity[] waypoints) {
-        TransformWithVelocityAndCurvature[] waypointsWithVelocityAndCurvature = new TransformWithVelocityAndCurvature[waypoints.length];
+        TransformWithVelocityAndCurvature[] waypointsWithVelocityAndCurvature =
+                new TransformWithVelocityAndCurvature[waypoints.length];
         for (int i = 0; i < waypointsWithVelocityAndCurvature.length; i++) {
             waypointsWithVelocityAndCurvature[i] = new TransformWithVelocityAndCurvature(waypoints[i],
-                    waypoints[i].getVelocity(),0);
+                    waypoints[i].getVelocity(), 0);
         }
         this.waypoints = waypointsWithVelocityAndCurvature;
         generateParametricEquations();
@@ -504,8 +506,9 @@ public abstract class Path extends Parametric {
      * @param adaptToStartHeading
      * @return
      */
-    public TransformWithVelocityAndCurvature[] generateAdaptivePathWaypoints(TransformWithVelocityAndCurvature newStartTransform,
-                                                                 boolean adaptToStartHeading) {
+    public TransformWithVelocityAndCurvature[] generateAdaptivePathWaypoints(
+            TransformWithVelocityAndCurvature newStartTransform,
+            boolean adaptToStartHeading) {
         TransformWithT onPathPoint = getClosestTransform(newStartTransform.getPosition(), 10, 3);
         TransformWithVelocityAndCurvature[] waypoints = getWaypoints();
 
@@ -527,8 +530,9 @@ public abstract class Path extends Parametric {
         if (adaptToStartHeading) {
             adaptiveStartTransform = newStartTransform;
         } else {
-            adaptiveStartTransform = new TransformWithVelocityAndCurvature(new Transform(newStartTransform.getPosition(),
-                    onPathPoint.getRotation()),0,newStartTransform.getCurvature());
+            adaptiveStartTransform =
+                    new TransformWithVelocityAndCurvature(new Transform(newStartTransform.getPosition(),
+                            onPathPoint.getRotation()), 0, newStartTransform.getCurvature());
         }
 
         adjustedPathWaypoints = new TransformWithVelocityAndCurvature[waypoints.length - startWaypointIndex + 1];
