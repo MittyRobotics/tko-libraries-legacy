@@ -29,6 +29,13 @@ import com.github.mittyrobotics.datatypes.positioning.Position;
 import com.github.mittyrobotics.datatypes.positioning.Rotation;
 import com.github.mittyrobotics.datatypes.positioning.Transform;
 
+/**
+ * Quintic Hermite Spline class
+ *
+ * Reference: https://rose-hulman.edu/~finn/CCLI/Notes/day09.pdf
+ *
+ * Desmos graph of spline: https://www.desmos.com/calculator/7rxnlvbt2j
+ */
 public class QuinticHermiteSpline implements Parametric {
     private double x0, x1, y0, y1, vx0, vx1, vy0, vy1, ax0, ax1, ay0, ay1;
 

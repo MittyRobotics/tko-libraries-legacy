@@ -89,7 +89,7 @@ public class Main {
                         1.2,
                         20,
                         true,
-                        false
+                        true
                 );
 
         PathFollowerProperties.RamseteProperties ramseteProperties = new PathFollowerProperties.RamseteProperties(

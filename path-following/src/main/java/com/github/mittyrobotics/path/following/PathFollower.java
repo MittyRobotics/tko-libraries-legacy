@@ -34,6 +34,11 @@ import com.github.mittyrobotics.path.following.controllers.RamseteController;
 import com.github.mittyrobotics.path.following.enums.PathFollowingType;
 import com.github.mittyrobotics.path.following.util.PathFollowerProperties;
 import com.github.mittyrobotics.path.generation.paths.Path;
+import com.github.mittyrobotics.visualization.graphs.RobotGraph;
+import com.github.mittyrobotics.visualization.util.GraphManager;
+
+import javax.swing.*;
+import java.awt.*;
 
 public class PathFollower {
     private PathFollowingType pathFollowingType;
@@ -126,7 +131,7 @@ public class PathFollower {
      */
     public void changePath(Path newPath) {
         this.currentPath = newPath;
-        unAdaptedPath = true;
+        unAdaptedPath = false;
     }
 
     /**
@@ -167,8 +172,6 @@ public class PathFollower {
         if (unAdaptedPath) {
             calculateAdaptivePath(robotTransform, true);
             unAdaptedPath = false;
-        } else if (properties.continuouslyAdaptivePath) {
-            calculateAdaptivePath(robotTransform, false);
         }
 
         if (currentPath == null) {
@@ -198,7 +201,6 @@ public class PathFollower {
         double lookaheadDistance = purePursuitProperties.lookaheadDistance;
 
         Position lookaheadCalculationStartPosition;
-
         if (purePursuitProperties.adaptiveLookahead) {
             Position closestPosition = currentPath.getClosestTransform(robotTransform.getPosition()).getPosition();
             lookaheadCalculationStartPosition = closestPosition;
@@ -262,7 +264,7 @@ public class PathFollower {
      */
     private void calculateAdaptivePath(Transform robotTransform, boolean adaptToRobotHeading) {
         changePath(currentPath.updatePathFromPoints(currentPath.generateAdaptivePathWaypoints(robotTransform,
-                adaptToRobotHeading)), false);
+                adaptToRobotHeading)));
     }
 
     /**
