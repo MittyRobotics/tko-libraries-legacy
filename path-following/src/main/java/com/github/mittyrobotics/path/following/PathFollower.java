@@ -165,11 +165,10 @@ public class PathFollower {
     public DrivetrainVelocities updatePathFollower(Transform robotTransform, double currentVelocity,
                                                    double deltaTime) {
         if (unAdaptedPath) {
-            calculateAdaptivePath(robotTransform,true);
+            calculateAdaptivePath(robotTransform, true);
             unAdaptedPath = false;
-        }
-        else if (properties.continuouslyAdaptivePath) {
-            calculateAdaptivePath(robotTransform,false);
+        } else if (properties.continuouslyAdaptivePath) {
+            calculateAdaptivePath(robotTransform, false);
         }
 
         if (currentPath == null) {
@@ -248,7 +247,7 @@ public class PathFollower {
         //Get radius from curvature is 1/curvature
         double turningRadius = 1 / currentPath.getCurvature(desiredTransform.getT());
 
-        if (Double.isNaN(turningRadius)) {
+        if (Double.isNaN(turningRadius) || Double.isInfinite(turningRadius)) {
             turningRadius = 2e16;
         }
 
@@ -262,7 +261,8 @@ public class PathFollower {
      * @param robotTransform the robot's {@link Transform}.
      */
     private void calculateAdaptivePath(Transform robotTransform, boolean adaptToRobotHeading) {
-        changePath(currentPath.generateAdaptivePath(robotTransform, adaptToRobotHeading),false);
+        changePath(currentPath.updatePathFromPoints(currentPath.generateAdaptivePathWaypoints(robotTransform,
+                adaptToRobotHeading)), false);
     }
 
     /**

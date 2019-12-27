@@ -24,11 +24,11 @@
 
 package com.github.mittyrobotics.datatypes.positioning;
 
-public class TransformWithT extends Transform{
+public class TransformWithT extends Transform {
     private double t;
 
-    public TransformWithT(Transform transform,double t) {
-        super(transform.getPosition(),transform.getRotation());
+    public TransformWithT(Transform transform, double t) {
+        super(transform.getPosition(), transform.getRotation());
         this.t = t;
     }
 

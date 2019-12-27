@@ -30,8 +30,8 @@ import com.github.mittyrobotics.datatypes.positioning.Transform;
 import com.github.mittyrobotics.motionprofile.PathVelocityController;
 import com.github.mittyrobotics.path.following.util.DifferentialDriveKinematics;
 import com.github.mittyrobotics.path.following.util.PathFollowerProperties;
-import com.github.mittyrobotics.path.generation.paths.CubicHermitePath;
 import com.github.mittyrobotics.path.generation.paths.Path;
+import com.github.mittyrobotics.path.generation.paths.QuinticHermitePath;
 import com.github.mittyrobotics.simulation.sim.RobotSimManager;
 import com.github.mittyrobotics.simulation.util.SimSampleDrivetrain;
 import com.github.mittyrobotics.simulation.util.SimSampleRobot;
@@ -65,11 +65,11 @@ public class Main {
         boolean reversed = false;
 
         //Create the original path from the robot position to the point
-        Path originalPath = new CubicHermitePath(
+        Path originalPath = new QuinticHermitePath(
                 new Transform[]{SimSampleDrivetrain.getInstance().getRobotTransform(), new Transform(100, -24, 0)});
 
         if (reversed) {
-            originalPath = new CubicHermitePath(originalPath.getReversedWaypoints());
+            originalPath = new QuinticHermitePath(originalPath.getReversedWaypoints());
             SimSampleDrivetrain.getInstance().setOdometry(originalPath.getStartWaypoint().getPosition().getX(),
                     originalPath.getStartWaypoint().getPosition().getY(),
                     SimSampleDrivetrain.getInstance().getHeading());
@@ -89,15 +89,15 @@ public class Main {
                         1.2,
                         20,
                         true,
-                        true
+                        false
                 );
 
         PathFollowerProperties.RamseteProperties ramseteProperties = new PathFollowerProperties.RamseteProperties(
                 originalPath,
                 velocityController,
                 reversed,
-                2.0,
-                .8
+                5.0,
+                .7
         );
 
         //Setup the path follower
@@ -118,10 +118,10 @@ public class Main {
 
         //Loop
         while (true) {
-            changePathCount ++;
-            if(changePathCount == 10000){
-                follower.changePath(new CubicHermitePath(new Transform[]{new Transform(50,24,0),
-                        new Transform(100,24,0)}));
+            changePathCount++;
+            if (changePathCount == 10000) {
+//                follower.changePath(new QuinticHermitePath(new Transform[]{new Transform(50,24,0),
+//                        new Transform(100,24,0)}));
             }
             //Graph
             SwingUtilities.invokeLater(() -> {

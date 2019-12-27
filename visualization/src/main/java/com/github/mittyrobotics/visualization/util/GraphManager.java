@@ -25,6 +25,7 @@
 package com.github.mittyrobotics.visualization.util;
 
 import com.github.mittyrobotics.datatypes.geometry.ArcSegment;
+import com.github.mittyrobotics.datatypes.geometry.Circle;
 import com.github.mittyrobotics.datatypes.path.Parametric;
 import com.github.mittyrobotics.datatypes.positioning.Position;
 import com.github.mittyrobotics.datatypes.positioning.Transform;
@@ -177,6 +178,22 @@ public class GraphManager {
         series.add(p1.getPosition().getX(), p1.getPosition().getY());
         series.add(p3.getPosition().getX(), p3.getPosition().getY());
         return series;
+    }
+
+    public XYSeriesCollectionWithRender graphCircle(Circle circle, String seriesName, Color color) {
+        XYSeriesCollectionWithRender dataset =
+                new XYSeriesCollectionWithRender(true, false, color, new Rectangle(1, 1));
+
+        XYSeries series = new XYSeries(seriesName, false);
+        for (int i = 0; i < 360; i++) {
+            Position pos = new Position(
+                    circle.getCenter().getX() + Math.cos(Math.toRadians(i)) * circle.getRadius(),
+                    circle.getCenter().getY() + Math.sin(Math.toRadians(i)) * circle.getRadius());
+            series.add(pos.getX(), pos.getY());
+        }
+
+        dataset.addSeries(series);
+        return dataset;
     }
 
     public XYSeriesCollectionWithRender graphArc(ArcSegment arcSegment, String seriesName, Color color) {

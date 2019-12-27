@@ -119,6 +119,40 @@ public abstract class Path implements Parametric {
         return 1 / 2e16;
     }
 
+    @Override
+    public Position getFirstDerivative(double t) {
+        //Convert t from 0 to 1 to 0 to waypoints.length-1 so that the t value represents all parametric equation
+        //segments of the total path.
+        t = t * parametrics.length;
+
+        for (int i = 0; i < parametrics.length; i++) {
+            //Find which parametric equation segment that t falls in
+            if (t >= i && t <= i + 1) {
+                //return the Transform from the segment that it falls in
+                return parametrics[i].getFirstDerivative(t - i);
+            }
+        }
+
+        return new Position();
+    }
+
+    @Override
+    public Position getSecondDerivative(double t) {
+        //Convert t from 0 to 1 to 0 to waypoints.length-1 so that the t value represents all parametric equation
+        //segments of the total path.
+        t = t * parametrics.length;
+
+        for (int i = 0; i < parametrics.length; i++) {
+            //Find which parametric equation segment that t falls in
+            if (t >= i && t <= i + 1) {
+                //return the Transform from the segment that it falls in
+                return parametrics[i].getSecondDerivative(t - i);
+            }
+        }
+
+        return new Position();
+    }
+
     /**
      * Finds the closest {@link TransformWithT} to the <code>referencePosition</code>.
      * <p>
@@ -461,9 +495,10 @@ public abstract class Path implements Parametric {
      * @param adaptToStartHeading
      * @return
      */
-    public Path generateAdaptivePath(Transform newStartTransform, boolean adaptToStartHeading) {
+    public TransformWithVelocity[] generateAdaptivePathWaypoints(Transform newStartTransform,
+                                                                 boolean adaptToStartHeading) {
         TransformWithT onPathPoint = getClosestTransform(newStartTransform.getPosition(), 10, 3);
-        Transform[] waypoints = getWaypoints();
+        TransformWithVelocity[] waypoints = getWaypoints();
 
         int startWaypointIndex = 0;
         double currentClosest = 9999;
@@ -476,9 +511,9 @@ public abstract class Path implements Parametric {
             }
         }
 
-        Transform[] adjustedPathWaypoints;
+        TransformWithVelocity[] adjustedPathWaypoints;
         Transform adaptiveStartTransform;
-        Transform nextWaypoint = waypoints[startWaypointIndex];
+        TransformWithVelocity nextWaypoint = waypoints[startWaypointIndex];
 
         if (adaptToStartHeading) {
             adaptiveStartTransform = newStartTransform;
@@ -487,15 +522,17 @@ public abstract class Path implements Parametric {
                     onPathPoint.getRotation());
         }
 
-        adjustedPathWaypoints = new Transform[waypoints.length - startWaypointIndex + 1];
-        adjustedPathWaypoints[0] = adaptiveStartTransform;
+        adjustedPathWaypoints = new TransformWithVelocity[waypoints.length - startWaypointIndex + 1];
+        adjustedPathWaypoints[0] = new TransformWithVelocity(adaptiveStartTransform, 0);
         adjustedPathWaypoints[1] = nextWaypoint;
         for (int i = 2; i < adjustedPathWaypoints.length; i++) {
             adjustedPathWaypoints[i] = waypoints[(i - 1) + startWaypointIndex];
         }
 
-        return new CubicHermitePath(adjustedPathWaypoints);
+        return adjustedPathWaypoints;
     }
+
+    public abstract Path updatePathFromPoints(TransformWithVelocity[] waypoints);
 
     /**
      * Returns an array of {@link Transform}s that make up the waypoints of this {@link Path} in reverse.
