@@ -55,4 +55,8 @@ public interface Parametric {
      * @return the curvature at the parameter <code>t</code>.
      */
     public abstract double getCurvature(double t);
+
+    public abstract Position getFirstDerivative(double t);
+
+    public abstract Position getSecondDerivative(double t);
 }

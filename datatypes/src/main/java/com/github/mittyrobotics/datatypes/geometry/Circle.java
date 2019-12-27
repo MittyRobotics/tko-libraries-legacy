@@ -47,6 +47,18 @@ public class Circle {
     }
 
     /**
+     * Constructs a {@link Circle} given a a tangent point {@link Transform} and a radius
+     *
+     * @param tangentPoint a tangent point of the circle represented by a {@link Transform}
+     * @param radius       the radius of the circle
+     */
+    public Circle(Transform tangentPoint, double radius) {
+        Circle circle = getCircleFromTangentAndRadius(tangentPoint, radius);
+        this.center = circle.center;
+        this.radius = circle.getRadius();
+    }
+
+    /**
      * Constructs a {@link Circle} given three {@link Position}s that it intersects
      *
      * @param p1 first {@link Position}
@@ -72,6 +84,21 @@ public class Circle {
         Circle circle = getCircleFromTangentAndIntersection(tangentPoint, intersection);
         this.center = circle.center;
         this.radius = circle.radius;
+    }
+
+    /**
+     * Returns the {@link Circle} defined by a tangent point {@link Transform} and the radius
+     *
+     * @param tangentPoint a tangent point {@link Transform}.
+     * @param radius       the radius of the circle.
+     * @return the {@link Circle} defined by a tangent point {@link Transform} and the radius
+     */
+    public Circle getCircleFromTangentAndRadius(Transform tangentPoint, double radius) {
+        Transform perpendicuarTransform = new Transform(tangentPoint.getPosition(),
+                tangentPoint.getRotation().rotateBy(90));
+        Position center = new Position(perpendicuarTransform.getRotation().cos() * radius,
+                perpendicuarTransform.getRotation().sin() * radius).add(perpendicuarTransform.getPosition());
+        return new Circle(center, radius);
     }
 
     /**

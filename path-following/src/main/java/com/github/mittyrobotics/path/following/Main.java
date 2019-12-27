@@ -30,14 +30,15 @@ import com.github.mittyrobotics.datatypes.positioning.Transform;
 import com.github.mittyrobotics.motionprofile.PathVelocityController;
 import com.github.mittyrobotics.path.following.util.DifferentialDriveKinematics;
 import com.github.mittyrobotics.path.following.util.PathFollowerProperties;
-import com.github.mittyrobotics.path.generation.paths.CubicHermitePath;
 import com.github.mittyrobotics.path.generation.paths.Path;
+import com.github.mittyrobotics.path.generation.paths.QuinticHermitePath;
 import com.github.mittyrobotics.simulation.sim.RobotSimManager;
 import com.github.mittyrobotics.simulation.util.SimSampleDrivetrain;
 import com.github.mittyrobotics.simulation.util.SimSampleRobot;
 import com.github.mittyrobotics.visualization.graphs.RobotGraph;
 import com.github.mittyrobotics.visualization.util.GraphManager;
 
+import javax.swing.*;
 import java.awt.*;
 import java.util.Random;
 
@@ -64,11 +65,11 @@ public class Main {
         boolean reversed = false;
 
         //Create the original path from the robot position to the point
-        Path originalPath = new CubicHermitePath(
+        Path originalPath = new QuinticHermitePath(
                 new Transform[]{SimSampleDrivetrain.getInstance().getRobotTransform(), new Transform(100, -24, 0)});
 
         if (reversed) {
-            originalPath = new CubicHermitePath(originalPath.getReversedWaypoints());
+            originalPath = new QuinticHermitePath(originalPath.getReversedWaypoints());
             SimSampleDrivetrain.getInstance().setOdometry(originalPath.getStartWaypoint().getPosition().getX(),
                     originalPath.getStartWaypoint().getPosition().getY(),
                     SimSampleDrivetrain.getInstance().getHeading());
@@ -88,20 +89,19 @@ public class Main {
                         1.2,
                         20,
                         true,
-                        false,
-                        40
+                        false
                 );
 
         PathFollowerProperties.RamseteProperties ramseteProperties = new PathFollowerProperties.RamseteProperties(
                 originalPath,
                 velocityController,
                 reversed,
-                2.0,
+                5.0,
                 .7
         );
 
         //Setup the path follower
-        PathFollower follower = new PathFollower(ramseteProperties);
+        PathFollower follower = new PathFollower(purePursuitProperties);
 
         //Add original path to graph
         RobotGraph.getInstance()
@@ -114,13 +114,21 @@ public class Main {
             e.printStackTrace();
         }
 
+        int changePathCount = 0;
+
         //Loop
         while (true) {
+            changePathCount++;
+            if (changePathCount == 10000) {
+//                follower.changePath(new QuinticHermitePath(new Transform[]{new Transform(50,24,0),
+//                        new Transform(100,24,0)}));
+            }
             //Graph
-//			SwingUtilities.invokeLater(() -> {
-//				RobotGraph.getInstance().clearGraph();
-//				RobotGraph.getInstance().addDataset(GraphManager.getInstance().graphParametricFast(follower.getCurrentPath(), .07, "spline", Color.cyan));
-//			});
+            SwingUtilities.invokeLater(() -> {
+                RobotGraph.getInstance().clearGraph();
+                RobotGraph.getInstance().addDataset(GraphManager.getInstance()
+                        .graphParametricFast(follower.getCurrentPath(), .07, "spline", Color.cyan));
+            });
             //Update pure pursuit controller and set velocities
             DrivetrainVelocities wheelVelocities =
                     follower.updatePathFollower(SimSampleDrivetrain.getInstance().getRobotTransform(),
@@ -136,5 +144,4 @@ public class Main {
             }
         }
     }
-
 }
