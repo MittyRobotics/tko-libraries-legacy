@@ -22,23 +22,21 @@
  * SOFTWARE.
  */
 
-package com.github.mittyrobotics.path.generation.datatypes;
+package com.github.mittyrobotics.datatypes.positioning;
 
-import com.github.mittyrobotics.datatypes.positioning.Transform;
-
-public class PathTransform extends Transform {
+public class TransformWithT extends Transform{
     private double t;
 
-    public PathTransform(Transform transform, double t) {
-        super(transform);
+    public TransformWithT(Transform transform,double t) {
+        super(transform.getPosition(),transform.getRotation());
         this.t = t;
     }
 
-    public double getTOnPath() {
+    public double getT() {
         return t;
     }
 
-    public void setTOnPath(double t) {
+    public void setT(double t) {
         this.t = t;
     }
 }

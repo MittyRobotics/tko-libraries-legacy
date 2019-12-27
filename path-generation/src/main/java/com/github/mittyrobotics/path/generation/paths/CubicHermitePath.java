@@ -25,6 +25,7 @@
 package com.github.mittyrobotics.path.generation.paths;
 
 import com.github.mittyrobotics.datatypes.positioning.Transform;
+import com.github.mittyrobotics.datatypes.positioning.TransformWithVelocity;
 import com.github.mittyrobotics.path.generation.splines.CubicHermiteSpline;
 
 public class CubicHermitePath extends Path {
@@ -34,6 +35,15 @@ public class CubicHermitePath extends Path {
      * @param waypoints an array of {@link Transform}s that act as waypoints for the path to pass through.
      */
     public CubicHermitePath(Transform[] waypoints) {
+        super(waypoints);
+    }
+
+    /**
+     * Constructs a {@link CubicHermitePath} given an array of waypoint {@link TransformWithVelocity}s.
+     *
+     * @param waypoints an array of {@link TransformWithVelocity}s that act as waypoints for the path to pass through.
+     */
+    public CubicHermitePath(TransformWithVelocity[] waypoints) {
         super(waypoints);
     }
 
@@ -50,5 +60,4 @@ public class CubicHermitePath extends Path {
         }
         setParametrics(splines);
     }
-
 }

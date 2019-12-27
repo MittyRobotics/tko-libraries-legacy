@@ -38,6 +38,7 @@ import com.github.mittyrobotics.simulation.util.SimSampleRobot;
 import com.github.mittyrobotics.visualization.graphs.RobotGraph;
 import com.github.mittyrobotics.visualization.util.GraphManager;
 
+import javax.swing.*;
 import java.awt.*;
 import java.util.Random;
 
@@ -88,8 +89,7 @@ public class Main {
                         1.2,
                         20,
                         true,
-                        false,
-                        40
+                        true
                 );
 
         PathFollowerProperties.RamseteProperties ramseteProperties = new PathFollowerProperties.RamseteProperties(
@@ -97,11 +97,11 @@ public class Main {
                 velocityController,
                 reversed,
                 2.0,
-                .7
+                .8
         );
 
         //Setup the path follower
-        PathFollower follower = new PathFollower(ramseteProperties);
+        PathFollower follower = new PathFollower(purePursuitProperties);
 
         //Add original path to graph
         RobotGraph.getInstance()
@@ -114,13 +114,21 @@ public class Main {
             e.printStackTrace();
         }
 
+        int changePathCount = 0;
+
         //Loop
         while (true) {
+            changePathCount ++;
+            if(changePathCount == 10000){
+                follower.changePath(new CubicHermitePath(new Transform[]{new Transform(50,24,0),
+                        new Transform(100,24,0)}));
+            }
             //Graph
-//			SwingUtilities.invokeLater(() -> {
-//				RobotGraph.getInstance().clearGraph();
-//				RobotGraph.getInstance().addDataset(GraphManager.getInstance().graphParametricFast(follower.getCurrentPath(), .07, "spline", Color.cyan));
-//			});
+            SwingUtilities.invokeLater(() -> {
+                RobotGraph.getInstance().clearGraph();
+                RobotGraph.getInstance().addDataset(GraphManager.getInstance()
+                        .graphParametricFast(follower.getCurrentPath(), .07, "spline", Color.cyan));
+            });
             //Update pure pursuit controller and set velocities
             DrivetrainVelocities wheelVelocities =
                     follower.updatePathFollower(SimSampleDrivetrain.getInstance().getRobotTransform(),
@@ -136,5 +144,4 @@ public class Main {
             }
         }
     }
-
 }

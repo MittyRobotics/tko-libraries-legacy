@@ -29,6 +29,7 @@ import com.github.mittyrobotics.datatypes.path.Parametric;
 import com.github.mittyrobotics.datatypes.positioning.Position;
 import com.github.mittyrobotics.datatypes.positioning.Rotation;
 import com.github.mittyrobotics.datatypes.positioning.Transform;
+import com.github.mittyrobotics.datatypes.positioning.TransformWithVelocity;
 
 public class CubicHermiteSpline implements Parametric {
     private double x0, x1, y0, y1, a0, a1, d, mx0, mx1, my0, my1;
@@ -40,6 +41,36 @@ public class CubicHermiteSpline implements Parametric {
      * @param endWaypoint   the {@link Transform} to end the spline.
      */
     public CubicHermiteSpline(Transform startWaypoint, Transform endWaypoint) {
+        initSpline(new TransformWithVelocity(startWaypoint,d),new TransformWithVelocity(endWaypoint,0));
+    }
+
+    /**
+     * Constructs a {@link CubicHermiteSpline} given the start and end {@link Transform}s as well as the magnitude of
+     * the start and end tangent vectors.
+     *
+     * @param startWaypoint the {@link Transform} to start the spline.
+     * @param endWaypoint   the {@link Transform} to end the spline.
+     * @param m1            the magnitude of the start tangent vector.
+     * @param m2            the magnitude of the end tangent vector.
+     */
+    public CubicHermiteSpline(Transform startWaypoint, Transform endWaypoint, double m1, double m2) {
+        initSpline(new TransformWithVelocity(startWaypoint,m1),new TransformWithVelocity(endWaypoint,m2));
+    }
+
+    /**
+     * Constructs a {@link CubicHermiteSpline} given the start and end {@link TransformWithVelocity}s containing a
+     * {@link Transform} and velocity vector magnitude
+     *
+     * @param startWaypoint the {@link TransformWithVelocity} to start the spline containing a {@link Transform} and
+     *                      velocity vector magnitude.
+     * @param endWaypoint   the {@link TransformWithVelocity} to end the spline containing a {@link Transform} and
+     *                      velocity vector magnitude.
+     */
+    public CubicHermiteSpline(TransformWithVelocity startWaypoint, TransformWithVelocity endWaypoint) {
+        initSpline(startWaypoint,endWaypoint);
+    }
+
+    private void initSpline(TransformWithVelocity startWaypoint, TransformWithVelocity endWaypoint){
         x0 = startWaypoint.getPosition().getX();
         x1 = endWaypoint.getPosition().getX();
         y0 = startWaypoint.getPosition().getY();
@@ -49,14 +80,23 @@ public class CubicHermiteSpline implements Parametric {
         a0 = Math.toRadians(startWaypoint.getRotation().getHeading());
         a1 = Math.toRadians(endWaypoint.getRotation().getHeading());
 
-        //Get distance between points
-        d = startWaypoint.getPosition().distance(endWaypoint.getPosition());
+        double startMagnitude = startWaypoint.getVelocity();
+        double endMagnitude = endWaypoint.getVelocity();
+
+        double d = startWaypoint.getPosition().distance(endWaypoint.getPosition());
+
+        if(startMagnitude == 0){
+            startMagnitude = d;
+        }
+        if(endMagnitude == 0){
+            endMagnitude = d;
+        }
 
         //Create tangent vectors proportional to the distance between points
-        mx0 = Math.cos(a0) * d;
-        my0 = Math.sin(a0) * d;
-        mx1 = Math.cos(a1) * d;
-        my1 = Math.sin(a1) * d;
+        mx0 = Math.cos(a0) * startMagnitude;
+        my0 = Math.sin(a0) * startMagnitude;
+        mx1 = Math.cos(a1) * endMagnitude;
+        my1 = Math.sin(a1) * endMagnitude;
     }
 
     /**
@@ -117,6 +157,13 @@ public class CubicHermiteSpline implements Parametric {
      */
     @Override
     public double getCurvature(double t) {
+        if(t <= 0.01){
+            Circle circle = new Circle(getPosition(t + 0.01), getPosition(t), getPosition(t + 0.02));
+            return 1 / circle.getRadius();
+        }
+        else if(t >= 9.99){
+
+        }
         Circle circle = new Circle(getPosition(t - 0.01), getPosition(t), getPosition(t + 0.01));
         return 1 / circle.getRadius();
     }

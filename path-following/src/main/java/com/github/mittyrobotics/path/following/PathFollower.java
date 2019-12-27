@@ -28,11 +28,11 @@ import com.github.mittyrobotics.datatypes.motion.DrivetrainVelocities;
 import com.github.mittyrobotics.datatypes.positioning.Position;
 import com.github.mittyrobotics.datatypes.positioning.Rotation;
 import com.github.mittyrobotics.datatypes.positioning.Transform;
+import com.github.mittyrobotics.datatypes.positioning.TransformWithT;
 import com.github.mittyrobotics.path.following.controllers.PurePursuitController;
 import com.github.mittyrobotics.path.following.controllers.RamseteController;
 import com.github.mittyrobotics.path.following.enums.PathFollowingType;
 import com.github.mittyrobotics.path.following.util.PathFollowerProperties;
-import com.github.mittyrobotics.path.generation.datatypes.PathTransform;
 import com.github.mittyrobotics.path.generation.paths.Path;
 
 public class PathFollower {
@@ -164,12 +164,12 @@ public class PathFollower {
      */
     public DrivetrainVelocities updatePathFollower(Transform robotTransform, double currentVelocity,
                                                    double deltaTime) {
-        if (properties.continuouslyAdaptivePath) {
-            calculateAdaptivePath(robotTransform);
-        }
         if (unAdaptedPath) {
-            calculateAdaptivePath(robotTransform);
+            calculateAdaptivePath(robotTransform,true);
             unAdaptedPath = false;
+        }
+        else if (properties.continuouslyAdaptivePath) {
+            calculateAdaptivePath(robotTransform,false);
         }
 
         if (currentPath == null) {
@@ -231,7 +231,7 @@ public class PathFollower {
      */
     private DrivetrainVelocities updateRamsete(Transform robotTransform, double currentVelocity, double deltaTime) {
         //Get the desired transform to follow, which is the closest point on the path
-        PathTransform desiredTransform = currentPath.getClosestTransform(robotTransform.getPosition());
+        TransformWithT desiredTransform = currentPath.getClosestTransform(robotTransform.getPosition());
 
         //If reversed, reverse the desired transform's rotation
         desiredTransform.setRotation(desiredTransform.getRotation().rotateBy(new Rotation((properties.reversed ? 180 :
@@ -246,7 +246,7 @@ public class PathFollower {
                 * (properties.reversed ? -1 : 1);
 
         //Get radius from curvature is 1/curvature
-        double turningRadius = 1 / currentPath.getCurvature(desiredTransform.getTOnPath());
+        double turningRadius = 1 / currentPath.getCurvature(desiredTransform.getT());
 
         if (Double.isNaN(turningRadius)) {
             turningRadius = 2e16;
@@ -261,8 +261,8 @@ public class PathFollower {
      *
      * @param robotTransform the robot's {@link Transform}.
      */
-    private void calculateAdaptivePath(Transform robotTransform) {
-        changePath(currentPath.generateAdaptivePath(robotTransform, properties.robotToPathAdaptiveDistance));
+    private void calculateAdaptivePath(Transform robotTransform, boolean adaptToRobotHeading) {
+        changePath(currentPath.generateAdaptivePath(robotTransform, adaptToRobotHeading),false);
     }
 
     /**

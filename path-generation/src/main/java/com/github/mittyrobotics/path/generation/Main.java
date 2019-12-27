@@ -26,7 +26,7 @@ package com.github.mittyrobotics.path.generation;
 
 import com.github.mittyrobotics.datatypes.positioning.Position;
 import com.github.mittyrobotics.datatypes.positioning.Transform;
-import com.github.mittyrobotics.path.generation.datatypes.PathTransform;
+import com.github.mittyrobotics.datatypes.positioning.TransformWithT;
 import com.github.mittyrobotics.path.generation.paths.CubicHermitePath;
 import com.github.mittyrobotics.visualization.graphs.Graph;
 import com.github.mittyrobotics.visualization.util.GraphManager;
@@ -49,7 +49,7 @@ public class Main {
         Transform transform = new Transform(0, 0);
         while (true) {
 
-            PathTransform closestPos = path.getClosestTransform(transform.getPosition(), 10, 3);
+            TransformWithT closestPos = path.getClosestTransform(transform.getPosition(), 10, 3);
             Position targetPos = path.getClosestTransform(closestPos.getPosition(), 20, false, 10, 3).getPosition();
 
             Transform finalTransform = transform;
