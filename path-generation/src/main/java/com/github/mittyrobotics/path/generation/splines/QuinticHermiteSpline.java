@@ -87,6 +87,12 @@ public class QuinticHermiteSpline extends Parametric {
         this.ay1 = ay1;
     }
 
+    /**
+     * Returns the {@link Position} along the {@link Parametric} at <code>t</code> where <code>0 <= t <= 1</code>.
+     *
+     * @param t the parameter
+     * @return the {@link Position} at the parameter <code>t</code>.
+     */
     @Override
     public Position getPosition(double t) {
         //Quintic hermite spline equations https://rose-hulman.edu/~finn/CCLI/Notes/day09.pdf#page=4
@@ -100,6 +106,15 @@ public class QuinticHermiteSpline extends Parametric {
         return computeFromCoefficients(h0, h1, h2, h3, h4, h5);
     }
 
+    /**
+     * Returns the {@link Transform} along the {@link Parametric} at <code>t</code> where <code>0 <= t <= 1</code>.
+     * <p>
+     * The {@link Transform} contains the {@link Position} and {@link Rotation}, with the {@link Rotation} being the
+     * tangent angle at the {@link Position}.
+     *
+     * @param t the parameter
+     * @return the {@link Transform} at the parameter <code>t</code>.
+     */
     @Override
     public Transform getTransform(double t) {
         Position position = getPosition(t);
@@ -109,6 +124,12 @@ public class QuinticHermiteSpline extends Parametric {
         return new Transform(position, rotation);
     }
 
+    /**
+     * Returns the curvature at point <code>t</code> on the {@link Parametric}.
+     *
+     * @param t the parameter
+     * @return the curvature at the parameter <code>t</code>.
+     */
     @Override
     public double getCurvature(double t) {
         Position firstDerivative = getFirstDerivative(t);
@@ -119,6 +140,13 @@ public class QuinticHermiteSpline extends Parametric {
                         firstDerivative.getY() * firstDerivative.getY(), 3));
     }
 
+    /**
+     * Returns the first derivative of the {@link Parametric} in the form of a {@link Position} containing the x and
+     * y value of the first derivative at the parameter <code>t</code>.
+     *
+     * @param t the parameter
+     * @return the first derivative {@link Position} at the parameter <code>t</code>.
+     */
     @Override
     public Position getFirstDerivative(double t) {
         //First derivative of quintic hermite spline functions
@@ -132,6 +160,13 @@ public class QuinticHermiteSpline extends Parametric {
         return computeFromCoefficients(h0, h1, h2, h3, h4, h5);
     }
 
+    /**
+     * Returns the second derivative of the {@link Parametric} in the form of a {@link Position} containing the x and
+     * y value of the second derivative at the parameter <code>t</code>.
+     *
+     * @param t the parameter
+     * @return the second derivative {@link Position} at the parameter <code>t</code>.
+     */
     @Override
     public Position getSecondDerivative(double t) {
         //Second derivative of quintic hermite spline functions
@@ -154,7 +189,7 @@ public class QuinticHermiteSpline extends Parametric {
      * @param h3 base coefficient 4
      * @param h4 base coefficient 5
      * @param h5 base coefficient 6
-     * @return
+     * @return the {@link Position} containing the x and y values computed from the coefficients.
      */
     private Position computeFromCoefficients(double h0, double h1, double h2, double h3, double h4, double h5) {
         double x = h0 * x0 + h1 * vx0 + h2 * ax0 + h3 * ax1 + h4 * vx1 + h5 * x1;
