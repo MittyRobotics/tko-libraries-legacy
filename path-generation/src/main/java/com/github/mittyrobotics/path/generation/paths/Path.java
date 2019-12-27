@@ -27,7 +27,7 @@ package com.github.mittyrobotics.path.generation.paths;
 import com.github.mittyrobotics.datatypes.path.Parametric;
 import com.github.mittyrobotics.datatypes.positioning.*;
 
-public abstract class Path implements Parametric {
+public abstract class Path extends Parametric {
     private TransformWithVelocityAndCurvature[] waypoints;
     private Parametric[] parametrics;
 

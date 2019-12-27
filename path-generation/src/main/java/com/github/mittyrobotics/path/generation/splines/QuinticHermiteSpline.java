@@ -37,7 +37,7 @@ import com.github.mittyrobotics.datatypes.positioning.TransformWithVelocityAndCu
  *
  * Desmos graph of spline: https://www.desmos.com/calculator/7rxnlvbt2j
  */
-public class QuinticHermiteSpline implements Parametric {
+public class QuinticHermiteSpline extends Parametric {
     private double x0, x1, y0, y1, vx0, vx1, vy0, vy1, ax0, ax1, ay0, ay1;
 
     public QuinticHermiteSpline(Transform startWaypoint, Transform endWaypoint) {

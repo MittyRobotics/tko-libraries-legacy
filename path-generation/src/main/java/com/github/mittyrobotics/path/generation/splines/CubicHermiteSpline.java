@@ -30,7 +30,7 @@ import com.github.mittyrobotics.datatypes.positioning.Rotation;
 import com.github.mittyrobotics.datatypes.positioning.Transform;
 import com.github.mittyrobotics.datatypes.positioning.TransformWithVelocity;
 
-public class CubicHermiteSpline implements Parametric {
+public class CubicHermiteSpline extends Parametric {
     private double x0, x1, y0, y1, vx0, vx1, vy0, vy1;
 
     /**
