@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-package com.github.mittyrobotics.path.generation.paths;
+package com.github.mittyrobotics.path.generation;
 
 import com.github.mittyrobotics.datatypes.path.Parametric;
 import com.github.mittyrobotics.datatypes.positioning.*;
@@ -38,6 +38,11 @@ public class Path extends Parametric {
         initWaypoints();
     }
 
+    public Path(Parametric parametric){
+        this.parametrics = new Parametric[]{parametric};
+        initWaypoints();
+    }
+
     private void initWaypoints(){
         waypoints = new Transform[parametrics.length*2];
         int j = 0;
@@ -46,22 +51,6 @@ public class Path extends Parametric {
             waypoints[j+1] = parametrics[i].getTransform(1);
             j += 2;
         }
-    }
-
-    public static Parametric[] generateCubicHermiteSplinePath(TransformWithVelocity[] waypoints){
-        Parametric[] parametrics = new Parametric[waypoints.length-1];
-        for(int i = 0; i < parametrics.length; i++){
-            parametrics[i] = new CubicHermiteSpline(waypoints[i], waypoints[i+1]);
-        }
-        return parametrics;
-    }
-
-    public static Parametric[] generateQuinticHermiteSplinePath(TransformWithVelocityAndCurvature[] waypoints){
-        Parametric[] parametrics = new Parametric[waypoints.length-1];
-        for(int i = 0; i < parametrics.length; i++){
-            parametrics[i] = new QuinticHermiteSpline(waypoints[i], waypoints[i+1]);
-        }
-        return parametrics;
     }
 
     /**

@@ -31,7 +31,8 @@ import com.github.mittyrobotics.datatypes.positioning.TransformWithVelocityAndCu
 import com.github.mittyrobotics.motionprofile.PathVelocityController;
 import com.github.mittyrobotics.path.following.util.DifferentialDriveKinematics;
 import com.github.mittyrobotics.path.following.util.PathFollowerProperties;
-import com.github.mittyrobotics.path.generation.paths.Path;
+import com.github.mittyrobotics.path.generation.Path;
+import com.github.mittyrobotics.path.generation.PathGenerator;
 import com.github.mittyrobotics.simulation.sim.RobotSimManager;
 import com.github.mittyrobotics.simulation.util.SimSampleDrivetrain;
 import com.github.mittyrobotics.simulation.util.SimSampleRobot;
@@ -65,7 +66,7 @@ public class Main {
         boolean reversed = false;
 
         //Create the original path from the robot position to the point
-        Path originalPath = new Path(Path.generateQuinticHermiteSplinePath(
+        Path originalPath = new Path(PathGenerator.getInstance().generateQuinticHermiteSplinePath(
                 new TransformWithVelocityAndCurvature[]{
                         new TransformWithVelocityAndCurvature(SimSampleDrivetrain.getInstance().getRobotTransform(), 0,
                                 0), new TransformWithVelocityAndCurvature(new Transform(100, -24, 0), 0, 0)}));

@@ -30,7 +30,7 @@ import com.github.mittyrobotics.path.following.controllers.PurePursuitController
 import com.github.mittyrobotics.path.following.controllers.RamseteController;
 import com.github.mittyrobotics.path.following.enums.PathFollowingType;
 import com.github.mittyrobotics.path.following.util.PathFollowerProperties;
-import com.github.mittyrobotics.path.generation.paths.Path;
+import com.github.mittyrobotics.path.generation.Path;
 
 public class PathFollower {
     private PathFollowingType pathFollowingType;
