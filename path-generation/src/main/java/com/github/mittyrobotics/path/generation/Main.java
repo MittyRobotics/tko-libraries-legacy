@@ -43,8 +43,7 @@ public class Main {
         TransformWithVelocityAndCurvature p2 = new TransformWithVelocityAndCurvature(new Transform(50, 50, 0), 0, 0);
         TransformWithVelocityAndCurvature p3 = new TransformWithVelocityAndCurvature(new Transform(100, 30, -45), 0, 0);
 
-        Path path = new Path(PathGenerator.getInstance()
-                .generateQuinticHermiteSplinePath(new TransformWithVelocityAndCurvature[]{p1, p2, p3}));
+        Path path = new Path(PathGenerator.getInstance().generateQuinticHermiteSplinePath(new TransformWithVelocityAndCurvature[]{p1, p2, p3}));
 
         graph.addDataset(GraphManager.getInstance().graphParametric(path, 0.01, 2, 1, "quintic", Color.green));
     }
