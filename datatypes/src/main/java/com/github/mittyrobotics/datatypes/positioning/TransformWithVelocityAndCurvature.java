@@ -1,18 +1,25 @@
 package com.github.mittyrobotics.datatypes.positioning;
 
-public class TransformWithVelocityAndCurvature extends TransformWithVelocity {
+import com.github.mittyrobotics.datatypes.interfaces.WithCurvature;
+import com.github.mittyrobotics.datatypes.interfaces.WithVelocity;
+
+public class TransformWithVelocityAndCurvature extends Transform implements WithVelocity, WithCurvature {
+    private double velocity;
     private double curvature;
 
     public TransformWithVelocityAndCurvature(Transform transform, double velocity, double curvature) {
-        super(transform, velocity);
+        super(transform);
         this.curvature = curvature;
+        this.velocity = velocity;
     }
 
+    @Override
+    public double getVelocity() {
+        return velocity;
+    }
+
+    @Override
     public double getCurvature() {
         return curvature;
-    }
-
-    public void setCurvature(double curvature) {
-        this.curvature = curvature;
     }
 }

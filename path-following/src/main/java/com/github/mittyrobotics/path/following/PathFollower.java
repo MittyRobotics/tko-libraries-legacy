@@ -192,7 +192,7 @@ public class PathFollower {
                                                    double deltaTime) {
         double lookaheadDistance = purePursuitProperties.lookaheadDistance;
 
-        TransformWithT closestPosition = currentPath.getClosestTransform(robotTransform.getPosition());
+        TransformWithParameter closestPosition = currentPath.getClosestTransform(robotTransform.getPosition());
 
         currentPath.getCurvature(closestPosition.getT());
 
@@ -228,7 +228,7 @@ public class PathFollower {
      */
     private DrivetrainVelocities updateRamsete(Transform robotTransform, double currentVelocity, double deltaTime) {
         //Get the desired transform to follow, which is the closest point on the path
-        TransformWithT desiredTransform = currentPath.getClosestTransform(robotTransform.getPosition());
+        TransformWithParameter desiredTransform = currentPath.getClosestTransform(robotTransform.getPosition());
 
         //If reversed, reverse the desired transform's rotation
         desiredTransform.setRotation(desiredTransform.getRotation().rotateBy(new Rotation((properties.reversed ? 180 :

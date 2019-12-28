@@ -24,19 +24,18 @@
 
 package com.github.mittyrobotics.datatypes.positioning;
 
-public class TransformWithT extends Transform {
+import com.github.mittyrobotics.datatypes.interfaces.WithParameter;
+
+public class TransformWithParameter extends Transform implements WithParameter {
     private double t;
 
-    public TransformWithT(Transform transform, double t) {
+    public TransformWithParameter(Transform transform, double t) {
         super(transform.getPosition(), transform.getRotation());
         this.t = t;
     }
 
-    public double getT() {
+    @Override
+    public double getParameter() {
         return t;
-    }
-
-    public void setT(double t) {
-        this.t = t;
     }
 }

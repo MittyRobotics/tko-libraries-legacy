@@ -165,9 +165,9 @@ public abstract class Path extends Parametric {
     }
 
     /**
-     * Finds the closest {@link TransformWithT} to the <code>referencePosition</code>.
+     * Finds the closest {@link TransformWithParameter} to the <code>referencePosition</code>.
      * <p>
-     * The {@link TransformWithT} contains the {@link Transform} of the point as well as the <code>t</code> value of it
+     * The {@link TransformWithParameter} contains the {@link Transform} of the point as well as the <code>t</code> value of it
      * along the {@link Parametric}.
      * <p>
      * This function defaults to a <code>searchIncrement</code> of 10 and a <code>searches</code> of 3.
@@ -175,18 +175,18 @@ public abstract class Path extends Parametric {
      * If the point is outside the start and end of the {@link Path}, either the start or end {@link Transform} will be
      * picked.
      *
-     * @param referencePosition the {@link Position} to find the closest {@link TransformWithT} to.
-     * @return the closest {@link TransformWithT} to the <code>referencePosition</code>.
+     * @param referencePosition the {@link Position} to find the closest {@link TransformWithParameter} to.
+     * @return the closest {@link TransformWithParameter} to the <code>referencePosition</code>.
      */
-    public TransformWithT getClosestTransform(Position referencePosition) {
+    public TransformWithParameter getClosestTransform(Position referencePosition) {
         return getClosestTransform(referencePosition, 0, true, 10, 3);
     }
 
     /**
-     * Finds the closest {@link TransformWithT} to the <code>referencePosition</code> given a
+     * Finds the closest {@link TransformWithParameter} to the <code>referencePosition</code> given a
      * <code>distanceShift</code>.
      * <p>
-     * The {@link TransformWithT} contains the {@link Transform} of the point as well as the <code>t</code> value of it
+     * The {@link TransformWithParameter} contains the {@link Transform} of the point as well as the <code>t</code> value of it
      * along the {@link Parametric}.
      * <p>
      * This function defaults to a <code>searchIncrement</code> of 10 and a <code>searches</code> of 3.
@@ -199,18 +199,18 @@ public abstract class Path extends Parametric {
      * <code>referencePosition</code> and then performs the distance shifted search using the actual closest point as a
      * guide of whether or not the point is in front or behind the <code>referencePosition</code>.
      *
-     * @param referencePosition the {@link Position} to find the closest {@link TransformWithT} to.
+     * @param referencePosition the {@link Position} to find the closest {@link TransformWithParameter} to.
      * @param distanceShift     the distance away from the <code>referencePosition</code> the closest point should be.
-     * @return the closest {@link TransformWithT} to the <code>referencePosition</code>.
+     * @return the closest {@link TransformWithParameter} to the <code>referencePosition</code>.
      */
-    public TransformWithT getClosestTransform(Position referencePosition, double distanceShift) {
+    public TransformWithParameter getClosestTransform(Position referencePosition, double distanceShift) {
         return getClosestTransform(referencePosition, distanceShift, true, 10, 3);
     }
 
     /**
-     * Finds the closest {@link TransformWithT} to the <code>referencePosition</code>.
+     * Finds the closest {@link TransformWithParameter} to the <code>referencePosition</code>.
      * <p>
-     * The {@link TransformWithT} contains the {@link Transform} of the point as well as the <code>t</code> value of it
+     * The {@link TransformWithParameter} contains the {@link Transform} of the point as well as the <code>t</code> value of it
      * along the {@link Parametric}.
      * <p>
      * The closest point is found by sampling <code>searchIncrement</code> amount of points on the {@link Parametric}.
@@ -226,20 +226,21 @@ public abstract class Path extends Parametric {
      * If the point is outside the start and end of the {@link Path}, either the start or end {@link Transform} will be
      * picked.
      *
-     * @param referencePosition the {@link Position} to find the closest {@link TransformWithT} to.
+     * @param referencePosition the {@link Position} to find the closest {@link TransformWithParameter} to.
      * @param searchIncrement   the samples within each search.
      * @param searches          the amount of searches to perform to get the final closest value.
-     * @return the closest {@link TransformWithT} to the <code>referencePosition</code>.
+     * @return the closest {@link TransformWithParameter} to the <code>referencePosition</code>.
      */
-    public TransformWithT getClosestTransform(Position referencePosition, double searchIncrement, double searches) {
+    public TransformWithParameter getClosestTransform(Position referencePosition, double searchIncrement,
+                                                      double searches) {
         return getClosestTransform(referencePosition, 0, true, searchIncrement, searches);
     }
 
     /**
-     * Finds the closest {@link TransformWithT} to the <code>referencePosition</code> given a
+     * Finds the closest {@link TransformWithParameter} to the <code>referencePosition</code> given a
      * <code>distanceShift</code>.
      * <p>
-     * The {@link TransformWithT} contains the {@link Transform} of the point as well as the <code>t</code> value of it
+     * The {@link TransformWithParameter} contains the {@link Transform} of the point as well as the <code>t</code> value of it
      * along the {@link Parametric}.
      * <p>
      * The closest point is found by sampling <code>searchIncrement</code> amount of points on the {@link Parametric}.
@@ -260,22 +261,23 @@ public abstract class Path extends Parametric {
      * <code>referencePosition</code> and then performs the distance shifted search using the actual closest point as a
      * guide of whether or not the point is in front or behind the <code>referencePosition</code>.
      *
-     * @param referencePosition the {@link Position} to find the closest {@link TransformWithT} to.
+     * @param referencePosition the {@link Position} to find the closest {@link TransformWithParameter} to.
      * @param distanceShift     the distance away from the <code>referencePosition</code> the closest point should be.
      * @param searchIncrement   the samples within each search.
      * @param searches          the amount of searches to perform to get the final closest value.
-     * @return the closest {@link TransformWithT} to the <code>referencePosition</code>.
+     * @return the closest {@link TransformWithParameter} to the <code>referencePosition</code>.
      */
-    public TransformWithT getClosestTransform(Position referencePosition, double distanceShift, double searchIncrement,
-                                              double searches) {
+    public TransformWithParameter getClosestTransform(Position referencePosition, double distanceShift,
+                                                      double searchIncrement,
+                                                      double searches) {
         return getClosestTransform(referencePosition, distanceShift, true, searchIncrement, searches);
     }
 
     /**
-     * Finds the closest {@link TransformWithT} to the <code>referencePosition</code> given a
+     * Finds the closest {@link TransformWithParameter} to the <code>referencePosition</code> given a
      * <code>distanceShift</code>.
      * <p>
-     * The {@link TransformWithT} contains the {@link Transform} of the point as well as the <code>t</code> value of it
+     * The {@link TransformWithParameter} contains the {@link Transform} of the point as well as the <code>t</code> value of it
      * along the {@link Parametric}.
      * <p>
      * The closest point is found by sampling <code>searchIncrement</code> amount of points on the {@link Parametric}.
@@ -299,16 +301,17 @@ public abstract class Path extends Parametric {
      * <code>false</code>, and only behind the actual closest point on the {@link Path} if <code>pointInFront</code> is
      * <code>true</code>.
      *
-     * @param referencePosition the {@link Position} to find the closest {@link TransformWithT} to.
+     * @param referencePosition the {@link Position} to find the closest {@link TransformWithParameter} to.
      * @param distanceShift     the distance away from the <code>referencePosition</code> the closest point should be.
      * @param pointInFront      whether to find the closest {@link Position} behind or in front of the
      *                          <code>referencePosition</code>.
      * @param searchIncrement   the samples within each search.
      * @param searches          the amount of searches to perform to get the final closest value.
-     * @return the closest {@link TransformWithT} to the <code>referencePosition</code>.
+     * @return the closest {@link TransformWithParameter} to the <code>referencePosition</code>.
      */
-    public TransformWithT getClosestTransform(Position referencePosition, double distanceShift, boolean pointInFront,
-                                              double searchIncrement, double searches) {
+    public TransformWithParameter getClosestTransform(Position referencePosition, double distanceShift,
+                                                      boolean pointInFront,
+                                                      double searchIncrement, double searches) {
 
         double distanceToEndWaypoint = referencePosition.distance(getEndWaypoint().getPosition());
         if (distanceToEndWaypoint <= distanceShift) {
@@ -316,7 +319,7 @@ public abstract class Path extends Parametric {
             Rotation rotation = getEndWaypoint().getRotation();
             Position position = getEndWaypoint().getPosition()
                     .add(new Position(rotation.cos() * distanceOffset, rotation.sin() * distanceOffset));
-            return new TransformWithT(new Transform(position), 1);
+            return new TransformWithParameter(new Transform(position), 1);
         }
 
         double tFinal;
@@ -327,7 +330,7 @@ public abstract class Path extends Parametric {
         }
 
         Transform transform = getTransform(tFinal);
-        return new TransformWithT(transform, tFinal);
+        return new TransformWithParameter(transform, tFinal);
     }
 
     /**
@@ -385,7 +388,7 @@ public abstract class Path extends Parametric {
      * Finds the closest <code>t</code> value on the {@link Parametric} to the <code>referencePosition</code> given a
      * <code>distanceShift</code>.
      * <p>
-     * The {@link TransformWithT} contains the {@link Transform} of the point as well as the <code>t</code> value of it
+     * The {@link TransformWithParameter} contains the {@link Transform} of the point as well as the <code>t</code> value of it
      * along the {@link Parametric}.
      * <p>
      * The closest point is found by sampling <code>searchIncrement</code> amount of points on the {@link Parametric}.
@@ -422,7 +425,7 @@ public abstract class Path extends Parametric {
      * Finds the closest <code>t</code> value on the {@link Parametric} to the <code>referencePosition</code> given a
      * <code>distanceShift</code>.
      * <p>
-     * The {@link TransformWithT} contains the {@link Transform} of the point as well as the <code>t</code> value of it
+     * The {@link TransformWithParameter} contains the {@link Transform} of the point as well as the <code>t</code> value of it
      * along the {@link Parametric}.
      * <p>
      * The closest point is found by sampling <code>searchIncrement</code> amount of points on the {@link Parametric}.
@@ -509,7 +512,7 @@ public abstract class Path extends Parametric {
     public TransformWithVelocityAndCurvature[] generateAdaptivePathWaypoints(
             TransformWithVelocityAndCurvature newStartTransform,
             boolean adaptToStartHeading) {
-        TransformWithT onPathPoint = getClosestTransform(newStartTransform.getPosition(), 10, 3);
+        TransformWithParameter onPathPoint = getClosestTransform(newStartTransform.getPosition(), 10, 3);
         TransformWithVelocityAndCurvature[] waypoints = getWaypoints();
 
         int startWaypointIndex = 0;
@@ -517,7 +520,7 @@ public abstract class Path extends Parametric {
         for (int i = 0; i < waypoints.length; i++) {
             double waypointT = getClosestT(waypoints[i].getPosition(), 10, 3);
             double distance = waypoints[i].getPosition().distance(onPathPoint.getPosition());
-            if (distance < currentClosest && waypointT > onPathPoint.getT()) {
+            if (distance < currentClosest && waypointT > onPathPoint.getParameter()) {
                 currentClosest = distance;
                 startWaypointIndex = i;
             }
