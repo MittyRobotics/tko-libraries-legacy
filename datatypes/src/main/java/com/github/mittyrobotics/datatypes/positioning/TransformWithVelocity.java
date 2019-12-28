@@ -29,6 +29,11 @@ import com.github.mittyrobotics.datatypes.interfaces.WithVelocity;
 public class TransformWithVelocity extends Transform implements WithVelocity {
     private double velocity;
 
+    public TransformWithVelocity(Transform transform) {
+        super(transform);
+        this.velocity = 0;
+    }
+
     public TransformWithVelocity(Transform transform, double velocity) {
         super(transform);
         this.velocity = velocity;

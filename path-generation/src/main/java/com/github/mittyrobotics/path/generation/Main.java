@@ -26,7 +26,8 @@ package com.github.mittyrobotics.path.generation;
 
 import com.github.mittyrobotics.datatypes.positioning.Transform;
 import com.github.mittyrobotics.datatypes.positioning.TransformWithVelocityAndCurvature;
-import com.github.mittyrobotics.path.generation.paths.QuinticHermitePath;
+import com.github.mittyrobotics.path.generation.paths.Path;
+import com.github.mittyrobotics.path.generation.splines.QuinticHermiteSpline;
 import com.github.mittyrobotics.visualization.graphs.Graph;
 import com.github.mittyrobotics.visualization.util.GraphManager;
 
@@ -44,12 +45,11 @@ public class Main {
         TransformWithVelocityAndCurvature p2 = new TransformWithVelocityAndCurvature(new Transform(50, 50, 0), 0, 0);
         TransformWithVelocityAndCurvature p3 = new TransformWithVelocityAndCurvature(new Transform(100, 30, -45), 0, 0);
 
-        QuinticHermitePath spline = new QuinticHermitePath(new TransformWithVelocityAndCurvature[]{p1, p2, p3}
-        );
+        Path path = new Path(Path.generateQuinticHermiteSplinePath(new TransformWithVelocityAndCurvature[]{p1,p2,p3}));
 
         Transform transform = new Transform(0, 0);
 
-        graph.addDataset(GraphManager.getInstance().graphParametric(spline, 0.01, 2, 1, "quintic", Color.green));
+        graph.addDataset(GraphManager.getInstance().graphParametric(path, 0.01, 2, 1, "quintic", Color.green));
 
 //        for (double i = 0; i < 1; i += 0.01) {
 //            graph.clearGraph();

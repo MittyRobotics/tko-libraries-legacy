@@ -7,6 +7,13 @@ public class TransformWithVelocityAndCurvature extends Transform implements With
     private double velocity;
     private double curvature;
 
+
+    public TransformWithVelocityAndCurvature(Transform transform) {
+        super(transform);
+        this.curvature = 0;
+        this.velocity = 0;
+    }
+
     public TransformWithVelocityAndCurvature(Transform transform, double velocity, double curvature) {
         super(transform);
         this.curvature = curvature;

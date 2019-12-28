@@ -29,6 +29,11 @@ import com.github.mittyrobotics.datatypes.interfaces.WithParameter;
 public class TransformWithParameter extends Transform implements WithParameter {
     private double t;
 
+    public TransformWithParameter(Transform transform) {
+        super(transform.getPosition(), transform.getRotation());
+        this.t = 0;
+    }
+
     public TransformWithParameter(Transform transform, double t) {
         super(transform.getPosition(), transform.getRotation());
         this.t = t;

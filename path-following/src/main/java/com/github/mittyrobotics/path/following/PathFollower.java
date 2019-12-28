@@ -194,7 +194,7 @@ public class PathFollower {
 
         TransformWithParameter closestPosition = currentPath.getClosestTransform(robotTransform.getPosition());
 
-        currentPath.getCurvature(closestPosition.getT());
+        currentPath.getCurvature(closestPosition.getParameter());
 
         Position lookaheadCalculationStartPosition;
         if (purePursuitProperties.adaptiveLookahead) {
@@ -243,7 +243,7 @@ public class PathFollower {
                 * (properties.reversed ? -1 : 1);
 
         //Get radius from curvature is 1/curvature
-        double turningRadius = 1 / currentPath.getCurvature(desiredTransform.getT());
+        double turningRadius = 1 / currentPath.getCurvature(desiredTransform.getParameter());
 
         if (Double.isNaN(turningRadius) || Double.isInfinite(turningRadius)) {
             turningRadius = 2e16;
@@ -259,10 +259,7 @@ public class PathFollower {
      * @param robotTransform the robot's {@link Transform}.
      */
     private void calculateAdaptivePath(Transform robotTransform, double curvature, boolean adaptToRobotHeading) {
-        changePath(currentPath.updatePathFromPoints(
-                currentPath.generateAdaptivePathWaypoints(new TransformWithVelocityAndCurvature(robotTransform, 0
-                                , curvature),
-                        adaptToRobotHeading)));
+        //TODO: calculate adaptive path
     }
 
     /**
