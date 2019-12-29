@@ -30,7 +30,7 @@ import com.github.mittyrobotics.datatypes.positioning.Rotation;
 import com.github.mittyrobotics.datatypes.positioning.Transform;
 import com.github.mittyrobotics.datatypes.positioning.TransformWithVelocity;
 
-public class CubicHermiteSpline implements Parametric {
+public class CubicHermiteSpline extends Parametric {
     private double x0, x1, y0, y1, vx0, vx1, vy0, vy1;
 
     /**
@@ -150,6 +150,13 @@ public class CubicHermiteSpline implements Parametric {
                         firstDerivative.getY() * firstDerivative.getY(), 3));
     }
 
+    /**
+     * Returns the first derivative of the {@link Parametric} in the form of a {@link Position} containing the x and
+     * y value of the first derivative at the parameter <code>t</code>.
+     *
+     * @param t the parameter
+     * @return the first derivative {@link Position} at the parameter <code>t</code>.
+     */
     @Override
     public Position getFirstDerivative(double t) {
         //First derivative of cubic hermite spline functions
@@ -162,6 +169,13 @@ public class CubicHermiteSpline implements Parametric {
         return computeFromCoefficients(h0, h1, h2, h3);
     }
 
+    /**
+     * Returns the second derivative of the {@link Parametric} in the form of a {@link Position} containing the x and
+     * y value of the second derivative at the parameter <code>t</code>.
+     *
+     * @param t the parameter
+     * @return the second derivative {@link Position} at the parameter <code>t</code>.
+     */
     @Override
     public Position getSecondDerivative(double t) {
         //Second derivative of cubic hermite spline functions
@@ -174,6 +188,15 @@ public class CubicHermiteSpline implements Parametric {
         return computeFromCoefficients(h0, h1, h2, h3);
     }
 
+    /**
+     * Computes the {@link Position} from the 4 base coefficients.
+     *
+     * @param h0 base coefficient 1
+     * @param h1 base coefficient 2
+     * @param h2 base coefficient 3
+     * @param h3 base coefficient 4
+     * @return the {@link Position} containing the x and y values computed from the coefficients.
+     */
     private Position computeFromCoefficients(double h0, double h1, double h2, double h3) {
         double x = h0 * x0 + h1 * vx0 + h2 * vx1 + h3 * x1;
         double y = h0 * y0 + h1 * vy0 + h2 * vy1 + h3 * y1;

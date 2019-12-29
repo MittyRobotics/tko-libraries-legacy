@@ -25,7 +25,7 @@
 package com.github.mittyrobotics.path.following.util;
 
 import com.github.mittyrobotics.motionprofile.PathVelocityController;
-import com.github.mittyrobotics.path.generation.paths.Path;
+import com.github.mittyrobotics.path.generation.Path;
 
 public abstract class PathFollowerProperties {
     public final Path path;

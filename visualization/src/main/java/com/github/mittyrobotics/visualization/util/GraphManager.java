@@ -88,6 +88,10 @@ public class GraphManager {
     }
 
 
+    public XYSeriesCollectionWithRender graphParametric(Parametric[] parametrics, String seriesName, Color color) {
+        return graphParametric(parametrics, 1, .1, seriesName, color);
+    }
+
     public XYSeriesCollectionWithRender graphParametric(Parametric[] parametrics, double arrowLength, double arrowWidth,
                                                         String seriesName, Color color) {
         XYSeriesCollectionWithRender dataset =

@@ -26,6 +26,7 @@ package com.github.mittyrobotics.datatypes.geometry;
 
 import com.github.mittyrobotics.datatypes.positioning.Position;
 import com.github.mittyrobotics.datatypes.positioning.Rotation;
+import com.github.mittyrobotics.datatypes.positioning.Transform;
 
 import java.util.Optional;
 
@@ -49,6 +50,16 @@ public class Line {
         this.yIntercept = yIntercept;
         this.firstPoint = new Position(0, yIntercept);
         this.secondPoint = new Position(1, yIntercept + slope);
+    }
+
+    /**
+     * Constructs a {@link Line} given a {@link Transform}
+     *
+     * @param transform the {@link Transform}
+     */
+    public Line(Transform transform) {
+        this(transform.getPosition(), transform.getPosition().add(new Position(transform.getRotation().cos(),
+                transform.getRotation().sin())));
     }
 
     /**

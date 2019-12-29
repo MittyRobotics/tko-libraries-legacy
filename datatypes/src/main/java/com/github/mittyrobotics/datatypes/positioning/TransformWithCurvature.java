@@ -24,19 +24,23 @@
 
 package com.github.mittyrobotics.datatypes.positioning;
 
-public class TransformWithT extends Transform {
-    private double t;
+import com.github.mittyrobotics.datatypes.interfaces.WithCurvature;
 
-    public TransformWithT(Transform transform, double t) {
-        super(transform.getPosition(), transform.getRotation());
-        this.t = t;
+public class TransformWithCurvature extends Transform implements WithCurvature {
+    private final double curvature;
+
+    public TransformWithCurvature(Transform transform) {
+        super(transform);
+        this.curvature = 0;
     }
 
-    public double getT() {
-        return t;
+    public TransformWithCurvature(Transform transform, double curvature) {
+        super(transform);
+        this.curvature = curvature;
     }
 
-    public void setT(double t) {
-        this.t = t;
+    @Override
+    public double getCurvature() {
+        return curvature;
     }
 }

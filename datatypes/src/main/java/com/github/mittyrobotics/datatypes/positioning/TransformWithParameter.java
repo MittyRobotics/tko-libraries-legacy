@@ -24,23 +24,23 @@
 
 package com.github.mittyrobotics.datatypes.positioning;
 
-import com.github.mittyrobotics.datatypes.interfaces.WithVelocity;
+import com.github.mittyrobotics.datatypes.interfaces.WithParameter;
 
-public class TransformWithVelocity extends Transform implements WithVelocity {
-    private double velocity;
+public class TransformWithParameter extends Transform implements WithParameter {
+    private double t;
 
-    public TransformWithVelocity(Transform transform) {
-        super(transform);
-        this.velocity = 0;
+    public TransformWithParameter(Transform transform) {
+        super(transform.getPosition(), transform.getRotation());
+        this.t = 0;
     }
 
-    public TransformWithVelocity(Transform transform, double velocity) {
-        super(transform);
-        this.velocity = velocity;
+    public TransformWithParameter(Transform transform, double t) {
+        super(transform.getPosition(), transform.getRotation());
+        this.t = t;
     }
 
     @Override
-    public double getVelocity() {
-        return velocity;
+    public double getParameter() {
+        return t;
     }
 }

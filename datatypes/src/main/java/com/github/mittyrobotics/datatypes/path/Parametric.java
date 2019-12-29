@@ -28,7 +28,7 @@ import com.github.mittyrobotics.datatypes.positioning.Position;
 import com.github.mittyrobotics.datatypes.positioning.Rotation;
 import com.github.mittyrobotics.datatypes.positioning.Transform;
 
-public interface Parametric {
+public abstract class Parametric {
     /**
      * Returns the {@link Position} along the {@link Parametric} at <code>t</code> where <code>0 <= t <= 1</code>.
      *
@@ -56,7 +56,21 @@ public interface Parametric {
      */
     public abstract double getCurvature(double t);
 
+    /**
+     * Returns the first derivative of the {@link Parametric} in the form of a {@link Position} containing the x and
+     * y value of the first derivative at the parameter <code>t</code>.
+     *
+     * @param t the parameter
+     * @return the first derivative {@link Position} at the parameter <code>t</code>.
+     */
     public abstract Position getFirstDerivative(double t);
 
+    /**
+     * Returns the second derivative of the {@link Parametric} in the form of a {@link Position} containing the x and
+     * y value of the second derivative at the parameter <code>t</code>.
+     *
+     * @param t the parameter
+     * @return the second derivative {@link Position} at the parameter <code>t</code>.
+     */
     public abstract Position getSecondDerivative(double t);
 }

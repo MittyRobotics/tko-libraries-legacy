@@ -76,10 +76,6 @@ public class RamseteController {
         //Get the transform error in meters.
         Transform error = desiredTransform.relativeTo(robotTransform).inToM();
 
-        if (error.getPosition().getY() < 0) {
-            turningRadius = -turningRadius;
-        }
-
         //Calculate linear velocity in meters per second given robot velocity in inches per second
         double linearVelocity = robotVelocity * Conversions.IN_TO_M;
         //Calculate the angular velocity in radians per second given the turning radius and the robot velocity.

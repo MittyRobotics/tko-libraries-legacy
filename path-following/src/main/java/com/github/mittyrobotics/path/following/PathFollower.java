@@ -28,12 +28,12 @@ import com.github.mittyrobotics.datatypes.motion.DrivetrainVelocities;
 import com.github.mittyrobotics.datatypes.positioning.Position;
 import com.github.mittyrobotics.datatypes.positioning.Rotation;
 import com.github.mittyrobotics.datatypes.positioning.Transform;
-import com.github.mittyrobotics.datatypes.positioning.TransformWithT;
+import com.github.mittyrobotics.datatypes.positioning.TransformWithParameter;
 import com.github.mittyrobotics.path.following.controllers.PurePursuitController;
 import com.github.mittyrobotics.path.following.controllers.RamseteController;
 import com.github.mittyrobotics.path.following.enums.PathFollowingType;
 import com.github.mittyrobotics.path.following.util.PathFollowerProperties;
-import com.github.mittyrobotics.path.generation.paths.Path;
+import com.github.mittyrobotics.path.generation.Path;
 
 public class PathFollower {
     private PathFollowingType pathFollowingType;
@@ -126,7 +126,7 @@ public class PathFollower {
      */
     public void changePath(Path newPath) {
         this.currentPath = newPath;
-        unAdaptedPath = true;
+        unAdaptedPath = false;
     }
 
     /**
@@ -165,10 +165,8 @@ public class PathFollower {
     public DrivetrainVelocities updatePathFollower(Transform robotTransform, double currentVelocity,
                                                    double deltaTime) {
         if (unAdaptedPath) {
-            calculateAdaptivePath(robotTransform, true);
+            calculateAdaptivePath(robotTransform, 0, true);
             unAdaptedPath = false;
-        } else if (properties.continuouslyAdaptivePath) {
-            calculateAdaptivePath(robotTransform, false);
         }
 
         if (currentPath == null) {
@@ -197,11 +195,14 @@ public class PathFollower {
                                                    double deltaTime) {
         double lookaheadDistance = purePursuitProperties.lookaheadDistance;
 
-        Position lookaheadCalculationStartPosition;
+        TransformWithParameter closestPosition = currentPath.getClosestTransform(robotTransform.getPosition());
 
+        currentPath.getCurvature(closestPosition.getParameter());
+
+        Position lookaheadCalculationStartPosition;
         if (purePursuitProperties.adaptiveLookahead) {
-            Position closestPosition = currentPath.getClosestTransform(robotTransform.getPosition()).getPosition();
-            lookaheadCalculationStartPosition = closestPosition;
+            closestPosition = currentPath.getClosestTransform(robotTransform.getPosition());
+            lookaheadCalculationStartPosition = closestPosition.getPosition();
         } else {
             lookaheadCalculationStartPosition = robotTransform.getPosition();
         }
@@ -230,7 +231,7 @@ public class PathFollower {
      */
     private DrivetrainVelocities updateRamsete(Transform robotTransform, double currentVelocity, double deltaTime) {
         //Get the desired transform to follow, which is the closest point on the path
-        TransformWithT desiredTransform = currentPath.getClosestTransform(robotTransform.getPosition());
+        TransformWithParameter desiredTransform = currentPath.getClosestTransform(robotTransform.getPosition());
 
         //If reversed, reverse the desired transform's rotation
         desiredTransform.setRotation(desiredTransform.getRotation().rotateBy(new Rotation((properties.reversed ? 180 :
@@ -245,7 +246,7 @@ public class PathFollower {
                 * (properties.reversed ? -1 : 1);
 
         //Get radius from curvature is 1/curvature
-        double turningRadius = 1 / currentPath.getCurvature(desiredTransform.getT());
+        double turningRadius = 1 / currentPath.getCurvature(desiredTransform.getParameter());
 
         if (Double.isNaN(turningRadius) || Double.isInfinite(turningRadius)) {
             turningRadius = 2e16;
@@ -260,9 +261,8 @@ public class PathFollower {
      *
      * @param robotTransform the robot's {@link Transform}.
      */
-    private void calculateAdaptivePath(Transform robotTransform, boolean adaptToRobotHeading) {
-        changePath(currentPath.updatePathFromPoints(currentPath.generateAdaptivePathWaypoints(robotTransform,
-                adaptToRobotHeading)), false);
+    private void calculateAdaptivePath(Transform robotTransform, double curvature, boolean adaptToRobotHeading) {
+        //TODO: calculate adaptive path
     }
 
     /**
