@@ -31,10 +31,6 @@ import com.github.mittyrobotics.visualization.graphs.Graph;
 import com.github.mittyrobotics.visualization.util.GraphManager;
 
 import java.awt.*;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Spliterator;
-import java.util.function.DoubleFunction;
 
 
 public class Main {
@@ -48,8 +44,8 @@ public class Main {
         TransformWithVelocityAndCurvature p1 = new TransformWithVelocityAndCurvature(new Transform(0, 0, 0), 0, 0);
         TransformWithVelocityAndCurvature p2 = new TransformWithVelocityAndCurvature(new Transform(80, 50, 0), 0, 0);
 
-        QuinticHermiteSpline spline = new QuinticHermiteSpline(p1,p2);
+        QuinticHermiteSpline spline = new QuinticHermiteSpline(p1, p2);
 
-        graph.addDataset(GraphManager.getInstance().graphParametric(spline, .01,2,.5,"quintic",Color.green));
+        graph.addDataset(GraphManager.getInstance().graphParametric(spline, .01, 2, .5, "quintic", Color.green));
     }
 }

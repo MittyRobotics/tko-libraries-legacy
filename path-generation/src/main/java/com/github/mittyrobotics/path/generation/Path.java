@@ -26,8 +26,6 @@ package com.github.mittyrobotics.path.generation;
 
 import com.github.mittyrobotics.datatypes.path.Parametric;
 import com.github.mittyrobotics.datatypes.positioning.*;
-import com.github.mittyrobotics.path.generation.splines.CubicHermiteSpline;
-import com.github.mittyrobotics.path.generation.splines.QuinticHermiteSpline;
 
 public class Path extends Parametric {
     private Transform[] waypoints;
@@ -38,17 +36,17 @@ public class Path extends Parametric {
         initWaypoints();
     }
 
-    public Path(Parametric parametric){
+    public Path(Parametric parametric) {
         this.parametrics = new Parametric[]{parametric};
         initWaypoints();
     }
 
-    private void initWaypoints(){
-        waypoints = new Transform[parametrics.length*2];
+    private void initWaypoints() {
+        waypoints = new Transform[parametrics.length * 2];
         int j = 0;
-        for(int i = 0; i < parametrics.length; i++){
+        for (int i = 0; i < parametrics.length; i++) {
             waypoints[j] = parametrics[i].getTransform(0);
-            waypoints[j+1] = parametrics[i].getTransform(1);
+            waypoints[j + 1] = parametrics[i].getTransform(1);
             j += 2;
         }
     }

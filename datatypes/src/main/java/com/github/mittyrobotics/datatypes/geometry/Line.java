@@ -55,11 +55,11 @@ public class Line {
     /**
      * Constructs a {@link Line} given a {@link Transform}
      *
-     * @param transform      the {@link Transform}
+     * @param transform the {@link Transform}
      */
     public Line(Transform transform) {
-        this(transform.getPosition(),transform.getPosition().add(new Position(transform.getRotation().cos(),
-               transform.getRotation().sin())));
+        this(transform.getPosition(), transform.getPosition().add(new Position(transform.getRotation().cos(),
+                transform.getRotation().sin())));
     }
 
     /**

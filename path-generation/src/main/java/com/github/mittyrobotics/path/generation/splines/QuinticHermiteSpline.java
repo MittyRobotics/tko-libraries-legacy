@@ -27,8 +27,6 @@ package com.github.mittyrobotics.path.generation.splines;
 import com.github.mittyrobotics.datatypes.path.Parametric;
 import com.github.mittyrobotics.datatypes.positioning.*;
 
-import java.util.List;
-
 /**
  * Quintic Hermite Spline class
  * <p>
@@ -309,7 +307,7 @@ public class QuinticHermiteSpline extends Parametric {
      * @return the default velocity magnitude for any waypoint passed into the {@link QuinticHermiteSpline}
      */
     public double getDefaultVelocityMagnitude(Position p1, Position p2) {
-        return 1.2*p1.distance(p2);
+        return p1.distance(p2);
     }
 
     /**

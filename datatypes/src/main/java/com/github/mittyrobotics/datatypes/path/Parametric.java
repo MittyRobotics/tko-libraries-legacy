@@ -55,7 +55,7 @@ public abstract class Parametric {
      * @return the curvature at the parameter <code>t</code>.
      */
     public abstract double getCurvature(double t);
-    
+
     /**
      * Returns the first derivative of the {@link Parametric} in the form of a {@link Position} containing the x and
      * y value of the first derivative at the parameter <code>t</code>.

@@ -25,7 +25,10 @@
 package com.github.mittyrobotics.path.following;
 
 import com.github.mittyrobotics.datatypes.motion.DrivetrainVelocities;
-import com.github.mittyrobotics.datatypes.positioning.*;
+import com.github.mittyrobotics.datatypes.positioning.Position;
+import com.github.mittyrobotics.datatypes.positioning.Rotation;
+import com.github.mittyrobotics.datatypes.positioning.Transform;
+import com.github.mittyrobotics.datatypes.positioning.TransformWithParameter;
 import com.github.mittyrobotics.path.following.controllers.PurePursuitController;
 import com.github.mittyrobotics.path.following.controllers.RamseteController;
 import com.github.mittyrobotics.path.following.enums.PathFollowingType;
