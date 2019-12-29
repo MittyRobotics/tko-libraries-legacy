@@ -27,12 +27,14 @@ package com.github.mittyrobotics.path.generation.splines;
 import com.github.mittyrobotics.datatypes.path.Parametric;
 import com.github.mittyrobotics.datatypes.positioning.*;
 
+import java.util.List;
+
 /**
  * Quintic Hermite Spline class
  * <p>
  * Reference: https://rose-hulman.edu/~finn/CCLI/Notes/day09.pdf
  * <p>
- * Desmos graph of spline: https://www.desmos.com/calculator/7rxnlvbt2j
+ * Desmos graph of spline: https://www.desmos.com/calculator/g8sls8d7dm
  */
 public class QuinticHermiteSpline extends Parametric {
     private double x0, x1, y0, y1, vx0, vx1, vy0, vy1, ax0, ax1, ay0, ay1;
@@ -306,8 +308,8 @@ public class QuinticHermiteSpline extends Parametric {
      * @param p2 the last {@link Position} of the {@link QuinticHermiteSpline}
      * @return the default velocity magnitude for any waypoint passed into the {@link QuinticHermiteSpline}
      */
-    private double getDefaultVelocityMagnitude(Position p1, Position p2) {
-        return p1.distance(p2);
+    public double getDefaultVelocityMagnitude(Position p1, Position p2) {
+        return 1.2*p1.distance(p2);
     }
 
     /**
@@ -318,7 +320,7 @@ public class QuinticHermiteSpline extends Parametric {
      * @param distanceBetweenPoints the distance between waypoints passed into the {@link QuinticHermiteSpline}
      * @return the magnitude of the acceleration vector for the waypoint to achieve the desired curvature value
      */
-    private double getAccelerationMagnitudeFromCurvature(double desiredCurvature, double distanceBetweenPoints) {
+    public double getAccelerationMagnitudeFromCurvature(double desiredCurvature, double distanceBetweenPoints) {
         return desiredCurvature * (distanceBetweenPoints * distanceBetweenPoints);
     }
 
@@ -376,6 +378,33 @@ public class QuinticHermiteSpline extends Parametric {
     }
 
     /**
+     * Returns the derivative of the curvature at point <code>t</code> on the {@link Parametric}.
+     *
+     * @param t the parameter
+     * @return the derivative of the curvature at the parameter <code>t</code>.
+     */
+    public double getCurvatureDerivative(double t) {
+        Position firstDerivative = getFirstDerivative(t);
+        Position secondDerivative = getSecondDerivative(t);
+        Position thirdDerivative = getThirdDerivative(t);
+
+        double g = firstDerivative.getX();
+        double j = secondDerivative.getY();
+        double k = secondDerivative.getX();
+        double l = firstDerivative.getY();
+        double gd = secondDerivative.getX();
+        double jd = thirdDerivative.getY();
+        double kd = thirdDerivative.getX();
+        double ld = secondDerivative.getY();
+
+        double eqn1 = (j * gd + g * jd - l * kd - k * ld) / Math.sqrt(Math.pow(g * g + l * l, 3));
+        double eqn2 = (3.0 * (g * g + l * l) * (g * g + l * l) * (2.0 * g * gd + 2.0 * l * ld) * (g * j - k * l)) /
+                (2.0 * Math.sqrt(Math.pow(Math.pow(g * g + l * l, 3), 3)));
+
+        return eqn1 - eqn2;
+    }
+
+    /**
      * Returns the first derivative of the {@link Parametric} in the form of a {@link Position} containing the x and
      * y value of the first derivative at the parameter <code>t</code>.
      *
@@ -411,6 +440,25 @@ public class QuinticHermiteSpline extends Parametric {
         double h3 = t * (10 * t * t - 12 * t + 3);
         double h4 = -60 * t * t * t + 84 * t * t - 24 * t;
         double h5 = 120 * t * t * t - 180 * t * t + 60 * t;
+
+        return computeFromCoefficients(h0, h1, h2, h3, h4, h5);
+    }
+
+    /**
+     * Returns the third derivative of the {@link Parametric} in the form of a {@link Position} containing the x and
+     * y value of the third derivative at the parameter <code>t</code>.
+     *
+     * @param t the parameter
+     * @return the third derivative {@link Position} at the parameter <code>t</code>.
+     */
+    public Position getThirdDerivative(double t) {
+        //Third derivative of quintic hermite spline functions
+        double h0 = -360 * t * t * t + 360 * t - 60;
+        double h1 = -180 * t * t + 192 * t - 36;
+        double h2 = -30 * t * t + 36 * t - 9;
+        double h3 = 30 * t * t - 24 * t + 3;
+        double h4 = -180 * t * t + 168 * t - 24;
+        double h5 = 360 * t * t - 360 * t + 60;
 
         return computeFromCoefficients(h0, h1, h2, h3, h4, h5);
     }
