@@ -22,9 +22,7 @@
  * SOFTWARE.
  */
 
-package com.github.mittyrobotics.path.following.util;
-
-import com.github.mittyrobotics.datatypes.motion.DrivetrainVelocities;
+package com.github.mittyrobotics.datatypes.motion;
 
 /**
  * Contains differential drive kinematics equations for figuring out wheel velocities.
@@ -65,7 +63,8 @@ public class DifferentialDriveKinematics {
         //Calculate left and right drivetrain velocities
         double left = angularVelocity * (radius - (trackWidth / 2));
         double right = angularVelocity * (radius + (trackWidth / 2));
-
+        //left/(linearVelocity / angularVelocity - (track/2)) = angular
+        //left/(linear/angular) - left/(track/2)
         //Return the calculated drivetrain velocities
         return new DrivetrainVelocities(left, right);
     }
@@ -95,6 +94,27 @@ public class DifferentialDriveKinematics {
         //Return the calculated drivetrain velocities
         return new DrivetrainVelocities(angularVelocity * (radius - (trackWidth / 2)),
                 angularVelocity * (radius + (trackWidth / 2)));
+    }
+
+    public double getRadiusFromWheelSpeeds(DrivetrainVelocities wheelSpeeds) {
+        double linearVelocity = wheelSpeeds.getAvgVelocity();
+
+        return linearVelocity / getAngularVelocityFromWheelSpeeds(wheelSpeeds);
+    }
+
+    public double getAngularVelocityFromWheelSpeeds(DrivetrainVelocities wheelSpeeds) {
+        double rightVelocity = wheelSpeeds.getRightVelocity();
+        double linearVelocity = wheelSpeeds.getAvgVelocity();
+
+        //If track width has not been set, send a warning and return velocities of 0 to avoid any damage
+        if (trackWidth == 0) {
+            System.out.println("WARNING: Track width in DifferentialDriveKinematics.java has not been set!");
+            return 2e16;
+        }
+
+        double angularVelocity = (2 * (rightVelocity - linearVelocity)) / trackWidth;
+
+        return angularVelocity;
     }
 
     public double getTrackWidth() {

@@ -24,12 +24,13 @@
 
 package com.github.mittyrobotics.path.following;
 
+import com.github.mittyrobotics.datatypes.motion.DrivetrainData;
 import com.github.mittyrobotics.datatypes.motion.DrivetrainVelocities;
 import com.github.mittyrobotics.datatypes.motion.VelocityConstraints;
 import com.github.mittyrobotics.datatypes.positioning.Transform;
 import com.github.mittyrobotics.datatypes.positioning.TransformWithVelocityAndCurvature;
 import com.github.mittyrobotics.motionprofile.PathVelocityController;
-import com.github.mittyrobotics.path.following.util.DifferentialDriveKinematics;
+import com.github.mittyrobotics.datatypes.motion.DifferentialDriveKinematics;
 import com.github.mittyrobotics.path.following.util.PathFollowerProperties;
 import com.github.mittyrobotics.path.generation.Path;
 import com.github.mittyrobotics.path.generation.PathGenerator;
@@ -63,6 +64,7 @@ public class Main {
         //Set robot transform to random values
         SimSampleDrivetrain.getInstance().setOdometry(x, y, heading);
 
+
         boolean reversed = false;
 
         //Create the original path from the robot position to the point
@@ -91,7 +93,6 @@ public class Main {
                         30,
                         1.2,
                         20,
-                        true,
                         true
                 );
 
@@ -104,7 +105,7 @@ public class Main {
         );
 
         //Setup the path follower
-        PathFollower follower = new PathFollower(ramseteProperties);
+        PathFollower follower = new PathFollower(purePursuitProperties);
 
         //Add original path to graph
         RobotGraph.getInstance()
@@ -117,28 +118,23 @@ public class Main {
             e.printStackTrace();
         }
 
-        int changePathCount = 0;
-
         //Loop
         while (true) {
-            changePathCount++;
-            if (changePathCount == 10000) {
-//                follower.changePath(new QuinticHermitePath(new Transform[]{new Transform(50,24,0),
-//                        new Transform(100,24,0)}));
-            }
             //Graph
             SwingUtilities.invokeLater(() -> {
                 RobotGraph.getInstance().clearGraph();
                 RobotGraph.getInstance().addDataset(GraphManager.getInstance()
                         .graphParametricFast(follower.getCurrentPath(), .07, "spline", Color.cyan));
             });
+
             //Update pure pursuit controller and set velocities
-            DrivetrainVelocities wheelVelocities =
+            DrivetrainData drivetrainData =
                     follower.updatePathFollower(SimSampleDrivetrain.getInstance().getRobotTransform(),
                             SimSampleDrivetrain.getInstance().getAverageVelocity(),
                             RobotSimManager.getInstance().getPeriodTime());
+
             SimSampleDrivetrain.getInstance()
-                    .setVelocities(wheelVelocities.getLeftVelocity(), wheelVelocities.getRightVelocity());
+                    .setVelocities(drivetrainData.getLeftVelocity(), drivetrainData.getRightVelocity());
 
             try {
                 Thread.sleep((long) RobotSimManager.getInstance().getPeriodTime() * 1000);

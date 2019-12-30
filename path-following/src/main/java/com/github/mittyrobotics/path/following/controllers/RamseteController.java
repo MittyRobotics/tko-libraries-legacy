@@ -24,10 +24,10 @@
 
 package com.github.mittyrobotics.path.following.controllers;
 
+import com.github.mittyrobotics.datatypes.motion.DrivetrainData;
 import com.github.mittyrobotics.datatypes.motion.DrivetrainVelocities;
 import com.github.mittyrobotics.datatypes.positioning.Transform;
 import com.github.mittyrobotics.datatypes.units.Conversions;
-import com.github.mittyrobotics.path.following.util.DifferentialDriveKinematics;
 
 public class RamseteController {
     public static double DEFAULT_AGGRESSIVE_GAIN = 2.0;
@@ -71,8 +71,8 @@ public class RamseteController {
      * @param turningRadius    the current desired radius the robot should be turning.
      * @return
      */
-    public DrivetrainVelocities calculate(Transform robotTransform, Transform desiredTransform, double robotVelocity,
-                                          double turningRadius) {
+    public DrivetrainData calculate(Transform robotTransform, Transform desiredTransform, double robotVelocity,
+                                    double turningRadius) {
         //Get the transform error in meters.
         Transform error = desiredTransform.relativeTo(robotTransform).inToM();
 
@@ -100,8 +100,7 @@ public class RamseteController {
                 angularVelocity + k * eTheta + aggressiveGain * linearVelocity * error.getRotation().sinc() * eY;
 
         //Use differential drive kinematics given linear velocity in inches per second and angular velocity in radians per second
-        return DifferentialDriveKinematics.getInstance()
-                .calculateFromAngularVelocity(adjustedLinearVelocity, adjustedAngularVelocity);
+        return new DrivetrainData(adjustedLinearVelocity, adjustedAngularVelocity);
     }
 
     public double getAggressiveGain() {

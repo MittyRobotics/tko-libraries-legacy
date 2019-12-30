@@ -48,25 +48,22 @@ public abstract class PathFollowerProperties {
         public final double lookaheadDistance;
         public final double curvatureSlowdownGain;
         public final double minSlowdownVelocity;
-        public final boolean adaptiveLookahead;
 
         public PurePursuitProperties(Path path,
                                      PathVelocityController velocityController,
                                      boolean reversed,
-                                     double lookaheadDistance,
-                                     boolean adaptiveLookahead
+                                     double lookaheadDistance
         ) {
-            this(path, velocityController, reversed, -1, -1, lookaheadDistance, adaptiveLookahead, false);
+            this(path, velocityController, reversed, -1, -1, lookaheadDistance, false);
         }
 
         public PurePursuitProperties(Path path,
                                      PathVelocityController velocityController,
                                      boolean reversed,
                                      double lookaheadDistance,
-                                     boolean adaptiveLookahead,
                                      boolean continuouslyAdaptivePath
         ) {
-            this(path, velocityController, reversed, -1, -1, lookaheadDistance, adaptiveLookahead,
+            this(path, velocityController, reversed, -1, -1, lookaheadDistance,
                     continuouslyAdaptivePath);
         }
 
@@ -76,14 +73,12 @@ public abstract class PathFollowerProperties {
                                      double lookaheadDistance,
                                      double curvatureSlowdownGain,
                                      double minSlowdownVelocity,
-                                     boolean adaptiveLookahead,
                                      boolean continuouslyAdaptivePath
         ) {
             super(path, velocityController, reversed, continuouslyAdaptivePath);
             this.lookaheadDistance = lookaheadDistance;
             this.curvatureSlowdownGain = curvatureSlowdownGain;
             this.minSlowdownVelocity = minSlowdownVelocity;
-            this.adaptiveLookahead = adaptiveLookahead;
         }
     }
 

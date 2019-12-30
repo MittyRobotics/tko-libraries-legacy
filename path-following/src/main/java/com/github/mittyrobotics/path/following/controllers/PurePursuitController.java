@@ -26,11 +26,12 @@ package com.github.mittyrobotics.path.following.controllers;
 
 import com.github.mittyrobotics.datatypes.geometry.Circle;
 import com.github.mittyrobotics.datatypes.geometry.Line;
+import com.github.mittyrobotics.datatypes.motion.DrivetrainData;
 import com.github.mittyrobotics.datatypes.motion.DrivetrainVelocities;
 import com.github.mittyrobotics.datatypes.positioning.Position;
 import com.github.mittyrobotics.datatypes.positioning.Rotation;
 import com.github.mittyrobotics.datatypes.positioning.Transform;
-import com.github.mittyrobotics.path.following.util.DifferentialDriveKinematics;
+import com.github.mittyrobotics.datatypes.motion.DifferentialDriveKinematics;
 
 public class PurePursuitController {
     public static final double DEFAULT_CURVATURE_SLOWDOWN_GAIN = 0;
@@ -69,7 +70,7 @@ public class PurePursuitController {
      * @param robotVelocity  the desired base velocity for the robot to be going.
      * @return the {@link DrivetrainVelocities} based on the {@link PurePursuitController} path following algorithm.
      */
-    public DrivetrainVelocities calculate(Transform robotTransform, Position targetPosition, double robotVelocity) {
+    public DrivetrainData calculate(Transform robotTransform, Position targetPosition, double robotVelocity) {
         //Determine if reversed
         boolean reversed = robotVelocity < 0;
 
@@ -92,12 +93,12 @@ public class PurePursuitController {
 
         robotVelocity = calculateSlowdownVelocity(1 / (pursuitCircle.getRadius()), robotVelocity, minSlowdownVelocity);
 
+        double radius = pursuitCircle.getRadius() * side * (reversed ? -1 : 1);
+
         //Use differential drive kinematics to calculate the left and right wheel velocity given the base robot
         //velocity and the radius of the pursuit circle
-        return DifferentialDriveKinematics.getInstance().calculateFromRadius(
-                robotVelocity,
-                pursuitCircle.getRadius() * side * (reversed ? -1 : 1)
-        );
+        return new DrivetrainData(DifferentialDriveKinematics.getInstance().calculateFromRadius(
+                robotVelocity, radius));
     }
 
     /**

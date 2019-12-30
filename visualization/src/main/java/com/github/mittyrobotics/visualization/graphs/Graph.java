@@ -199,16 +199,14 @@ public class Graph extends JFrame {
         if (datasets != null) {
             for (int i = 0; i < datasets.length; i++) {
                 plot.setDataset(i, datasets[i]);
-                plot.setRenderer(i, new XYLineShapeColorRenderer(datasets[i].isShowPoints(), datasets[i].isShowLines(),
-                        datasets[i].getColor()));
+                plot.setRenderer(i, datasets[i].getRenderer());
             }
         }
     }
 
     public void addDataset(XYSeriesCollectionWithRender dataset) {
         plot.setDataset(lastIndex, dataset);
-        plot.setRenderer(lastIndex,
-                new XYLineShapeColorRenderer(dataset.isShowPoints(), dataset.isShowLines(), dataset.getColor()));
+        plot.setRenderer(lastIndex, dataset.getRenderer());
         lastIndex++;
     }
 
