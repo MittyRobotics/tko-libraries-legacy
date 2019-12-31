@@ -29,8 +29,6 @@ import com.github.mittyrobotics.datatypes.positioning.Transform;
 import com.github.mittyrobotics.datatypes.units.Conversions;
 
 public abstract class SimDrivetrain {
-
-
     private SimTalon[] leftTalons;
     private SimTalon[] rightTalons;
 
@@ -39,7 +37,6 @@ public abstract class SimDrivetrain {
     private double x = 0;
     private double y = 0;
     private double heading = 0;
-
 
     public abstract void initDrivetrain();
 

@@ -41,6 +41,14 @@ public class PathFollowerProperties {
         this.continuouslyAdaptivePath = continuouslyAdaptivePath;
     }
 
+    public PathFollowerProperties(PathVelocityController velocityController, boolean reversed,
+                                  boolean continuouslyAdaptivePath) {
+        this.path = null;
+        this.velocityController = velocityController;
+        this.reversed = reversed;
+        this.continuouslyAdaptivePath = continuouslyAdaptivePath;
+    }
+
     public static class PurePursuitProperties {
         public final double lookaheadDistance;
         public final double curvatureSlowdownGain;

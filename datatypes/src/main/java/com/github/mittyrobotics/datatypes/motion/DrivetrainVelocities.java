@@ -59,6 +59,10 @@ public class DrivetrainVelocities {
         //Get driving curvature from linear velocity and angular velocity
         double curvature = 1 / (linearVelocity / angularVelocity);
 
+        if (Double.isNaN(curvature)) {
+            curvature = 0;
+        }
+
         return new DrivetrainVelocities(linearVelocity, angularVelocity, drivetrainWheelVelocities.getLeftVelocity(),
                 drivetrainWheelVelocities.getRightVelocity(), curvature);
     }

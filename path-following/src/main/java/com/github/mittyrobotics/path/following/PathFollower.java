@@ -157,6 +157,24 @@ public class PathFollower {
         }
     }
 
+    public void setDrivingGoal(Transform goal) {
+        Path path =
+                new Path(PathGenerator.getInstance().generateQuinticHermiteSplinePath(new Transform[]{
+                        goal.add(new Transform(goal.getRotation().cos() * -20, goal.getRotation().sin() * -20)),
+                        goal}));
+        changePath(path, true);
+    }
+
+    public void setDrivingGoalVia(Transform goal, Transform[] intermediatePoints) {
+        Transform[] waypoints = new Transform[intermediatePoints.length + 1];
+        for (int i = 0; i < waypoints.length + 1; i++) {
+            waypoints[i] = intermediatePoints[i];
+        }
+        waypoints[waypoints.length - 1] = goal;
+        Path path = new Path(PathGenerator.getInstance().generateQuinticHermiteSplinePath(waypoints));
+        changePath(path, true);
+    }
+
     /**
      * Universal update function for the {@link PathFollower}.
      * <p>
@@ -178,15 +196,15 @@ public class PathFollower {
 
         if (currentPath == null) {
             System.out.println("WARNING: The current path follower path is null!");
-            return DrivetrainVelocities.calculateFromLinearAndAngularVelocity(0, 0);
+            return DrivetrainVelocities.empty();
         }
         if (pathFollowingType == PathFollowingType.PURE_PURSUIT_CONTROLLER) {
             return updatePurePursuit(robotTransform, currentDrivetrainVelocities.getLinearVelocity(), deltaTime);
         } else if (pathFollowingType == PathFollowingType.RAMSETE_CONTROLLER) {
-            return updateRamsete(robotTransform, currentDrivetrainVelocities.getAngularVelocity(), deltaTime);
+            return updateRamsete(robotTransform, currentDrivetrainVelocities.getLinearVelocity(), deltaTime);
         } else {
             System.out.println("WARNING: Unspecified path follower type");
-            return DrivetrainVelocities.calculateFromLinearAndAngularVelocity(0, 0);
+            return DrivetrainVelocities.empty();
         }
     }
 

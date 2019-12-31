@@ -64,7 +64,9 @@ public class PathVelocityController {
         //Calculate if still in takeoff mode
         if (inTakeoffMode) {
             int sign = (int) Math.signum(deltaVelocity);
-            inTakeoffMode = sign == previousSign || previousSign == 0;
+            inTakeoffMode =
+                    sign == previousSign ||
+                            previousSign == 0 && Math.abs(currentVelocity - velocityConstraints.getMaxVelocity()) <= 5;
             previousSign = sign;
         }
 
