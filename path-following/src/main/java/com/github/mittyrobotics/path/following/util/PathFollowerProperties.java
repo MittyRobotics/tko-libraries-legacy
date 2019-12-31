@@ -27,79 +27,37 @@ package com.github.mittyrobotics.path.following.util;
 import com.github.mittyrobotics.motionprofile.PathVelocityController;
 import com.github.mittyrobotics.path.generation.Path;
 
-public abstract class PathFollowerProperties {
+public class PathFollowerProperties {
     public final Path path;
     public final PathVelocityController velocityController;
     public final boolean reversed;
     public final boolean continuouslyAdaptivePath;
 
-    public PathFollowerProperties(Path path,
-                                  PathVelocityController velocityController,
-                                  boolean reversed,
-                                  boolean continuouslyAdaptivePath
-    ) {
+    public PathFollowerProperties(Path path, PathVelocityController velocityController, boolean reversed, boolean continuouslyAdaptivePath) {
         this.path = path;
         this.velocityController = velocityController;
         this.reversed = reversed;
         this.continuouslyAdaptivePath = continuouslyAdaptivePath;
     }
 
-    public static class PurePursuitProperties extends PathFollowerProperties {
+    public static class PurePursuitProperties {
         public final double lookaheadDistance;
         public final double curvatureSlowdownGain;
         public final double minSlowdownVelocity;
 
-        public PurePursuitProperties(Path path,
-                                     PathVelocityController velocityController,
-                                     boolean reversed,
-                                     double lookaheadDistance
-        ) {
-            this(path, velocityController, reversed, -1, -1, lookaheadDistance, false);
-        }
-
-        public PurePursuitProperties(Path path,
-                                     PathVelocityController velocityController,
-                                     boolean reversed,
-                                     double lookaheadDistance,
-                                     boolean continuouslyAdaptivePath
-        ) {
-            this(path, velocityController, reversed, -1, -1, lookaheadDistance,
-                    continuouslyAdaptivePath);
-        }
-
-        public PurePursuitProperties(Path path,
-                                     PathVelocityController velocityController,
-                                     boolean reversed,
-                                     double lookaheadDistance,
-                                     double curvatureSlowdownGain,
-                                     double minSlowdownVelocity,
-                                     boolean continuouslyAdaptivePath
-        ) {
-            super(path, velocityController, reversed, continuouslyAdaptivePath);
+        public PurePursuitProperties(double lookaheadDistance, double curvatureSlowdownGain,
+                                     double minSlowdownVelocity) {
             this.lookaheadDistance = lookaheadDistance;
             this.curvatureSlowdownGain = curvatureSlowdownGain;
             this.minSlowdownVelocity = minSlowdownVelocity;
         }
     }
 
-    public static class RamseteProperties extends PathFollowerProperties {
+    public static class RamseteProperties {
         public final double aggressiveGain;
         public final double dampingGain;
 
-        public RamseteProperties(Path path,
-                                 PathVelocityController velocityController,
-                                 boolean reversed
-        ) {
-            this(path, velocityController, reversed, -1, -1);
-        }
-
-        public RamseteProperties(Path path,
-                                 PathVelocityController velocityController,
-                                 boolean reversed,
-                                 double aggressiveGain,
-                                 double dampingGain
-        ) {
-            super(path, velocityController, reversed, false);
+        public RamseteProperties(double aggressiveGain, double dampingGain) {
             this.aggressiveGain = aggressiveGain;
             this.dampingGain = dampingGain;
         }

@@ -34,9 +34,9 @@ import com.github.mittyrobotics.datatypes.positioning.Transform;
 import com.github.mittyrobotics.datatypes.motion.DifferentialDriveKinematics;
 
 public class PurePursuitController {
-    public static final double DEFAULT_CURVATURE_SLOWDOWN_GAIN = 0;
-    public static final double DEFAULT_MIN_SLOWDOWN_VELOCITY = 10;
-    public static double DEFAULT_LOOKAHEAD_DISTANCE = 20.0;
+    public static final double DEFAULT_CURVATURE_SLOWDOWN_GAIN = 0.0;
+    public static final double DEFAULT_MIN_SLOWDOWN_VELOCITY = 20.0;
+    public static double DEFAULT_LOOKAHEAD_DISTANCE = 25.0;
     private static PurePursuitController instance = new PurePursuitController();
     private double curvatureSlowdownGain;
     private double minSlowdownVelocity;

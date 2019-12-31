@@ -24,13 +24,11 @@
 
 package com.github.mittyrobotics.path.following;
 
+import com.github.mittyrobotics.datatypes.motion.DifferentialDriveKinematics;
 import com.github.mittyrobotics.datatypes.motion.DrivetrainData;
-import com.github.mittyrobotics.datatypes.motion.DrivetrainVelocities;
 import com.github.mittyrobotics.datatypes.motion.VelocityConstraints;
 import com.github.mittyrobotics.datatypes.positioning.Transform;
-import com.github.mittyrobotics.datatypes.positioning.TransformWithVelocityAndCurvature;
 import com.github.mittyrobotics.motionprofile.PathVelocityController;
-import com.github.mittyrobotics.datatypes.motion.DifferentialDriveKinematics;
 import com.github.mittyrobotics.path.following.util.PathFollowerProperties;
 import com.github.mittyrobotics.path.generation.Path;
 import com.github.mittyrobotics.path.generation.PathGenerator;
@@ -62,16 +60,14 @@ public class Main {
         double y = random.nextInt(200) - 100.0;
         double heading = random.nextInt(90) - 45;
         //Set robot transform to random values
-        SimSampleDrivetrain.getInstance().setOdometry(x, y, heading);
+        SimSampleDrivetrain.getInstance().setOdometry(0, 0, 0);
 
 
         boolean reversed = false;
 
         //Create the original path from the robot position to the point
         Path originalPath = new Path(PathGenerator.getInstance().generateQuinticHermiteSplinePath(
-                new TransformWithVelocityAndCurvature[]{
-                        new TransformWithVelocityAndCurvature(SimSampleDrivetrain.getInstance().getRobotTransform(), 0,
-                                0), new TransformWithVelocityAndCurvature(new Transform(100, -24, 0), 0, 0)}));
+                new Transform[]{new Transform(0, 0, 0), new Transform(100, -48, 0)}));
 
         if (reversed) {
             // originalPath = new QuinticHermitePath(originalPath.getReversedWaypoints());
@@ -82,30 +78,22 @@ public class Main {
 
         //Create velocity controller
         PathVelocityController velocityController =
-                new PathVelocityController(new VelocityConstraints(200, 50, 150), 10, 0);
+                new PathVelocityController(new VelocityConstraints(200, 50, 150), 10, 0, true);
 
         //Create path properties
-        PathFollowerProperties.PurePursuitProperties purePursuitProperties =
-                new PathFollowerProperties.PurePursuitProperties(
-                        originalPath,
-                        velocityController,
-                        reversed,
-                        30,
-                        1.2,
-                        20,
-                        true
-                );
+        PathFollowerProperties properties =
+                new PathFollowerProperties(originalPath, velocityController, reversed, false);
 
-        PathFollowerProperties.RamseteProperties ramseteProperties = new PathFollowerProperties.RamseteProperties(
-                originalPath,
-                velocityController,
-                reversed,
-                5.0,
-                .7
-        );
+        //Create pure pursuit properties
+        PathFollowerProperties.PurePursuitProperties purePursuitProperties =
+                new PathFollowerProperties.PurePursuitProperties(20, 1.2, 40);
+
+        //Create ramsete properties
+        PathFollowerProperties.RamseteProperties ramseteProperties =
+                new PathFollowerProperties.RamseteProperties(5.0, .7);
 
         //Setup the path follower
-        PathFollower follower = new PathFollower(purePursuitProperties);
+        PathFollower follower = new PathFollower(properties, purePursuitProperties);
 
         //Add original path to graph
         RobotGraph.getInstance()

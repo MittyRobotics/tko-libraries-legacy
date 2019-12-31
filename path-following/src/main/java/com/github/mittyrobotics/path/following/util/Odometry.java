@@ -27,7 +27,6 @@ package com.github.mittyrobotics.path.following.util;
 import com.github.mittyrobotics.datatypes.positioning.Position;
 import com.github.mittyrobotics.datatypes.positioning.Rotation;
 import com.github.mittyrobotics.datatypes.positioning.Transform;
-import com.github.mittyrobotics.datatypes.positioning.TransformWithVelocityAndCurvature;
 
 public class Odometry {
     private static Odometry instance;
@@ -38,8 +37,6 @@ public class Odometry {
     private double lastRightEncoderPos = 0;
     private double calibrateGyroVal = 0;
 
-    private double ticksPerInch = 0;
-
     public static Odometry getInstance() {
         return instance;
     }
@@ -47,36 +44,32 @@ public class Odometry {
     /**
      * Updates the {@link Odometry}. This should be updated frequently with the current gencoder and gyro values.
      *
-     * @param leftEncoder   the left wheel encoder value of the drivetrain.
-     * @param rightEncocder the right wheel encoder value of the drivetrain.
-     * @param heading       the heading value of the gyro.
+     * @param leftEncoderPosInches  the left wheel encoder value of the drivetrain in inches.
+     * @param rightEncoderPosInches the right wheel encoder value of the drivetrain in inches.
+     * @param heading               the heading value of the gyro.
      */
-    public void update(double leftEncoder, double rightEncocder, double heading) {
-        if (ticksPerInch == 0) {
-            System.out.println(
-                    "WARNING: Odometry.java ticks per inch is not setup! Call Odometry.getInstance().setTicksPerInch to set the value.");
-        } else {
-            //Get robot rotation
-            Rotation robotRotation = new Rotation(heading - calibrateGyroVal).mapHeading180();
+    public void update(double leftEncoderPosInches, double rightEncoderPosInches, double heading) {
+        //Get robot rotation
+        Rotation robotRotation = new Rotation(heading - calibrateGyroVal).mapHeading180();
 
-            //Get delta left and right encoder pos
-            double deltaLeftPos = leftEncoder - lastLeftEncoderPos;
-            double deltaRightPos = rightEncocder - lastRightEncoderPos;
+        //Get delta left and right encoder pos
+        double deltaLeftPos = leftEncoderPosInches - lastLeftEncoderPos;
+        double deltaRightPos = rightEncoderPosInches - lastRightEncoderPos;
 
-            //Get average delta encoder pos in inches
-            double deltaPosition = (deltaLeftPos + deltaRightPos) / 2 / ticksPerInch;
+        //Get average delta encoder pos in inches
+        double deltaPosition = (deltaLeftPos + deltaRightPos) / 2;
 
-            //Get x and y values from heading and delta pos
-            double deltaX = deltaPosition * robotRotation.cos();
-            double deltaY = deltaPosition * robotRotation.sin();
+        //Get x and y values from heading and delta pos
+        double deltaX = deltaPosition * robotRotation.cos();
+        double deltaY = deltaPosition * robotRotation.sin();
 
-            //Set last encoder positions
-            lastLeftEncoderPos = leftEncoder;
-            lastRightEncoderPos = rightEncocder;
+        //Set last encoder positions
+        lastLeftEncoderPos = leftEncoderPosInches;
+        lastRightEncoderPos = rightEncoderPosInches;
 
-            robotTransform =
-                    new Transform(robotTransform.getPosition().add(new Position(deltaX, deltaY)), robotRotation);
-        }
+        robotTransform =
+                new Transform(robotTransform.getPosition().add(new Position(deltaX, deltaY)), robotRotation);
+
     }
 
     public void calibrateToZero(double leftEncoder, double rightEncoder, double heading) {
@@ -133,13 +126,5 @@ public class Odometry {
     public void calibrateGyroValue(double desiredHeading, double currentHeading) {
         this.calibrateGyroVal =
                 currentHeading - desiredHeading;
-    }
-
-    public double getTicksPerInch() {
-        return ticksPerInch;
-    }
-
-    public void setTicksPerInch(double ticksPerInch) {
-        this.ticksPerInch = ticksPerInch;
     }
 }

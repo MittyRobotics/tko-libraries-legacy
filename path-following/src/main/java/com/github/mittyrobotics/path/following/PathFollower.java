@@ -48,32 +48,38 @@ public class PathFollower {
     /**
      * Constructs a {@link PathFollower} and sets it up for use with the {@link PurePursuitController}.
      *
-     * @param properties the {@link PathFollowerProperties.PurePursuitProperties} for the {@link PathFollower}.
+     * @param properties            the {@link PathFollowerProperties} for the {@link PathFollower}.
+     * @param purePursuitProperties the {@link PathFollowerProperties.PurePursuitProperties} for the
+     *                              {@link PathFollower}.
      */
-    public PathFollower(PathFollowerProperties.PurePursuitProperties properties) {
-        setupPurePursuit(properties);
+    public PathFollower(PathFollowerProperties properties,
+                        PathFollowerProperties.PurePursuitProperties purePursuitProperties) {
+        setupPurePursuit(properties, purePursuitProperties);
     }
 
     /**
      * Constructs a {@link PathFollower} and sets it up for use with the {@link RamseteController}.
      *
-     * @param properties the {@link PathFollowerProperties.RamseteProperties} for the {@link PathFollower}.
+     * @param properties        the {@link PathFollowerProperties} for the {@link PathFollower}.
+     * @param ramseteProperties the {@link PathFollowerProperties.RamseteProperties} for the {@link PathFollower}.
      */
-    public PathFollower(PathFollowerProperties.RamseteProperties properties) {
-        setupRamseteController(properties);
+    public PathFollower(PathFollowerProperties properties, PathFollowerProperties.RamseteProperties ramseteProperties) {
+        setupRamseteController(properties, ramseteProperties);
     }
 
     /**
      * Sets up the {@link PurePursuitController} with the {@link PathFollowerProperties.PurePursuitProperties}.
      *
-     * @param properties the {@link PathFollowerProperties.PurePursuitProperties} for the {@link
-     *                   PurePursuitController}.
+     * @param properties            the {@link PathFollowerProperties} for the {@link PathFollower}.
+     * @param purePursuitProperties the {@link PathFollowerProperties.PurePursuitProperties} for the
+     *                              {@link PathFollower}.
      */
-    private void setupPurePursuit(PathFollowerProperties.PurePursuitProperties properties) {
+    private void setupPurePursuit(PathFollowerProperties properties,
+                                  PathFollowerProperties.PurePursuitProperties purePursuitProperties) {
         pathFollowingType = PathFollowingType.PURE_PURSUIT_CONTROLLER;
 
         setupPathFollower(properties);
-        this.purePursuitProperties = properties;
+        this.purePursuitProperties = purePursuitProperties;
 
         if (purePursuitProperties.curvatureSlowdownGain != -1) {
             PurePursuitController.getInstance().setCurvatureSlowdownGain(purePursuitProperties.curvatureSlowdownGain);
@@ -87,13 +93,15 @@ public class PathFollower {
     /**
      * Sets up the {@link RamseteController} with the {@link PathFollowerProperties.RamseteProperties}.
      *
-     * @param properties the {@link PathFollowerProperties.RamseteProperties} for the {@link RamseteController}.
+     * @param properties        the {@link PathFollowerProperties} for the {@link PathFollower}.
+     * @param ramseteProperties the {@link PathFollowerProperties.RamseteProperties} for the {@link PathFollower}.
      */
-    private void setupRamseteController(PathFollowerProperties.RamseteProperties properties) {
+    private void setupRamseteController(PathFollowerProperties properties,
+                                        PathFollowerProperties.RamseteProperties ramseteProperties) {
         this.pathFollowingType = PathFollowingType.RAMSETE_CONTROLLER;
 
         setupPathFollower(properties);
-        this.ramseteProperties = properties;
+        this.ramseteProperties = ramseteProperties;
 
         if (ramseteProperties.aggressiveGain != -1) {
             RamseteController.getInstance().setAggressiveGain(ramseteProperties.aggressiveGain);
@@ -200,7 +208,7 @@ public class PathFollower {
                 lookaheadDistance).getPosition();
 
         //Find the rough distance to the end of the path
-        double distanceToEnd = getDistanceToEnd(robotTransform, 20);
+        double distanceToEnd = getRoughDistanceToEnd(robotTransform);
 
         //Calculate the robot velocity using the path velocity controller
         double robotVelocity = properties.velocityController.getVelocity(Math.abs(currentVelocity), distanceToEnd,
@@ -227,7 +235,7 @@ public class PathFollower {
                 0))));
 
         //Find the rough distance to the end of the path
-        double distanceToEnd = getDistanceToEnd(robotTransform, 20);
+        double distanceToEnd = getRoughDistanceToEnd(robotTransform);
 
         //Calculate the robot velocity using the path velocity controller. If reversed, reverse the robot velocity
         double robotVelocity = properties.velocityController.getVelocity(Math.abs(currentVelocity), distanceToEnd,
@@ -271,21 +279,32 @@ public class PathFollower {
      * Path}.
      */
     public boolean isFinished(Transform robotTransform, double distanceTolerance) {
-        return getDistanceToEnd(robotTransform, 0) < distanceTolerance;
+        return getRoughDistanceToEnd(robotTransform) < distanceTolerance;
+    }
+
+
+    /**
+     * Returns the rough distance of the robot along the current {@link Path}.
+     *
+     * @param robotTransform the robot's {@link Transform}.
+     * @return the rough distance of the robot along the current {@link Path}.
+     */
+    private double getRoughDistanceToEnd(Transform robotTransform) {
+        TransformWithParameter closestTransform = currentPath.getClosestTransform(robotTransform.getPosition());
+        return getRoughDistanceToEnd(closestTransform);
     }
 
     /**
-     * Returns the distance from the robot to the end of the path.
+     * Returns the rough distance of the robot along the current {@link Path}.
      *
-     * @param robotTransform        the robot's {@link Transform}.
-     * @param stopDistanceTolerance
-     * @return the distance from the robot to the end of the path.
+     * @param closestTransform the closest {@link TransformWithParameter} on the current {@link Path} to the
+     *                         robot.
+     * @return the rough distance of the robot along the current {@link Path}.
      */
-    private double getDistanceToEnd(Transform robotTransform, double stopDistanceTolerance) {
-        double distance = robotTransform.getPosition().distance(currentPath.getEndWaypoint().getPosition());
+    private double getRoughDistanceToEnd(TransformWithParameter closestTransform) {
+        double distance = closestTransform.getPosition().distance(currentPath.getEndWaypoint().getPosition());
 
-        if (robotTransform.relativeTo(currentPath.getEndWaypoint()).getPosition().getX() >= 0 &&
-                distance <= stopDistanceTolerance && stopDistanceTolerance != 0) {
+        if (closestTransform.getParameter() >= 0.999) {
             return 0;
         }
 
