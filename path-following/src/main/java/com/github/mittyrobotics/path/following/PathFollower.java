@@ -41,8 +41,9 @@ public class PathFollower {
     private PathFollowerProperties.PurePursuitProperties purePursuitProperties;
     private PathFollowerProperties.RamseteProperties ramseteProperties;
 
-    private Path currentPath;
+    private double previousCalculatedVelocity;
 
+    private Path currentPath;
     private boolean unAdaptedPath;
 
     /**
@@ -120,6 +121,7 @@ public class PathFollower {
     private void setupPathFollower(PathFollowerProperties properties) {
         this.properties = properties;
         this.currentPath = properties.path;
+        this.previousCalculatedVelocity = 0;
     }
 
     /**
@@ -230,8 +232,10 @@ public class PathFollower {
         double distanceToEnd = getRoughDistanceToEnd(robotTransform);
 
         //Calculate the robot velocity using the path velocity controller
-        double robotVelocity = properties.velocityController.getVelocity(Math.abs(currentVelocity), distanceToEnd,
+        double robotVelocity = properties.velocityController.getVelocity(previousCalculatedVelocity, distanceToEnd,
                 deltaTime) * (properties.reversed ? -1 : 1);
+
+        this.previousCalculatedVelocity = robotVelocity;
 
         //Calculate the pure pursuit controller
         return PurePursuitController.getInstance().calculate(robotTransform, targetPosition, robotVelocity);
@@ -257,9 +261,11 @@ public class PathFollower {
         double distanceToEnd = getRoughDistanceToEnd(robotTransform);
 
         //Calculate the robot velocity using the path velocity controller. If reversed, reverse the robot velocity
-        double robotVelocity = properties.velocityController.getVelocity(Math.abs(currentVelocity), distanceToEnd,
+        double robotVelocity = properties.velocityController.getVelocity(previousCalculatedVelocity, distanceToEnd,
                 deltaTime)
                 * (properties.reversed ? -1 : 1);
+
+        this.previousCalculatedVelocity = robotVelocity;
 
         //Get radius from curvature is 1/curvature
         double turningRadius = 1 / currentPath.getCurvature(desiredTransform.getParameter());

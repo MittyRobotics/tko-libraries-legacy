@@ -36,6 +36,4 @@ public class SimMain {
                 .setupRobotSimManager(robot, SimSampleDrivetrain.getInstance(), 125, 7, 2, 20, 30, 0.02);
         SimOI.getInstance();
     }
-
 }
-

@@ -33,21 +33,34 @@ import com.github.mittyrobotics.path.following.util.PathFollowerProperties;
 import com.github.mittyrobotics.simulation.sim.RobotSimManager;
 import com.github.mittyrobotics.simulation.util.SimSampleDrivetrain;
 import com.github.mittyrobotics.simulation.util.SimSampleRobot;
+import com.github.mittyrobotics.visualization.graphs.Graph;
 import com.github.mittyrobotics.visualization.graphs.RobotGraph;
 import com.github.mittyrobotics.visualization.util.GraphManager;
+import com.github.mittyrobotics.visualization.util.XYSeriesCollectionWithRender;
+import org.jfree.data.xy.XYSeries;
 
 import javax.swing.*;
 import java.awt.*;
 import java.util.Random;
+import java.util.Timer;
+import java.util.TimerTask;
 
-public class Main {
+public class Main extends TimerTask {
+    private PathFollower pathFollower;
+    private Graph graph;
+    private XYSeriesCollectionWithRender dataset;
+
     public static void main(String[] args) {
+        new Main().initMain();
+    }
+
+    public void initMain(){
         //Setup the robot sim
         SimSampleRobot robot = new SimSampleRobot();
         RobotSimManager.getInstance()
                 .setupRobotSimManager(robot, SimSampleDrivetrain.getInstance(), 125, 7, 2, 20, 30, 0.02);
         RobotGraph.getInstance().getChart().removeLegend();
-        SimSampleDrivetrain.getInstance().setupPIDFValues(0.01, 0, 0, 0.08);
+        SimSampleDrivetrain.getInstance().setupPIDFValues(0.1, 0, 0, 0.08);
 
         //Set track width of differential drive kinematics
         DifferentialDriveKinematics.getInstance().setTrackWidth(20);
@@ -64,7 +77,7 @@ public class Main {
 
         //Create velocity controller
         PathVelocityController velocityController =
-                new PathVelocityController(new VelocityConstraints(200, 50, 150), 10, 0, true);
+                new PathVelocityController(new VelocityConstraints(50, 50, 150), 10, 0, true);
 
         //Create path properties
         PathFollowerProperties properties =
@@ -81,45 +94,65 @@ public class Main {
         //Setup the path follower
         PathFollower pathFollower = new PathFollower(properties, ramseteProperties);
         pathFollower.setDrivingGoal(new Transform(100, -24, 0));
+        this.pathFollower = pathFollower;
 
+        initGraphs();
+
+        Timer timer = new Timer();
+        timer.scheduleAtFixedRate(this,(long)500,(long)(RobotSimManager.getInstance().getPeriodTime()*1000.0));
+    }
+
+    private void initGraphs(){
         //Add original path to graph
         RobotGraph.getInstance()
                 .addPath((GraphManager.getInstance()
                         .graphParametric(pathFollower.getCurrentPath(), .05, 3, .2, "spline", Color.green)));
 
-        //Delay before starting
-        try {
-            Thread.sleep(500);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        this.graph = new Graph();
+        this.dataset = new XYSeriesCollectionWithRender();
+        dataset.addSeries(new XYSeries("Velocity Robot"));
+        dataset.addSeries(new XYSeries("Velocity Expected"));
+        graph.addDataset(dataset);
+        JFrame frame = new JFrame();
+        frame.setLayout(new BorderLayout());
+        frame.add(RobotGraph.getInstance().getChartPanel(), BorderLayout.WEST);
+        frame.add(graph.getChartPanel(), BorderLayout.EAST);
+        frame.pack();
+        frame.setVisible(true);
+        RobotGraph.getInstance().setVisible(false);
+        graph.setVisible(false);
+    }
 
-        //Loop
-        while (true) {
-            //Graph
-            SwingUtilities.invokeLater(() -> {
-                RobotGraph.getInstance().clearGraph();
-                RobotGraph.getInstance().addDataset(GraphManager.getInstance()
-                        .graphParametricFast(pathFollower.getCurrentPath(), .07, "spline", Color.cyan));
-            });
+    private double t = 0;
 
-            DrivetrainVelocities currentVelocities = DrivetrainVelocities
+    @Override
+    public void run() {
+        t += RobotSimManager.getInstance().getPeriodTime();
+        DrivetrainVelocities currentVelocities = DrivetrainVelocities
+                .calculateFromWheelVelocities(SimSampleDrivetrain.getInstance().getLeftMasterTalon().getVelocity(),
+                        SimSampleDrivetrain.getInstance().getRightMasterTalon().getVelocity());
+
+        //Update pure pursuit controller and set velocities
+        DrivetrainVelocities drivetrainVelocities =
+                pathFollower.updatePathFollower(SimSampleDrivetrain.getInstance().getRobotTransform(),
+                        currentVelocities, RobotSimManager.getInstance().getPeriodTime());
+
+        //Graph
+        SwingUtilities.invokeLater(() -> {
+            RobotGraph.getInstance().clearGraph();
+            RobotGraph.getInstance().addDataset(GraphManager.getInstance()
+                    .graphParametricFast(pathFollower.getCurrentPath(), .07, "spline", Color.cyan));
+
+            DrivetrainVelocities currentVelocities1 = DrivetrainVelocities
                     .calculateFromWheelVelocities(SimSampleDrivetrain.getInstance().getLeftMasterTalon().getVelocity(),
                             SimSampleDrivetrain.getInstance().getRightMasterTalon().getVelocity());
 
-            //Update pure pursuit controller and set velocities
-            DrivetrainVelocities drivetrainVelocities =
-                    pathFollower.updatePathFollower(SimSampleDrivetrain.getInstance().getRobotTransform(),
-                            currentVelocities, RobotSimManager.getInstance().getPeriodTime());
+            dataset.getSeries(0).add(t,currentVelocities1.getLinearVelocity());
+            dataset.getSeries(1).add(t,drivetrainVelocities.getLinearVelocity());
+            graph.setDatasets(new XYSeriesCollectionWithRender[]{dataset});
+        });
 
-            SimSampleDrivetrain.getInstance()
-                    .setVelocities(drivetrainVelocities.getLeftVelocity(), drivetrainVelocities.getRightVelocity());
-
-            try {
-                Thread.sleep((long) RobotSimManager.getInstance().getPeriodTime() * 1000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }
+        SimSampleDrivetrain.getInstance()
+                .setVelocities(drivetrainVelocities.getLeftVelocity(), drivetrainVelocities.getRightVelocity());
     }
 }

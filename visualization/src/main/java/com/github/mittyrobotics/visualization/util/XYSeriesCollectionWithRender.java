@@ -37,7 +37,7 @@ public class XYSeriesCollectionWithRender extends XYSeriesCollection {
     private XYLineAndShapeRenderer renderer;
 
     public XYSeriesCollectionWithRender() {
-        this(true, true, Color.white, new Rectangle(2, 2));
+        this(true, true, null, new Rectangle(2, 2));
     }
 
     public XYSeriesCollectionWithRender(boolean showPoints, boolean showLines, Color color, Shape shape) {

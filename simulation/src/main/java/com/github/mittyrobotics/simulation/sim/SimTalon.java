@@ -26,7 +26,9 @@ package com.github.mittyrobotics.simulation.sim;
 
 import com.github.mittyrobotics.datatypes.units.Conversions;
 
-public class SimTalon implements Runnable {
+import java.util.TimerTask;
+
+public class SimTalon extends TimerTask {
     private ModelSystem model;
     private double voltage = 0;
     private SimTalon master;
@@ -91,18 +93,10 @@ public class SimTalon implements Runnable {
      */
     @Override
     public void run() {
-        while (true) {
-            if (follower) {
-                model.updateModel(master.getVoltage(), 0.001);
-            } else {
-                model.updateModel(voltage, 0.001);
-            }
-            //TODO: Implement better way of managing timed loops
-            try {
-                Thread.sleep(1);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
+        if (follower) {
+            model.updateModel(master.getVoltage(), 0.001);
+        } else {
+            model.updateModel(voltage, 0.001);
         }
     }
 

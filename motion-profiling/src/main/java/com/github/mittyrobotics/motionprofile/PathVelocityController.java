@@ -65,13 +65,14 @@ public class PathVelocityController {
         if (inTakeoffMode) {
             int sign = (int) Math.signum(deltaVelocity);
             inTakeoffMode =
-                    sign == previousSign ||
-                            previousSign == 0 && Math.abs(currentVelocity - velocityConstraints.getMaxVelocity()) <= 5;
+                    (sign == previousSign ||
+                            previousSign == 0) && Math.abs(currentVelocity - velocityConstraints.getMaxVelocity()) <= 5;
             previousSign = sign;
         }
 
         //If in takeoff mode and extreme takeoff is true, multiple acceleration and deceleration by extremeTakeoffMultiplier
         if (inTakeoffMode && extremeTakeoff) {
+            System.out.println("takeoff mode");
             return safeVelocityController.getVelocity(currentVelocity, desiredVelocity, deltaTime,
                     new VelocityConstraints(velocityConstraints.getMaxAcceleration() * extremeTakeoffMultiplier,
                             velocityConstraints.getMaxDeceleration() * extremeTakeoffMultiplier,
