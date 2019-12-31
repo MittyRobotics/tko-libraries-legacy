@@ -24,8 +24,8 @@
 
 package com.github.mittyrobotics.path.following;
 
-import com.github.mittyrobotics.datatypes.motion.DrivetrainData;
 import com.github.mittyrobotics.datatypes.motion.DrivetrainVelocities;
+import com.github.mittyrobotics.datatypes.motion.DrivetrainWheelVelocities;
 import com.github.mittyrobotics.datatypes.positioning.*;
 import com.github.mittyrobotics.path.following.controllers.PurePursuitController;
 import com.github.mittyrobotics.path.following.controllers.RamseteController;
@@ -163,13 +163,14 @@ public class PathFollower {
      * Will update the respective path following controller depending on which {@link PathFollowerProperties} was
      * input.
      *
-     * @param robotTransform  the robot's current {@link Transform}.
-     * @param currentVelocity the robot's current velocity in inches/s.
-     * @param deltaTime       the change in time since the last update call in seconds.
-     * @return the {@link DrivetrainVelocities} to follow based on the path following algorithm.
+     * @param robotTransform              the robot's current {@link Transform}.
+     * @param currentDrivetrainVelocities the robot's current {@link DrivetrainVelocities}
+     * @param deltaTime                   the change in time since the last update call in seconds.
+     * @return the {@link DrivetrainWheelVelocities} to follow based on the path following algorithm.
      */
-    public DrivetrainData updatePathFollower(Transform robotTransform, double currentVelocity,
-                                             double deltaTime) {
+    public DrivetrainVelocities updatePathFollower(Transform robotTransform,
+                                                   DrivetrainVelocities currentDrivetrainVelocities,
+                                                   double deltaTime) {
         if (unAdaptedPath) {
             calculateAdaptivePath(robotTransform, 0);
             unAdaptedPath = false;
@@ -177,15 +178,15 @@ public class PathFollower {
 
         if (currentPath == null) {
             System.out.println("WARNING: The current path follower path is null!");
-            return new DrivetrainData(0, 0);
+            return DrivetrainVelocities.calculateFromLinearAndAngularVelocity(0, 0);
         }
         if (pathFollowingType == PathFollowingType.PURE_PURSUIT_CONTROLLER) {
-            return updatePurePursuit(robotTransform, currentVelocity, deltaTime);
+            return updatePurePursuit(robotTransform, currentDrivetrainVelocities.getLinearVelocity(), deltaTime);
         } else if (pathFollowingType == PathFollowingType.RAMSETE_CONTROLLER) {
-            return updateRamsete(robotTransform, currentVelocity, deltaTime);
+            return updateRamsete(robotTransform, currentDrivetrainVelocities.getAngularVelocity(), deltaTime);
         } else {
             System.out.println("WARNING: Unspecified path follower type");
-            return new DrivetrainData(0, 0);
+            return DrivetrainVelocities.calculateFromLinearAndAngularVelocity(0, 0);
         }
     }
 
@@ -195,10 +196,10 @@ public class PathFollower {
      * @param robotTransform  the robot's current {@link Transform}.
      * @param currentVelocity the robot's current velocity in inches/s.
      * @param deltaTime       the change in time since the last update call in seconds.
-     * @return the {@link DrivetrainVelocities} to follow based on the {@link PurePursuitController} algorithm.
+     * @return the {@link DrivetrainWheelVelocities} to follow based on the {@link PurePursuitController} algorithm.
      */
-    private DrivetrainData updatePurePursuit(Transform robotTransform, double currentVelocity,
-                                             double deltaTime) {
+    private DrivetrainVelocities updatePurePursuit(Transform robotTransform, double currentVelocity,
+                                                   double deltaTime) {
         double lookaheadDistance = purePursuitProperties.lookaheadDistance;
 
         TransformWithParameter closestTransformWithParameter =
@@ -224,9 +225,9 @@ public class PathFollower {
      * @param robotTransform  the robot's current {@link Transform}.
      * @param currentVelocity the robot's current velocity in inches/s.
      * @param deltaTime       the change in time since the last update call in seconds.
-     * @return the {@link DrivetrainVelocities} to follow based on the {@link RamseteController} algorithm.
+     * @return the {@link DrivetrainWheelVelocities} to follow based on the {@link RamseteController} algorithm.
      */
-    private DrivetrainData updateRamsete(Transform robotTransform, double currentVelocity, double deltaTime) {
+    private DrivetrainVelocities updateRamsete(Transform robotTransform, double currentVelocity, double deltaTime) {
         //Get the desired transform to follow, which is the closest point on the path
         TransformWithParameter desiredTransform = currentPath.getClosestTransform(robotTransform.getPosition());
 

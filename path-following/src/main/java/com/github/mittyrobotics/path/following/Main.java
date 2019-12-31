@@ -25,7 +25,7 @@
 package com.github.mittyrobotics.path.following;
 
 import com.github.mittyrobotics.datatypes.motion.DifferentialDriveKinematics;
-import com.github.mittyrobotics.datatypes.motion.DrivetrainData;
+import com.github.mittyrobotics.datatypes.motion.DrivetrainVelocities;
 import com.github.mittyrobotics.datatypes.motion.VelocityConstraints;
 import com.github.mittyrobotics.datatypes.positioning.Transform;
 import com.github.mittyrobotics.motionprofile.PathVelocityController;
@@ -116,13 +116,15 @@ public class Main {
             });
 
             //Update pure pursuit controller and set velocities
-            DrivetrainData drivetrainData =
+            DrivetrainVelocities drivetrainVelocities =
                     follower.updatePathFollower(SimSampleDrivetrain.getInstance().getRobotTransform(),
-                            SimSampleDrivetrain.getInstance().getAverageVelocity(),
+                            DrivetrainVelocities.calculateFromWheelVelocities(
+                                    SimSampleDrivetrain.getInstance().getLeftMasterTalon().getVelocity(),
+                                    SimSampleDrivetrain.getInstance().getRightMasterTalon().getVelocity()),
                             RobotSimManager.getInstance().getPeriodTime());
 
             SimSampleDrivetrain.getInstance()
-                    .setVelocities(drivetrainData.getLeftVelocity(), drivetrainData.getRightVelocity());
+                    .setVelocities(drivetrainVelocities.getLeftVelocity(), drivetrainVelocities.getRightVelocity());
 
             try {
                 Thread.sleep((long) RobotSimManager.getInstance().getPeriodTime() * 1000);

@@ -25,36 +25,101 @@
 package com.github.mittyrobotics.datatypes.motion;
 
 public class DrivetrainVelocities {
-    private final double leftVelocity;
-    private final double rightVelocity;
+    private double linearVelocity;
+    private double angularVelocity;
+    private double leftVelocity;
+    private double rightVelocity;
+    private double radius;
 
-    public DrivetrainVelocities(double leftVelocity, double rightVelocity) {
-        if (Double.isNaN(leftVelocity) || Double.isInfinite(leftVelocity)) {
-            this.leftVelocity = 0;
-        } else {
-            this.leftVelocity = leftVelocity;
-        }
-        if (Double.isNaN(rightVelocity) || Double.isInfinite(rightVelocity)) {
-            this.rightVelocity = 0;
-        } else {
-            this.rightVelocity = rightVelocity;
-        }
+    private DrivetrainVelocities(double linearVelocity, double angularVelocity, double leftVelocity,
+                                 double rightVelocity,
+                                 double radius) {
+        this.linearVelocity = linearVelocity;
+        this.angularVelocity = angularVelocity;
+        this.leftVelocity = leftVelocity;
+        this.rightVelocity = rightVelocity;
+        this.radius = radius;
+    }
+
+    public static DrivetrainVelocities calculateFromWheelVelocities(double leftVelocity, double rightVelocity) {
+        return calculateFromWheelVelocities(new DrivetrainWheelVelocities(leftVelocity, rightVelocity));
+    }
+
+    public static DrivetrainVelocities calculateFromWheelVelocities(
+            DrivetrainWheelVelocities drivetrainWheelVelocities) {
+        //Get linear and angular velocity from drivetrain velocities
+        double linearVelocity = drivetrainWheelVelocities.getAvgVelocity();
+        double angularVelocity =
+                DifferentialDriveKinematics.getInstance().getAngularVelocityFromWheelSpeeds(drivetrainWheelVelocities);
+
+        //Get driving radius from linear velocity and angular velocity
+        double radius = linearVelocity / angularVelocity;
+
+        return new DrivetrainVelocities(linearVelocity, angularVelocity, drivetrainWheelVelocities.getLeftVelocity(),
+                drivetrainWheelVelocities.getRightVelocity(), radius);
+    }
+
+    public static DrivetrainVelocities calculateFromLinearAndAngularVelocity(double linearVelocity,
+                                                                             double angularVelocity) {
+        //Calculate drivetrain velocities from linear and angular velocities
+        DrivetrainWheelVelocities drivetrainWheelVelocities =
+                DifferentialDriveKinematics.getInstance().calculateFromAngularVelocity(linearVelocity, angularVelocity);
+
+        //Get left and right velocity from drivetrain velocities
+        double leftVelocity = drivetrainWheelVelocities.getLeftVelocity();
+        double rightVelocity = drivetrainWheelVelocities.getRightVelocity();
+
+        //Get driving radius from linear velocity and angular velocity
+        double radius = linearVelocity / angularVelocity;
+
+        return new DrivetrainVelocities(linearVelocity, angularVelocity, leftVelocity, rightVelocity, radius);
+    }
+
+    private void setValues(DrivetrainVelocities data) {
+        this.linearVelocity = data.getLinearVelocity();
+        this.angularVelocity = data.getAngularVelocity();
+        this.leftVelocity = data.getLeftVelocity();
+        this.rightVelocity = data.getRightVelocity();
+        this.radius = data.getDrivingRadius();
+    }
+
+    public double getLinearVelocity() {
+        return linearVelocity;
+    }
+
+    public void setLinearVelocity(double linearVelocity) {
+        this.linearVelocity = linearVelocity;
+        setValues(calculateFromLinearAndAngularVelocity(linearVelocity, angularVelocity));
+    }
+
+    public double getAngularVelocity() {
+        return angularVelocity;
+    }
+
+    public void setAngularVelocity(double angularVelocity) {
+        this.angularVelocity = angularVelocity;
+        setValues(calculateFromLinearAndAngularVelocity(linearVelocity, angularVelocity));
     }
 
     public double getLeftVelocity() {
         return leftVelocity;
     }
 
+    public void setLeftVelocity(double leftVelocity) {
+        this.leftVelocity = leftVelocity;
+        setValues(calculateFromWheelVelocities(leftVelocity, rightVelocity));
+    }
+
     public double getRightVelocity() {
         return rightVelocity;
     }
 
-    public double getAvgVelocity() {
-        return (rightVelocity + leftVelocity) / 2;
+    public void setRightVelocity(double rightVelocity) {
+        this.rightVelocity = rightVelocity;
+        setValues(calculateFromWheelVelocities(leftVelocity, rightVelocity));
     }
 
-    @Override
-    public String toString() {
-        return String.format("DrivetrainVelocities(left: %s, right: %s)", leftVelocity, rightVelocity);
+    public double getDrivingRadius() {
+        return radius;
     }
 }

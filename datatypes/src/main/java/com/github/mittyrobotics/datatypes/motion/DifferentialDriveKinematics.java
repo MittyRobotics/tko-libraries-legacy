@@ -43,21 +43,21 @@ public class DifferentialDriveKinematics {
     }
 
     /**
-     * Calculates the {@link DrivetrainVelocities} given a base robot velocity and a radius of the circle that it wants
+     * Calculates the {@link DrivetrainWheelVelocities} given a base robot velocity and a radius of the circle that it wants
      * to follow using differential drive kinematics.
      *
      * @param linearVelocity the base linear robot velocity in units per second (how fast the robot moves forward).
      * @param radius         the radius to follow in units.
-     * @return the calculated {@link DrivetrainVelocities}.
+     * @return the calculated {@link DrivetrainWheelVelocities}.
      */
-    public DrivetrainVelocities calculateFromRadius(double linearVelocity, double radius) {
+    public DrivetrainWheelVelocities calculateFromRadius(double linearVelocity, double radius) {
         //Calculate the angular velocity of the robot in radians per second
         double angularVelocity = linearVelocity / radius;
 
         //If track width has not been set, send a warning and return velocities of 0 to avoid any damage
         if (trackWidth == 0) {
             System.out.println("WARNING: Track width in DifferentialDriveKinematics.java has not been set!");
-            return new DrivetrainVelocities(0, 0);
+            return new DrivetrainWheelVelocities(0, 0);
         }
 
         //Calculate left and right drivetrain velocities
@@ -66,20 +66,20 @@ public class DifferentialDriveKinematics {
         //left/(linearVelocity / angularVelocity - (track/2)) = angular
         //left/(linear/angular) - left/(track/2)
         //Return the calculated drivetrain velocities
-        return new DrivetrainVelocities(left, right);
+        return new DrivetrainWheelVelocities(left, right);
     }
 
     /**
-     * Calculates the {@link DrivetrainVelocities} given a base robot velocity and a radius of the circle that it wants
+     * Calculates the {@link DrivetrainWheelVelocities} given a base robot velocity and a radius of the circle that it wants
      * to follow using differential drive kinematics.
      *
      * @param linearVelocity  the base linear robot velocity in units per second (how fast the robot moves forward).
      * @param angularVelocity the angular velocity of the robot in radians per second
-     * @return the calculated {@link DrivetrainVelocities}.
+     * @return the calculated {@link DrivetrainWheelVelocities}.
      */
-    public DrivetrainVelocities calculateFromAngularVelocity(double linearVelocity, double angularVelocity) {
+    public DrivetrainWheelVelocities calculateFromAngularVelocity(double linearVelocity, double angularVelocity) {
         if (linearVelocity == 0 && angularVelocity == 0) {
-            return new DrivetrainVelocities(0, 0);
+            return new DrivetrainWheelVelocities(0, 0);
         }
 
         //Calculate the radius given linear velocity and angular velocity
@@ -88,21 +88,21 @@ public class DifferentialDriveKinematics {
         //If track width has not been set, send a warning and return velocities of 0 to avoid any damage
         if (trackWidth == 0) {
             System.out.println("WARNING: Track width in DifferentialDriveKinematics.java has not been set!");
-            return new DrivetrainVelocities(0, 0);
+            return new DrivetrainWheelVelocities(0, 0);
         }
 
         //Return the calculated drivetrain velocities
-        return new DrivetrainVelocities(angularVelocity * (radius - (trackWidth / 2)),
+        return new DrivetrainWheelVelocities(angularVelocity * (radius - (trackWidth / 2)),
                 angularVelocity * (radius + (trackWidth / 2)));
     }
 
-    public double getRadiusFromWheelSpeeds(DrivetrainVelocities wheelSpeeds) {
+    public double getRadiusFromWheelSpeeds(DrivetrainWheelVelocities wheelSpeeds) {
         double linearVelocity = wheelSpeeds.getAvgVelocity();
 
         return linearVelocity / getAngularVelocityFromWheelSpeeds(wheelSpeeds);
     }
 
-    public double getAngularVelocityFromWheelSpeeds(DrivetrainVelocities wheelSpeeds) {
+    public double getAngularVelocityFromWheelSpeeds(DrivetrainWheelVelocities wheelSpeeds) {
         double rightVelocity = wheelSpeeds.getRightVelocity();
         double linearVelocity = wheelSpeeds.getAvgVelocity();
 

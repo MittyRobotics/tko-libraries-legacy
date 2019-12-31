@@ -24,8 +24,8 @@
 
 package com.github.mittyrobotics.path.following.controllers;
 
-import com.github.mittyrobotics.datatypes.motion.DrivetrainData;
 import com.github.mittyrobotics.datatypes.motion.DrivetrainVelocities;
+import com.github.mittyrobotics.datatypes.motion.DrivetrainWheelVelocities;
 import com.github.mittyrobotics.datatypes.positioning.Transform;
 import com.github.mittyrobotics.datatypes.units.Conversions;
 
@@ -62,7 +62,7 @@ public class RamseteController {
     }
 
     /**
-     * Calculates the {@link DrivetrainVelocities} based on the {@link RamseteController} path following algorithm.
+     * Calculates the {@link DrivetrainWheelVelocities} based on the {@link RamseteController} path following algorithm.
      *
      * @param robotTransform   the robot's current {@link Transform}.
      * @param desiredTransform the current desired {@link Transform} of the robot, the position on the path you want the
@@ -71,8 +71,8 @@ public class RamseteController {
      * @param turningRadius    the current desired radius the robot should be turning.
      * @return
      */
-    public DrivetrainData calculate(Transform robotTransform, Transform desiredTransform, double robotVelocity,
-                                    double turningRadius) {
+    public DrivetrainVelocities calculate(Transform robotTransform, Transform desiredTransform, double robotVelocity,
+                                          double turningRadius) {
         //Get the transform error in meters.
         Transform error = desiredTransform.relativeTo(robotTransform).inToM();
 
@@ -100,7 +100,8 @@ public class RamseteController {
                 angularVelocity + k * eTheta + aggressiveGain * linearVelocity * error.getRotation().sinc() * eY;
 
         //Use differential drive kinematics given linear velocity in inches per second and angular velocity in radians per second
-        return new DrivetrainData(adjustedLinearVelocity, adjustedAngularVelocity);
+        return DrivetrainVelocities
+                .calculateFromLinearAndAngularVelocity(adjustedLinearVelocity, adjustedAngularVelocity);
     }
 
     public double getAggressiveGain() {

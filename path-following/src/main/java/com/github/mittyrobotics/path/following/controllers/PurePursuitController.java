@@ -27,8 +27,8 @@ package com.github.mittyrobotics.path.following.controllers;
 import com.github.mittyrobotics.datatypes.geometry.Circle;
 import com.github.mittyrobotics.datatypes.geometry.Line;
 import com.github.mittyrobotics.datatypes.motion.DifferentialDriveKinematics;
-import com.github.mittyrobotics.datatypes.motion.DrivetrainData;
 import com.github.mittyrobotics.datatypes.motion.DrivetrainVelocities;
+import com.github.mittyrobotics.datatypes.motion.DrivetrainWheelVelocities;
 import com.github.mittyrobotics.datatypes.positioning.Position;
 import com.github.mittyrobotics.datatypes.positioning.Rotation;
 import com.github.mittyrobotics.datatypes.positioning.Transform;
@@ -63,14 +63,14 @@ public class PurePursuitController {
     }
 
     /**
-     * Calculates the {@link DrivetrainVelocities} based on the {@link PurePursuitController} path following algorithm.
+     * Calculates the {@link DrivetrainWheelVelocities} based on the {@link PurePursuitController} path following algorithm.
      *
      * @param robotTransform the robot's current {@link Transform}.
      * @param targetPosition the {@link Position} in front of the robot it is targeting (the look ahead position).
      * @param robotVelocity  the desired base velocity for the robot to be going.
-     * @return the {@link DrivetrainVelocities} based on the {@link PurePursuitController} path following algorithm.
+     * @return the {@link DrivetrainWheelVelocities} based on the {@link PurePursuitController} path following algorithm.
      */
-    public DrivetrainData calculate(Transform robotTransform, Position targetPosition, double robotVelocity) {
+    public DrivetrainVelocities calculate(Transform robotTransform, Position targetPosition, double robotVelocity) {
         //Determine if reversed
         boolean reversed = robotVelocity < 0;
 
@@ -97,8 +97,9 @@ public class PurePursuitController {
 
         //Use differential drive kinematics to calculate the left and right wheel velocity given the base robot
         //velocity and the radius of the pursuit circle
-        return new DrivetrainData(DifferentialDriveKinematics.getInstance().calculateFromRadius(
-                robotVelocity, radius));
+        return DrivetrainVelocities
+                .calculateFromWheelVelocities(DifferentialDriveKinematics.getInstance().calculateFromRadius(
+                        robotVelocity, radius));
     }
 
     /**
