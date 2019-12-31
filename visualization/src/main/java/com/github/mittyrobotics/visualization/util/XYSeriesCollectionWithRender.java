@@ -24,7 +24,6 @@
 
 package com.github.mittyrobotics.visualization.util;
 
-import org.jfree.chart.renderer.category.LineAndShapeRenderer;
 import org.jfree.chart.renderer.xy.XYLineAndShapeRenderer;
 import org.jfree.data.xy.XYSeriesCollection;
 

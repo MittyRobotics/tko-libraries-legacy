@@ -33,7 +33,8 @@ public class PathFollowerProperties {
     public final boolean reversed;
     public final boolean continuouslyAdaptivePath;
 
-    public PathFollowerProperties(Path path, PathVelocityController velocityController, boolean reversed, boolean continuouslyAdaptivePath) {
+    public PathFollowerProperties(Path path, PathVelocityController velocityController, boolean reversed,
+                                  boolean continuouslyAdaptivePath) {
         this.path = path;
         this.velocityController = velocityController;
         this.reversed = reversed;

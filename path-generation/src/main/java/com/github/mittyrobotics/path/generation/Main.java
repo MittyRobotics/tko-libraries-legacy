@@ -29,7 +29,6 @@ import com.github.mittyrobotics.datatypes.positioning.TransformWithVelocityAndCu
 import com.github.mittyrobotics.path.generation.splines.QuinticHermiteSpline;
 import com.github.mittyrobotics.visualization.graphs.Graph;
 import com.github.mittyrobotics.visualization.util.GraphManager;
-import com.github.mittyrobotics.visualization.util.XYColorByVelocityRenderer;
 
 import java.awt.*;
 

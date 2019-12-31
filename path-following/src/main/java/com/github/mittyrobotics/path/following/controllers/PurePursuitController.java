@@ -26,12 +26,12 @@ package com.github.mittyrobotics.path.following.controllers;
 
 import com.github.mittyrobotics.datatypes.geometry.Circle;
 import com.github.mittyrobotics.datatypes.geometry.Line;
+import com.github.mittyrobotics.datatypes.motion.DifferentialDriveKinematics;
 import com.github.mittyrobotics.datatypes.motion.DrivetrainData;
 import com.github.mittyrobotics.datatypes.motion.DrivetrainVelocities;
 import com.github.mittyrobotics.datatypes.positioning.Position;
 import com.github.mittyrobotics.datatypes.positioning.Rotation;
 import com.github.mittyrobotics.datatypes.positioning.Transform;
-import com.github.mittyrobotics.datatypes.motion.DifferentialDriveKinematics;
 
 public class PurePursuitController {
     public static final double DEFAULT_CURVATURE_SLOWDOWN_GAIN = 0.0;

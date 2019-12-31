@@ -54,6 +54,7 @@ public class PathGenerator {
         }
         return parametrics;
     }
+
     public Parametric[] generateQuinticHermiteSplinePath(Transform[] waypoints) {
         Parametric[] parametrics = new Parametric[waypoints.length - 1];
 

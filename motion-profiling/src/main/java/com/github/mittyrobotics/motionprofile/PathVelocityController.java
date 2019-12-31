@@ -30,20 +30,19 @@ public class PathVelocityController {
     private final VelocityConstraints velocityConstraints;
     private final double startVelocity;
     private final double endVelocity;
-    private SafeVelocityController safeVelocityController;
     private final boolean extremeTakeoff;
     private final double extremeTakeoffMultiplier;
-
+    private SafeVelocityController safeVelocityController;
     private boolean inTakeoffMode = true;
     private int previousSign = 0;
 
-    public PathVelocityController(VelocityConstraints velocityConstraints, double startVelocity, double endVelocity){
-        this(velocityConstraints,startVelocity,endVelocity,false,0);
+    public PathVelocityController(VelocityConstraints velocityConstraints, double startVelocity, double endVelocity) {
+        this(velocityConstraints, startVelocity, endVelocity, false, 0);
     }
 
     public PathVelocityController(VelocityConstraints velocityConstraints, double startVelocity, double endVelocity,
                                   boolean extremeTakeoff) {
-        this(velocityConstraints,startVelocity,endVelocity,extremeTakeoff,2);
+        this(velocityConstraints, startVelocity, endVelocity, extremeTakeoff, 2);
     }
 
     public PathVelocityController(VelocityConstraints velocityConstraints, double startVelocity, double endVelocity,

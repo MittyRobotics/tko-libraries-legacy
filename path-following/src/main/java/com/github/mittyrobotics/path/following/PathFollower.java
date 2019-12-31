@@ -281,8 +281,7 @@ public class PathFollower {
     public boolean isFinished(Transform robotTransform, double distanceTolerance) {
         return getRoughDistanceToEnd(robotTransform) < distanceTolerance;
     }
-
-
+    
     /**
      * Returns the rough distance of the robot along the current {@link Path}.
      *
