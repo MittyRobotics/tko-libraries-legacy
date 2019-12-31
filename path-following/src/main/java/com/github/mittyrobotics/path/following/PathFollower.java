@@ -172,7 +172,7 @@ public class PathFollower {
                                                    DrivetrainVelocities currentDrivetrainVelocities,
                                                    double deltaTime) {
         if (unAdaptedPath) {
-            calculateAdaptivePath(robotTransform, 0);
+            calculateAdaptivePath(robotTransform, currentDrivetrainVelocities.getDrivingCurvature());
             unAdaptedPath = false;
         }
 

@@ -60,14 +60,14 @@ public class Main {
         double y = random.nextInt(200) - 100.0;
         double heading = random.nextInt(90) - 45;
         //Set robot transform to random values
-        SimSampleDrivetrain.getInstance().setOdometry(0, 0, 0);
+        SimSampleDrivetrain.getInstance().setOdometry(x, y, heading);
 
 
         boolean reversed = false;
 
         //Create the original path from the robot position to the point
         Path originalPath = new Path(PathGenerator.getInstance().generateQuinticHermiteSplinePath(
-                new Transform[]{new Transform(0, 0, 0), new Transform(100, -48, 0)}));
+                new Transform[]{SimSampleDrivetrain.getInstance().getRobotTransform(), new Transform(100, -48, 0)}));
 
         if (reversed) {
             // originalPath = new QuinticHermitePath(originalPath.getReversedWaypoints());
@@ -115,13 +115,14 @@ public class Main {
                         .graphParametricFast(follower.getCurrentPath(), .07, "spline", Color.cyan));
             });
 
+            DrivetrainVelocities currentVelocities = DrivetrainVelocities
+                    .calculateFromWheelVelocities(SimSampleDrivetrain.getInstance().getLeftMasterTalon().getVelocity(),
+                            SimSampleDrivetrain.getInstance().getRightMasterTalon().getVelocity());
+
             //Update pure pursuit controller and set velocities
             DrivetrainVelocities drivetrainVelocities =
                     follower.updatePathFollower(SimSampleDrivetrain.getInstance().getRobotTransform(),
-                            DrivetrainVelocities.calculateFromWheelVelocities(
-                                    SimSampleDrivetrain.getInstance().getLeftMasterTalon().getVelocity(),
-                                    SimSampleDrivetrain.getInstance().getRightMasterTalon().getVelocity()),
-                            RobotSimManager.getInstance().getPeriodTime());
+                            currentVelocities, RobotSimManager.getInstance().getPeriodTime());
 
             SimSampleDrivetrain.getInstance()
                     .setVelocities(drivetrainVelocities.getLeftVelocity(), drivetrainVelocities.getRightVelocity());
