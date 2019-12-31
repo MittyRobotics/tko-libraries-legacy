@@ -259,7 +259,6 @@ public class PathFollower {
      * @param robotTransform the robot's {@link Transform}.
      */
     private void calculateAdaptivePath(Transform robotTransform, double curvature) {
-        //TODO: calculate adaptive path
         Path path =
                 new Path(PathGenerator.getInstance().generateQuinticHermiteSplinePath(
                         new TransformWithVelocityAndCurvature[]{
@@ -281,7 +280,7 @@ public class PathFollower {
     public boolean isFinished(Transform robotTransform, double distanceTolerance) {
         return getRoughDistanceToEnd(robotTransform) < distanceTolerance;
     }
-    
+
     /**
      * Returns the rough distance of the robot along the current {@link Path}.
      *
