@@ -71,7 +71,6 @@ public class PathVelocityController {
 
         //If in takeoff mode and extreme takeoff is true, multiple acceleration and deceleration by extremeTakeoffMultiplier
         if (inTakeoffMode && extremeTakeoff) {
-            System.out.println("takeoff mode");
             return safeVelocityController.getVelocity(currentVelocity, desiredVelocity, deltaTime,
                     new VelocityConstraints(velocityConstraints.getMaxAcceleration() * extremeTakeoffMultiplier,
                             velocityConstraints.getMaxDeceleration() * extremeTakeoffMultiplier,

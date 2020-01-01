@@ -162,7 +162,7 @@ public class PathFollower {
     public void setDrivingGoal(Transform goal) {
         Path path =
                 new Path(PathGenerator.getInstance().generateQuinticHermiteSplinePath(new Transform[]{
-                        goal.add(new Transform(goal.getRotation().cos() * -20, goal.getRotation().sin() * -20)),
+                        goal.add(new Transform(goal.getRotation().cos() * -30, goal.getRotation().sin() * -30)),
                         goal}));
         changePath(path, true);
     }
@@ -285,11 +285,7 @@ public class PathFollower {
      */
     private void calculateAdaptivePath(Transform robotTransform, double curvature) {
         Path path =
-                new Path(PathGenerator.getInstance().generateQuinticHermiteSplinePath(
-                        new TransformWithVelocityAndCurvature[]{
-                                new TransformWithVelocityAndCurvature(robotTransform, 0, curvature),
-                                new TransformWithVelocityAndCurvature(currentPath.getTransform(1), 0, 0)
-                        }));
+                new Path(PathGenerator.getInstance().generateQuinticHermiteSplinePath(currentPath.generateAdaptivePathWaypoints(robotTransform,true)));
         changePath(path);
     }
 

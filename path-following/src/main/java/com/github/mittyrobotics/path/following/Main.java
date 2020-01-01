@@ -49,6 +49,7 @@ public class Main extends TimerTask {
     private PathFollower pathFollower;
     private Graph graph;
     private XYSeriesCollectionWithRender dataset;
+    private double t = 0;
 
     public static void main(String[] args) {
         new Main().initMain();
@@ -77,7 +78,7 @@ public class Main extends TimerTask {
 
         //Create velocity controller
         PathVelocityController velocityController =
-                new PathVelocityController(new VelocityConstraints(50, 50, 150), 10, 0, true);
+                new PathVelocityController(new VelocityConstraints(50, 50, 150), 0, 0, true);
 
         //Create path properties
         PathFollowerProperties properties =
@@ -115,15 +116,13 @@ public class Main extends TimerTask {
         graph.addDataset(dataset);
         JFrame frame = new JFrame();
         frame.setLayout(new BorderLayout());
-        frame.add(RobotGraph.getInstance().getChartPanel(), BorderLayout.WEST);
-        frame.add(graph.getChartPanel(), BorderLayout.EAST);
+        frame.add(RobotGraph.getInstance().getContentPane(), BorderLayout.WEST);
+        frame.add(graph.getContentPane(), BorderLayout.EAST);
         frame.pack();
         frame.setVisible(true);
         RobotGraph.getInstance().setVisible(false);
         graph.setVisible(false);
     }
-
-    private double t = 0;
 
     @Override
     public void run() {
