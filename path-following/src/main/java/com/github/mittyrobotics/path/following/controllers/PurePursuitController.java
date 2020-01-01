@@ -98,8 +98,7 @@ public class PurePursuitController {
         //Use differential drive kinematics to calculate the left and right wheel velocity given the base robot
         //velocity and the radius of the pursuit circle
         return DrivetrainVelocities
-                .calculateFromWheelVelocities(DifferentialDriveKinematics.getInstance().calculateFromRadius(
-                        robotVelocity, radius));
+                .calculateFromLinearVelocityAndRadius(robotVelocity,radius);
     }
 
     /**

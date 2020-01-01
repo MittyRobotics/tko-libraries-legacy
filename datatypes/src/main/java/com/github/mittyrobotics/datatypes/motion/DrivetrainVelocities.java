@@ -45,6 +45,13 @@ public class DrivetrainVelocities {
         return new DrivetrainVelocities(0, 0, 0, 0, 0);
     }
 
+    public static DrivetrainVelocities calculateFromLinearVelocityAndRadius(double linearVelocity,
+                                                                                      double radius){
+        DrivetrainWheelVelocities drivetrainWheelVelocities =
+                DifferentialDriveKinematics.getInstance().calculateFromRadius(linearVelocity,radius);
+        return calculateFromWheelVelocities(drivetrainWheelVelocities);
+    }
+
     public static DrivetrainVelocities calculateFromWheelVelocities(double leftVelocity, double rightVelocity) {
         return calculateFromWheelVelocities(new DrivetrainWheelVelocities(leftVelocity, rightVelocity));
     }

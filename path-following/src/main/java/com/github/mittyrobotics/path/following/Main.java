@@ -93,7 +93,7 @@ public class Main extends TimerTask {
                 new PathFollowerProperties.RamseteProperties(5.0, .7);
 
         //Setup the path follower
-        PathFollower pathFollower = new PathFollower(properties, ramseteProperties);
+        PathFollower pathFollower = new PathFollower(properties, purePursuitProperties);
         pathFollower.setDrivingGoal(new Transform(100, -24, 0));
         this.pathFollower = pathFollower;
 
@@ -104,11 +104,6 @@ public class Main extends TimerTask {
     }
 
     private void initGraphs(){
-        //Add original path to graph
-        RobotGraph.getInstance()
-                .addPath((GraphManager.getInstance()
-                        .graphParametric(pathFollower.getCurrentPath(), .05, 3, .2, "spline", Color.green)));
-
         this.graph = new Graph();
         this.dataset = new XYSeriesCollectionWithRender();
         dataset.addSeries(new XYSeries("Velocity Robot"));
