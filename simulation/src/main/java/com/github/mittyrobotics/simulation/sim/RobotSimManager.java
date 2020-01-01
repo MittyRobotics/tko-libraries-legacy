@@ -29,8 +29,10 @@ import com.github.mittyrobotics.datatypes.positioning.Transform;
 import com.github.mittyrobotics.visualization.graphs.RobotGraph;
 
 import javax.swing.*;
+import java.util.Timer;
+import java.util.TimerTask;
 
-public class RobotSimManager implements Runnable {
+public class RobotSimManager extends TimerTask {
 
 
     private static RobotSimManager instance = new RobotSimManager();
@@ -80,21 +82,15 @@ public class RobotSimManager implements Runnable {
 
     @Override
     public void run() {
-        while (true) {
-            while (!calledInit) {
-            }
-            periodic();
-            try {
-                Thread.sleep((long) (periodTime * 1000));
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
+        while (!calledInit) {
         }
+        periodic();
     }
 
     private void initHardware() {
         drivetrain.initDrivetrain();
-        new Thread(this).start();
+        Timer timer = new Timer();
+        timer.scheduleAtFixedRate(this,(long)0.0,(long)(periodTime*1000));
     }
 
     private void init() {

@@ -22,39 +22,39 @@
  * SOFTWARE.
  */
 
-package com.github.mittyrobotics.visualization.util;
+package com.github.mittyrobotics.datatypes.motion;
 
-import org.jfree.chart.renderer.xy.XYLineAndShapeRenderer;
+public class DrivetrainWheelVelocities {
+    private final double leftVelocity;
+    private final double rightVelocity;
 
-import java.awt.*;
-
-public class XYLineShapeColorRenderer extends XYLineAndShapeRenderer {
-
-    private final boolean showShapes;
-    private final boolean showLines;
-    private final Color color;
-
-    public XYLineShapeColorRenderer(boolean showLines, boolean showShapes, Color color) {
-        this.showShapes = showShapes;
-        this.showLines = showLines;
-        this.color = color;
-    }
-
-    @Override
-    public boolean getItemShapeVisible(int series, int item) {
-        return showShapes;
-    }
-
-    @Override
-    public boolean getItemLineVisible(int series, int item) {
-        return showLines;
-    }
-
-    @Override
-    public Paint getItemPaint(int row, int column) {
-        if(color == null){
-            return super.getItemPaint(row,column);
+    public DrivetrainWheelVelocities(double leftVelocity, double rightVelocity) {
+        if (Double.isNaN(leftVelocity) || Double.isInfinite(leftVelocity)) {
+            this.leftVelocity = 0;
+        } else {
+            this.leftVelocity = leftVelocity;
         }
-        return color;
+        if (Double.isNaN(rightVelocity) || Double.isInfinite(rightVelocity)) {
+            this.rightVelocity = 0;
+        } else {
+            this.rightVelocity = rightVelocity;
+        }
+    }
+
+    public double getLeftVelocity() {
+        return leftVelocity;
+    }
+
+    public double getRightVelocity() {
+        return rightVelocity;
+    }
+
+    public double getAvgVelocity() {
+        return (rightVelocity + leftVelocity) / 2;
+    }
+
+    @Override
+    public String toString() {
+        return String.format("DrivetrainVelocities(left: %s, right: %s)", leftVelocity, rightVelocity);
     }
 }

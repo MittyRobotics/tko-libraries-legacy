@@ -24,6 +24,7 @@
 
 package com.github.mittyrobotics.path.following.util;
 
+import com.github.mittyrobotics.datatypes.positioning.Position;
 import com.github.mittyrobotics.datatypes.positioning.Rotation;
 import com.github.mittyrobotics.datatypes.positioning.Transform;
 
@@ -32,14 +33,9 @@ public class Odometry {
 
     private Transform robotTransform;
 
-    private double robotHeading = 0;
-    private double robotX = 0;
-    private double robotY = 0;
     private double lastLeftEncoderPos = 0;
     private double lastRightEncoderPos = 0;
     private double calibrateGyroVal = 0;
-
-    private double ticksPerInch = 0;
 
     public static Odometry getInstance() {
         return instance;
@@ -48,70 +44,87 @@ public class Odometry {
     /**
      * Updates the {@link Odometry}. This should be updated frequently with the current gencoder and gyro values.
      *
-     * @param leftEncoder   the left wheel encoder value of the drivetrain.
-     * @param rightEncocder the right wheel encoder value of the drivetrain.
-     * @param heading       the heading value of the gyro.
+     * @param leftEncoderPosInches  the left wheel encoder value of the drivetrain in inches.
+     * @param rightEncoderPosInches the right wheel encoder value of the drivetrain in inches.
+     * @param heading               the heading value of the gyro.
      */
-    public void update(double leftEncoder, double rightEncocder, double heading) {
-        if (ticksPerInch == 0) {
-            System.out.println(
-                    "WARNING: Odometry.java ticks per inch is not setup! Call Odometry.getInstance().setTicksPerInch to set the value.");
-        } else {
-            //Update robot values based on encoder and gyro output
+    public void update(double leftEncoderPosInches, double rightEncoderPosInches, double heading) {
+        //Get robot rotation
+        Rotation robotRotation = new Rotation(heading - calibrateGyroVal).mapHeading180();
 
-            //Get robot heading relative to the calibrated value
-            robotHeading = heading - calibrateGyroVal;
-            if (robotHeading < 0) {
-                robotHeading = robotHeading + 360;
-            }
+        //Get delta left and right encoder pos
+        double deltaLeftPos = leftEncoderPosInches - lastLeftEncoderPos;
+        double deltaRightPos = rightEncoderPosInches - lastRightEncoderPos;
 
-            //Get robot rotation
-            Rotation robotRotation = new Rotation(robotHeading).mapHeading180();
+        //Get average delta encoder pos in inches
+        double deltaPosition = (deltaLeftPos + deltaRightPos) / 2;
 
-            //Get delta left and right encoder pos
-            double deltaLeftPos = leftEncoder - lastLeftEncoderPos;
-            double deltaRightPos = rightEncocder - lastRightEncoderPos;
+        //Get x and y values from heading and delta pos
+        double deltaX = deltaPosition * robotRotation.cos();
+        double deltaY = deltaPosition * robotRotation.sin();
 
-            //Get average delta encoder pos in inches
-            double deltaPosition = (deltaLeftPos + deltaRightPos) / 2 / ticksPerInch;
+        //Set last encoder positions
+        lastLeftEncoderPos = leftEncoderPosInches;
+        lastRightEncoderPos = rightEncoderPosInches;
 
-            //Get x and y values from heading and delta pos
-            robotX += deltaPosition * robotRotation.cos();
-            robotY += deltaPosition * robotRotation.sin();
+        robotTransform =
+                new Transform(robotTransform.getPosition().add(new Position(deltaX, deltaY)), robotRotation);
 
-            //Set last encoder positions
-            lastLeftEncoderPos = leftEncoder;
-            lastRightEncoderPos = rightEncocder;
-
-            robotHeading = robotRotation.getHeading();
-
-            robotTransform = new Transform(robotX, robotY, robotRotation);
-        }
     }
 
     public void calibrateToZero(double leftEncoder, double rightEncoder, double heading) {
-        calibrateGyroVal = robotTransform.getRotation().getHeading();
+        calibrateGyroVal = heading;
         lastLeftEncoderPos = leftEncoder;
         lastRightEncoderPos = rightEncoder;
         setRobotTransform(new Transform(0, 0, 0));
     }
 
+    public void calibratePositionToZero(double leftEncoder, double rightEncoder) {
+        lastLeftEncoderPos = leftEncoder;
+        lastRightEncoderPos = rightEncoder;
+        setRobotTransform(new Transform(0, 0, robotTransform.getRotation()));
+    }
+
+    /**
+     * Returns the calculated robot {@link Transform} from the {@link Odometry} calculations.
+     *
+     * @return the robot {@link Transform}.
+     */
     public Transform getRobotTransform() {
         return robotTransform;
     }
 
-    public void setRobotTransform(Transform robotTransform) {
-        this.robotTransform = robotTransform;
-        robotX = robotTransform.getPosition().getX();
-        robotY = robotTransform.getPosition().getY();
-        robotHeading = robotTransform.getRotation().getHeading();
+    /**
+     * Sets the robot {@link Transform}.
+     *
+     * @param newRobotTransform the new robot {@link Transform}.
+     */
+    public void setRobotTransform(Transform newRobotTransform) {
+        this.robotTransform = newRobotTransform;
     }
 
-    public double getTicksPerInch() {
-        return ticksPerInch;
+    /**
+     * Sets the robot {@link Position} in the robot {@link Transform}.
+     *
+     * @param newRobotPosition the new robot {@link Position}.
+     */
+    public void setRobotPosition(Position newRobotPosition) {
+        this.robotTransform = new Transform(newRobotPosition, robotTransform.getRotation());
     }
 
-    public void setTicksPerInch(double ticksPerInch) {
-        this.ticksPerInch = ticksPerInch;
+    /**
+     * Sets the robot {@link Transform} and calibrates the gyro value.
+     *
+     * @param newRobotTransform   the new robot {@link Transform}.
+     * @param currentRobotHeading the robot's current heading value.
+     */
+    public void setRobotTransform(Transform newRobotTransform, double currentRobotHeading) {
+        calibrateGyroValue(newRobotTransform.getRotation().getHeading(), currentRobotHeading);
+        this.robotTransform = newRobotTransform;
+    }
+
+    public void calibrateGyroValue(double desiredHeading, double currentHeading) {
+        this.calibrateGyroVal =
+                currentHeading - desiredHeading;
     }
 }

@@ -25,9 +25,9 @@
 package com.github.mittyrobotics.path.following.controllers;
 
 import com.github.mittyrobotics.datatypes.motion.DrivetrainVelocities;
+import com.github.mittyrobotics.datatypes.motion.DrivetrainWheelVelocities;
 import com.github.mittyrobotics.datatypes.positioning.Transform;
 import com.github.mittyrobotics.datatypes.units.Conversions;
-import com.github.mittyrobotics.path.following.util.DifferentialDriveKinematics;
 
 public class RamseteController {
     public static double DEFAULT_AGGRESSIVE_GAIN = 2.0;
@@ -62,7 +62,7 @@ public class RamseteController {
     }
 
     /**
-     * Calculates the {@link DrivetrainVelocities} based on the {@link RamseteController} path following algorithm.
+     * Calculates the {@link DrivetrainWheelVelocities} based on the {@link RamseteController} path following algorithm.
      *
      * @param robotTransform   the robot's current {@link Transform}.
      * @param desiredTransform the current desired {@link Transform} of the robot, the position on the path you want the
@@ -100,8 +100,8 @@ public class RamseteController {
                 angularVelocity + k * eTheta + aggressiveGain * linearVelocity * error.getRotation().sinc() * eY;
 
         //Use differential drive kinematics given linear velocity in inches per second and angular velocity in radians per second
-        return DifferentialDriveKinematics.getInstance()
-                .calculateFromAngularVelocity(adjustedLinearVelocity, adjustedAngularVelocity);
+        return DrivetrainVelocities
+                .calculateFromLinearAndAngularVelocity(adjustedLinearVelocity, adjustedAngularVelocity);
     }
 
     public double getAggressiveGain() {

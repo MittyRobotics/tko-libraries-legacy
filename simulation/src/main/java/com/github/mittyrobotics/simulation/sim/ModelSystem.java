@@ -80,8 +80,9 @@ public class ModelSystem {
     public void updateModel(double voltage, double deltaTime) {
         this.voltage = voltage;
         double acceleration = getAcceleration(voltage);
-        position += velocity * deltaTime;
+
         velocity += acceleration * deltaTime;
+        position += velocity * deltaTime;
     }
 
     /**

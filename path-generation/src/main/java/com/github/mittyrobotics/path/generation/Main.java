@@ -45,7 +45,7 @@ public class Main {
         TransformWithVelocityAndCurvature p2 = new TransformWithVelocityAndCurvature(new Transform(80, 50, 0), 0, 0);
 
         QuinticHermiteSpline spline = new QuinticHermiteSpline(p1, p2);
-
-        graph.addDataset(GraphManager.getInstance().graphParametric(spline, .01, 2, .5, "quintic", Color.green));
+        graph.addDataset(GraphManager.getInstance().graphParametric(new QuinticHermiteSpline[]{spline}, 2, .5,
+                "quintic", Color.green));
     }
 }

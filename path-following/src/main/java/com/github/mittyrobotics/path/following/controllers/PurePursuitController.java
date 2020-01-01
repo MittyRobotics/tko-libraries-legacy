@@ -26,16 +26,17 @@ package com.github.mittyrobotics.path.following.controllers;
 
 import com.github.mittyrobotics.datatypes.geometry.Circle;
 import com.github.mittyrobotics.datatypes.geometry.Line;
+import com.github.mittyrobotics.datatypes.motion.DifferentialDriveKinematics;
 import com.github.mittyrobotics.datatypes.motion.DrivetrainVelocities;
+import com.github.mittyrobotics.datatypes.motion.DrivetrainWheelVelocities;
 import com.github.mittyrobotics.datatypes.positioning.Position;
 import com.github.mittyrobotics.datatypes.positioning.Rotation;
 import com.github.mittyrobotics.datatypes.positioning.Transform;
-import com.github.mittyrobotics.path.following.util.DifferentialDriveKinematics;
 
 public class PurePursuitController {
-    public static final double DEFAULT_CURVATURE_SLOWDOWN_GAIN = 0;
-    public static final double DEFAULT_MIN_SLOWDOWN_VELOCITY = 10;
-    public static double DEFAULT_LOOKAHEAD_DISTANCE = 20.0;
+    public static final double DEFAULT_CURVATURE_SLOWDOWN_GAIN = 0.0;
+    public static final double DEFAULT_MIN_SLOWDOWN_VELOCITY = 20.0;
+    public static double DEFAULT_LOOKAHEAD_DISTANCE = 25.0;
     private static PurePursuitController instance = new PurePursuitController();
     private double curvatureSlowdownGain;
     private double minSlowdownVelocity;
@@ -62,12 +63,12 @@ public class PurePursuitController {
     }
 
     /**
-     * Calculates the {@link DrivetrainVelocities} based on the {@link PurePursuitController} path following algorithm.
+     * Calculates the {@link DrivetrainWheelVelocities} based on the {@link PurePursuitController} path following algorithm.
      *
      * @param robotTransform the robot's current {@link Transform}.
      * @param targetPosition the {@link Position} in front of the robot it is targeting (the look ahead position).
      * @param robotVelocity  the desired base velocity for the robot to be going.
-     * @return the {@link DrivetrainVelocities} based on the {@link PurePursuitController} path following algorithm.
+     * @return the {@link DrivetrainWheelVelocities} based on the {@link PurePursuitController} path following algorithm.
      */
     public DrivetrainVelocities calculate(Transform robotTransform, Position targetPosition, double robotVelocity) {
         //Determine if reversed
@@ -92,12 +93,13 @@ public class PurePursuitController {
 
         robotVelocity = calculateSlowdownVelocity(1 / (pursuitCircle.getRadius()), robotVelocity, minSlowdownVelocity);
 
+        double radius = pursuitCircle.getRadius() * side * (reversed ? -1 : 1);
+
         //Use differential drive kinematics to calculate the left and right wheel velocity given the base robot
         //velocity and the radius of the pursuit circle
-        return DifferentialDriveKinematics.getInstance().calculateFromRadius(
-                robotVelocity,
-                pursuitCircle.getRadius() * side * (reversed ? -1 : 1)
-        );
+        return DrivetrainVelocities
+                .calculateFromWheelVelocities(DifferentialDriveKinematics.getInstance().calculateFromRadius(
+                        robotVelocity, radius));
     }
 
     /**

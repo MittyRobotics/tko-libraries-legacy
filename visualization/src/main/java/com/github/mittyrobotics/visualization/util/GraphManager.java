@@ -29,6 +29,7 @@ import com.github.mittyrobotics.datatypes.geometry.Circle;
 import com.github.mittyrobotics.datatypes.path.Parametric;
 import com.github.mittyrobotics.datatypes.positioning.Position;
 import com.github.mittyrobotics.datatypes.positioning.Transform;
+import org.jfree.chart.renderer.xy.XYLineAndShapeRenderer;
 import org.jfree.data.xy.XYSeries;
 import org.jfree.data.xy.XYSeriesCollection;
 
@@ -95,7 +96,25 @@ public class GraphManager {
     public XYSeriesCollectionWithRender graphParametric(Parametric[] parametrics, double arrowLength, double arrowWidth,
                                                         String seriesName, Color color) {
         XYSeriesCollectionWithRender dataset =
-                new XYSeriesCollectionWithRender(true, false, color, new Rectangle(2, 2));
+                new XYSeriesCollectionWithRender(false, true, color, new Rectangle(2, 2));
+
+        for (double t = 0; t < 1; t += 0.01) {
+            double newT = t * parametrics.length;
+
+            for (int i = 0; i < parametrics.length; i++) {
+                if (newT >= i && newT <= i + 1) {
+                    dataset.addSeries(arrowSeries(parametrics[i].getTransform(newT - i), arrowLength, arrowWidth,
+                            seriesName + "" + newT));
+                }
+            }
+        }
+        return dataset;
+    }
+
+    public XYSeriesCollectionWithRender graphParametric(Parametric[] parametrics, double arrowLength, double arrowWidth,
+                                                        String seriesName, XYLineAndShapeRenderer renderer) {
+        XYSeriesCollectionWithRender dataset =
+                new XYSeriesCollectionWithRender(renderer);
 
         for (double t = 0; t < 1; t += 0.01) {
             double newT = t * parametrics.length;

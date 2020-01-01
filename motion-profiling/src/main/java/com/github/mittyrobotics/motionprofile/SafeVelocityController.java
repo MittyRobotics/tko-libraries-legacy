@@ -35,11 +35,23 @@ public class SafeVelocityController {
     }
 
     public double getVelocity(double currentVelocity, double desiredVelocity, double deltaTime) {
-        double finalVelocity = 0;
+        double finalVelocity;
         if (currentVelocity >= desiredVelocity) {
             finalVelocity = currentVelocity - velocityConstraints.getMaxDeceleration() * deltaTime;
         } else {
             finalVelocity = currentVelocity + velocityConstraints.getMaxAcceleration() * deltaTime;
+        }
+
+        return Math.min(finalVelocity, desiredVelocity);
+    }
+
+    public double getVelocity(double currentVelocity, double desiredVelocity, double deltaTime,
+                              VelocityConstraints currentVelocityConstraints) {
+        double finalVelocity = 0;
+        if (currentVelocity >= desiredVelocity) {
+            finalVelocity = currentVelocity - currentVelocityConstraints.getMaxDeceleration() * deltaTime;
+        } else {
+            finalVelocity = currentVelocity + currentVelocityConstraints.getMaxAcceleration() * deltaTime;
         }
 
         return Math.min(finalVelocity, desiredVelocity);

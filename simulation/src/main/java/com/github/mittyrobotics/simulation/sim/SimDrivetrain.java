@@ -25,12 +25,13 @@
 package com.github.mittyrobotics.simulation.sim;
 
 
+import com.github.mittyrobotics.datacollection.performance.TimeMonitor;
 import com.github.mittyrobotics.datatypes.positioning.Transform;
 import com.github.mittyrobotics.datatypes.units.Conversions;
 
+import java.util.Timer;
+
 public abstract class SimDrivetrain {
-
-
     private SimTalon[] leftTalons;
     private SimTalon[] rightTalons;
 
@@ -39,7 +40,6 @@ public abstract class SimDrivetrain {
     private double x = 0;
     private double y = 0;
     private double heading = 0;
-
 
     public abstract void initDrivetrain();
 
@@ -67,12 +67,14 @@ public abstract class SimDrivetrain {
         double massPerLeftSide = massPerSide / leftTalons.length;
         double massPerRightSide = massPerSide / rightTalons.length;
         for (int i = 0; i < leftTalons.length; i++) {
-            new Thread(leftTalons[i]).start();
+            Timer timer = new Timer();
+            timer.scheduleAtFixedRate(leftTalons[i],(long)0.0,(long)1.0);
             leftTalons[i].getModel().initSystemModel(massPerLeftSide, RobotSimManager.getInstance().getDriveGearRatio(),
                     RobotSimManager.getInstance().getDriveWheelRadius() * Conversions.IN_TO_M);
         }
         for (int i = 0; i < rightTalons.length; i++) {
-            new Thread(rightTalons[i]).start();
+            Timer timer = new Timer();
+            timer.scheduleAtFixedRate(rightTalons[i],(long)0.0,(long)1.0);
             rightTalons[i].getModel()
                     .initSystemModel(massPerRightSide, RobotSimManager.getInstance().getDriveGearRatio(),
                             RobotSimManager.getInstance().getDriveWheelRadius() * Conversions.IN_TO_M);

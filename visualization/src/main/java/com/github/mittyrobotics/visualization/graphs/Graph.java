@@ -26,7 +26,6 @@ package com.github.mittyrobotics.visualization.graphs;
 
 import com.github.mittyrobotics.visualization.themes.GraphTheme;
 import com.github.mittyrobotics.visualization.themes.TKOTheme;
-import com.github.mittyrobotics.visualization.util.XYLineShapeColorRenderer;
 import com.github.mittyrobotics.visualization.util.XYSeriesCollectionWithRender;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
@@ -199,16 +198,14 @@ public class Graph extends JFrame {
         if (datasets != null) {
             for (int i = 0; i < datasets.length; i++) {
                 plot.setDataset(i, datasets[i]);
-                plot.setRenderer(i, new XYLineShapeColorRenderer(datasets[i].isShowPoints(), datasets[i].isShowLines(),
-                        datasets[i].getColor()));
+                plot.setRenderer(i, datasets[i].getRenderer());
             }
         }
     }
 
     public void addDataset(XYSeriesCollectionWithRender dataset) {
         plot.setDataset(lastIndex, dataset);
-        plot.setRenderer(lastIndex,
-                new XYLineShapeColorRenderer(dataset.isShowPoints(), dataset.isShowLines(), dataset.getColor()));
+        plot.setRenderer(lastIndex, dataset.getRenderer());
         lastIndex++;
     }
 

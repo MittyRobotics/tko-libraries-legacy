@@ -529,7 +529,7 @@ public class Path extends Parametric {
                             onPathPoint.getRotation()));
         }
 
-        adjustedPathWaypoints = new TransformWithVelocityAndCurvature[waypoints.length - startWaypointIndex + 1];
+        adjustedPathWaypoints = new Transform[waypoints.length - startWaypointIndex + 1];
         adjustedPathWaypoints[0] = adaptiveStartTransform;
         adjustedPathWaypoints[1] = nextWaypoint;
         for (int i = 2; i < adjustedPathWaypoints.length; i++) {

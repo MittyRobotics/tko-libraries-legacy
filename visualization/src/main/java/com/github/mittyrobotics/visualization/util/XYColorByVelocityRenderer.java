@@ -28,33 +28,26 @@ import org.jfree.chart.renderer.xy.XYLineAndShapeRenderer;
 
 import java.awt.*;
 
-public class XYLineShapeColorRenderer extends XYLineAndShapeRenderer {
+public class XYColorByVelocityRenderer extends XYLineAndShapeRenderer {
+    private final double minVelocity;
+    private final double maxVelocity;
+    private final double[] velocityPoints;
 
-    private final boolean showShapes;
-    private final boolean showLines;
-    private final Color color;
-
-    public XYLineShapeColorRenderer(boolean showLines, boolean showShapes, Color color) {
-        this.showShapes = showShapes;
-        this.showLines = showLines;
-        this.color = color;
-    }
-
-    @Override
-    public boolean getItemShapeVisible(int series, int item) {
-        return showShapes;
-    }
-
-    @Override
-    public boolean getItemLineVisible(int series, int item) {
-        return showLines;
+    public XYColorByVelocityRenderer(boolean showLines, boolean showPoints, double minVelocity, double maxVelocity,
+                                     double[] velocityPoints) {
+        super(showLines, showPoints);
+        this.minVelocity = minVelocity;
+        this.maxVelocity = maxVelocity;
+        this.velocityPoints = velocityPoints;
     }
 
     @Override
     public Paint getItemPaint(int row, int column) {
-        if(color == null){
-            return super.getItemPaint(row,column);
-        }
-        return color;
+        return new Color(Math.min(255, (int) (180 - map(velocityPoints[row], minVelocity, maxVelocity, 0, 180))),
+                Math.max(0, (int) (map(velocityPoints[row], minVelocity, maxVelocity, 0, 180))), 0);
+    }
+
+    private double map(double val, double valMin, double valMax, double newMin, double newMax) {
+        return (val - valMin) / (valMax - valMin) * (newMax - newMin) + newMin;
     }
 }

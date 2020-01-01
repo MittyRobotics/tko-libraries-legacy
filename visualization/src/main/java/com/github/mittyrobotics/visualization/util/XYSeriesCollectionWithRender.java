@@ -24,6 +24,7 @@
 
 package com.github.mittyrobotics.visualization.util;
 
+import org.jfree.chart.renderer.xy.XYLineAndShapeRenderer;
 import org.jfree.data.xy.XYSeriesCollection;
 
 import java.awt.*;
@@ -33,19 +34,24 @@ public class XYSeriesCollectionWithRender extends XYSeriesCollection {
     private boolean showPoints;
     private Color color;
     private Shape shape;
+    private XYLineAndShapeRenderer renderer;
 
     public XYSeriesCollectionWithRender() {
-        this(true, true, Color.white, new Rectangle(2, 2));
+        this(true, true, null, new Rectangle(2, 2));
     }
 
-    public XYSeriesCollectionWithRender(boolean showLines, boolean showPoints, Color color, Shape shape) {
+    public XYSeriesCollectionWithRender(boolean showPoints, boolean showLines, Color color, Shape shape) {
         super();
         this.showLines = showLines;
         this.showPoints = showPoints;
         this.color = color;
         this.shape = shape;
+        this.renderer = new XYLineShapeColorRenderer(showPoints, showLines, color);
     }
 
+    public XYSeriesCollectionWithRender(XYLineAndShapeRenderer renderer) {
+        this.renderer = renderer;
+    }
 
     public boolean isShowLines() {
         return showLines;
@@ -77,5 +83,13 @@ public class XYSeriesCollectionWithRender extends XYSeriesCollection {
 
     public void setShape(Shape shape) {
         this.shape = shape;
+    }
+
+    public XYLineAndShapeRenderer getRenderer() {
+        return renderer;
+    }
+
+    public void setRenderer(XYLineAndShapeRenderer renderer) {
+        this.renderer = renderer;
     }
 }
