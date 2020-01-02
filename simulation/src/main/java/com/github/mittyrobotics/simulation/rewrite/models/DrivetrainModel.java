@@ -32,6 +32,7 @@ public class DrivetrainModel {
     private final double mass;
     private final double momentOfInertia;
     private final double trackWidth;
+    private final double drivetrainLength;
     private final Motor motor;
     private final double numMotorsPerSide;
     private final double gearRatio;
@@ -57,12 +58,14 @@ public class DrivetrainModel {
      * @param gearRatio
      * @param wheelRadius      in
      */
-    public DrivetrainModel(double mass, double momentOfInertia, double trackWidth, Motor motor,
+    public DrivetrainModel(double mass, double momentOfInertia, double trackWidth, double drivetrainLength,
+                           Motor motor,
                            double numMotorsPerSide,
                            double gearRatio, double wheelRadius) {
         this.mass = mass * Conversions.LBS_TO_KG;
         this.momentOfInertia = momentOfInertia;
         this.trackWidth = trackWidth * Conversions.IN_TO_M;
+        this.drivetrainLength = drivetrainLength;
         this.motor = motor;
         this.numMotorsPerSide = numMotorsPerSide;
         this.gearRatio = gearRatio;
@@ -76,7 +79,7 @@ public class DrivetrainModel {
         double freeSpeed = motor.getFreeSpeed();
         double freeCurrent = motor.getFreeCurrent();
 
-        this.resistance = 12 / stallCurrent;
+        this.resistance = 12.0 / stallCurrent;
         this.Kv = ((freeSpeed / 60.0 * 2.0 * Math.PI) / (12.0 - resistance * freeCurrent));
         this.Kt = (numMotorsPerSide * stallTorque) / stallCurrent;
     }
@@ -121,6 +124,14 @@ public class DrivetrainModel {
                 ((1 / m) - ((rb * rb) / J)) * Fl + ((1 / m) + ((rb * rb) / J)) * Fr;
 
         return new DrivetrainWheelVelocities(leftAcceleration, rightAcceleration);
+    }
+
+    public double getTrackWidth(){
+        return trackWidth * Conversions.M_TO_IN;
+    }
+
+    public double getDrivetrainLength() {
+        return drivetrainLength;
     }
 
     public double getLeftVelocity() {

@@ -24,29 +24,19 @@
 
 package com.github.mittyrobotics.simulation.rewrite;
 
-import com.github.mittyrobotics.datatypes.units.Conversions;
 import com.github.mittyrobotics.simulation.rewrite.models.DrivetrainModel;
-import com.github.mittyrobotics.simulation.rewrite.models.PulleyModel;
 import com.github.mittyrobotics.simulation.rewrite.motors.CIMMotor;
-import com.github.mittyrobotics.simulation.rewrite.motors.Pro775Motor;
-import com.github.mittyrobotics.simulation.sim.ModelSystem;
-import com.github.mittyrobotics.visualization.graphs.MotorSimGraph;
+import com.github.mittyrobotics.simulation.rewrite.sim.RobotSimulator;
+import com.github.mittyrobotics.simulation.rewrite.sim.SimDrivetrain;
+import com.github.mittyrobotics.simulation.rewrite.sim.SimRobot;
+import com.github.mittyrobotics.visualization.graphs.RobotGraph;
 
 public class Main {
     public static void main(String[] args) {
-        DrivetrainModel drivetrainModel = new DrivetrainModel(125,1.585,20, new CIMMotor(),2,7,2);
+        DrivetrainModel drivetrainModel = new DrivetrainModel(125,1.585,20,30, new CIMMotor(),2,7.0,2);
+        SimRobot robot = new SimRobot(new SimDrivetrain(drivetrainModel));
 
-        MotorSimGraph graph = new MotorSimGraph();
-
-        double voltage = 12;
-        for(int i = 0; i < 500; i++){
-            drivetrainModel.updateModel(voltage,voltage,0.02);
-            if(i > 200){
-                voltage = 0;
-            }
-            graph.addAcceleration((drivetrainModel.getLeftAcceleration()+drivetrainModel.getRightAcceleration())/2,i*0.02);
-            graph.addVelocity((drivetrainModel.getLeftVelocity()+drivetrainModel.getRightVelocity())/2,i*0.02);
-            graph.addPosition((drivetrainModel.getLeftPosition()+drivetrainModel.getRightPosition())/2,i*0.02);
-        }
+        RobotSimulator simulator = new RobotSimulator(robot,0.02);
+        robot.getDrivetrain().setPercentOutput(1,1);
     }
 }

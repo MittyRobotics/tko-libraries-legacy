@@ -28,7 +28,6 @@ import com.github.mittyrobotics.datatypes.positioning.Position;
 import com.github.mittyrobotics.datatypes.positioning.Rotation;
 import com.github.mittyrobotics.datatypes.positioning.Transform;
 import com.github.mittyrobotics.simulation.rewrite.models.DrivetrainModel;
-import com.github.mittyrobotics.simulation.sim.RobotSimManager;
 
 import java.util.Timer;
 import java.util.TimerTask;
@@ -40,7 +39,7 @@ public class SimDrivetrain extends TimerTask {
     private double periodTime = 0.001;
 
     //Odometry values
-    private Transform robotTransform;
+    private Transform robotTransform = new Transform();
     private double prevLeftPos;
     private double prevRightPos;
 
@@ -53,19 +52,21 @@ public class SimDrivetrain extends TimerTask {
     private double lastError;
     private double maxPIDPercent = 1;
 
-    public SimDrivetrain(DrivetrainModel drivetrainModel){
+    public SimDrivetrain(DrivetrainModel drivetrainModel) {
         this.drivetrainModel = drivetrainModel;
-        new Timer().scheduleAtFixedRate(this,(long)0.0,(long)(periodTime*1000.0));
+        new Timer().scheduleAtFixedRate(this, (long) 1000.0, (long) (periodTime * 1000.0));
     }
 
-    public void setPercentOutput(double leftPercent, double rightPercent){
-        this.leftVoltage = leftPercent*12;
-        this.rightVoltage = rightPercent*12;
+    public void setPercentOutput(double leftPercent, double rightPercent) {
+        leftPercent = Math.max(-1, Math.min(1, leftPercent));
+        rightPercent = Math.max(-1, Math.min(1, rightPercent));
+        this.leftVoltage = leftPercent * 12;
+        this.rightVoltage = rightPercent * 12;
     }
 
-    public void setVelocityControl(double leftVelocity, double rightVelocity){
-        this.leftVoltage = calculatePID(leftVelocity,drivetrainModel.getLeftVelocity(),periodTime);
-        this.rightVoltage = calculatePID(rightVelocity,drivetrainModel.getRightVelocity(),periodTime);
+    public void setVelocityControl(double leftVelocity, double rightVelocity) {
+        setPercentOutput(calculatePID(leftVelocity, drivetrainModel.getLeftVelocity(), periodTime),
+                calculatePID(rightVelocity, drivetrainModel.getRightVelocity(), periodTime));
     }
 
     private void odometry() {
@@ -74,12 +75,15 @@ public class SimDrivetrain extends TimerTask {
 
         double deltaPos = (deltaLeftPos + deltaRightPos) / 2;
 
-        Rotation heading =
-                robotTransform.getRotation().subtract(new Rotation(Math.toDegrees(Math.atan2((deltaLeftPos - deltaRightPos),
-                        RobotSimManager.getInstance().getRobotWidth()))));
+        Rotation rotation =
+                robotTransform.getRotation()
+                        .subtract(new Rotation(Math.toDegrees(Math.atan2((deltaLeftPos - deltaRightPos),
+                                drivetrainModel.getTrackWidth()))));
 
-        Position position = robotTransform.getPosition().add(new Position(heading.cos()*deltaPos,
-                heading.sin()*deltaPos));
+        Position position = robotTransform.getPosition().add(new Position(rotation.cos() * deltaPos,
+                rotation.sin() * deltaPos));
+
+        robotTransform = new Transform(position, rotation);
 
         prevLeftPos = drivetrainModel.getLeftPosition();
         prevRightPos = drivetrainModel.getRightPosition();
@@ -92,7 +96,7 @@ public class SimDrivetrain extends TimerTask {
         prevRightPos = drivetrainModel.getRightPosition();
     }
 
-    public Transform getRobotTransform(){
+    public Transform getRobotTransform() {
         return robotTransform;
     }
 
@@ -116,7 +120,7 @@ public class SimDrivetrain extends TimerTask {
         double FB = p * error;
 
         voltage = FF + FB;
-        
+
         double maxVoltage = maxPIDPercent * 12;
         voltage = Math.max(-maxVoltage, Math.min(maxVoltage, voltage));
 
@@ -128,7 +132,7 @@ public class SimDrivetrain extends TimerTask {
 
     @Override
     public void run() {
-        drivetrainModel.updateModel(leftVoltage,rightVoltage,periodTime);
+        drivetrainModel.updateModel(leftVoltage, rightVoltage, periodTime);
         odometry();
     }
 
