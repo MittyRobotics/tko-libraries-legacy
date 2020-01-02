@@ -58,7 +58,7 @@ public class PathFollowerSimRobot extends SimRobot {
 
         //Create velocity controller
         PathVelocityController velocityController =
-                new PathVelocityController(new VelocityConstraints(50, 50, 150), 0, 0, false);
+                new PathVelocityController(new VelocityConstraints(100, 100, 150), 0, 0, false);
 
         //Create path properties
         PathFollowerProperties properties =

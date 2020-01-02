@@ -54,7 +54,7 @@ public class SimDrivetrain extends TimerTask {
 
     public SimDrivetrain(DrivetrainModel drivetrainModel) {
         this.drivetrainModel = drivetrainModel;
-        new Timer().scheduleAtFixedRate(this, (long) 1000.0, (long) (periodTime * 1000.0));
+        new Timer().scheduleAtFixedRate(this, (long) 0.0, (long) (periodTime * 1000.0));
     }
 
     public void setPercentOutput(double leftPercent, double rightPercent) {

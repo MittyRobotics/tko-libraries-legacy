@@ -30,6 +30,8 @@ import com.github.mittyrobotics.datatypes.positioning.Rotation;
 import com.github.mittyrobotics.datatypes.positioning.Transform;
 import com.github.mittyrobotics.datatypes.positioning.TransformWithParameter;
 
+import java.util.ArrayList;
+
 public class Path extends Parametric {
     private Transform[] waypoints;
     private Parametric[] parametrics;
@@ -510,7 +512,7 @@ public class Path extends Parametric {
         Transform[] waypoints = getWaypoints();
 
         int startWaypointIndex = 0;
-        double currentClosest = 9999;
+        double currentClosest = Double.POSITIVE_INFINITY;
         for (int i = 0; i < waypoints.length; i++) {
             double waypointT = getClosestT(waypoints[i].getPosition(), 10, 3);
             double distance = waypoints[i].getPosition().distance(onPathPoint.getPosition());
@@ -520,26 +522,27 @@ public class Path extends Parametric {
             }
         }
 
-        Transform[] adjustedPathWaypoints;
-        Transform adaptiveStartTransform;
+        ArrayList<Transform> adjustedPathWaypoints = new ArrayList<>();
         Transform nextWaypoint = waypoints[startWaypointIndex];
 
         if (adaptToStartHeading) {
-            adaptiveStartTransform = newStartTransform;
+            adjustedPathWaypoints.add(newStartTransform);
         } else {
-            adaptiveStartTransform =
-                    new Transform(new Transform(newStartTransform.getPosition(),
-                            onPathPoint.getRotation()));
+            adjustedPathWaypoints
+                    .add(new Transform(new Transform(newStartTransform.getPosition(), onPathPoint.getRotation())));
         }
 
-        adjustedPathWaypoints = new Transform[waypoints.length - startWaypointIndex + 1];
-        adjustedPathWaypoints[0] = adaptiveStartTransform;
-        adjustedPathWaypoints[1] = nextWaypoint;
-        for (int i = 2; i < adjustedPathWaypoints.length; i++) {
-            adjustedPathWaypoints[i] = waypoints[(i - 1) + startWaypointIndex];
+        adjustedPathWaypoints.add(nextWaypoint);
+        for (int i = startWaypointIndex; i < waypoints.length; i++) {
+            adjustedPathWaypoints.add(waypoints[i]);
         }
 
-        return adjustedPathWaypoints;
+        Transform[] adjustedPathWaypointsArray = new Transform[adjustedPathWaypoints.size()];
+        for(int i = 0; i < adjustedPathWaypointsArray.length; i++){
+            adjustedPathWaypointsArray[i] = adjustedPathWaypoints.get(i);
+        }
+
+        return adjustedPathWaypointsArray;
     }
 
     /**
