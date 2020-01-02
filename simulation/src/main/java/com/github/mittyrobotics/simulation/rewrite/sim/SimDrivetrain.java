@@ -108,18 +108,16 @@ public class SimDrivetrain extends TimerTask {
     }
 
     private double calculatePID(double target, double measured, double deltaTime) {
-        double voltage = 0;
+        double voltage;
 
         double FF = f * target + d * ((measured - lastMeasured) / deltaTime);
 
         double error = target - measured;
-
         double FB = p * error;
 
         voltage = FF + FB;
-
+        
         double maxVoltage = maxPIDPercent * 12;
-
         voltage = Math.max(-maxVoltage, Math.min(maxVoltage, voltage));
 
         lastMeasured = measured;
