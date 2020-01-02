@@ -31,13 +31,13 @@ import com.github.mittyrobotics.datatypes.positioning.Transform;
 import com.github.mittyrobotics.motionprofile.PathVelocityController;
 import com.github.mittyrobotics.path.following.PathFollower;
 import com.github.mittyrobotics.path.following.util.PathFollowerProperties;
-import com.github.mittyrobotics.simulation.rewrite.sim.RobotSimulator;
 import com.github.mittyrobotics.simulation.rewrite.sim.SimDrivetrain;
 import com.github.mittyrobotics.simulation.rewrite.sim.SimRobot;
 import com.github.mittyrobotics.visualization.util.GraphManager;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.Random;
 
 public class PathFollowerSimRobot extends SimRobot {
     private PathFollower pathFollower;
@@ -76,7 +76,15 @@ public class PathFollowerSimRobot extends SimRobot {
 
         this.pathFollower = pathFollower;
 
-        pathFollower.setDrivingGoal(new Transform(100, -24, 0));
+        //Get random values for robot transform
+        Random random = new Random();
+        double x = random.nextInt(200) - 200;
+        double y = random.nextInt(200) - 100.0;
+        double heading = random.nextInt(90) - 45;
+        //Set robot transform to random values
+        getDrivetrain().setOdometry(new Transform(x, y, heading));
+
+        pathFollower.setDrivingGoal(new Transform(100, -24, -90));
     }
 
     @Override
@@ -90,14 +98,13 @@ public class PathFollowerSimRobot extends SimRobot {
                 pathFollower.updatePathFollower(getDrivetrain().getRobotTransform(),
                         currentVelocities, getRobotSimulator().getPeriodTime());
 
-        getDrivetrain().setVelocityControl(drivetrainVelocities.getLeftVelocity(),drivetrainVelocities.getRightVelocity());
-
-        System.out.println(drivetrainVelocities.getLeftVelocity() + " " + getDrivetrain().getDrivetrainModel().getLeftVelocity());
+        getDrivetrain()
+                .setVelocityControl(drivetrainVelocities.getLeftVelocity(), drivetrainVelocities.getRightVelocity());
 
         updateGraph();
     }
 
-    private void updateGraph(){
+    private void updateGraph() {
         //Graph
         SwingUtilities.invokeLater(() -> {
             getRobotSimulator().getGraph().clearGraph();

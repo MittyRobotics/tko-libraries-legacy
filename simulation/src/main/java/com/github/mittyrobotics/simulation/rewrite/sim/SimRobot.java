@@ -24,29 +24,30 @@
 
 package com.github.mittyrobotics.simulation.rewrite.sim;
 
-public class SimRobot{
+public class SimRobot {
     private final SimDrivetrain drivetrain;
     private RobotSimulator robotSimulator;
-    public SimRobot(SimDrivetrain drivetrain){
+
+    public SimRobot(SimDrivetrain drivetrain) {
         this.drivetrain = drivetrain;
     }
 
-    public void setRobotSimulator(RobotSimulator simulator){
-        this.robotSimulator = simulator;
-    }
-
-    public void robotInit(){
+    public void robotInit() {
         System.out.println("Default simulator robot init");
     }
 
-    public void robotPeriodic(){
+    public void robotPeriodic() {
     }
 
     public SimDrivetrain getDrivetrain() {
         return drivetrain;
     }
 
-    public RobotSimulator getRobotSimulator(){
+    public RobotSimulator getRobotSimulator() {
         return robotSimulator;
+    }
+
+    public void setRobotSimulator(RobotSimulator simulator) {
+        this.robotSimulator = simulator;
     }
 }

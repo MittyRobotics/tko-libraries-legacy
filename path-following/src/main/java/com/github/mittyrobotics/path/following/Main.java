@@ -31,11 +31,12 @@ import com.github.mittyrobotics.simulation.rewrite.sim.RobotSimulator;
 import com.github.mittyrobotics.simulation.rewrite.sim.SimDrivetrain;
 import com.github.mittyrobotics.visualization.graphs.RobotGraph;
 
-public class Main  {
+public class Main {
 
     public static void main(String[] args) {
-        PathFollowerSimRobot simRobot = new PathFollowerSimRobot(new SimDrivetrain(new DrivetrainModel(50,1.5,20,30,
-            new CIMMotor(),2,7,2)));
-        new RobotSimulator(simRobot,0.02);
+        PathFollowerSimRobot simRobot =
+                new PathFollowerSimRobot(new SimDrivetrain(new DrivetrainModel(50, 1.585, 20, 30,
+                        new CIMMotor(), 2, 7, 2)));
+        new RobotSimulator(simRobot, 0.02);
     }
 }

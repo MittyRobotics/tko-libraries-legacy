@@ -119,14 +119,14 @@ public class DrivetrainModel {
         double Fr = (c1 * vr + c2 * Vr);
 
         double leftAcceleration =
-                ((1 / m) + ((rb * rb) / J)) * Fl  + ((1 / m) - ((rb * rb) / J)) * Fr;
+                ((1 / m) + ((rb * rb) / J)) * Fl + ((1 / m) - ((rb * rb) / J)) * Fr;
         double rightAcceleration =
                 ((1 / m) - ((rb * rb) / J)) * Fl + ((1 / m) + ((rb * rb) / J)) * Fr;
 
         return new DrivetrainWheelVelocities(leftAcceleration, rightAcceleration);
     }
 
-    public double getTrackWidth(){
+    public double getTrackWidth() {
         return trackWidth * Conversions.M_TO_IN;
     }
 

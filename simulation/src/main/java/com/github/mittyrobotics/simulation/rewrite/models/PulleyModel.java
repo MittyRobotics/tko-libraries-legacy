@@ -68,7 +68,7 @@ public class PulleyModel {
         this.position += velocity * deltaTime;
     }
 
-    private double calculateAcceleration(double voltage){
+    private double calculateAcceleration(double voltage) {
         double G = gearRatio;
         double R = resistance;
         double r = pulleyRadius;
@@ -76,7 +76,7 @@ public class PulleyModel {
         double V = voltage;
         double v = velocity;
 
-        return (G*Kt)/(R*r*m)*V - (G*G*Kt)/(R*(r*r)*m*Kv)*v;
+        return (G * Kt) / (R * r * m) * V - (G * G * Kt) / (R * (r * r) * m * Kv) * v;
     }
 
     public double getAcceleration() {

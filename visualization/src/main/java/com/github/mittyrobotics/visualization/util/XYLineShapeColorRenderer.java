@@ -52,8 +52,8 @@ public class XYLineShapeColorRenderer extends XYLineAndShapeRenderer {
 
     @Override
     public Paint getItemPaint(int row, int column) {
-        if(color == null){
-            return super.getItemPaint(row,column);
+        if (color == null) {
+            return super.getItemPaint(row, column);
         }
         return color;
     }

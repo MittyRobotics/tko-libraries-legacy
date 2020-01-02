@@ -285,7 +285,8 @@ public class PathFollower {
      */
     private void calculateAdaptivePath(Transform robotTransform, double curvature) {
         Path path =
-                new Path(PathGenerator.getInstance().generateQuinticHermiteSplinePath(currentPath.generateAdaptivePathWaypoints(robotTransform,true)));
+                new Path(PathGenerator.getInstance().generateQuinticHermiteSplinePath(
+                        currentPath.generateAdaptivePathWaypoints(robotTransform, true)));
         changePath(path);
     }
 

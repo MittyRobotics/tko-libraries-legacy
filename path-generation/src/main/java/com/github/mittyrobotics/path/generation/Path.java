@@ -25,7 +25,10 @@
 package com.github.mittyrobotics.path.generation;
 
 import com.github.mittyrobotics.datatypes.path.Parametric;
-import com.github.mittyrobotics.datatypes.positioning.*;
+import com.github.mittyrobotics.datatypes.positioning.Position;
+import com.github.mittyrobotics.datatypes.positioning.Rotation;
+import com.github.mittyrobotics.datatypes.positioning.Transform;
+import com.github.mittyrobotics.datatypes.positioning.TransformWithParameter;
 
 public class Path extends Parametric {
     private Transform[] waypoints;

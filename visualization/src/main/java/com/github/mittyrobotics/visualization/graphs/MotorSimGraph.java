@@ -24,7 +24,6 @@
 
 package com.github.mittyrobotics.visualization.graphs;
 
-import com.github.mittyrobotics.datatypes.units.Conversions;
 import com.github.mittyrobotics.visualization.util.XYSeriesCollectionWithRender;
 import org.jfree.data.xy.XYSeries;
 
