@@ -22,10 +22,10 @@
  * SOFTWARE.
  */
 
-package com.github.mittyrobotics.simulation.motors;
+package com.github.mittyrobotics.simulation.rewrite.motors;
 
-public class MiniCIMMotor extends Motor {
-    public MiniCIMMotor() {
-        super(1.41, 89, 5840, 3);
+public class NEOMotor extends Motor {
+    public NEOMotor() {
+        super(3.36, 166.0, 5880.0, 1.3);
     }
 }

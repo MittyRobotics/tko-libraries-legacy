@@ -26,7 +26,7 @@ package com.github.mittyrobotics.simulation.sim;
 
 
 import com.github.mittyrobotics.simulation.enums.ControlType;
-import com.github.mittyrobotics.simulation.motors.Motor;
+import com.github.mittyrobotics.simulation.rewrite.motors.Motor;
 import com.github.mittyrobotics.visualization.graphs.MotorSimGraph;
 
 /**

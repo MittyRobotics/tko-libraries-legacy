@@ -24,7 +24,7 @@
 
 package com.github.mittyrobotics.simulation.util;
 
-import com.github.mittyrobotics.simulation.motors.CIMMotor;
+import com.github.mittyrobotics.simulation.rewrite.motors.CIMMotor;
 import com.github.mittyrobotics.simulation.sim.ModelSystem;
 import com.github.mittyrobotics.simulation.sim.RobotSimManager;
 import com.github.mittyrobotics.simulation.sim.SimDrivetrain;

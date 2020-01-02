@@ -22,10 +22,10 @@
  * SOFTWARE.
  */
 
-package com.github.mittyrobotics.simulation.motors;
+package com.github.mittyrobotics.simulation.rewrite.motors;
 
-public class Falcon500Motor extends Motor {
-    public Falcon500Motor() {
-        super(4.69, 257, 6380, 1.5);
+public class MiniCIMMotor extends Motor {
+    public MiniCIMMotor() {
+        super(1.41, 89, 5840, 3);
     }
 }

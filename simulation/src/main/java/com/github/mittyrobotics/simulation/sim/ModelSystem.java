@@ -24,7 +24,7 @@
 
 package com.github.mittyrobotics.simulation.sim;
 
-import com.github.mittyrobotics.simulation.motors.Motor;
+import com.github.mittyrobotics.simulation.rewrite.motors.Motor;
 
 public class ModelSystem {
     private final Motor motor;
@@ -36,6 +36,7 @@ public class ModelSystem {
     private double Kv;
     private double Kt;
 
+    private double acceleration;
     private double velocity;
     private double position;
     private double voltage;
@@ -79,7 +80,7 @@ public class ModelSystem {
      */
     public void updateModel(double voltage, double deltaTime) {
         this.voltage = voltage;
-        double acceleration = getAcceleration(voltage);
+        acceleration = calculateAcceleration(voltage);
 
         velocity += acceleration * deltaTime;
         position += velocity * deltaTime;
@@ -91,7 +92,7 @@ public class ModelSystem {
      * @param voltage
      * @return
      */
-    private double getAcceleration(double voltage) {
+    private double calculateAcceleration(double voltage) {
         return -Kt * gearRatio * gearRatio / (Kv * resistance * wheelRadius * wheelRadius * mass) * velocity +
                 gearRatio * Kt / (resistance * wheelRadius * mass) * voltage;
     }
@@ -134,5 +135,9 @@ public class ModelSystem {
 
     public void setVoltage(double voltage) {
         this.voltage = voltage;
+    }
+
+    public double getAcceleration() {
+        return acceleration;
     }
 }
