@@ -82,9 +82,9 @@ public class PathFollowerSimRobot extends SimRobot {
         double y = random.nextInt(200) - 100.0;
         double heading = random.nextInt(90) - 45;
         //Set robot transform to random values
-        getDrivetrain().setOdometry(new Transform(x, y, heading));
+        getDrivetrain().setOdometry(new Transform(0, 0, 0));
 
-        pathFollower.setDrivingGoal(new Transform(100, -24, 0));
+        pathFollower.setDrivingGoal(new Transform(48, 48, 0));
     }
 
     @Override

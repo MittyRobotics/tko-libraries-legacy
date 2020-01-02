@@ -162,7 +162,7 @@ public class PathFollower {
     public void setDrivingGoal(Transform goal) {
         Path path =
                 new Path(PathGenerator.getInstance().generateQuinticHermiteSplinePath(new Transform[]{
-                        goal.add(new Transform(goal.getRotation().cos() * -30, goal.getRotation().sin() * -30)),
+                        goal,
                         goal}));
         changePath(path, true);
     }
@@ -339,5 +339,4 @@ public class PathFollower {
     public Path getCurrentPath() {
         return currentPath;
     }
-
 }
