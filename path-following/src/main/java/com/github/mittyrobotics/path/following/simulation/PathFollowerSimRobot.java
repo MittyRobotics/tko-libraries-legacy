@@ -58,7 +58,7 @@ public class PathFollowerSimRobot extends SimRobot {
 
         //Create velocity controller
         PathVelocityController velocityController =
-                new PathVelocityController(new VelocityConstraints(50, 50, 150), 0, 0, true);
+                new PathVelocityController(new VelocityConstraints(50, 50, 150), 0, 0, false);
 
         //Create path properties
         PathFollowerProperties properties =
@@ -84,7 +84,7 @@ public class PathFollowerSimRobot extends SimRobot {
         //Set robot transform to random values
         getDrivetrain().setOdometry(new Transform(x, y, heading));
 
-        pathFollower.setDrivingGoal(new Transform(100, -24, -90));
+        pathFollower.setDrivingGoal(new Transform(100, -24, 0));
     }
 
     @Override
@@ -109,7 +109,7 @@ public class PathFollowerSimRobot extends SimRobot {
         SwingUtilities.invokeLater(() -> {
             getRobotSimulator().getGraph().clearGraph();
             getRobotSimulator().getGraph().addDataset(GraphManager.getInstance()
-                    .graphParametricFast(pathFollower.getCurrentPath(), .07, "spline", Color.cyan));
+                    .graphParametricFast(pathFollower.getCurrentPath(), .01, "spline", Color.cyan));
         });
     }
 }
