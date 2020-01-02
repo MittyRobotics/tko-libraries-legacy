@@ -72,7 +72,7 @@ public class Graph extends JFrame {
         JFreeChart chart = createChart();
 
         ChartPanel chartPanel = new ChartPanel(chart);
-        chartPanel.setBorder(BorderFactory.createEmptyBorder(15, 15, 15, 15));
+        chartPanel.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 30));
         add(chartPanel);
 
         pack();
