@@ -22,42 +22,18 @@
  * SOFTWARE.
  */
 
-import edu.wpi.first.toolchain.NativePlatforms
+package com.github.mittyrobotics.simulation.rewrite.sim;
 
-plugins {
-    id("java")
-    id("edu.wpi.first.GradleRIO") version "2020.1.1"
-    id("maven")
-    `maven-publish`
-}
+import java.util.TimerTask;
 
-group = "com.github.MittyRobotics"
-version = "1.0.0"
+public class RobotSimulator extends TimerTask {
 
-allprojects {
-    apply(plugin = "java")
-    apply(plugin = "edu.wpi.first.GradleRIO")
+    public RobotSimulator(){
 
-    repositories {
-        mavenLocal()
-        jcenter()
-        maven(url = "https://jitpack.io")
     }
 
-    dependencies {
-        // WPILib
-        wpi.deps.wpilib().forEach { compile(it) }
-        wpi.deps.vendor.java().forEach { compile(it) }
-        wpi.deps.vendor.jni(NativePlatforms.roborio).forEach { nativeZip(it) }
-        wpi.deps.vendor.jni(NativePlatforms.desktop).forEach { nativeDesktopZip(it) }
+    @Override
+    public void run() {
 
-// https://mvnrepository.com/artifact/org.jfree/jfreechart
-        compile(group = "org.jfree", name = "jfreechart", version = "1.5.0")
-    }
-}
-
-publishing {
-    repositories {
-        mavenLocal()
     }
 }

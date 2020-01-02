@@ -34,30 +34,19 @@ import com.github.mittyrobotics.visualization.graphs.MotorSimGraph;
 
 public class Main {
     public static void main(String[] args) {
-        DrivetrainModel drivetrainModel = new DrivetrainModel(50,1.463198267146,20, new CIMMotor(),2,7,2);
-        PulleyModel pulleyModel = new PulleyModel(20,new Pro775Motor(),1,7,1);
-        ModelSystem model = new ModelSystem(new Pro775Motor());
-        model.initSystemModel(44*Conversions.LBS_TO_KG,7,1*Conversions.IN_TO_M);
+        DrivetrainModel drivetrainModel = new DrivetrainModel(125,1.585,20, new CIMMotor(),2,7,2);
+
         MotorSimGraph graph = new MotorSimGraph();
-        MotorSimGraph graph1 = new MotorSimGraph();
+
+        double voltage = 12;
         for(int i = 0; i < 500; i++){
-            drivetrainModel.updateModel(12,12,0.02);
+            drivetrainModel.updateModel(voltage,voltage,0.02);
+            if(i > 200){
+                voltage = 0;
+            }
             graph.addAcceleration((drivetrainModel.getLeftAcceleration()+drivetrainModel.getRightAcceleration())/2,i*0.02);
             graph.addVelocity((drivetrainModel.getLeftVelocity()+drivetrainModel.getRightVelocity())/2,i*0.02);
             graph.addPosition((drivetrainModel.getLeftPosition()+drivetrainModel.getRightPosition())/2,i*0.02);
-        }
-//
-//        for(int i = 0; i < 500; i++){
-//            pulleyModel.updateModel(12,0.02);
-//            graph.addAcceleration(pulleyModel.getAcceleration(),i*0.02);
-//            graph.addVelocity(pulleyModel.getVelocity(),i*0.02);
-//            graph.addPosition(pulleyModel.getPosition(),i*0.02);
-//        }
-        for(int i = 0; i < 500; i++){
-            model.updateModel(12,0.02);
-            graph1.addAcceleration(model.getAcceleration()* Conversions.M_TO_IN,i*0.02);
-            graph1.addVelocity(model.getVelocity()* Conversions.M_TO_IN,i*0.02);
-            graph1.addPosition(model.getPosition()* Conversions.M_TO_IN,i*0.02);
         }
     }
 }
