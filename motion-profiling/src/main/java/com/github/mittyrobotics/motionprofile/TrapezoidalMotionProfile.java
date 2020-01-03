@@ -37,9 +37,6 @@ public class TrapezoidalMotionProfile {
     private final MotionState endMotionState;
     private final VelocityConstraints velocityConstraints;
     private final MechanismBounds mechanismBounds;
-    //Keep track of the previous velocity and time for getting acceleration
-    double prevVelocity;
-    double prevTime;
     private MotionSegment accelerationSegment;
     private MotionSegment cruiseSegment;
     private MotionSegment decelerationSegment;
@@ -80,7 +77,6 @@ public class TrapezoidalMotionProfile {
         this.velocityConstraints = velocityConstraints;
         this.mechanismBounds = mechanismBounds;
 
-
         this.startPosition = startMotionState.getPosition();
         this.startVelocity = startMotionState.getVelocity();
         this.endPosition = endMotionState.getPosition();
@@ -98,20 +94,9 @@ public class TrapezoidalMotionProfile {
             this.endVelocity = -endVelocity;
             this.startVelocity = -startVelocity;
         }
-        //Since we are dealing with non-zero start and end velocity values, we need to first figure out where the
-        //motion profile gets to with the non-zero values and adjust the setpoint so it reaches the actual position
-        //that it wants to get to.
 
-        //Initial motion profile calculation with setpoint
+        //Motion profile calculations
         calculateMotionProfile(currentSetpoint);
-
-        //Get the difference in setpoint between the input and the final one
-        double finalPosition = getPositionAtTime(tTotal);
-
-        double setpointDifference = endMotionState.getPosition() - finalPosition;
-
-        //Recalculate the motion profile with the adjusted setpoint
-        // calculateMotionProfile(endMotionState.getPosition() + setpointDifference);
     }
 
     private void calculateMotionProfile(double currentSetpoint) {
@@ -231,7 +216,6 @@ public class TrapezoidalMotionProfile {
             dDecel = 0;
         }
 
-
         //Find the total time of the motion profile
         tTotal = tAccel + tCruise + tDecel;
         this.tTotal = tTotal;
@@ -279,7 +263,7 @@ public class TrapezoidalMotionProfile {
         //Get the velocity, position, and acceleration at the time
         double velocity = getVelocityAtTime(t);
         double position = getPositionAtTime(t);
-        double acceleration = getAccelerationAtTime(t, velocity);
+        double acceleration = getAccelerationAtTime(t);
 
         //Make sure the position does not exceed the bounds
         if (!(minPosition == 0 && maxPosition == 0)) {
@@ -349,7 +333,7 @@ public class TrapezoidalMotionProfile {
      * @param t the time of the desired position value
      * @return the position of the motion profile at time t
      */
-    private double getPositionAtTime(double t) {
+    public double getPositionAtTime(double t) {
         double output = 0;
 
         double c = accelerationSegment.getTime();
@@ -374,42 +358,21 @@ public class TrapezoidalMotionProfile {
     }
 
     /**
-     * Only works with starting and ending velocity of 0.
-     *
-     * @param position
-     * @return
-     */
-    public double getTimeAtPosition(double position) {
-        if (position < accelerationSegment.getDistance()) {
-            return Math.sqrt((2 * position) / maxAcceleration);
-        } else if (position > accelerationSegment.getDistance() && position < cruiseSegment.getDistance()) {
-            return accelerationSegment.getTime() +
-                    (position - accelerationSegment.getDistance()) / maxVelocity;
-        } else {
-            return accelerationSegment.getTime() +
-                    cruiseSegment.getTime() +
-                    Math.sqrt((2 * (position - accelerationSegment.getDistance() - cruiseSegment.getDistance())) /
-                            maxAcceleration);
-        }
-    }
-
-    /**
      * Returns the acceleration of the motion profile at time t.
      *
      * @param t the time of the desired acceleration value
-     * @return the acceleration of the motion profile at time t
      */
-    private double getAccelerationAtTime(double t, double velocity) {
+    public double getAccelerationAtTime(double t) {
+
+        double velocity = getVelocityAtTime(t);
+        double prevVelocity = getVelocityAtTime(t-0.001);
 
         double acceleration;
         if (t == 0) {
             acceleration = 0;
         } else {
-            acceleration = (velocity - prevVelocity) / (t - prevTime);
+            acceleration = (velocity - prevVelocity) / 0.001;
         }
-
-        this.prevVelocity = velocity;
-        this.prevTime = t;
 
         if (reversed) {
             return -acceleration;

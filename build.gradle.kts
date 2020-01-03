@@ -47,6 +47,9 @@ allprojects {
     dependencies {
         // WPILib
         wpi.deps.wpilib().forEach { compile(it) }
+        wpi.deps.wpilibJni(NativePlatforms.roborio).forEach { nativeZip(it) }
+        wpi.deps.wpilibJni(NativePlatforms.desktop).forEach { nativeDesktopZip(it) }
+
         wpi.deps.vendor.java().forEach { compile(it) }
         wpi.deps.vendor.jni(NativePlatforms.roborio).forEach { nativeZip(it) }
         wpi.deps.vendor.jni(NativePlatforms.desktop).forEach { nativeDesktopZip(it) }

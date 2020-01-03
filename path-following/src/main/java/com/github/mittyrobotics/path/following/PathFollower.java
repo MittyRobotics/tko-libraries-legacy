@@ -33,6 +33,8 @@ import com.github.mittyrobotics.path.following.enums.PathFollowingType;
 import com.github.mittyrobotics.path.following.util.PathFollowerProperties;
 import com.github.mittyrobotics.path.generation.Path;
 import com.github.mittyrobotics.path.generation.PathGenerator;
+import edu.wpi.first.wpilibj.controller.ProfiledPIDController;
+import edu.wpi.first.wpilibj.trajectory.TrapezoidProfile;
 
 public class PathFollower {
     private PathFollowingType pathFollowingType;
@@ -54,7 +56,7 @@ public class PathFollower {
      *                              {@link PathFollower}.
      */
     public PathFollower(PathFollowerProperties properties,
-                        PathFollowerProperties.PurePursuitProperties purePursuitProperties) {
+                         PathFollowerProperties.PurePursuitProperties purePursuitProperties) {
         setupPurePursuit(properties, purePursuitProperties);
     }
 
