@@ -43,7 +43,6 @@ public class TrapezoidalMotionProfile {
     private double startPosition, startVelocity, endPosition, endVelocity, maxAcceleration, maxDeceleration,
             maxVelocity, minPosition, maxPosition;
     private boolean reversed;
-    private boolean isFinished;
 
     /**
      * Constructs a new {@link TrapezoidalMotionProfile}.
@@ -377,6 +376,10 @@ public class TrapezoidalMotionProfile {
         return acceleration;
     }
 
+    public boolean isFinished(double t) {
+        return t >= tTotal || (getVelocityAtTime(t) == endMotionState.getVelocity() && getPositionAtTime(t) == endMotionState.getPosition());
+    }
+
     public double getTotalTime() {
         return tTotal;
     }
@@ -395,10 +398,6 @@ public class TrapezoidalMotionProfile {
 
     public MechanismBounds getMechanismBounds() {
         return mechanismBounds;
-    }
-
-    public boolean isFinished() {
-        return isFinished;
     }
 
     public boolean isReversed() {
