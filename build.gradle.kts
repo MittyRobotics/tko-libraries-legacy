@@ -26,7 +26,7 @@ import edu.wpi.first.toolchain.NativePlatforms
 
 plugins {
     id("java")
-    id("edu.wpi.first.GradleRIO") version "2020.1.1"
+    id("edu.wpi.first.GradleRIO") version "2020.1.2"
     id("maven")
     `maven-publish`
 }
