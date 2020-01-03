@@ -26,7 +26,6 @@ package com.github.mittyrobotics.path.following.controllers;
 
 import com.github.mittyrobotics.datatypes.geometry.Circle;
 import com.github.mittyrobotics.datatypes.geometry.Line;
-import com.github.mittyrobotics.datatypes.motion.DifferentialDriveKinematics;
 import com.github.mittyrobotics.datatypes.motion.DrivetrainVelocities;
 import com.github.mittyrobotics.datatypes.motion.DrivetrainWheelVelocities;
 import com.github.mittyrobotics.datatypes.positioning.Position;

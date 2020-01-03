@@ -24,10 +24,8 @@
 
 package com.github.mittyrobotics.visualization.graphs;
 
-import com.github.mittyrobotics.visualization.themes.AtomTheme;
 import com.github.mittyrobotics.visualization.themes.DefaultDarkTheme;
 import com.github.mittyrobotics.visualization.themes.GraphTheme;
-import com.github.mittyrobotics.visualization.themes.TKOTheme;
 import com.github.mittyrobotics.visualization.util.XYSeriesCollectionWithRender;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;

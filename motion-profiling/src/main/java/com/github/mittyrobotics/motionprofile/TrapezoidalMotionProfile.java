@@ -32,7 +32,6 @@ import com.github.mittyrobotics.motionprofile.util.datatypes.MechanismBounds;
 import com.github.mittyrobotics.motionprofile.util.datatypes.MotionSegment;
 
 public class TrapezoidalMotionProfile {
-
     private final MotionState startMotionState;
     private final MotionState endMotionState;
     private final VelocityConstraints velocityConstraints;
@@ -259,7 +258,7 @@ public class TrapezoidalMotionProfile {
      * @param t time of the motion frame
      * @return a new {@link MotionState} at time t
      */
-    public MotionState getFrameAtTime(double t) {
+    public MotionState getMotionStateAtTime(double t) {
         //Get the velocity, position, and acceleration at the time
         double velocity = getVelocityAtTime(t);
         double position = getPositionAtTime(t);
@@ -270,9 +269,6 @@ public class TrapezoidalMotionProfile {
             position = Math.min(position, maxPosition);
             position = Math.max(position, minPosition);
         }
-
-        //Check if it is finished
-        isFinished = t <= tTotal;
 
         if (t < tTotal) {
             return new MotionState(position, velocity, acceleration, t);
@@ -289,15 +285,16 @@ public class TrapezoidalMotionProfile {
      */
     public double getVelocityAtTime(double t) {
         double output;
-        if (t < accelerationSegment.getTime()) {
+        if (t < 0) {
+            return startMotionState.getVelocity();
+        } else if (t <= accelerationSegment.getTime()) {
             output = t * maxAcceleration + startVelocity;
-
-        } else if (t < cruiseSegment.getTime() + accelerationSegment.getTime()) {
+        } else if (t <= cruiseSegment.getTime() + accelerationSegment.getTime()) {
             output = maxVelocity;
-        } else if (t >= tTotal) {
-            output = endVelocity;
-        } else {
+        } else if (t <= cruiseSegment.getTime() + accelerationSegment.getTime() + decelerationSegment.getTime()) {
             output = maxVelocity - (t - accelerationSegment.getTime() - cruiseSegment.getTime()) * maxDeceleration;
+        } else {
+            return endMotionState.getVelocity();
         }
 
         if (reversed) {
@@ -334,20 +331,24 @@ public class TrapezoidalMotionProfile {
      * @return the position of the motion profile at time t
      */
     public double getPositionAtTime(double t) {
-        double output = 0;
+        double output;
 
         double c = accelerationSegment.getTime();
         double f = cruiseSegment.getTime() + accelerationSegment.getTime();
 
-        if (t <= accelerationSegment.getTime()) {
+        if (t < 0) {
+            return startMotionState.getPosition();
+        } else if (t <= accelerationSegment.getTime()) {
             output = IntegralMath.integral(0, t, accelerationSegment.getF());
         } else if (t <= cruiseSegment.getTime() + accelerationSegment.getTime()) {
             output = IntegralMath.integral(c, t, cruiseSegment.getF()) +
                     IntegralMath.integral(0, c, accelerationSegment.getF());
-        } else {
+        } else if (t <= cruiseSegment.getTime() + accelerationSegment.getTime() + decelerationSegment.getTime()) {
             output = IntegralMath.integral(f, t, decelerationSegment.getF()) +
                     IntegralMath.integral(0, c, accelerationSegment.getF()) +
                     IntegralMath.integral(c, f, cruiseSegment.getF());
+        } else {
+            return endMotionState.getPosition();
         }
 
         if (reversed) {
@@ -365,14 +366,9 @@ public class TrapezoidalMotionProfile {
     public double getAccelerationAtTime(double t) {
 
         double velocity = getVelocityAtTime(t);
-        double prevVelocity = getVelocityAtTime(t-0.001);
+        double prevVelocity = getVelocityAtTime(t - 0.001);
 
-        double acceleration;
-        if (t == 0) {
-            acceleration = 0;
-        } else {
-            acceleration = (velocity - prevVelocity) / 0.001;
-        }
+        double acceleration = (velocity - prevVelocity) / 0.001;
 
         if (reversed) {
             return -acceleration;

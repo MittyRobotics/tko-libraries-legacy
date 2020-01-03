@@ -39,10 +39,8 @@ import java.awt.*;
 
 public class Main {
     public static void main(String[] args) {
-        TimeMonitor monitor = new TimeMonitor();
-        monitor.start();
-        MotionState startFrame = new MotionState(0, 0);
-        MotionState endFrame = new MotionState(200, 0);
+        MotionState startFrame = new MotionState(200, 0);
+        MotionState endFrame = new MotionState(0, 0);
 
         VelocityConstraints velocityConstraints = new VelocityConstraints(5, 5, 20);
 
@@ -50,8 +48,6 @@ public class Main {
 
         TrapezoidalMotionProfile motionProfile =
                 new TrapezoidalMotionProfile(startFrame, endFrame, velocityConstraints, bounds);
-        monitor.end();
-        monitor.printMillis();
 
         SwingUtilities.invokeLater(new Runnable() {
             @Override

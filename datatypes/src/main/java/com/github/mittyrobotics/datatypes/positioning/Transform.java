@@ -217,12 +217,14 @@ public class Transform {
 
     @Override
     public boolean equals(Object obj) {
-        try{
-            Transform transform = (Transform)obj;
-            if(transform.getPosition().getX() == getPosition().getX() && transform.getPosition().getY() == getPosition().getY() && transform.getRotation().getHeading() == getRotation().getHeading()){
+        try {
+            Transform transform = (Transform) obj;
+            if (transform.getPosition().getX() == getPosition().getX() &&
+                    transform.getPosition().getY() == getPosition().getY() &&
+                    transform.getRotation().getHeading() == getRotation().getHeading()) {
                 return true;
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             return false;
         }
         return false;

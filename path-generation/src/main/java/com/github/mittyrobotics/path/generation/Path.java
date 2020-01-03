@@ -538,7 +538,7 @@ public class Path extends Parametric {
         }
 
         Transform[] adjustedPathWaypointsArray = new Transform[adjustedPathWaypoints.size()];
-        for(int i = 0; i < adjustedPathWaypointsArray.length; i++){
+        for (int i = 0; i < adjustedPathWaypointsArray.length; i++) {
             adjustedPathWaypointsArray[i] = adjustedPathWaypoints.get(i);
         }
 

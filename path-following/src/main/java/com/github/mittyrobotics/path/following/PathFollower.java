@@ -26,15 +26,16 @@ package com.github.mittyrobotics.path.following;
 
 import com.github.mittyrobotics.datatypes.motion.DrivetrainVelocities;
 import com.github.mittyrobotics.datatypes.motion.DrivetrainWheelVelocities;
-import com.github.mittyrobotics.datatypes.positioning.*;
+import com.github.mittyrobotics.datatypes.positioning.Position;
+import com.github.mittyrobotics.datatypes.positioning.Rotation;
+import com.github.mittyrobotics.datatypes.positioning.Transform;
+import com.github.mittyrobotics.datatypes.positioning.TransformWithParameter;
 import com.github.mittyrobotics.path.following.controllers.PurePursuitController;
 import com.github.mittyrobotics.path.following.controllers.RamseteController;
 import com.github.mittyrobotics.path.following.enums.PathFollowingType;
 import com.github.mittyrobotics.path.following.util.PathFollowerProperties;
 import com.github.mittyrobotics.path.generation.Path;
 import com.github.mittyrobotics.path.generation.PathGenerator;
-import edu.wpi.first.wpilibj.controller.ProfiledPIDController;
-import edu.wpi.first.wpilibj.trajectory.TrapezoidProfile;
 
 public class PathFollower {
     private PathFollowingType pathFollowingType;
@@ -56,7 +57,7 @@ public class PathFollower {
      *                              {@link PathFollower}.
      */
     public PathFollower(PathFollowerProperties properties,
-                         PathFollowerProperties.PurePursuitProperties purePursuitProperties) {
+                        PathFollowerProperties.PurePursuitProperties purePursuitProperties) {
         setupPurePursuit(properties, purePursuitProperties);
     }
 
