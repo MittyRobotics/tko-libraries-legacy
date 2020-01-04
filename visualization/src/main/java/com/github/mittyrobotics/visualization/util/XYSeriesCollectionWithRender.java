@@ -46,7 +46,7 @@ public class XYSeriesCollectionWithRender extends XYSeriesCollection {
         this.showPoints = showPoints;
         this.color = color;
         this.shape = shape;
-        this.renderer = new XYLineShapeColorRenderer(showPoints, showLines, color);
+        this.renderer = new XYLineShapeColorRenderer(showLines, showPoints, color);
     }
 
     public XYSeriesCollectionWithRender(XYLineAndShapeRenderer renderer) {

@@ -26,7 +26,10 @@ package com.github.mittyrobotics.path.following;
 
 import com.github.mittyrobotics.datatypes.motion.DrivetrainVelocities;
 import com.github.mittyrobotics.datatypes.motion.DrivetrainWheelVelocities;
-import com.github.mittyrobotics.datatypes.positioning.*;
+import com.github.mittyrobotics.datatypes.positioning.Position;
+import com.github.mittyrobotics.datatypes.positioning.Rotation;
+import com.github.mittyrobotics.datatypes.positioning.Transform;
+import com.github.mittyrobotics.datatypes.positioning.TransformWithParameter;
 import com.github.mittyrobotics.path.following.controllers.PurePursuitController;
 import com.github.mittyrobotics.path.following.controllers.RamseteController;
 import com.github.mittyrobotics.path.following.enums.PathFollowingType;
@@ -162,7 +165,7 @@ public class PathFollower {
     public void setDrivingGoal(Transform goal) {
         Path path =
                 new Path(PathGenerator.getInstance().generateQuinticHermiteSplinePath(new Transform[]{
-                        goal.add(new Transform(goal.getRotation().cos() * -30, goal.getRotation().sin() * -30)),
+                        goal,
                         goal}));
         changePath(path, true);
     }
@@ -285,7 +288,8 @@ public class PathFollower {
      */
     private void calculateAdaptivePath(Transform robotTransform, double curvature) {
         Path path =
-                new Path(PathGenerator.getInstance().generateQuinticHermiteSplinePath(currentPath.generateAdaptivePathWaypoints(robotTransform,true)));
+                new Path(PathGenerator.getInstance().generateQuinticHermiteSplinePath(
+                        currentPath.generateAdaptivePathWaypoints(robotTransform, true)));
         changePath(path);
     }
 
@@ -338,5 +342,4 @@ public class PathFollower {
     public Path getCurrentPath() {
         return currentPath;
     }
-
 }

@@ -32,14 +32,10 @@ import com.github.mittyrobotics.motionprofile.util.datatypes.MechanismBounds;
 import com.github.mittyrobotics.motionprofile.util.datatypes.MotionSegment;
 
 public class TrapezoidalMotionProfile {
-
     private final MotionState startMotionState;
     private final MotionState endMotionState;
     private final VelocityConstraints velocityConstraints;
     private final MechanismBounds mechanismBounds;
-    //Keep track of the previous velocity and time for getting acceleration
-    double prevVelocity;
-    double prevTime;
     private MotionSegment accelerationSegment;
     private MotionSegment cruiseSegment;
     private MotionSegment decelerationSegment;
@@ -47,7 +43,6 @@ public class TrapezoidalMotionProfile {
     private double startPosition, startVelocity, endPosition, endVelocity, maxAcceleration, maxDeceleration,
             maxVelocity, minPosition, maxPosition;
     private boolean reversed;
-    private boolean isFinished;
 
     /**
      * Constructs a new {@link TrapezoidalMotionProfile}.
@@ -80,7 +75,6 @@ public class TrapezoidalMotionProfile {
         this.velocityConstraints = velocityConstraints;
         this.mechanismBounds = mechanismBounds;
 
-
         this.startPosition = startMotionState.getPosition();
         this.startVelocity = startMotionState.getVelocity();
         this.endPosition = endMotionState.getPosition();
@@ -98,20 +92,9 @@ public class TrapezoidalMotionProfile {
             this.endVelocity = -endVelocity;
             this.startVelocity = -startVelocity;
         }
-        //Since we are dealing with non-zero start and end velocity values, we need to first figure out where the
-        //motion profile gets to with the non-zero values and adjust the setpoint so it reaches the actual position
-        //that it wants to get to.
 
-        //Initial motion profile calculation with setpoint
+        //Motion profile calculations
         calculateMotionProfile(currentSetpoint);
-
-        //Get the difference in setpoint between the input and the final one
-        double finalPosition = getPositionAtTime(tTotal);
-
-        double setpointDifference = endMotionState.getPosition() - finalPosition;
-
-        //Recalculate the motion profile with the adjusted setpoint
-        // calculateMotionProfile(endMotionState.getPosition() + setpointDifference);
     }
 
     private void calculateMotionProfile(double currentSetpoint) {
@@ -231,7 +214,6 @@ public class TrapezoidalMotionProfile {
             dDecel = 0;
         }
 
-
         //Find the total time of the motion profile
         tTotal = tAccel + tCruise + tDecel;
         this.tTotal = tTotal;
@@ -275,20 +257,17 @@ public class TrapezoidalMotionProfile {
      * @param t time of the motion frame
      * @return a new {@link MotionState} at time t
      */
-    public MotionState getFrameAtTime(double t) {
+    public MotionState getMotionStateAtTime(double t) {
         //Get the velocity, position, and acceleration at the time
         double velocity = getVelocityAtTime(t);
         double position = getPositionAtTime(t);
-        double acceleration = getAccelerationAtTime(t, velocity);
+        double acceleration = getAccelerationAtTime(t);
 
         //Make sure the position does not exceed the bounds
         if (!(minPosition == 0 && maxPosition == 0)) {
             position = Math.min(position, maxPosition);
             position = Math.max(position, minPosition);
         }
-
-        //Check if it is finished
-        isFinished = t <= tTotal;
 
         if (t < tTotal) {
             return new MotionState(position, velocity, acceleration, t);
@@ -305,15 +284,16 @@ public class TrapezoidalMotionProfile {
      */
     public double getVelocityAtTime(double t) {
         double output;
-        if (t < accelerationSegment.getTime()) {
+        if (t < 0) {
+            return startMotionState.getVelocity();
+        } else if (t <= accelerationSegment.getTime()) {
             output = t * maxAcceleration + startVelocity;
-
-        } else if (t < cruiseSegment.getTime() + accelerationSegment.getTime()) {
+        } else if (t <= cruiseSegment.getTime() + accelerationSegment.getTime()) {
             output = maxVelocity;
-        } else if (t >= tTotal) {
-            output = endVelocity;
-        } else {
+        } else if (t <= cruiseSegment.getTime() + accelerationSegment.getTime() + decelerationSegment.getTime()) {
             output = maxVelocity - (t - accelerationSegment.getTime() - cruiseSegment.getTime()) * maxDeceleration;
+        } else {
+            return endMotionState.getVelocity();
         }
 
         if (reversed) {
@@ -349,21 +329,25 @@ public class TrapezoidalMotionProfile {
      * @param t the time of the desired position value
      * @return the position of the motion profile at time t
      */
-    private double getPositionAtTime(double t) {
-        double output = 0;
+    public double getPositionAtTime(double t) {
+        double output;
 
         double c = accelerationSegment.getTime();
         double f = cruiseSegment.getTime() + accelerationSegment.getTime();
 
-        if (t <= accelerationSegment.getTime()) {
+        if (t < 0) {
+            return startMotionState.getPosition();
+        } else if (t <= accelerationSegment.getTime()) {
             output = IntegralMath.integral(0, t, accelerationSegment.getF());
         } else if (t <= cruiseSegment.getTime() + accelerationSegment.getTime()) {
             output = IntegralMath.integral(c, t, cruiseSegment.getF()) +
                     IntegralMath.integral(0, c, accelerationSegment.getF());
-        } else {
+        } else if (t <= cruiseSegment.getTime() + accelerationSegment.getTime() + decelerationSegment.getTime()) {
             output = IntegralMath.integral(f, t, decelerationSegment.getF()) +
                     IntegralMath.integral(0, c, accelerationSegment.getF()) +
                     IntegralMath.integral(c, f, cruiseSegment.getF());
+        } else {
+            return endMotionState.getPosition();
         }
 
         if (reversed) {
@@ -374,48 +358,26 @@ public class TrapezoidalMotionProfile {
     }
 
     /**
-     * Only works with starting and ending velocity of 0.
-     *
-     * @param position
-     * @return
-     */
-    public double getTimeAtPosition(double position) {
-        if (position < accelerationSegment.getDistance()) {
-            return Math.sqrt((2 * position) / maxAcceleration);
-        } else if (position > accelerationSegment.getDistance() && position < cruiseSegment.getDistance()) {
-            return accelerationSegment.getTime() +
-                    (position - accelerationSegment.getDistance()) / maxVelocity;
-        } else {
-            return accelerationSegment.getTime() +
-                    cruiseSegment.getTime() +
-                    Math.sqrt((2 * (position - accelerationSegment.getDistance() - cruiseSegment.getDistance())) /
-                            maxAcceleration);
-        }
-    }
-
-    /**
      * Returns the acceleration of the motion profile at time t.
      *
      * @param t the time of the desired acceleration value
-     * @return the acceleration of the motion profile at time t
      */
-    private double getAccelerationAtTime(double t, double velocity) {
+    public double getAccelerationAtTime(double t) {
 
-        double acceleration;
-        if (t == 0) {
-            acceleration = 0;
-        } else {
-            acceleration = (velocity - prevVelocity) / (t - prevTime);
-        }
+        double velocity = getVelocityAtTime(t);
+        double prevVelocity = getVelocityAtTime(t - 0.001);
 
-        this.prevVelocity = velocity;
-        this.prevTime = t;
+        double acceleration = (velocity - prevVelocity) / 0.001;
 
         if (reversed) {
             return -acceleration;
         }
 
         return acceleration;
+    }
+
+    public boolean isFinished(double t) {
+        return t >= tTotal || (getVelocityAtTime(t) == endMotionState.getVelocity() && getPositionAtTime(t) == endMotionState.getPosition());
     }
 
     public double getTotalTime() {
@@ -436,10 +398,6 @@ public class TrapezoidalMotionProfile {
 
     public MechanismBounds getMechanismBounds() {
         return mechanismBounds;
-    }
-
-    public boolean isFinished() {
-        return isFinished;
     }
 
     public boolean isReversed() {

@@ -22,9 +22,17 @@
  * SOFTWARE.
  */
 
-package com.github.mittyrobotics.simulation.enums;
+package com.github.mittyrobotics.visualization.themes;
 
-public enum ControlType {
-    POSITION,
-    VELOCITY
+import java.awt.*;
+
+public class DefaultDarkTheme extends GraphTheme {
+    public DefaultDarkTheme() {
+        super(new Color(64, 64, 64),
+                new Color(0, 0, 0),
+                new Color(71, 71, 71),
+                new Color(158, 159, 157),
+                new Color(158, 159, 157),
+                new Color(158, 159, 157));
+    }
 }

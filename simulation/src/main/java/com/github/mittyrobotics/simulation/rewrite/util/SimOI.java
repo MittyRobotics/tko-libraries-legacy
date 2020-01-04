@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-package com.github.mittyrobotics.simulation.util;
+package com.github.mittyrobotics.simulation.rewrite.util;
 
 import javax.swing.*;
 import java.awt.event.KeyAdapter;
@@ -30,8 +30,8 @@ import java.awt.event.KeyEvent;
 
 public class SimOI extends JFrame implements Runnable {
 
-    private static SimOI instance = new SimOI();
-
+    private static SimOI
+            instance = new SimOI();
 
     private boolean upKey;
     private boolean downKey;

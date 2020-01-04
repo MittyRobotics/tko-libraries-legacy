@@ -22,10 +22,32 @@
  * SOFTWARE.
  */
 
-package com.github.mittyrobotics.simulation.motors;
+package com.github.mittyrobotics.simulation.rewrite.sim;
 
-public class Falcon500Motor extends Motor {
-    public Falcon500Motor() {
-        super(4.69, 257, 6380, 1.5);
+public class SimRobot {
+    private final SimDrivetrain drivetrain;
+    private RobotSimulator robotSimulator;
+
+    public SimRobot(SimDrivetrain drivetrain) {
+        this.drivetrain = drivetrain;
+    }
+
+    public void robotInit() {
+        System.out.println("Default simulator robot init");
+    }
+
+    public void robotPeriodic() {
+    }
+
+    public SimDrivetrain getDrivetrain() {
+        return drivetrain;
+    }
+
+    public RobotSimulator getRobotSimulator() {
+        return robotSimulator;
+    }
+
+    public void setRobotSimulator(RobotSimulator simulator) {
+        this.robotSimulator = simulator;
     }
 }

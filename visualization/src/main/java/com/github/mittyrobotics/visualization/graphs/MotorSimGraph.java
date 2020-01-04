@@ -24,13 +24,13 @@
 
 package com.github.mittyrobotics.visualization.graphs;
 
-import com.github.mittyrobotics.datatypes.units.Conversions;
 import com.github.mittyrobotics.visualization.util.XYSeriesCollectionWithRender;
 import org.jfree.data.xy.XYSeries;
 
 public class MotorSimGraph extends Graph {
     XYSeries positionSeries;
     XYSeries velocitySeries;
+    XYSeries accelerationSeries;
     XYSeries voltageSeries;
     XYSeries setpointSeries;
     XYSeries errorSeries;
@@ -39,6 +39,7 @@ public class MotorSimGraph extends Graph {
         super();
         positionSeries = new XYSeries("Position", false);
         velocitySeries = new XYSeries("Velocity", false);
+        accelerationSeries = new XYSeries("Acceleration", false);
         voltageSeries = new XYSeries("Voltage", false);
         setpointSeries = new XYSeries("Setpoint", false);
         errorSeries = new XYSeries("Error", false);
@@ -46,6 +47,7 @@ public class MotorSimGraph extends Graph {
         final XYSeriesCollectionWithRender data = new XYSeriesCollectionWithRender();
         data.addSeries(positionSeries);
         data.addSeries(velocitySeries);
+        data.addSeries(accelerationSeries);
         data.addSeries(voltageSeries);
         data.addSeries(setpointSeries);
         data.addSeries(errorSeries);
@@ -56,12 +58,17 @@ public class MotorSimGraph extends Graph {
 
     public void addPosition(double position, double time) {
         //convert to inches
-        positionSeries.add(time, position * Conversions.M_TO_IN);
+        positionSeries.add(time, position);
     }
 
     public void addVelocity(double velocity, double time) {
         //convert to inches
-        velocitySeries.add(time, velocity * Conversions.M_TO_IN);
+        velocitySeries.add(time, velocity);
+    }
+
+    public void addAcceleration(double acceleration, double time) {
+        //convert to inches
+        accelerationSeries.add(time, acceleration);
     }
 
     public void addVoltage(double voltage, double time) {
@@ -71,7 +78,7 @@ public class MotorSimGraph extends Graph {
 
     public void addSetpoint(double setpoint, double time) {
         //convert to inches
-        setpointSeries.add(time, setpoint * Conversions.M_TO_IN);
+        setpointSeries.add(time, setpoint);
     }
 
     public void addError(double error, double time) {

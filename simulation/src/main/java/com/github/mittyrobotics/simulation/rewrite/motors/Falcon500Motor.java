@@ -22,10 +22,10 @@
  * SOFTWARE.
  */
 
-package com.github.mittyrobotics.simulation.sim;
+package com.github.mittyrobotics.simulation.rewrite.motors;
 
-public interface SimRobot {
-    void robotInit();
-
-    void robotPeriodic();
+public class Falcon500Motor extends Motor {
+    public Falcon500Motor() {
+        super(4.69, 257, 6380, 1.5);
+    }
 }

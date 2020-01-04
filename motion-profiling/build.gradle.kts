@@ -1,3 +1,5 @@
+import edu.wpi.first.toolchain.NativePlatforms
+
 /*
  * MIT License
  *
@@ -40,8 +42,8 @@ repositories {
 dependencies {
     compile(project(":datatypes"))
     compile(project(":visualization"))
+    compile(project(":data-collection"))
 }
-
 
 publishing {
     publications {

@@ -33,17 +33,12 @@ import java.awt.*;
 
 public class RobotGraph extends Graph {
 
-    private static RobotGraph instance = new RobotGraph();
     private int lastIndex = 3;
 
     public RobotGraph() {
         super("Robot Graph", "x", "y");
         resizeGraph(-200, 200, -200, 200);
         setSize(800, 800);
-    }
-
-    public static RobotGraph getInstance() {
-        return instance;
     }
 
     public void graphRobot(Transform robotTransform, double width, double length) {

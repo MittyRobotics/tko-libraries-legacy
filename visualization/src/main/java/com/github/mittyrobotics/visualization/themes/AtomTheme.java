@@ -22,9 +22,17 @@
  * SOFTWARE.
  */
 
-package com.github.mittyrobotics.simulation.enums;
+package com.github.mittyrobotics.visualization.themes;
 
-public enum ControlLoopType {
-    PIDF,
-    VELOCITY
+import java.awt.*;
+
+public class AtomTheme extends GraphTheme {
+    public AtomTheme() {
+        super(new Color(33, 37, 43),
+                new Color(96, 99, 104),
+                new Color(40, 44, 52),
+                new Color(171, 178, 191),
+                new Color(171, 178, 191),
+                new Color(171, 178, 191));
+    }
 }

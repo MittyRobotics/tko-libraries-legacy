@@ -26,7 +26,6 @@ package com.github.mittyrobotics.path.following.controllers;
 
 import com.github.mittyrobotics.datatypes.geometry.Circle;
 import com.github.mittyrobotics.datatypes.geometry.Line;
-import com.github.mittyrobotics.datatypes.motion.DifferentialDriveKinematics;
 import com.github.mittyrobotics.datatypes.motion.DrivetrainVelocities;
 import com.github.mittyrobotics.datatypes.motion.DrivetrainWheelVelocities;
 import com.github.mittyrobotics.datatypes.positioning.Position;
@@ -98,8 +97,7 @@ public class PurePursuitController {
         //Use differential drive kinematics to calculate the left and right wheel velocity given the base robot
         //velocity and the radius of the pursuit circle
         return DrivetrainVelocities
-                .calculateFromWheelVelocities(DifferentialDriveKinematics.getInstance().calculateFromRadius(
-                        robotVelocity, radius));
+                .calculateFromLinearVelocityAndRadius(robotVelocity, radius);
     }
 
     /**

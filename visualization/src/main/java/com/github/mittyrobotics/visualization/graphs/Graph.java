@@ -24,8 +24,8 @@
 
 package com.github.mittyrobotics.visualization.graphs;
 
+import com.github.mittyrobotics.visualization.themes.DefaultDarkTheme;
 import com.github.mittyrobotics.visualization.themes.GraphTheme;
-import com.github.mittyrobotics.visualization.themes.TKOTheme;
 import com.github.mittyrobotics.visualization.util.XYSeriesCollectionWithRender;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
@@ -62,7 +62,7 @@ public class Graph extends JFrame {
         this.xAxisName = xAxisName;
 
         initUI();
-        setGraphTheme(new TKOTheme());
+        setGraphTheme(new DefaultDarkTheme());
         setVisible(true);
     }
 
@@ -70,7 +70,7 @@ public class Graph extends JFrame {
         JFreeChart chart = createChart();
 
         ChartPanel chartPanel = new ChartPanel(chart);
-        chartPanel.setBorder(BorderFactory.createEmptyBorder(15, 15, 15, 15));
+        chartPanel.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 30));
         add(chartPanel);
 
         pack();

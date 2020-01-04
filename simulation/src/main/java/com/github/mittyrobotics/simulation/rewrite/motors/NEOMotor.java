@@ -22,10 +22,10 @@
  * SOFTWARE.
  */
 
-package com.github.mittyrobotics.simulation.motors;
+package com.github.mittyrobotics.simulation.rewrite.motors;
 
-public class Pro775Motor extends Motor {
-    public Pro775Motor() {
-        super(.71, 134, 18730, 0.7);
+public class NEOMotor extends Motor {
+    public NEOMotor() {
+        super(3.36, 166.0, 5880.0, 1.3);
     }
 }

@@ -38,8 +38,6 @@ repositories {
 }
 
 dependencies {
-    compile(project(":datatypes"))
-    compile(project(":motion-profiling"))
 }
 
 publishing {
