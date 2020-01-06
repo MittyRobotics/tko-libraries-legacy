@@ -377,7 +377,8 @@ public class TrapezoidalMotionProfile {
     }
 
     public boolean isFinished(double t) {
-        return t >= tTotal || (getVelocityAtTime(t) == endMotionState.getVelocity() && getPositionAtTime(t) == endMotionState.getPosition());
+        return t >= tTotal || (getVelocityAtTime(t) == endMotionState.getVelocity() &&
+                getPositionAtTime(t) == endMotionState.getPosition());
     }
 
     public double getTotalTime() {
