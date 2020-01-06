@@ -32,12 +32,17 @@ plugins {
 }
 
 group = "com.github.MittyRobotics"
-version = "1.0.0"
+version = "0.1.0"
 
 allprojects {
     apply(plugin = "java")
     apply(plugin = "edu.wpi.first.GradleRIO")
     apply(plugin = "maven")
+
+    java {
+        sourceCompatibility = JavaVersion.VERSION_11
+        targetCompatibility = JavaVersion.VERSION_11
+    }
 
     repositories {
         mavenLocal()
