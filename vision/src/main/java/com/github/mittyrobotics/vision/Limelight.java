@@ -72,8 +72,7 @@ public class Limelight {
     public void updateLimelightValues() {
         hasValidTarget =
                 NetworkTableInstance.getDefault().getTable("limelight").getEntry("tv").getDouble(DEFAULT_VALUE) == 1;
-        if (hasValidTarget == false) {
-            System.out.println("WARNING: No valid Limelight targets, not updating values.");
+        if (hasValidTarget == true) {
             yawToTarget =
                     NetworkTableInstance.getDefault().getTable("limelight").getEntry("tx").getDouble(DEFAULT_VALUE);
             pitchToTarget =
@@ -99,6 +98,8 @@ public class Limelight {
                     .getDoubleArray(new double[]{DEFAULT_VALUE});
             targetCornerY = NetworkTableInstance.getDefault().getTable("limelight").getEntry("tcorny")
                     .getDoubleArray(new double[]{DEFAULT_VALUE});
+        } else {
+            //No valid targets
         }
     }
 
