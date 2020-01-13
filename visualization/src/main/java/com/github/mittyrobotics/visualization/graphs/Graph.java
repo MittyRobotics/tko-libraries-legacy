@@ -53,7 +53,7 @@ public class Graph extends JFrame {
     private int lastIndex = 0;
 
     public Graph() {
-        this("Graph", "X", "Y");
+        this("Graph", "y", "x");
     }
 
     public Graph(String titleName, String yAxisName, String xAxisName) {

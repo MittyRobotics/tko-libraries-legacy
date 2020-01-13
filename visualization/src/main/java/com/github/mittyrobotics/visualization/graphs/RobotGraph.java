@@ -36,7 +36,7 @@ public class RobotGraph extends Graph {
     private int lastIndex = 3;
 
     public RobotGraph() {
-        super("Robot Graph", "x", "y");
+        super("Robot Graph", "y", "x");
         resizeGraph(-200, 200, -200, 200);
         setSize(800, 800);
     }
