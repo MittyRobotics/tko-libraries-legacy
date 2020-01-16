@@ -30,9 +30,8 @@ import edu.wpi.first.wpilibj.controller.PIDController;
 public class TKODifferentialDrive {
     SpeedController leftController;
     SpeedController rightController;
-
-
-    public void initController(SpeedController leftController, SpeedController rightController) {
+    
+    public TKODifferentialDrive(SpeedController leftController, SpeedController rightController) {
         this.leftController = leftController;
         this.rightController = rightController;
     }
