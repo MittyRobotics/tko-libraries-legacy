@@ -32,6 +32,11 @@ public class TKODifferentialDrive {
     SpeedController rightController;
 
 
+    public void initController(SpeedController leftController, SpeedController rightController) {
+        this.leftController = leftController;
+        this.rightController = rightController;
+    }
+
     public void tankDrive(double left, double right) {
         if (Math.abs(left) < 0.1) {
             leftController.set(0);
