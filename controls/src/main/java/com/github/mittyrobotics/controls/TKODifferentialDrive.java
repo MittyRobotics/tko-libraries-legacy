@@ -130,7 +130,6 @@ public class TKODifferentialDrive {
         double turn = 0;
 
         PIDController controller = new PIDController(p, i, d);
-        controller.setIntegratorRange(1, -1);
 
 
         //CompassSteering
@@ -203,7 +202,7 @@ public class TKODifferentialDrive {
 
         speed += acceleration;
 
-        turn = controller.getSetpoint();
+        turn = controller.calculate(gyroAngle);
 
         //emphasis var
         double newSpeed = speed * DRIVE_EMPHASIS;
@@ -274,7 +273,7 @@ public class TKODifferentialDrive {
             controller.setSetpoint(steerWheelValue);
         }
         double newSpeed = speed * (1-controller.getSetpoint());
-        double newTurn = controller.getSetpoint();
+        double newTurn = controller.calculate(gyroAngle);
 
         tankDrive(newSpeed + newTurn, newSpeed - newTurn);
 
