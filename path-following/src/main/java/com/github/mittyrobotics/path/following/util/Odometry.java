@@ -37,7 +37,7 @@ public class Odometry {
     private double lastRightEncoderPos = 0;
     private double calibrateGyroVal = 0;
 
-    public static Odometry getInstance() {
+    synchronized public static Odometry getInstance() {
         return instance;
     }
 
