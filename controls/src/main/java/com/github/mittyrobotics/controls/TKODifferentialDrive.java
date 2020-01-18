@@ -264,16 +264,16 @@ public class TKODifferentialDrive {
         double steerWheelValue = steeringWheelX * 450;
 
         if (steerWheelValue > gyroAngle + step) {
-            controller.calculate(gyroAngle + step);
+            controller.setSetpoint(gyroAngle + step);
         }
         else if (steerWheelValue < gyroAngle - step) {
-            controller.calculate(gyroAngle - step);
+            controller.setSetpoint(gyroAngle - step);
         }
         else {
-            controller.calculate(steerWheelValue);
+            controller.setSetpoint(steerWheelValue);
         }
-        double newSpeed = speed * (1-controller.getSetpoint());
         double newTurn = controller.calculate(gyroAngle);
+        double newSpeed = speed * (1-newTurn);
 
         tankDrive(newSpeed + newTurn, newSpeed - newTurn);
 
