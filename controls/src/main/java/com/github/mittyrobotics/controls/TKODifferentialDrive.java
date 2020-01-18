@@ -203,6 +203,7 @@ public class TKODifferentialDrive {
         speed += acceleration;
 
         turn = controller.calculate(gyroAngle);
+        //
 
         //emphasis var
         double newSpeed = speed * DRIVE_EMPHASIS;
