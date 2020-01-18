@@ -29,7 +29,7 @@ import com.github.mittyrobotics.datatypes.positioning.Rotation;
 import com.github.mittyrobotics.datatypes.positioning.Transform;
 
 public class Odometry {
-    private static Odometry instance;
+    private static Odometry instance = new Odometry();
 
     private Transform robotTransform;
 
