@@ -136,11 +136,11 @@ public class TKODifferentialDrive {
         steerWheelValue = steerWheelValue * 450;
 
         if(steerWheelValue > gyroAngle + step) {
-            controller.calculate(gyroAngle + step);
+            controller.setSetpoint(gyroAngle + step);
         } else if (steerWheelValue < gyroAngle - step) {
-            controller.calculate(gyroAngle - step);
+            controller.setSetpoint(gyroAngle - step);
         } else {
-            controller.calculate(steerWheelValue);
+            controller.setSetpoint(steerWheelValue);
         }
 
         //BumperDriveCommand
