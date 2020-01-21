@@ -203,6 +203,7 @@ public class TKODifferentialDrive {
         speed += acceleration;
 
         turn = controller.calculate(gyroAngle);
+        //
 
         //emphasis var
         double newSpeed = speed * DRIVE_EMPHASIS;
@@ -272,8 +273,8 @@ public class TKODifferentialDrive {
         else {
             controller.setSetpoint(steerWheelValue);
         }
-        double newSpeed = speed * (1-controller.getSetpoint());
         double newTurn = controller.calculate(gyroAngle);
+        double newSpeed = speed * (1-newTurn);
 
         tankDrive(newSpeed + newTurn, newSpeed - newTurn);
 
