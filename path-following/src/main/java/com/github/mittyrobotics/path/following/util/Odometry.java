@@ -72,17 +72,43 @@ public class Odometry {
 
     }
 
-    public void calibrateToZero(double leftEncoder, double rightEncoder, double heading) {
-        calibrateGyroVal = heading;
+    /**
+     * Calibrates the {@link Odometry} robot {@link Transform} to the <code>newRobotTransform</code>.
+     *
+     * @param newRobotTransform the new {@link Transform} to set the {@link Odometry} to.
+     * @param leftEncoder the current drivetrain left encoder position
+     * @param rightEncoder the current drivetrain right encoder position
+     * @param heading the current robot heading
+     */
+    public void calibrateRobotTransform(Transform newRobotTransform, double leftEncoder, double rightEncoder,
+                                        double heading) {
         lastLeftEncoderPos = leftEncoder;
         lastRightEncoderPos = rightEncoder;
-        setRobotTransform(new Transform(0, 0, 0));
+        calibrateGyroValue(newRobotTransform.getRotation().getHeading(), heading);
+        this.robotTransform = newRobotTransform;
     }
 
+    /**
+     * Calibrates the {@link Odometry} robot {@link Transform} to zero.
+     *
+     * @param leftEncoder the current drivetrain left encoder position
+     * @param rightEncoder the current drivetrain right encoder position
+     * @param heading the current robot heading
+     */
+    public void calibrateTransformToZero(double leftEncoder, double rightEncoder, double heading) {
+        calibrateRobotTransform(new Transform(0,0,0),leftEncoder,rightEncoder,heading);
+    }
+
+    /**
+     * Calibrates the {@link Odometry} robot {@link Position} to zero while maintaining the current heading value.
+     *
+     * @param leftEncoder the current drivetrain left encoder position
+     * @param rightEncoder the current drivetrain right encoder position
+     */
     public void calibratePositionToZero(double leftEncoder, double rightEncoder) {
         lastLeftEncoderPos = leftEncoder;
         lastRightEncoderPos = rightEncoder;
-        setRobotTransform(new Transform(0, 0, robotTransform.getRotation()));
+        this.robotTransform = new Transform(0,0,getRobotTransform().getRotation());
     }
 
     /**
@@ -92,35 +118,6 @@ public class Odometry {
      */
     public Transform getRobotTransform() {
         return robotTransform;
-    }
-
-    /**
-     * Sets the robot {@link Transform}.
-     *
-     * @param newRobotTransform the new robot {@link Transform}.
-     */
-    public void setRobotTransform(Transform newRobotTransform) {
-        this.robotTransform = newRobotTransform;
-    }
-
-    /**
-     * Sets the robot {@link Position} in the robot {@link Transform}.
-     *
-     * @param newRobotPosition the new robot {@link Position}.
-     */
-    public void setRobotPosition(Position newRobotPosition) {
-        this.robotTransform = new Transform(newRobotPosition, robotTransform.getRotation());
-    }
-
-    /**
-     * Sets the robot {@link Transform} and calibrates the gyro value.
-     *
-     * @param newRobotTransform   the new robot {@link Transform}.
-     * @param currentRobotHeading the robot's current heading value.
-     */
-    public void setRobotTransform(Transform newRobotTransform, double currentRobotHeading) {
-        calibrateGyroValue(newRobotTransform.getRotation().getHeading(), currentRobotHeading);
-        this.robotTransform = newRobotTransform;
     }
 
     public void calibrateGyroValue(double desiredHeading, double currentHeading) {
