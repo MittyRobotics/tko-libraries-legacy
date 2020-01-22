@@ -167,7 +167,7 @@ public class GraphManager {
     public XYSeriesCollectionWithRender graphArrow(Transform transform, double length, double arrowWidth,
                                                    String seriesName, Color color) {
         XYSeriesCollectionWithRender dataset =
-                new XYSeriesCollectionWithRender(true, false, color, new Rectangle(2, 2));
+                new XYSeriesCollectionWithRender(false, true, color, new Rectangle(2, 2));
         dataset.addSeries(arrowSeries(transform, length, arrowWidth, seriesName));
 
         return dataset;
