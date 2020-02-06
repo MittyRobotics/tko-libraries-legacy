@@ -39,6 +39,7 @@ public class FlywheelModel {
 
     private double angularAcceleration;
     private double angularVelocity;
+    private double torque;
 
     public FlywheelModel(double momentOfInertia, Motor motor, double numMotors, double gearRatio) {
         this.momentOfInertia = momentOfInertia;
@@ -62,16 +63,23 @@ public class FlywheelModel {
     public void updateModel(double voltage, double deltaTime) {
         this.angularAcceleration = calculateAcceleration(voltage);
         this.angularVelocity += angularAcceleration * deltaTime;
+        this.torque = calculateTorque(this.angularAcceleration);
+    }
+
+    private double calculateTorque(double angularAcceleration){
+        double wf = angularAcceleration;
+        double J = momentOfInertia;
+        return J*wf;
     }
 
     private double calculateAcceleration(double voltage) {
         double G = gearRatio;
         double R = resistance;
         double V = voltage;
-        double wf = angularVelocity;
+        double w = angularVelocity;
         double J = momentOfInertia;
 
-        return (G * Kt) / (R*J) * V - (G * G * Kt) / (Kv*R*J) * wf;
+        return (G * Kt) / (R*J) * V - (G * G * Kt) / (Kv*R*J) * w;
     }
 
     public double getAngularAcceleration() {
@@ -80,5 +88,9 @@ public class FlywheelModel {
 
     public double getAngularVelocity() {
         return angularVelocity * Conversions.M_TO_IN;
+    }
+
+    public double getTorque(){
+        return torque;
     }
 }
