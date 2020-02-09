@@ -327,7 +327,7 @@ public class PathFollower {
     private double getRoughDistanceToEnd(TransformWithParameter closestTransform) {
         double distance = closestTransform.getPosition().distance(currentPath.getEndWaypoint().getPosition());
 
-        if (closestTransform.getParameter() >= 0.999) {
+        if (closestTransform.getParameter() >= 0.99) {
             return 0;
         }
 

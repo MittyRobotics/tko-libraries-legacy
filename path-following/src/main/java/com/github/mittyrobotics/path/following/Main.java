@@ -32,7 +32,6 @@ import com.github.mittyrobotics.simulation.rewrite.sim.SimDrivetrain;
 import com.github.mittyrobotics.visualization.graphs.RobotGraph;
 
 public class Main {
-
     public static void main(String[] args) {
         RobotGraph graph = new RobotGraph();
         PathFollowerSimRobot simRobot =
