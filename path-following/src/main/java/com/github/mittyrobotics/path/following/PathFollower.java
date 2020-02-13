@@ -49,6 +49,8 @@ public class PathFollower {
     private Path currentPath;
     private boolean unAdaptedPath;
 
+    private double currentDistanceToEnd;
+
     /**
      * Constructs a {@link PathFollower} and sets it up for use with the {@link PurePursuitController}.
      *
@@ -124,6 +126,7 @@ public class PathFollower {
     private void setupPathFollower(PathFollowerProperties properties) {
         this.properties = properties;
         this.previousCalculatedVelocity = 0;
+        this.currentDistanceToEnd = 9999;
     }
 
     /**
@@ -136,7 +139,7 @@ public class PathFollower {
      * @param newPath the new {@link Path} to follow.
      */
     public void setPath(Path newPath) {
-        this.currentPath = newPath;
+        setPath(newPath,false);
     }
 
     /**
@@ -157,6 +160,7 @@ public class PathFollower {
         if (adaptPathToRobot) {
             unAdaptedPath = true;
         }
+        this.currentDistanceToEnd = 9999;
     }
 
     public void setDrivingGoal(Transform goal) {
@@ -230,6 +234,7 @@ public class PathFollower {
 
         //Find the rough distance to the end of the path
         double distanceToEnd = getRoughDistanceToEnd(robotTransform);
+        this.currentDistanceToEnd = distanceToEnd;
 
         //Calculate the robot velocity using the path velocity controller
         double robotVelocity = properties.velocityController.getVelocity(previousCalculatedVelocity, distanceToEnd,
@@ -259,6 +264,7 @@ public class PathFollower {
 
         //Find the rough distance to the end of the path
         double distanceToEnd = getRoughDistanceToEnd(robotTransform);
+        this.currentDistanceToEnd = distanceToEnd;
 
         //Calculate the robot velocity using the path velocity controller. If reversed, reverse the robot velocity
         double robotVelocity = properties.velocityController.getVelocity(previousCalculatedVelocity, distanceToEnd,
@@ -294,13 +300,12 @@ public class PathFollower {
      * Returns whether the robot is within the <code>distanceTolerance</code> of the ending location of the {@link
      * Path}.
      *
-     * @param robotTransform    the robot's {@link Transform}.
      * @param distanceTolerance the distance threshold to end
      * @return whether the robot is within the <code>distanceTolerance</code> of the ending location of the {@link
      * Path}.
      */
-    public boolean isFinished(Transform robotTransform, double distanceTolerance) {
-        return getRoughDistanceToEnd(robotTransform) < distanceTolerance;
+    public boolean isFinished(double distanceTolerance) {
+        return getCurrentDistanceToEnd() < distanceTolerance;
     }
 
     /**
@@ -338,5 +343,9 @@ public class PathFollower {
      */
     public Path getCurrentPath() {
         return currentPath;
+    }
+
+    public double getCurrentDistanceToEnd() {
+        return currentDistanceToEnd;
     }
 }
