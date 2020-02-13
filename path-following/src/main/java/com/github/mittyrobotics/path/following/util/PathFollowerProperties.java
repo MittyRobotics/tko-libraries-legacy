@@ -28,22 +28,12 @@ import com.github.mittyrobotics.motionprofile.PathVelocityController;
 import com.github.mittyrobotics.path.generation.Path;
 
 public class PathFollowerProperties {
-    public final Path path;
     public final PathVelocityController velocityController;
     public final boolean reversed;
     public final boolean continuouslyAdaptivePath;
 
-    public PathFollowerProperties(Path path, PathVelocityController velocityController, boolean reversed,
-                                  boolean continuouslyAdaptivePath) {
-        this.path = path;
-        this.velocityController = velocityController;
-        this.reversed = reversed;
-        this.continuouslyAdaptivePath = continuouslyAdaptivePath;
-    }
-
     public PathFollowerProperties(PathVelocityController velocityController, boolean reversed,
                                   boolean continuouslyAdaptivePath) {
-        this.path = null;
         this.velocityController = velocityController;
         this.reversed = reversed;
         this.continuouslyAdaptivePath = continuouslyAdaptivePath;

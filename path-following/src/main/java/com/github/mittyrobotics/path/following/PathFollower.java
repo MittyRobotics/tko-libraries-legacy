@@ -123,12 +123,11 @@ public class PathFollower {
      */
     private void setupPathFollower(PathFollowerProperties properties) {
         this.properties = properties;
-        this.currentPath = properties.path;
         this.previousCalculatedVelocity = 0;
     }
 
     /**
-     * Changes the {@link Path} that the {@link PathFollower} is currently following.
+     * Sets the {@link Path} that the {@link PathFollower} is currently following.
      * <p>
      * This can be done at any time, even in the middle of following another {@link Path}. The {@link PathFollower}
      * will
@@ -136,26 +135,24 @@ public class PathFollower {
      *
      * @param newPath the new {@link Path} to follow.
      */
-    public void changePath(Path newPath) {
+    public void setPath(Path newPath) {
         this.currentPath = newPath;
     }
 
     /**
-     * Changes the {@link Path} that the {@link PathFollower} is currently following.
+     * Sets the {@link Path} that the {@link PathFollower} is currently following.
      * <p>
      * This can be done at any time, even in the middle of following another {@link Path}. This can be done at any
-     * time,
-     * even in the middle of following another {@link Path}. The {@link PathFollower} will * automatically adapt the
-     * the
-     * new {@link Path} to the robot's next position when following if <code>adaptPathToRobot</code> is true.
-     * Otherwise,
-     * if <code>adaptPathToRobot</code> is false, the robot will follow the input {@link Path} unchanged.
+     * time, even in the middle of following another {@link Path}. The {@link PathFollower} will automatically
+     * adapt the the new {@link Path} to the robot's next position when following if <code>adaptPathToRobot</code> is
+     * true. Otherwise, if <code>adaptPathToRobot</code> is false, the robot will follow the input {@link Path}
+     * unchanged.
      *
      * @param newPath          the new {@link Path} to follow.
      * @param adaptPathToRobot whether or not to adapt the {@link Path} passed in to the robot's location at the next
      *                         update function call.
      */
-    public void changePath(Path newPath, boolean adaptPathToRobot) {
+    public void setPath(Path newPath, boolean adaptPathToRobot) {
         this.currentPath = newPath;
         if (adaptPathToRobot) {
             unAdaptedPath = true;
@@ -167,7 +164,7 @@ public class PathFollower {
                 new Path(PathGenerator.getInstance().generateQuinticHermiteSplinePath(new Transform[]{
                         goal,
                         goal}));
-        changePath(path, true);
+        setPath(path, true);
     }
 
     public void setDrivingGoalVia(Transform goal, Transform[] intermediatePoints) {
@@ -177,7 +174,7 @@ public class PathFollower {
         }
         waypoints[waypoints.length - 1] = goal;
         Path path = new Path(PathGenerator.getInstance().generateQuinticHermiteSplinePath(waypoints));
-        changePath(path, true);
+        setPath(path, true);
     }
 
     /**
@@ -290,7 +287,7 @@ public class PathFollower {
         Path path =
                 new Path(PathGenerator.getInstance().generateQuinticHermiteSplinePath(
                         currentPath.generateAdaptivePathWaypoints(robotTransform, true)));
-        changePath(path);
+        setPath(path);
     }
 
     /**
