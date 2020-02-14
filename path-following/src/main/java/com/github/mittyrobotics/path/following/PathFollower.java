@@ -240,12 +240,13 @@ public class PathFollower {
 
         //Calculate the robot velocity using the path velocity controller
         double robotVelocity = properties.velocityController.getVelocity(previousCalculatedVelocity, distanceToEnd,
-                deltaTime) * (properties.reversed ? -1 : 1);
+                deltaTime);
 
         this.previousCalculatedVelocity = robotVelocity;
 
         //Calculate the pure pursuit controller
-        return PurePursuitController.getInstance().calculate(robotTransform, targetPosition, robotVelocity);
+        return PurePursuitController.getInstance().calculate(robotTransform, targetPosition, robotVelocity,
+                properties.reversed);
     }
 
     /**
@@ -270,8 +271,7 @@ public class PathFollower {
 
         //Calculate the robot velocity using the path velocity controller. If reversed, reverse the robot velocity
         double robotVelocity = properties.velocityController.getVelocity(previousCalculatedVelocity, distanceToEnd,
-                deltaTime)
-                * (properties.reversed ? -1 : 1);
+                deltaTime);
 
         this.previousCalculatedVelocity = robotVelocity;
 
@@ -283,7 +283,7 @@ public class PathFollower {
         }
 
         return RamseteController.getInstance().calculate(robotTransform, desiredTransform, robotVelocity,
-                turningRadius);
+                turningRadius,properties.reversed);
     }
 
     /**

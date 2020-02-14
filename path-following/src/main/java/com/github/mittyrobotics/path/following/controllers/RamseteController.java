@@ -72,7 +72,7 @@ public class RamseteController {
      * @return
      */
     public DrivetrainVelocities calculate(Transform robotTransform, Transform desiredTransform, double robotVelocity,
-                                          double turningRadius) {
+                                          double turningRadius, boolean reversed) {
         //Get the transform error in meters.
         Transform error = desiredTransform.relativeTo(robotTransform).inToM();
 
@@ -99,9 +99,14 @@ public class RamseteController {
         double adjustedAngularVelocity =
                 angularVelocity + k * eTheta + aggressiveGain * linearVelocity * error.getRotation().sinc() * eY;
 
+        DrivetrainVelocities velocities = DrivetrainVelocities
+                .calculateFromLinearAndAngularVelocity(adjustedLinearVelocity, adjustedAngularVelocity*(reversed?-1:1));
+        if(reversed){
+            velocities = velocities.reverse();
+        }
+
         //Use differential drive kinematics given linear velocity in inches per second and angular velocity in radians per second
-        return DrivetrainVelocities
-                .calculateFromLinearAndAngularVelocity(adjustedLinearVelocity, adjustedAngularVelocity);
+        return velocities;
     }
 
     public double getAggressiveGain() {
