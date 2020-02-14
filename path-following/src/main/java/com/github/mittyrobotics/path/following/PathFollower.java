@@ -86,6 +86,7 @@ public class PathFollower {
 
         setupPathFollower(properties);
         this.purePursuitProperties = purePursuitProperties;
+        this.ramseteProperties = null;
 
         if (purePursuitProperties.curvatureSlowdownGain != -1) {
             PurePursuitController.getInstance().setCurvatureSlowdownGain(purePursuitProperties.curvatureSlowdownGain);
@@ -108,6 +109,7 @@ public class PathFollower {
 
         setupPathFollower(properties);
         this.ramseteProperties = ramseteProperties;
+        this.purePursuitProperties = null;
 
         if (ramseteProperties.aggressiveGain != -1) {
             RamseteController.getInstance().setAggressiveGain(ramseteProperties.aggressiveGain);
@@ -347,5 +349,17 @@ public class PathFollower {
 
     public double getCurrentDistanceToEnd() {
         return currentDistanceToEnd;
+    }
+
+    public PathFollowerProperties getProperties() {
+        return properties;
+    }
+
+    public PathFollowerProperties.PurePursuitProperties getPurePursuitProperties() {
+        return purePursuitProperties;
+    }
+
+    public PathFollowerProperties.RamseteProperties getRamseteProperties() {
+        return ramseteProperties;
     }
 }
