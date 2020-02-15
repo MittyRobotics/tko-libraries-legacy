@@ -87,6 +87,10 @@ public class PurePursuitController {
 
         double radius = pursuitCircle.getRadius() * side;
 
+        if(Double.isInfinite(radius)){
+            radius = 999999;
+        }
+
         //Use differential drive kinematics to calculate the left and right wheel velocity given the base robot
         //velocity and the radius of the pursuit circle
         DrivetrainVelocities velocities = DrivetrainVelocities.calculateFromLinearVelocityAndRadius(robotVelocity,
@@ -94,6 +98,8 @@ public class PurePursuitController {
         if(reversed){
             velocities = velocities.reverse();
         }
+
+
         return velocities;
     }
 

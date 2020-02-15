@@ -243,7 +243,6 @@ public class PathFollower {
                 deltaTime);
 
         this.previousCalculatedVelocity = robotVelocity;
-
         //Calculate the pure pursuit controller
         return PurePursuitController.getInstance().calculate(robotTransform, targetPosition, robotVelocity,
                 properties.reversed);
