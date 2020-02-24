@@ -27,10 +27,13 @@ package com.github.mittyrobotics.path.following.simulation;
 import com.github.mittyrobotics.datatypes.motion.DifferentialDriveKinematics;
 import com.github.mittyrobotics.datatypes.motion.DrivetrainVelocities;
 import com.github.mittyrobotics.datatypes.motion.VelocityConstraints;
+import com.github.mittyrobotics.datatypes.positioning.Position;
 import com.github.mittyrobotics.datatypes.positioning.Transform;
 import com.github.mittyrobotics.motionprofile.PathVelocityController;
 import com.github.mittyrobotics.path.following.PathFollower;
 import com.github.mittyrobotics.path.following.util.PathFollowerProperties;
+import com.github.mittyrobotics.path.generation.Path;
+import com.github.mittyrobotics.path.generation.PathGenerator;
 import com.github.mittyrobotics.simulation.rewrite.sim.SimDrivetrain;
 import com.github.mittyrobotics.simulation.rewrite.sim.SimRobot;
 import com.github.mittyrobotics.visualization.util.GraphManager;
@@ -54,7 +57,7 @@ public class PathFollowerSimRobot extends SimRobot {
         //Setup PID values
         getDrivetrain().setupPIDFValues(0.1, 0, 0, 0.09);
 
-        boolean reversed = false;
+        boolean reversed = true;
 
         //Create velocity controller
         PathVelocityController velocityController =
@@ -72,7 +75,7 @@ public class PathFollowerSimRobot extends SimRobot {
         PathFollowerProperties.RamseteProperties ramseteProperties =
                 new PathFollowerProperties.RamseteProperties(5.0, .7);
 
-        PathFollower pathFollower = new PathFollower(properties, ramseteProperties);
+        PathFollower pathFollower = new PathFollower(properties, purePursuitProperties);
 
         this.pathFollower = pathFollower;
 
@@ -82,9 +85,13 @@ public class PathFollowerSimRobot extends SimRobot {
         double y = random.nextInt(200) - 100.0;
         double heading = random.nextInt(90) - 45;
         //Set robot transform to random values
-        getDrivetrain().setOdometry(new Transform(0, 0, 0));
+        getDrivetrain().setOdometry(new Transform(new Position(0, -134.155), 0));
 
-        pathFollower.setDrivingGoal(new Transform(48, 48, 0));
+        Path path1 = new Path(PathGenerator.getInstance().generateQuinticHermiteSplinePath(
+                new Transform[]{new Transform(new Position(0, -134.155), 180),
+                        new Transform( new Position(-86.63, -134.155), 180)}));
+
+        pathFollower.setPath(path1);
     }
 
     @Override

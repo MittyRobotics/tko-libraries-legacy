@@ -69,15 +69,8 @@ public class PurePursuitController {
      * @param robotVelocity  the desired base velocity for the robot to be going.
      * @return the {@link DrivetrainWheelVelocities} based on the {@link PurePursuitController} path following algorithm.
      */
-    public DrivetrainVelocities calculate(Transform robotTransform, Position targetPosition, double robotVelocity) {
-        //Determine if reversed
-        boolean reversed = robotVelocity < 0;
-
-        //If reversed, flip the robot's transform
-        if (reversed) {
-            robotTransform.setRotation(robotTransform.getRotation().add(new Rotation(180)));
-        }
-
+    public DrivetrainVelocities calculate(Transform robotTransform, Position targetPosition,
+                                          double robotVelocity, boolean reversed) {
         //Calculate the pursuit circle to follow, calculated by finding the circle tangent to the robot transform that
         //intersects the target position.
         Circle pursuitCircle = new Circle(robotTransform, targetPosition);
@@ -92,12 +85,22 @@ public class PurePursuitController {
 
         robotVelocity = calculateSlowdownVelocity(1 / (pursuitCircle.getRadius()), robotVelocity, minSlowdownVelocity);
 
-        double radius = pursuitCircle.getRadius() * side * (reversed ? -1 : 1);
+        double radius = pursuitCircle.getRadius() * side;
+
+        if(Double.isInfinite(radius)){
+            radius = 999999;
+        }
 
         //Use differential drive kinematics to calculate the left and right wheel velocity given the base robot
         //velocity and the radius of the pursuit circle
-        return DrivetrainVelocities
-                .calculateFromLinearVelocityAndRadius(robotVelocity, radius);
+        DrivetrainVelocities velocities = DrivetrainVelocities.calculateFromLinearVelocityAndRadius(robotVelocity,
+                radius);
+        if(reversed){
+            velocities = velocities.reverse();
+        }
+
+
+        return velocities;
     }
 
     /**
