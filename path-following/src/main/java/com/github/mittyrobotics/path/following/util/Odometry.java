@@ -150,6 +150,26 @@ public class Odometry {
         this.lastRightEncoderPos = rightEncoder;
     }
 
+    public Transform getLatestRobotTransform(){
+        return robotTransformList.getLatest().getObject();
+    }
+
+    public Transform getLatestRobotVelocity(){
+        return robotVelocityList.getLatest().getObject();
+    }
+    
+    public double getLatestTimestamp(){
+        return robotTransformList.getLatest().getTimestamp();
+    }
+
+    public Transform getRobotTransformAtTimestamp(double timestamp){
+        return robotTransformList.getElementFromTimestamp(timestamp);
+    }
+
+    public Transform getRobotVelocityAtTimestamp(double timestamp){
+        return robotVelocityList.getElementFromTimestamp(timestamp);
+    }
+
     public CircularTimestampedList<Transform> getRobotTransformList() {
         return robotTransformList;
     }
