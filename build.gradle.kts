@@ -62,6 +62,7 @@ allprojects {
 
 // https://mvnrepository.com/artifact/org.jfree/jfreechart
         compile(group = "org.jfree", name = "jfreechart", version = "1.5.0")
+        compile(group = "org.apache.commons", name = "commons-collections4", version = "4.1")
     }
 }
 

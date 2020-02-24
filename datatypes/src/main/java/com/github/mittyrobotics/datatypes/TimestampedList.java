@@ -24,25 +24,39 @@
 
 package com.github.mittyrobotics.datatypes;
 
-import com.github.mittyrobotics.datatypes.geometry.Circle;
-import com.github.mittyrobotics.datatypes.positioning.Position;
-import com.github.mittyrobotics.datatypes.units.Conversions;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
 
-public class Main {
-    public static void main(String[] args) {
-        CircularTimestampedList<Integer> list = new CircularTimestampedList<>(2);
-        list.addFront(new TimestampedElement<>(0,0));
-        list.addFront(new TimestampedElement<>(1,1));
-        list.addFront(new TimestampedElement<>(2,2));
-        list.addFront(new TimestampedElement<>(3,3));
-        list.addFront(new TimestampedElement<>(4,4));
-        list.addFront(new TimestampedElement<>(5,5));
-        list.addFront(new TimestampedElement<>(6,6));
-        list.addFront(new TimestampedElement<>(7,7));
-        list.addFront(new TimestampedElement<>(8,8));
-        list.addFront(new TimestampedElement<>(9,9));
-        for(int i = 0; i < list.size(); i++){
-            System.out.println(list.get(i).getObject() + " " + list.get(i).getTimestamp());
+public class TimestampedList<E> extends ArrayList<TimestampedElement<E>> {
+    public void add(E object, double timestamp){
+        add(new TimestampedElement<E>(object,timestamp));
+    }
+
+    public void addFront(TimestampedElement<E> eTimestampedElement) {
+        super.add(0,eTimestampedElement);
+    }
+
+    public E getElementFromTimestamp(double timestamp){
+        double closest = Double.POSITIVE_INFINITY;
+        E object = null;
+        Iterator<TimestampedElement<E>> iterator = iterator();
+        while(iterator.hasNext()){
+            TimestampedElement<E> timestampedElement = iterator.next();
+            double t = timestampedElement.getTimestamp();
+            if(Math.abs(t-timestamp) < closest){
+                closest = Math.abs(t-timestamp);
+                object = timestampedElement.getObject();
+            }
         }
+        return object;
+    }
+
+    public double getTimestampFromElement(int elementIndex) {
+        return get(elementIndex).getTimestamp();
+    }
+
+    public TimestampedElement<E> getLatest(){
+        return get(0);
     }
 }

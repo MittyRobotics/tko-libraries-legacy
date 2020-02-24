@@ -24,25 +24,20 @@
 
 package com.github.mittyrobotics.datatypes;
 
-import com.github.mittyrobotics.datatypes.geometry.Circle;
-import com.github.mittyrobotics.datatypes.positioning.Position;
-import com.github.mittyrobotics.datatypes.units.Conversions;
+public class TimestampedElement<E> {
+    private final E object;
+    private final double timestamp;
 
-public class Main {
-    public static void main(String[] args) {
-        CircularTimestampedList<Integer> list = new CircularTimestampedList<>(2);
-        list.addFront(new TimestampedElement<>(0,0));
-        list.addFront(new TimestampedElement<>(1,1));
-        list.addFront(new TimestampedElement<>(2,2));
-        list.addFront(new TimestampedElement<>(3,3));
-        list.addFront(new TimestampedElement<>(4,4));
-        list.addFront(new TimestampedElement<>(5,5));
-        list.addFront(new TimestampedElement<>(6,6));
-        list.addFront(new TimestampedElement<>(7,7));
-        list.addFront(new TimestampedElement<>(8,8));
-        list.addFront(new TimestampedElement<>(9,9));
-        for(int i = 0; i < list.size(); i++){
-            System.out.println(list.get(i).getObject() + " " + list.get(i).getTimestamp());
-        }
+    public TimestampedElement(E object, double timestamp){
+        this.object = object;
+        this.timestamp = timestamp;
+    }
+
+    public E getObject() {
+        return object;
+    }
+
+    public double getTimestamp() {
+        return timestamp;
     }
 }
