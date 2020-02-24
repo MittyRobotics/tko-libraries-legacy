@@ -150,6 +150,11 @@ public class Odometry {
         this.lastRightEncoderPos = rightEncoder;
     }
 
+    public void calibrateTransformToZero(double leftEncoder, double rightEncoder, double gyro){
+        calibrateEncodersToZero(leftEncoder,rightEncoder);
+        setTransform(new Transform(0,0, 0),gyro);
+    }
+
     public Transform getLatestRobotTransform(){
         return robotTransformList.getLatest().getObject();
     }
@@ -157,7 +162,7 @@ public class Odometry {
     public Transform getLatestRobotVelocity(){
         return robotVelocityList.getLatest().getObject();
     }
-    
+
     public double getLatestTimestamp(){
         return robotTransformList.getLatest().getTimestamp();
     }
