@@ -120,18 +120,20 @@ public class Odometry {
         //Loop through transform list, updating each transform based on the previous transform and velocity between
         //current transform and previous transform
         for (int i = 1; i < robotTransformList.size(); i++) {
-            //Get delta time between initial and final transforms
-            double deltaTime = robotTransformList.get(i - 1).getTimestamp() - robotTransformList.get(i).getTimestamp();
-            //Get velocity from initial to final transform, which is the velocity transform in the velocity list with
-            //the same index as the final transform in the transform list
-            Transform velocity = robotVelocityList.get(i - 1).getObject();
-            //Get the final transform in the transform list
-            Transform finalTransform = robotTransformList.get(i - 1).getObject();
-            //Calculate the initial transform using the formula: Xi = v*-t+Xf, where Xi is initial transform, t is
-            //delta time, v is velocity, and Xf is final transform
-            Transform initialTransform = velocity.multiply(-deltaTime).add(finalTransform);
-            //Set the object to the new calculated initial transform
-            robotTransformList.setObject(i, initialTransform);
+            if(robotTransformList.size() > 1){
+                //Get delta time between initial and final transforms
+                double deltaTime = robotTransformList.get(i - 1).getTimestamp() - robotTransformList.get(i).getTimestamp();
+                //Get velocity from initial to final transform, which is the velocity transform in the velocity list with
+                //the same index as the final transform in the transform list
+                Transform velocity = robotVelocityList.get(i - 1).getObject();
+                //Get the final transform in the transform list
+                Transform finalTransform = robotTransformList.get(i - 1).getObject();
+                //Calculate the initial transform using the formula: Xi = v*-t+Xf, where Xi is initial transform, t is
+                //delta time, v is velocity, and Xf is final transform
+                Transform initialTransform = velocity.multiply(-deltaTime).add(finalTransform);
+                //Set the object to the new calculated initial transform
+                robotTransformList.setObject(i, initialTransform);
+            }
         }
     }
 
