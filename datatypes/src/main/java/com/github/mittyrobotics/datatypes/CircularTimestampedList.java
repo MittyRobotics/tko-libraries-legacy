@@ -50,7 +50,9 @@ public class CircularTimestampedList<E> {
     }
 
     public void setObject(int index, E object){
-        timestampedList.set(index,new TimestampedElement<>(object,get(index).getTimestamp()));
+        if(timestampedList.get(index) != null){
+            timestampedList.set(index,new TimestampedElement<>(object,get(index).getTimestamp()));
+        }
     }
 
     public TimestampedElement<E> get(int index){
