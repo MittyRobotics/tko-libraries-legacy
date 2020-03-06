@@ -115,13 +115,12 @@ public class Odometry {
      *
      * @param position the {@link Position} to set {@link Odometry} to.
      */
-    public void setPosition(Position position) {
+    public void setPosition(Position position, double gyro) {
         if(robotTransformList.size() == 0){
-            robotTransformList.addFront(new TimestampedElement<>(new Transform(position,
-                    robotTransformList.getLatest().getTimestamp()),0));
+            robotTransformList.addFront(new TimestampedElement<>(new Transform(position, gyro),0));
         }
         else{
-            robotTransformList.setObject(0, new Transform(position, robotTransformList.getLatest().getTimestamp()));
+            robotTransformList.setObject(0, new Transform(position, robotTransformList.getLatest().getObject().getRotation()));
             //Loop through transform list, updating each transform based on the previous transform and velocity between
             //current transform and previous transform
             for (int i = 1; i < robotTransformList.size(); i++) {
@@ -151,7 +150,7 @@ public class Odometry {
      */
     public void setTransform(Transform transform, double gyro){
         setHeading(transform.getRotation().getHeading(), gyro);
-        setPosition(transform.getPosition());
+        setPosition(transform.getPosition(), gyro);
     }
 
     public void calibrateEncodersToZero(double leftEncoder, double rightEncoder){
