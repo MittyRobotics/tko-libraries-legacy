@@ -36,6 +36,8 @@ public class Odometry {
     private CircularTimestampedList<Transform> robotTransformList = new CircularTimestampedList<>(100);
     private CircularTimestampedList<Transform> robotVelocityList = new CircularTimestampedList<>(100);
 
+    private Transform latestRobotTransform;
+
     private double lastLeftEncoderPos = 0;
     private double lastRightEncoderPos = 0;
     private double calibrateGyroVal = 0;
@@ -76,19 +78,20 @@ public class Odometry {
         //Get delta position
         Position deltaPosition = new Position(deltaX, deltaY);
         //Get latest transform from timestamped transform list
-        Transform latestTransform = robotTransformList.getLatest().getObject();
+        Transform latestTransform = latestRobotTransform;
         //Get new transform from delta position and last transform
         Transform transform = new Transform(latestTransform.getPosition().add(deltaPosition), robotRotation);
 
         //Get delta time of update from timestamp list
-        double deltaTime = timestamp - robotTransformList.getLatest().getTimestamp();
+       // double deltaTime = timestamp - robotTransformList.getLatest().getTimestamp();
         //Compute acceleration transform from the difference between the current transform and last transform
         //multiplied by the delta time
-        Transform velocity = transform.subtract(latestTransform).divide(deltaTime);
+        //Transform velocity = transform.subtract(latestTransform).divide(deltaTime);
 
         //Add transform and acceleration to timestamped list
-        robotTransformList.addFront(new TimestampedElement<>(transform, timestamp));
-        robotVelocityList.addFront(new TimestampedElement<>(velocity, timestamp));
+        //robotTransformList.addFront(new TimestampedElement<>(transform, timestamp));
+        //robotVelocityList.addFront(new TimestampedElement<>(velocity, timestamp));
+        this.latestRobotTransform = transform;
     }
 
     /**
@@ -116,30 +119,31 @@ public class Odometry {
      * @param position the {@link Position} to set {@link Odometry} to.
      */
     public void setPosition(Position position, double gyro) {
-        if(robotTransformList.size() == 0){
-            robotTransformList.addFront(new TimestampedElement<>(new Transform(position, gyro),0));
-        }
-        else{
-            robotTransformList.setObject(0, new Transform(position, robotTransformList.getLatest().getObject().getRotation()));
-            //Loop through transform list, updating each transform based on the previous transform and velocity between
-            //current transform and previous transform
-            for (int i = 1; i < robotTransformList.size(); i++) {
-                if(robotTransformList.size() > 1){
-                    //Get delta time between initial and final transforms
-                    double deltaTime = robotTransformList.get(i - 1).getTimestamp() - robotTransformList.get(i).getTimestamp();
-                    //Get velocity from initial to final transform, which is the velocity transform in the velocity list with
-                    //the same index as the final transform in the transform list
-                    Transform velocity = robotVelocityList.get(i - 1).getObject();
-                    //Get the final transform in the transform list
-                    Transform finalTransform = robotTransformList.get(i - 1).getObject();
-                    //Calculate the initial transform using the formula: Xi = v*-t+Xf, where Xi is initial transform, t is
-                    //delta time, v is velocity, and Xf is final transform
-                    Transform initialTransform = velocity.multiply(-deltaTime).add(finalTransform);
-                    //Set the object to the new calculated initial transform
-                    robotTransformList.setObject(i, initialTransform);
-                }
-            }
-        }
+        this.latestRobotTransform = new Transform(position,gyro-calibrateGyroVal);
+//        if(robotTransformList.size() == 0){
+//            robotTransformList.addFront(new TimestampedElement<>(new Transform(position, gyro),0));
+//        }
+//        else{
+//            robotTransformList.setObject(0, new Transform(position, robotTransformList.getLatest().getObject().getRotation()));
+//            //Loop through transform list, updating each transform based on the previous transform and velocity between
+//            //current transform and previous transform
+//            for (int i = 1; i < robotTransformList.size(); i++) {
+//                if(robotTransformList.size() > 1){
+//                    //Get delta time between initial and final transforms
+//                    double deltaTime = robotTransformList.get(i - 1).getTimestamp() - robotTransformList.get(i).getTimestamp();
+//                    //Get velocity from initial to final transform, which is the velocity transform in the velocity list with
+//                    //the same index as the final transform in the transform list
+//                    Transform velocity = robotVelocityList.get(i - 1).getObject();
+//                    //Get the final transform in the transform list
+//                    Transform finalTransform = robotTransformList.get(i - 1).getObject();
+//                    //Calculate the initial transform using the formula: Xi = v*-t+Xf, where Xi is initial transform, t is
+//                    //delta time, v is velocity, and Xf is final transform
+//                    Transform initialTransform = velocity.multiply(-deltaTime).add(finalTransform);
+//                    //Set the object to the new calculated initial transform
+//                    robotTransformList.setObject(i, initialTransform);
+//                }
+//            }
+//        }
 
     }
 
@@ -164,7 +168,7 @@ public class Odometry {
     }
 
     public Transform getLatestRobotTransform(){
-        return robotTransformList.getLatest().getObject();
+        return latestRobotTransform;
     }
 
     public Transform getLatestRobotVelocity(){
