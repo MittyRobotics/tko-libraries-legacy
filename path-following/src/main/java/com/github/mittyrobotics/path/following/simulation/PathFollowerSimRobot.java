@@ -57,7 +57,7 @@ public class PathFollowerSimRobot extends SimRobot {
         //Setup PID values
         getDrivetrain().setupPIDFValues(0.1, 0, 0, 0.09);
 
-        boolean reversed = true;
+        boolean reversed = false;
 
         //Create velocity controller
         PathVelocityController velocityController =
@@ -85,11 +85,11 @@ public class PathFollowerSimRobot extends SimRobot {
         double y = random.nextInt(200) - 100.0;
         double heading = random.nextInt(90) - 45;
         //Set robot transform to random values
-        getDrivetrain().setOdometry(new Transform(new Position(0, -134.155), 0));
+        getDrivetrain().setOdometry(new Transform(new Position(0, 0), 0));
 
         Path path1 = new Path(PathGenerator.getInstance().generateQuinticHermiteSplinePath(
-                new Transform[]{new Transform(new Position(0, -134.155), 180),
-                        new Transform( new Position(-86.63, -134.155), 180)}));
+                new Transform[]{new Transform(new Position(0, 0), 0),
+                        new Transform( new Position(100, 50), 0)}));
 
         pathFollower.setPath(path1);
     }
