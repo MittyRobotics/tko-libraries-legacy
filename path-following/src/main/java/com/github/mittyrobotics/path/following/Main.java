@@ -25,10 +25,10 @@
 package com.github.mittyrobotics.path.following;
 
 import com.github.mittyrobotics.path.following.simulation.PathFollowerSimRobot;
-import com.github.mittyrobotics.simulation.rewrite.models.DrivetrainModel;
-import com.github.mittyrobotics.simulation.rewrite.motors.CIMMotor;
-import com.github.mittyrobotics.simulation.rewrite.sim.RobotSimulator;
-import com.github.mittyrobotics.simulation.rewrite.sim.SimDrivetrain;
+import com.github.mittyrobotics.simulation.models.DrivetrainModel;
+import com.github.mittyrobotics.simulation.motors.CIMMotor;
+import com.github.mittyrobotics.simulation.sim.RobotSimulator;
+import com.github.mittyrobotics.simulation.sim.SimDrivetrain;
 import com.github.mittyrobotics.visualization.graphs.RobotGraph;
 
 public class Main {

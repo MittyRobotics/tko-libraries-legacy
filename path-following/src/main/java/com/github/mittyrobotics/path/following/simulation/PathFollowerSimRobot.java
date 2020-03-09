@@ -34,8 +34,8 @@ import com.github.mittyrobotics.path.following.PathFollower;
 import com.github.mittyrobotics.path.following.util.PathFollowerProperties;
 import com.github.mittyrobotics.path.generation.Path;
 import com.github.mittyrobotics.path.generation.PathGenerator;
-import com.github.mittyrobotics.simulation.rewrite.sim.SimDrivetrain;
-import com.github.mittyrobotics.simulation.rewrite.sim.SimRobot;
+import com.github.mittyrobotics.simulation.sim.SimDrivetrain;
+import com.github.mittyrobotics.simulation.sim.SimRobot;
 import com.github.mittyrobotics.visualization.util.GraphManager;
 
 import javax.swing.*;

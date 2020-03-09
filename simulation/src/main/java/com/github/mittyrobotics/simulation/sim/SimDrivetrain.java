@@ -22,12 +22,12 @@
  * SOFTWARE.
  */
 
-package com.github.mittyrobotics.simulation.rewrite.sim;
+package com.github.mittyrobotics.simulation.sim;
 
 import com.github.mittyrobotics.datatypes.positioning.Position;
 import com.github.mittyrobotics.datatypes.positioning.Rotation;
 import com.github.mittyrobotics.datatypes.positioning.Transform;
-import com.github.mittyrobotics.simulation.rewrite.models.DrivetrainModel;
+import com.github.mittyrobotics.simulation.models.DrivetrainModel;
 
 import java.util.Timer;
 import java.util.TimerTask;

@@ -22,20 +22,10 @@
  * SOFTWARE.
  */
 
-package com.github.mittyrobotics.simulation.rewrite;
+package com.github.mittyrobotics.simulation.motors;
 
-import com.github.mittyrobotics.simulation.rewrite.models.DrivetrainModel;
-import com.github.mittyrobotics.simulation.rewrite.motors.CIMMotor;
-import com.github.mittyrobotics.simulation.rewrite.sim.RobotSimulator;
-import com.github.mittyrobotics.simulation.rewrite.sim.SimDrivetrain;
-import com.github.mittyrobotics.simulation.rewrite.sim.SimRobot;
-
-public class Main {
-    public static void main(String[] args) {
-        DrivetrainModel drivetrainModel = new DrivetrainModel(125, 1.585, 20, 30, new CIMMotor(), 2, 7.0, 2);
-        SimRobot robot = new SimRobot(new SimDrivetrain(drivetrainModel));
-
-        RobotSimulator simulator = new RobotSimulator(robot, 0.02);
-        robot.getDrivetrain().setPercentOutput(1, 1);
+public class NEOMotor extends Motor {
+    public NEOMotor() {
+        super(3.36, 166.0, 5880.0, 1.3);
     }
 }

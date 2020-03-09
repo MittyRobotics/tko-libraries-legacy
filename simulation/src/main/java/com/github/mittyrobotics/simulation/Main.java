@@ -22,10 +22,20 @@
  * SOFTWARE.
  */
 
-package com.github.mittyrobotics.simulation.rewrite.motors;
+package com.github.mittyrobotics.simulation;
 
-public class MiniCIMMotor extends Motor {
-    public MiniCIMMotor() {
-        super(1.41, 89, 5840, 3);
+import com.github.mittyrobotics.simulation.models.DrivetrainModel;
+import com.github.mittyrobotics.simulation.motors.CIMMotor;
+import com.github.mittyrobotics.simulation.sim.RobotSimulator;
+import com.github.mittyrobotics.simulation.sim.SimDrivetrain;
+import com.github.mittyrobotics.simulation.sim.SimRobot;
+
+public class Main {
+    public static void main(String[] args) {
+        DrivetrainModel drivetrainModel = new DrivetrainModel(125, 1.585, 20, 30, new CIMMotor(), 2, 7.0, 2);
+        SimRobot robot = new SimRobot(new SimDrivetrain(drivetrainModel));
+
+        RobotSimulator simulator = new RobotSimulator(robot, 0.02);
+        robot.getDrivetrain().setPercentOutput(1, 1);
     }
 }

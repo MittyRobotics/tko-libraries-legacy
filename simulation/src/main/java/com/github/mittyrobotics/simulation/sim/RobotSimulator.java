@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-package com.github.mittyrobotics.simulation.rewrite.sim;
+package com.github.mittyrobotics.simulation.sim;
 
 import com.github.mittyrobotics.visualization.graphs.RobotGraph;
 

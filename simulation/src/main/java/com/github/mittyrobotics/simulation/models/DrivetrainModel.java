@@ -22,11 +22,11 @@
  * SOFTWARE.
  */
 
-package com.github.mittyrobotics.simulation.rewrite.models;
+package com.github.mittyrobotics.simulation.models;
 
 import com.github.mittyrobotics.datatypes.motion.DrivetrainWheelVelocities;
 import com.github.mittyrobotics.datatypes.units.Conversions;
-import com.github.mittyrobotics.simulation.rewrite.motors.Motor;
+import com.github.mittyrobotics.simulation.motors.Motor;
 
 public class DrivetrainModel {
     private final double mass;

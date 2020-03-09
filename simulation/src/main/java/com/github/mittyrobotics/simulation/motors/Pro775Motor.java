@@ -22,32 +22,10 @@
  * SOFTWARE.
  */
 
-package com.github.mittyrobotics.simulation.rewrite.sim;
+package com.github.mittyrobotics.simulation.motors;
 
-public class SimRobot {
-    private final SimDrivetrain drivetrain;
-    private RobotSimulator robotSimulator;
-
-    public SimRobot(SimDrivetrain drivetrain) {
-        this.drivetrain = drivetrain;
-    }
-
-    public void robotInit() {
-        System.out.println("Default simulator robot init");
-    }
-
-    public void robotPeriodic() {
-    }
-
-    public SimDrivetrain getDrivetrain() {
-        return drivetrain;
-    }
-
-    public RobotSimulator getRobotSimulator() {
-        return robotSimulator;
-    }
-
-    public void setRobotSimulator(RobotSimulator simulator) {
-        this.robotSimulator = simulator;
+public class Pro775Motor extends Motor {
+    public Pro775Motor() {
+        super(.71, 134, 18730, 0.7);
     }
 }

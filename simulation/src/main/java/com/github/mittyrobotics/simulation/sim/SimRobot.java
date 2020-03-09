@@ -22,10 +22,32 @@
  * SOFTWARE.
  */
 
-package com.github.mittyrobotics.simulation.rewrite.motors;
+package com.github.mittyrobotics.simulation.sim;
 
-public class BagMotor extends Motor {
-    public BagMotor() {
-        super(.43, 53, 13180, 1.8);
+public class SimRobot {
+    private final SimDrivetrain drivetrain;
+    private RobotSimulator robotSimulator;
+
+    public SimRobot(SimDrivetrain drivetrain) {
+        this.drivetrain = drivetrain;
+    }
+
+    public void robotInit() {
+        System.out.println("Default simulator robot init");
+    }
+
+    public void robotPeriodic() {
+    }
+
+    public SimDrivetrain getDrivetrain() {
+        return drivetrain;
+    }
+
+    public RobotSimulator getRobotSimulator() {
+        return robotSimulator;
+    }
+
+    public void setRobotSimulator(RobotSimulator simulator) {
+        this.robotSimulator = simulator;
     }
 }

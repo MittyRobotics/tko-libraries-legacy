@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-package com.github.mittyrobotics.simulation.rewrite.util;
+package com.github.mittyrobotics.simulation.util;
 
 import javax.swing.*;
 import java.awt.event.KeyAdapter;

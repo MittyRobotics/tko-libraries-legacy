@@ -22,22 +22,11 @@
  * SOFTWARE.
  */
 
-package com.github.mittyrobotics.simulation.rewrite;
+package com.github.mittyrobotics.simulation.motors;
 
-import com.github.mittyrobotics.simulation.rewrite.models.FlywheelModel;
-import com.github.mittyrobotics.simulation.rewrite.motors.NEOMotor;
-import com.github.mittyrobotics.visualization.graphs.MotorSimGraph;
-
-public class MotorSimTest {
-    public static void main(String[] args) {
-        FlywheelModel model = new FlywheelModel(0.04115, new NEOMotor(),1,1);
-        MotorSimGraph graph = new MotorSimGraph();
-        double voltage = 6;
-        for(double i = 0; i < 50; i+=0.1){
-            model.updateModel(voltage,0.1);
-            //graph.addVelocity(model.getAngularVelocity(),i);
-            graph.addVoltage(voltage, i);
-            graph.addError(model.getTorque(), i);
-        }
+public class CIMMotor extends Motor {
+    public CIMMotor() {
+        super(2.24, 131.0, 5330, 2.7);
     }
+
 }
