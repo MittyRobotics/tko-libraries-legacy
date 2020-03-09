@@ -49,7 +49,7 @@ public class Odometry {
     private Odometry(){
         //Init latest calibration position
         latestCalibrationPosition = new Position();
-        
+
         //Init circular timestamped lists
         robotTransformList =  new CircularTimestampedList<>(100);
         robotVelocityList = new CircularTimestampedList<>(100);
