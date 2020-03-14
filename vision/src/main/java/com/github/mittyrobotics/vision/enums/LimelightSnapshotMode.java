@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2019 Mitty Robotics (Team 1351)
+ * Copyright (c) 2020 Mitty Robotics (Team 1351)
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -44,7 +44,7 @@ public enum LimelightSnapshotMode {
 
     public int value;
 
-    private LimelightSnapshotMode(int value) {
+    LimelightSnapshotMode(int value) {
         value = value;
     }
 
