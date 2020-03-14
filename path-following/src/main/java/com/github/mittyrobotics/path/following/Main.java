@@ -24,19 +24,5 @@
 
 package com.github.mittyrobotics.path.following;
 
-import com.github.mittyrobotics.path.following.simulation.PathFollowerSimRobot;
-import com.github.mittyrobotics.simulation.models.DrivetrainModel;
-import com.github.mittyrobotics.simulation.motors.CIMMotor;
-import com.github.mittyrobotics.simulation.sim.RobotSimulator;
-import com.github.mittyrobotics.simulation.sim.SimDrivetrain;
-import com.github.mittyrobotics.visualization.graphs.RobotGraph;
-
 public class Main {
-    public static void main(String[] args) {
-        RobotGraph graph = new RobotGraph();
-        PathFollowerSimRobot simRobot =
-                new PathFollowerSimRobot(new SimDrivetrain(new DrivetrainModel(50, 1.585, 20, 30,
-                        new CIMMotor(), 2, 7, 2)));
-        new RobotSimulator(simRobot, 0.02, graph);
-    }
 }

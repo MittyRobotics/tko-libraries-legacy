@@ -24,28 +24,5 @@
 
 package com.github.mittyrobotics.path.generation;
 
-import com.github.mittyrobotics.datatypes.positioning.Transform;
-import com.github.mittyrobotics.datatypes.positioning.TransformWithVelocityAndCurvature;
-import com.github.mittyrobotics.path.generation.splines.QuinticHermiteSpline;
-import com.github.mittyrobotics.visualization.graphs.Graph;
-import com.github.mittyrobotics.visualization.util.GraphManager;
-
-import java.awt.*;
-
-
 public class Main {
-    public static void main(String[] args) {
-        Graph graph = new Graph();
-
-        graph.resizeGraph(-10, 110, -10, 110);
-
-        graph.getChart().removeLegend();
-
-        TransformWithVelocityAndCurvature p1 = new TransformWithVelocityAndCurvature(new Transform(0, 0, 0), 0, 0);
-        TransformWithVelocityAndCurvature p2 = new TransformWithVelocityAndCurvature(new Transform(80, 50, 0), 0, 0);
-
-        QuinticHermiteSpline spline = new QuinticHermiteSpline(p1, p2);
-        graph.addDataset(GraphManager.getInstance().graphParametric(new QuinticHermiteSpline[]{spline}, 2, .5,
-                "quintic", Color.green));
-    }
 }
