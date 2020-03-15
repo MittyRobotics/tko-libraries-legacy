@@ -213,7 +213,7 @@ public class GraphManager {
             series.add(arcSegment.getStartPoint().getX(), arcSegment.getStartPoint().getY());
             series.add(arcSegment.getEndPoint().getX(), arcSegment.getEndPoint().getY());
         } else {
-            double i = 180 + arcSegment.getCenter().angleTo(arcSegment.getIntermediatePoint()).getHeading();
+            double i = 180 + arcSegment.getCenter().angleTo(arcSegment.getIntermediatePoint()).getRadians();
             double initI = i;
             while (i < initI + 359) {
                 Position pos = new Position(

@@ -105,7 +105,7 @@ public class ArcSegment extends Circle {
         }
 
         Transform actualClosestTransform =
-                new Transform(actualClosestPoint, getTangentLineAtPoint(actualClosestPoint).getLineAngle());
+                new Transform(actualClosestPoint, getTangentLineAtPoint(actualClosestPoint).getLineRotation());
 
         actualClosestTransform =
                 new Transform(actualClosestTransform.getPosition(), actualClosestTransform.getRotation());
@@ -142,7 +142,7 @@ public class ArcSegment extends Circle {
         //If only one point falls on the segment, return that point.
         else if (pointsOnSegment == 1) {
             Position pos = positions[latestPointIndex];
-            return Optional.of(new Transform(pos, getTangentLineAtPoint(pos).getLineAngle()));
+            return Optional.of(new Transform(pos, getTangentLineAtPoint(pos).getLineRotation()));
         }
 
         //If two points fall on the segment, return the point depending on the round mode
@@ -177,7 +177,7 @@ public class ArcSegment extends Circle {
         }
 
         return Optional.of(new Transform(currentClosestPosition,
-                getTangentLineAtPoint(currentClosestPosition).getLineAngle()));
+                getTangentLineAtPoint(currentClosestPosition).getLineRotation()));
     }
 
     /**

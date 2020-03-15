@@ -49,16 +49,16 @@ public class Transform {
         this(new Position(x, y), new Rotation());
     }
 
-    public Transform(double x, double y, double heading) {
-        this(new Position(x, y), new Rotation(heading));
+    public Transform(double x, double y, double angleRads) {
+        this(new Position(x, y), new Rotation(angleRads));
     }
 
-    public Transform(double x, double y, Rotation rotation) {
-        this(new Position(x, y), rotation);
+    public Transform(double x, double y, Rotation angleRads) {
+        this(new Position(x, y), angleRads);
     }
 
-    public Transform(Position position, double heading) {
-        this(position, new Rotation(heading));
+    public Transform(Position position, double angleRads) {
+        this(position, new Rotation(angleRads));
     }
 
     public Transform(Position position, Rotation rotation) {
@@ -221,7 +221,7 @@ public class Transform {
             Transform transform = (Transform) obj;
             if (transform.getPosition().getX() == getPosition().getX() &&
                     transform.getPosition().getY() == getPosition().getY() &&
-                    transform.getRotation().getHeading() == getRotation().getHeading()) {
+                    transform.getRotation().getRadians() == getRotation().getRadians()) {
                 return true;
             }
         } catch (Exception e) {

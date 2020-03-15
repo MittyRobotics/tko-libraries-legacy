@@ -95,7 +95,7 @@ public class Circle {
      */
     public Circle getCircleFromTangentAndRadius(Transform tangentPoint, double radius) {
         Transform perpendicuarTransform = new Transform(tangentPoint.getPosition(),
-                tangentPoint.getRotation().rotateBy(90));
+                tangentPoint.getRotation().rotateByDegrees(90));
         Position center = new Position(perpendicuarTransform.getRotation().cos() * radius,
                 perpendicuarTransform.getRotation().sin() * radius).add(perpendicuarTransform.getPosition());
         return new Circle(center, radius);

@@ -32,8 +32,8 @@ package com.github.mittyrobotics.datatypes.positioning;
  * Rotation}. Inspired by team 254's geometry system: https://github.com/Team254/FRC-2019-Public/blob/master/src/main/java/com/team254/lib/geometry/
  */
 public class Rotation {
-    private double heading;
-    private double radians = Double.NaN;
+    private double radians;
+    private double degrees = Double.NaN;
     private double tan = Double.NaN;
     private double cos = Double.NaN;
     private double sin = Double.NaN;
@@ -42,30 +42,49 @@ public class Rotation {
         this(0);
     }
 
-    public Rotation(double heading) {
-        this.heading = heading;
+    public Rotation(double radians) {
+        this.radians = radians;
     }
 
     /**
-     * Returns the heading (angle) value in degrees
+     * Returns a {@link Rotation} from an input degree angle
      *
-     * @return the heading value in degrees
+     * @param degrees degree angle
+     * @return a new {@link Rotation} from the input degree angle
      */
-    public double getHeading() {
-        return heading;
+    public static Rotation fromDegrees(double degrees) {
+        return new Rotation(Math.toRadians(degrees));
     }
 
+    /**
+     * Returns a {@link Rotation} from an input radian angle
+     *
+     * @param radians radian angle
+     * @return a new {@link Rotation} from the input radian angle
+     */
+    public static Rotation fromRadians(double radians) {
+        return new Rotation(radians);
+    }
 
     /**
-     * Returns the heading (angle) value in radians
+     * Returns the angle value in radians
      *
-     * @return the heading value in radians
+     * @return the angle value in radians
      */
     public double getRadians() {
-        if (Double.isNaN(radians)) {
-            radians = Math.toRadians(getHeading());
-        }
         return radians;
+    }
+
+    /**
+     * Returns the angle value in degrees
+     *
+     * @return the angle value in degrees
+     */
+    public double getDegrees() {
+        if (Double.isNaN(degrees)) {
+            degrees = Math.toDegrees(getRadians());
+        }
+        return degrees;
     }
 
     /**
@@ -128,21 +147,21 @@ public class Rotation {
     }
 
     /**
-     * Returns the inverse of the heading value
+     * Returns the inverse of the radians value
      *
-     * @return the inverse of the heading value
-     */
-    public double inverseHeading() {
-        return -getHeading();
-    }
-
-    /**
-     * Returns the inverse of the radian value
-     *
-     * @return the inverse of the radian value
+     * @return the inverse of the radians value
      */
     public double inverseRadians() {
         return -getRadians();
+    }
+
+    /**
+     * Returns the inverse of the degree value
+     *
+     * @return the inverse of the degree value
+     */
+    public double inverseDegrees() {
+        return -getDegrees();
     }
 
     /**
@@ -151,7 +170,7 @@ public class Rotation {
      * @return the inverse {@link Rotation} of this
      */
     public Rotation inverse() {
-        return new Rotation(inverseHeading());
+        return new Rotation(inverseRadians());
     }
 
     /**
@@ -161,7 +180,7 @@ public class Rotation {
      * @return a new {@link Rotation} with this and <code>other</code> added together
      */
     public Rotation add(Rotation other) {
-        return rotateBy(other);
+        return new Rotation(getRadians() + other.getRadians());
     }
 
     /**
@@ -171,7 +190,7 @@ public class Rotation {
      * @return a new {@link Rotation} with this subtracted by <code>other</code>
      */
     public Rotation subtract(Rotation other) {
-        return rotateBy(other.inverseHeading());
+        return new Rotation(getRadians() - other.getRadians());
     }
 
     /**
@@ -181,7 +200,7 @@ public class Rotation {
      * @return a new {@link Rotation} multiplied by <code>scalar</code>.
      */
     public Rotation multiply(double scalar) {
-        return new Rotation(heading * scalar);
+        return new Rotation(radians * scalar);
     }
 
     /**
@@ -191,17 +210,27 @@ public class Rotation {
      * @return a new {@link Rotation} divided by <code>scalar</code>.
      */
     public Rotation divide(double scalar) {
-        return new Rotation(heading / scalar);
+        return new Rotation(radians / scalar);
+    }
+
+    /**
+     * Rotates this {@link Rotation} by the <code>angle</code> in radians
+     *
+     * @param radians the angle in radians to rotate this {@link Rotation} by
+     * @return a new {@link Rotation} containing the angle of this {@link Rotation} rotated by <code>angle</code>.
+     */
+    public Rotation rotateByRadians(double radians) {
+        return rotateBy(new Rotation(radians));
     }
 
     /**
      * Rotates this {@link Rotation} by the <code>angle</code> in degrees
      *
-     * @param angle the angle in degrees to rotate this {@link Rotation} by
+     * @param degrees the angle in degrees to rotate this {@link Rotation} by
      * @return a new {@link Rotation} containing the angle of this {@link Rotation} rotated by <code>angle</code>.
      */
-    public Rotation rotateBy(double angle) {
-        return rotateBy(new Rotation(angle));
+    public Rotation rotateByDegrees(double degrees) {
+        return rotateBy(Rotation.fromDegrees(degrees));
     }
 
     /**
@@ -217,37 +246,37 @@ public class Rotation {
     }
 
     /**
-     * Maps the heading value of the {@link Rotation} between -180 and 180;
+     * Maps the degree value of the {@link Rotation} between -180 and 180;
      *
-     * @return a new {@link Rotation} with the heading mapped between -180 and 180;
+     * @return a new {@link Rotation} with the degree mapped between -180 and 180;
      */
-    public Rotation mapHeading180() {
-        double angle = getHeading();
+    public Rotation mapDegrees180() {
+        double angle = getRadians();
         double sign = Math.signum(angle);
         angle = Math.abs(angle % 360);
         if (angle <= 180 && angle >= 0) {
-            return new Rotation((angle * sign));
+            return Rotation.fromDegrees((angle * sign));
         } else {
-            return new Rotation((sign * ((angle % 360) % 180 - 180)));
+            return Rotation.fromDegrees((sign * ((angle % 360) % 180 - 180)));
         }
     }
 
     /**
-     * Maps the heading value of the {@link Rotation} between 0 and 360;
+     * Maps the degree value of the {@link Rotation} between 0 and 360;
      *
-     * @return a new {@link Rotation} with the heading mapped between 0 and 360;
+     * @return a new {@link Rotation} with the degree mapped between 0 and 360;
      */
-    public Rotation mapHeading360() {
-        double angle = mapHeading180().getHeading();
+    public Rotation mapDegrees360() {
+        double angle = mapDegrees180().getRadians();
         if (angle < 0) {
-            return new Rotation(angle + 360);
+            return Rotation.fromDegrees(angle + 360);
         } else {
-            return new Rotation(angle);
+            return Rotation.fromDegrees(angle);
         }
     }
 
     @Override
     public String toString() {
-        return String.format("Rotation(%s)", heading);
+        return String.format("Rotation(%s)", radians);
     }
 }
