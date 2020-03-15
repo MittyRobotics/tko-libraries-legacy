@@ -24,13 +24,37 @@
 
 package com.github.mittyrobotics.visualization;
 
+import org.jfree.chart.renderer.xy.XYLineAndShapeRenderer;
+
 import java.awt.*;
 
-public class Main {
-    public static void main(String[] args) {
-        EventQueue.invokeLater(() -> {
-            Graph graph = new Graph("Title", "y", "x");
-            graph.scaleGraphToScale(.1,0,0);
-        });
+public class XYLineShapeColorRenderer extends XYLineAndShapeRenderer {
+
+    private final boolean showShapes;
+    private final boolean showLines;
+    private final Color color;
+
+    public XYLineShapeColorRenderer(boolean showLines, boolean showShapes, Color color) {
+        this.showShapes = showShapes;
+        this.showLines = showLines;
+        this.color = color;
+    }
+
+    @Override
+    public boolean getItemShapeVisible(int series, int item) {
+        return showShapes;
+    }
+
+    @Override
+    public boolean getItemLineVisible(int series, int item) {
+        return showLines;
+    }
+
+    @Override
+    public Paint getItemPaint(int row, int column) {
+        if (color == null) {
+            return super.getItemPaint(row, column);
+        }
+        return color;
     }
 }

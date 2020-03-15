@@ -22,15 +22,17 @@
  * SOFTWARE.
  */
 
-package com.github.mittyrobotics.visualization;
+package com.github.mittyrobotics.visualization.themes;
 
 import java.awt.*;
 
-public class Main {
-    public static void main(String[] args) {
-        EventQueue.invokeLater(() -> {
-            Graph graph = new Graph("Title", "y", "x");
-            graph.scaleGraphToScale(.1,0,0);
-        });
+public class DefaultDarkTheme extends GraphTheme {
+    public DefaultDarkTheme() {
+        super(new Color(64, 64, 64),
+                new Color(0, 0, 0),
+                new Color(71, 71, 71),
+                new Color(158, 159, 157),
+                new Color(158, 159, 157),
+                new Color(158, 159, 157));
     }
 }
