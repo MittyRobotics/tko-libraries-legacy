@@ -25,43 +25,29 @@
 package com.github.mittyrobotics.visualization;
 
 import com.github.mittyrobotics.datatypes.positioning.Transform;
+import org.jfree.data.xy.XYSeries;
 
 public class RobotGraph extends Graph {
-
-    private int lastIndex = 2;
+    private String robotKey = "Robot";
+    private String pathKey = "Path";
 
     public RobotGraph() {
-        super("Robot Graph", "y", "x");
-        scaleGraphToScale(1,0,0);
-        setSize(800, 800);
+        super();
+        XYSeries robotSeries = new XYSeries(robotKey, false);
+        XYSeries pathSeries = new XYSeries(pathKey, false);
+
+        scaleGraphToScale(1, 0, 0);
+
+        addSeries(robotSeries);
+        addSeries(pathSeries);
     }
 
-    public void graphRobot(Transform robotTransform, double width, double length) {
-        XYSeriesCollectionWithRenderer dataset = new XYSeriesCollectionWithRenderer();
-        dataset.addSeries(GraphManager.getInstance().rectangleSeries(robotTransform, width, length, "robot"));
-        dataset.addSeries(GraphManager.getInstance().arrowSeries(robotTransform, length / 2, 1, "robot Transform"));
-        getPlot().setDataset(0, dataset);
+    public void graphRobot(Transform robotTransform, double robotWidth, double robotHeight) {
+        //convert to inches
+        changeSeries(robotKey, GraphUtil.populateSeries(new XYSeriesWithRenderer("robotKey"),
+                GraphUtil.rectangle(robotTransform, robotWidth, robotHeight)));
     }
 
-    @Override
-    public void addDataset(XYSeriesCollectionWithRenderer dataset) {
-        getPlot().setDataset(lastIndex, dataset);
-        getPlot().setRenderer(lastIndex,
-                new XYLineShapeColorRenderer(dataset.isShowPoints(), dataset.isShowLines(), dataset.getColor()));
-        lastIndex++;
-    }
-
-    public void addPath(XYSeriesCollectionWithRenderer dataset) {
-        getPlot().setDataset(1, dataset);
-        getPlot().setRenderer(1,
-                new XYLineShapeColorRenderer(dataset.isShowPoints(), dataset.isShowLines(), dataset.getColor()));
-    }
-
-    @Override
-    public void clearGraph() {
-        for (int i = 2; i < getPlot().getDatasetCount(); i++) {
-            getPlot().setDataset(i, null);
-        }
-        lastIndex = 2;
+    public void graphPath() {
     }
 }

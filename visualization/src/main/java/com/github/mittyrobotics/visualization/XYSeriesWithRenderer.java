@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-package com.github.mittyrobotics.visualization.rewrite;
+package com.github.mittyrobotics.visualization;
 
 import org.jfree.data.xy.XYSeries;
 
@@ -35,36 +35,18 @@ public class XYSeriesWithRenderer extends XYSeries {
     private Shape shape;
 
     public XYSeriesWithRenderer(XYSeries series) {
-        this(series.getKey(),series.getAutoSort(),series.getAllowDuplicateXValues(), null, true, true, null);
+        this(series.getKey(), null, true, true, null);
         for(int i = 0; i < series.getItemCount(); i++){
             this.add(series.getDataItem(i));
         }
     }
 
     public XYSeriesWithRenderer(Comparable key) {
-        this(key, true, true, null, true, true, null);
-    }
-
-    public XYSeriesWithRenderer(Comparable key, boolean autoSort) {
-        this(key, autoSort, true, null, true, true, null);
-    }
-
-    public XYSeriesWithRenderer(Comparable key, boolean autoSort, boolean allowDuplicateXValues) {
-        this(key, autoSort, allowDuplicateXValues, null, true, true, null);
+        this(key, null, true, true, null);
     }
 
     public XYSeriesWithRenderer(Comparable key, Color color, boolean showLines, boolean showShapes, Shape shape) {
-        super(key);
-    }
-
-    public XYSeriesWithRenderer(Comparable key, boolean autoSort, Color color, boolean showLines, boolean showShapes,
-                                Shape shape) {
-        super(key, autoSort);
-    }
-
-    public XYSeriesWithRenderer(Comparable key, boolean autoSort, boolean allowDuplicateXValues, Color color,
-                                boolean showLines, boolean showShapes, Shape shape) {
-        super(key, autoSort, allowDuplicateXValues);
+        super(key, false, true);
         this.color = color;
         this.showLines = showLines;
         this.showShapes = showShapes;

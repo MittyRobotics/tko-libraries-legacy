@@ -32,14 +32,15 @@ import org.jfree.chart.JFreeChart;
 import org.jfree.chart.axis.NumberAxis;
 import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.chart.plot.XYPlot;
+import org.jfree.chart.renderer.xy.XYLineAndShapeRenderer;
+import org.jfree.data.xy.XYDataItem;
 import org.jfree.data.xy.XYSeries;
 import org.jfree.data.xy.XYSeriesCollection;
 
-import javax.swing.BorderFactory;
-import javax.swing.JFrame;
-import java.awt.Color;
-import java.awt.EventQueue;
+import javax.swing.*;
+import java.awt.*;
 import java.text.DecimalFormat;
+import java.util.ArrayList;
 
 public class Graph extends JFrame {
 
@@ -64,6 +65,8 @@ public class Graph extends JFrame {
     private XYPlot plot;
     private ChartPanel chartPanel;
     private XYSeriesCollection defaultDataset = new XYSeriesCollection();
+    private XYLineAndShapeRenderer defaultRenderer = new XYLineAndShapeRenderer();
+    private ArrayList<XYSeriesWithRenderer> seriesWithRenderers = new ArrayList<>();
 
     private void initUI() {
         JFreeChart chart = createChart();
@@ -85,7 +88,7 @@ public class Graph extends JFrame {
                 titleName,
                 xAxisName,
                 yAxisName,
-                null,
+                defaultDataset,
                 PlotOrientation.VERTICAL,
                 true,
                 true,
@@ -108,29 +111,88 @@ public class Graph extends JFrame {
         this.chart = chart;
         this.plot = plot;
 
+        plot.setRenderer(defaultRenderer);
+
         return chart;
     }
 
-    public void addSeriesToDefaultDataset(XYSeries series){
-        defaultDataset.addSeries(series);
-        plot.setDataset(defaultDataset);
+    public int addSeries(XYSeriesWithRenderer series) {
+        seriesWithRenderers.add(series);
+        System.out.println(series.getKey());
+        update();
+        return getSeriesIndexFromKey(series.getKey().toString());
     }
 
-    private int addIndex = 1;
-    public void addDataset(XYSeriesCollectionWithRenderer dataset){
-        plot.setDataset(addIndex, dataset);
-        getPlot().setRenderer(addIndex,
-                new XYLineShapeColorRenderer(dataset.isShowPoints(), dataset.isShowLines(), dataset.getColor()));
-        addIndex++;
+    public int addSeries(XYSeries series) {
+        return addSeries(new XYSeriesWithRenderer(series));
     }
 
-    public void clearGraph() {
-        for (int i = 1; i < getPlot().getDatasetCount(); i++) {
-            getPlot().setDataset(i, null);
+    public void setSeriesRenderer(int index, Color color, boolean showLines, boolean showPoints, Shape shape) {
+        seriesWithRenderers.get(index).setRenderer(color, showLines, showPoints, shape);
+    }
+
+    public void setSeriesRenderer(String key, Color color, boolean showLines, boolean showPoints, Shape shape) {
+        setSeriesRenderer(getSeriesIndexFromKey(key), color, showLines, showPoints, shape);
+    }
+
+    public void addToSeries(int index, XYSeries additionSeries) {
+        for (int i = 0; i < additionSeries.getItemCount(); i++) {
+            XYDataItem data = additionSeries.getDataItem(i);
+            defaultDataset.getSeries(index).add(data);
         }
-        addIndex = 3;
     }
 
+    public void addToSeries(String key, XYSeries additionSeries) {
+        addToSeries(getSeriesIndexFromKey(key), additionSeries);
+    }
+
+    public void addToSeries(int index, XYDataItem dataItem) {
+        XYSeries series = new XYSeries("___temporary___", false);
+        series.add(dataItem);
+        addToSeries(index, series);
+    }
+
+    public void addToSeries(String key, XYDataItem dataItem) {
+        addToSeries(getSeriesIndexFromKey(key), dataItem);
+    }
+
+    public void changeSeries(int seriesIndex, XYSeries newSeries) {
+        int itemCount = defaultDataset.getSeries(seriesIndex).getItemCount();
+        for (int i = 0; i < itemCount; i++) {
+            defaultDataset.getSeries(seriesIndex).remove(0);
+        }
+        for (int i = 0; i < newSeries.getItemCount(); i++) {
+            defaultDataset.getSeries(seriesIndex).add(newSeries.getDataItem(i));
+        }
+    }
+
+    public void changeSeries(String key, XYSeries newSeries) {
+        changeSeries(getSeriesIndexFromKey(key), newSeries);
+    }
+
+    public void removeSeries(int seriesIndex) {
+        seriesWithRenderers.remove(seriesIndex);
+        update();
+    }
+
+    public void removeSeries(String key) {
+        removeSeries(getSeriesIndexFromKey(key));
+    }
+
+    public int getSeriesIndexFromKey(String key) {
+        return defaultDataset.getSeriesIndex(key);
+    }
+
+    public void update() {
+        defaultDataset.removeAllSeries();
+        for (int i = 0; i < seriesWithRenderers.size(); i++) {
+            defaultDataset.addSeries(seriesWithRenderers.get(i));
+            defaultRenderer.setSeriesPaint(i, seriesWithRenderers.get(i).getColor());
+            defaultRenderer.setSeriesLinesVisible(i, seriesWithRenderers.get(i).isShowLines());
+            defaultRenderer.setSeriesShapesVisible(i, seriesWithRenderers.get(i).isShowShapes());
+            defaultRenderer.setSeriesShape(i, seriesWithRenderers.get(i).getShape());
+        }
+    }
 
     /**
      * Scales the graph uniformly to fit all points on it
@@ -183,6 +245,7 @@ public class Graph extends JFrame {
 
     /**
      * Sizes the graph to an upper, lower, left, and right bound coordinate
+     *
      * @param lowerBound
      * @param upperBound
      * @param leftBound
@@ -198,6 +261,7 @@ public class Graph extends JFrame {
 
     /**
      * Scales the graph to a scale based on pixel size, each pixel representing <code>scale</code> units
+     *
      * @param scale
      */
     public void scaleGraphToScale(double scale, double centerX, double centerY) {
@@ -207,8 +271,8 @@ public class Graph extends JFrame {
         double upperBound = centerY + ((height * scale) / 2);
         double lowerBound = centerY - ((height * scale) / 2);
 
-        double leftBound = centerX - ((width  * scale) / 2);
-        double rightBound = centerX + ((width  * scale) / 2);
+        double leftBound = centerX - ((width * scale) / 2);
+        double rightBound = centerX + ((width * scale) / 2);
 
         NumberAxis domain = (NumberAxis) plot.getDomainAxis();
         domain.setRange(leftBound, rightBound);

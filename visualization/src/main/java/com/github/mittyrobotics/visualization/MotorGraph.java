@@ -24,63 +24,61 @@
 
 package com.github.mittyrobotics.visualization;
 
+import org.jfree.data.xy.XYDataItem;
 import org.jfree.data.xy.XYSeries;
 
-public class MotorSimGraph extends Graph {
-    XYSeries positionSeries;
-    XYSeries velocitySeries;
-    XYSeries accelerationSeries;
-    XYSeries voltageSeries;
-    XYSeries setpointSeries;
-    XYSeries errorSeries;
+public class MotorGraph extends Graph {
+    private String positionKey = "Position";
+    private String velocityKey = "Velocity";
+    private String accelerationKey = "Acceleration";
+    private String voltageKey = "Voltage";
+    private String setpointKey = "Setpoint";
+    private String errorKey = "Error";
 
-    public MotorSimGraph() {
+    public MotorGraph() {
         super();
-        positionSeries = new XYSeries("Position", false);
-        velocitySeries = new XYSeries("Velocity", false);
-        accelerationSeries = new XYSeries("Acceleration", false);
-        voltageSeries = new XYSeries("Voltage", false);
-        setpointSeries = new XYSeries("Setpoint", false);
-        errorSeries = new XYSeries("Error", false);
+        XYSeries positionSeries = new XYSeries(positionKey, false);
+        XYSeries velocitySeries = new XYSeries(velocityKey, false);
+        XYSeries accelerationSeries = new XYSeries(accelerationKey, false);
+        XYSeries voltageSeries = new XYSeries(voltageKey, false);
+        XYSeries setpointSeries = new XYSeries(setpointKey, false);
+        XYSeries errorSeries = new XYSeries(errorKey, false);
 
-        final XYSeriesCollectionWithRenderer data = new XYSeriesCollectionWithRenderer();
-        data.addSeries(positionSeries);
-        data.addSeries(velocitySeries);
-        data.addSeries(accelerationSeries);
-        data.addSeries(voltageSeries);
-        data.addSeries(setpointSeries);
-        data.addSeries(errorSeries);
-
-        addDataset(data);
+        addSeries(positionSeries);
+        addSeries(velocitySeries);
+        addSeries(accelerationSeries);
+        addSeries(voltageSeries);
+        addSeries(setpointSeries);
+        addSeries(errorSeries);
     }
 
     public void addPosition(double position, double time) {
         //convert to inches
-        positionSeries.add(time, position);
+        addToSeries(positionKey, new XYDataItem(time, position));
     }
 
     public void addVelocity(double velocity, double time) {
         //convert to inches
-        velocitySeries.add(time, velocity);
+        addToSeries(velocityKey, new XYDataItem(time, velocity));
     }
 
     public void addAcceleration(double acceleration, double time) {
         //convert to inches
-        accelerationSeries.add(time, acceleration);
+        addToSeries(accelerationKey, new XYDataItem(time, acceleration));
     }
 
     public void addVoltage(double voltage, double time) {
         //convert to inches
-        voltageSeries.add(time, voltage);
+        addToSeries(voltageKey, new XYDataItem(time, voltage));
     }
 
     public void addSetpoint(double setpoint, double time) {
         //convert to inches
-        setpointSeries.add(time, setpoint);
+        addToSeries(setpointKey, new XYDataItem(time, setpoint));
     }
 
     public void addError(double error, double time) {
         //convert to inches
-        errorSeries.add(time, error);
+        addToSeries(errorKey, new XYDataItem(time, error));
     }
 }

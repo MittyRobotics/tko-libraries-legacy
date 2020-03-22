@@ -24,13 +24,26 @@
 
 package com.github.mittyrobotics.visualization;
 
+import com.github.mittyrobotics.datatypes.geometry.ArcSegment;
+import com.github.mittyrobotics.datatypes.geometry.Circle;
+import com.github.mittyrobotics.datatypes.positioning.Position;
+import com.github.mittyrobotics.datatypes.positioning.Transform;
+
 import java.awt.*;
 
 public class Main {
     public static void main(String[] args) {
-        EventQueue.invokeLater(() -> {
-            Graph graph = new Graph("Title", "y", "x");
-            graph.scaleGraphToScale(.1,0,0);
-        });
+        Graph graph = new Graph();
+        graph.scaleGraphToScale(.1, 0, 0);
+        XYSeriesWithRenderer series = new XYSeriesWithRenderer("rectangle", Color.red, true, false, null);
+        series = GraphUtil.populateSeries(series, GraphUtil.rectangle(new Transform(0, 0, 0), 5, 5));
+        XYSeriesWithRenderer series1 = new XYSeriesWithRenderer("circle", Color.cyan, true, false, null);
+        series1 = GraphUtil.populateSeries(series1, GraphUtil.circle(new Circle(new Position(10, 0), 5)));
+        XYSeriesWithRenderer series2 = new XYSeriesWithRenderer("arc", Color.green, true, false, null);
+        series2 = GraphUtil.populateSeries(series2, GraphUtil.arc(new ArcSegment(new Position(-10, 0),
+                new Position(-14, 4), new Position(-15, 0))));
+        graph.addSeries(series);
+        graph.addSeries(series1);
+        graph.addSeries(series2);
     }
 }
