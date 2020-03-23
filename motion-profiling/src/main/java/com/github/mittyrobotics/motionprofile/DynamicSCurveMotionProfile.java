@@ -29,7 +29,7 @@ import com.github.mittyrobotics.datatypes.motion.MotionState;
 public class DynamicSCurveMotionProfile {
     private double maxAcceleration;
     private double maxDeceleration;
-    private double maxAccelerationAcceleration;
+    private double maxJerk;
     private double maxVelocity;
     private OverrideMethod overrideMethod;
 
@@ -54,20 +54,19 @@ public class DynamicSCurveMotionProfile {
      * velocity and acceleration constraints to reach the setpoint on time, or stopping as close to the setpoint as
      * possible within the velocity and acceleration constraints without coming back.
      *
-     * @param maxAcceleration             the maximum acceleration of the motion profile. (units/s^2)
-     * @param maxDeceleration             the maximum deceleration of the motion profile. (units/s^2)
-     * @param maxAccelerationAcceleration the maximum acceleration of the acceleration and deceleration values.
-     *                                    (units/s^3)
-     * @param maxVelocity                 the maximum velocity of the motion profile. (units/s)
-     * @param overrideMethod              the method to override the motion profile if the setpoint is impossible to reach at the
-     *                                    system's current state.
+     * @param maxAcceleration the maximum acceleration of the motion profile. (units/s^2)
+     * @param maxDeceleration the maximum deceleration of the motion profile. (units/s^2)
+     * @param maxJerk         the maximum jerk of the motion profile. (units/s^3)
+     * @param maxVelocity     the maximum velocity of the motion profile. (units/s)
+     * @param overrideMethod  the method to override the motion profile if the setpoint is impossible to reach at the
+     *                        system's current state.
      */
     public DynamicSCurveMotionProfile(double maxAcceleration, double maxDeceleration,
-                                      double maxAccelerationAcceleration, double maxVelocity,
+                                      double maxJerk, double maxVelocity,
                                       OverrideMethod overrideMethod) {
         this.maxAcceleration = maxAcceleration;
         this.maxDeceleration = maxDeceleration;
-        this.maxAccelerationAcceleration = maxAccelerationAcceleration;
+        this.maxJerk = maxJerk;
         this.maxVelocity = maxVelocity;
         this.overrideMethod = overrideMethod;
     }
@@ -87,21 +86,21 @@ public class DynamicSCurveMotionProfile {
         if (inDeceleration) {
             double velError = currentState.getVelocity() - setpoint.getVelocity();
 
-            double maxAccelToEnd = Math.sqrt(2 * maxAccelerationAcceleration * velError);
+            double maxAccelToEnd = Math.sqrt(2 * maxJerk * velError);
             double desiredAcceleration = -Math.min(maxDeceleration, maxAccelToEnd);
 
-            acceleration -= maxAccelerationAcceleration * deltaTime;
+            acceleration -= maxJerk * deltaTime;
             acceleration = Math.max(acceleration, desiredAcceleration);
         } else {
             double velError = maxVelocity - currentState.getVelocity();
 
-            double maxAccelerationToEnd = Math.sqrt(2 * maxAccelerationAcceleration * velError);
+            double maxAccelerationToEnd = Math.sqrt(2 * maxJerk * velError);
             if (Double.isNaN(maxAccelerationToEnd)) {
                 maxAccelerationToEnd = 0;
             }
             double desiredAcceleration = Math.min(maxAcceleration, maxAccelerationToEnd);
 
-            acceleration += maxAccelerationAcceleration * deltaTime;
+            acceleration += maxJerk * deltaTime;
             acceleration = Math.min(acceleration, desiredAcceleration);
         }
 
@@ -112,10 +111,10 @@ public class DynamicSCurveMotionProfile {
     }
 
     private double computeDistanceToStop() {
-        double theoreticalMaxDeceleration = Math.sqrt(2 * maxAccelerationAcceleration * maxVelocity / 2);
+        double theoreticalMaxDeceleration = Math.sqrt(2 * maxJerk * maxVelocity / 2);
         theoreticalMaxDeceleration = Math.min(theoreticalMaxDeceleration, maxDeceleration);
-        double tAccel = theoreticalMaxDeceleration / maxAccelerationAcceleration;
-        double tDecel = theoreticalMaxDeceleration / maxAccelerationAcceleration;
+        double tAccel = theoreticalMaxDeceleration / maxJerk;
+        double tDecel = theoreticalMaxDeceleration / maxJerk;
         double vTotal = maxVelocity;
         double vAccel = theoreticalMaxDeceleration * tAccel / 2;
         double vDecel = theoreticalMaxDeceleration * tDecel / 2;
@@ -148,7 +147,7 @@ public class DynamicSCurveMotionProfile {
      * @param currentState the current {@link MotionState} of the system.
      * @return the distance that the motion profile will override.
      */
-    private double isOverride(MotionState currentState){
+    private double isOverride(MotionState currentState) {
         return -1;
     }
 
@@ -175,8 +174,8 @@ public class DynamicSCurveMotionProfile {
         return maxVelocity;
     }
 
-    public double getMaxAccelerationAcceleration() {
-        return maxAccelerationAcceleration;
+    public double getMaxJerk() {
+        return maxJerk;
     }
 
     public OverrideMethod getOverrideMethod() {
