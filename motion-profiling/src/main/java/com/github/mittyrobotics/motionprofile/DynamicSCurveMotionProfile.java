@@ -145,10 +145,19 @@ public class DynamicSCurveMotionProfile {
      * override. Will output -1 if it will not override.
      *
      * @param currentState the current {@link MotionState} of the system.
-     * @return the distance that the motion profile will override.
+     * @param setpoint the setpoint state of the motion profile
+     * @param deltaTime the change in time from the previous call of the motion profile.
+     * @param distanceToStop the previously computed minimum distance to end the motion profile
+     * @return the distance that the motion profile will override. -1 if it will not override.
      */
-    private double isOverride(MotionState currentState) {
+    private double isOverride(MotionState currentState, MotionState setpoint, double deltaTime, double distanceToStop){
+
         return -1;
+    }
+
+    private double computeRequiredVelocity(MotionState currentState, MotionState setpoint, double deltaTime){
+        
+        return 0;
     }
 
     private double calculateDisplacementFromAccelerationLine(double time, double accelerationSlope,
