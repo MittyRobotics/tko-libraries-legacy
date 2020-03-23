@@ -118,7 +118,6 @@ public class Graph extends JFrame {
 
     public int addSeries(XYSeriesWithRenderer series) {
         seriesWithRenderers.add(series);
-        System.out.println(series.getKey());
         update();
         return getSeriesIndexFromKey(series.getKey().toString());
     }

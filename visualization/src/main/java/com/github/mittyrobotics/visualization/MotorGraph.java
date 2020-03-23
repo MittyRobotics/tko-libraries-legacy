@@ -35,8 +35,8 @@ public class MotorGraph extends Graph {
     private String setpointKey = "Setpoint";
     private String errorKey = "Error";
 
-    public MotorGraph() {
-        super();
+    public MotorGraph(String name, String yName, String xName) {
+        super(name, yName, xName);
         XYSeries positionSeries = new XYSeries(positionKey, false);
         XYSeries velocitySeries = new XYSeries(velocityKey, false);
         XYSeries accelerationSeries = new XYSeries(accelerationKey, false);
@@ -50,6 +50,10 @@ public class MotorGraph extends Graph {
         addSeries(voltageSeries);
         addSeries(setpointSeries);
         addSeries(errorSeries);
+    }
+
+    public MotorGraph() {
+        this("Graph", "y", "x");
     }
 
     public void addPosition(double position, double time) {

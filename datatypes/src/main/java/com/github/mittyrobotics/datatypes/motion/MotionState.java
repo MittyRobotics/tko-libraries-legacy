@@ -40,11 +40,10 @@ public class MotionState {
         this.velocity = velocity;
     }
 
-    public MotionState(double position, double velocity, double acceleration, double t) {
+    public MotionState(double position, double velocity, double acceleration) {
         this.position = position;
         this.velocity = velocity;
         this.acceleration = acceleration;
-        this.t = t;
     }
 
     public double getPosition() {
@@ -71,17 +70,10 @@ public class MotionState {
         this.acceleration = acceleration;
     }
 
-    public double getT() {
-        return t;
-    }
-
-    public void setT(double t) {
-        this.t = t;
-    }
 
     @Override
     public String toString() {
         return String
-                .format("MotionState(pos: %s, vel: %s, accel: %s, time: %s )", position, velocity, acceleration, t);
+                .format("MotionState(pos: %s, vel: %s, accel: %s)", position, velocity, acceleration);
     }
 }
