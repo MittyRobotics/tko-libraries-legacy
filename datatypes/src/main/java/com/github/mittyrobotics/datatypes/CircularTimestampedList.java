@@ -29,45 +29,45 @@ public class CircularTimestampedList<E> {
 
     private TimestampedList<E> timestampedList = new TimestampedList<>();
 
-    public CircularTimestampedList(int size){
+    public CircularTimestampedList(int size) {
         this.circularSize = size;
     }
 
-    public int getCircularSize(){
+    public int getCircularSize() {
         return circularSize;
     }
 
     public void addFront(TimestampedElement<E> timestampedElement) {
         timestampedList.addFront(timestampedElement);
-        if(timestampedList.size() > circularSize){
-            double oversize = timestampedList.size()-circularSize;
-            for(int i = 0; i < oversize; i++){
-                timestampedList.remove(timestampedList.size()-1);
+        if (timestampedList.size() > circularSize) {
+            double oversize = timestampedList.size() - circularSize;
+            for (int i = 0; i < oversize; i++) {
+                timestampedList.remove(timestampedList.size() - 1);
             }
         }
     }
 
-    public void setObject(int index, E object){
-        if(timestampedList.get(index) != null){
-            timestampedList.set(index,new TimestampedElement<>(object,get(index).getTimestamp()));
+    public void setObject(int index, E object) {
+        if (timestampedList.get(index) != null) {
+            timestampedList.set(index, new TimestampedElement<>(object, get(index).getTimestamp()));
         }
     }
 
-    public TimestampedElement<E> get(int index){
+    public TimestampedElement<E> get(int index) {
         //Cap index by the current list size and the circular size
-        index = Math.min(size(),Math.min(circularSize,index));
+        index = Math.min(size(), Math.min(circularSize, index));
         return timestampedList.get(index);
     }
 
-    public TimestampedElement<E> getLatest(){
+    public TimestampedElement<E> getLatest() {
         return timestampedList.getLatest();
     }
 
-    public TimestampedElement<E> getLast(){
-        return timestampedList.get(timestampedList.size()-1);
+    public TimestampedElement<E> getLast() {
+        return timestampedList.get(timestampedList.size() - 1);
     }
 
-    public E getElementFromTimestamp(double timestamp){
+    public E getElementFromTimestamp(double timestamp) {
         return timestampedList.getElementFromTimestamp(timestamp);
     }
 
@@ -76,7 +76,7 @@ public class CircularTimestampedList<E> {
     }
 
 
-    public int size(){
+    public int size() {
         return timestampedList.size();
     }
 }

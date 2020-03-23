@@ -36,7 +36,7 @@ public class XYSeriesWithRenderer extends XYSeries {
 
     public XYSeriesWithRenderer(XYSeries series) {
         this(series.getKey(), null, true, true, null);
-        for(int i = 0; i < series.getItemCount(); i++){
+        for (int i = 0; i < series.getItemCount(); i++) {
             this.add(series.getDataItem(i));
         }
     }
@@ -53,7 +53,7 @@ public class XYSeriesWithRenderer extends XYSeries {
         this.shape = shape;
     }
 
-    public void setRenderer(Color color, boolean showLines, boolean showShapes, Shape shape){
+    public void setRenderer(Color color, boolean showLines, boolean showShapes, Shape shape) {
         this.color = color;
         this.showLines = showLines;
         this.showShapes = showShapes;

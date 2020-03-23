@@ -35,7 +35,7 @@ public class RobotSimulator extends TimerTask {
     private final SimRobot robot;
     private final RobotGraph graph;
 
-    public RobotSimulator(SimRobot robot, double periodTime,  RobotGraph graph) {
+    public RobotSimulator(SimRobot robot, double periodTime, RobotGraph graph) {
         this.periodTime = periodTime;
         this.robot = robot;
         this.graph = graph;

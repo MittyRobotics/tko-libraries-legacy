@@ -28,7 +28,7 @@ public class TimestampedElement<E> {
     private final E object;
     private final double timestamp;
 
-    public TimestampedElement(E object, double timestamp){
+    public TimestampedElement(E object, double timestamp) {
         this.object = object;
         this.timestamp = timestamp;
     }

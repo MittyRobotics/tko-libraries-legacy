@@ -33,14 +33,14 @@ public class DynamicTrapezoidalMotionProfile {
     private OverrideMethod overrideMethod;
 
     public DynamicTrapezoidalMotionProfile(double maxAcceleration, double maxDeceleration,
-                                      double maxVelocity, OverrideMethod overrideMethod){
+                                           double maxVelocity, OverrideMethod overrideMethod) {
         this.maxAcceleration = maxAcceleration;
         this.maxDeceleration = maxDeceleration;
         this.maxVelocity = maxVelocity;
         this.overrideMethod = overrideMethod;
     }
 
-    public MotionState calculateNextState(MotionState currentState, MotionState setpoint, double deltaTime){
+    public MotionState calculateNextState(MotionState currentState, MotionState setpoint, double deltaTime) {
         double position = currentState.getPosition();
         double velocity = currentState.getVelocity();
         double acceleration = currentState.getAcceleration();
@@ -50,10 +50,10 @@ public class DynamicTrapezoidalMotionProfile {
         double maxDistanceVelocity = Math.sqrt(2 * maxDeceleration * absPositionError);
         double desiredVelocity = Math.min(maxVelocity, maxDistanceVelocity);
 
-        velocity += maxAcceleration*deltaTime;
-        velocity = Math.min(velocity,desiredVelocity);
+        velocity += maxAcceleration * deltaTime;
+        velocity = Math.min(velocity, desiredVelocity);
 
-        position += velocity*deltaTime;
+        position += velocity * deltaTime;
         return new MotionState(position, velocity, acceleration);
     }
 

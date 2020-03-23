@@ -66,10 +66,10 @@ public class FlywheelModel {
         this.torque = calculateTorque(this.angularAcceleration);
     }
 
-    private double calculateTorque(double angularAcceleration){
+    private double calculateTorque(double angularAcceleration) {
         double wf = angularAcceleration;
         double J = momentOfInertia;
-        return J*wf;
+        return J * wf;
     }
 
     private double calculateAcceleration(double voltage) {
@@ -79,7 +79,7 @@ public class FlywheelModel {
         double w = angularVelocity;
         double J = momentOfInertia;
 
-        return (G * Kt) / (R*J) * V - (G * G * Kt) / (Kv*R*J) * w;
+        return (G * Kt) / (R * J) * V - (G * G * Kt) / (Kv * R * J) * w;
     }
 
     public double getAngularAcceleration() {
@@ -90,7 +90,7 @@ public class FlywheelModel {
         return angularVelocity * Conversions.M_TO_IN;
     }
 
-    public double getTorque(){
+    public double getTorque() {
         return torque;
     }
 }

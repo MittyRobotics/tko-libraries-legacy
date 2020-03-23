@@ -26,5 +26,6 @@ package com.github.mittyrobotics.motionprofile;
 
 public enum OverrideMethod {
     OVERSHOOT,
-    VIOLATE_MAX_ACCELERATION
+    VIOLATE_MAX_VELOCITY,
+    END_AFTER_SETPOINT
 }

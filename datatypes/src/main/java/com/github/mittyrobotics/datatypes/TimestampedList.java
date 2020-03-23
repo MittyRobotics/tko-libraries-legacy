@@ -28,23 +28,23 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 public class TimestampedList<E> extends ArrayList<TimestampedElement<E>> {
-    public void add(E object, double timestamp){
-        add(new TimestampedElement<E>(object,timestamp));
+    public void add(E object, double timestamp) {
+        add(new TimestampedElement<E>(object, timestamp));
     }
 
     public void addFront(TimestampedElement<E> eTimestampedElement) {
-        super.add(0,eTimestampedElement);
+        super.add(0, eTimestampedElement);
     }
 
-    public E getElementFromTimestamp(double timestamp){
+    public E getElementFromTimestamp(double timestamp) {
         double closest = Double.POSITIVE_INFINITY;
         E object = null;
         Iterator<TimestampedElement<E>> iterator = iterator();
-        while(iterator.hasNext()){
+        while (iterator.hasNext()) {
             TimestampedElement<E> timestampedElement = iterator.next();
             double t = timestampedElement.getTimestamp();
-            if(Math.abs(t-timestamp) < closest){
-                closest = Math.abs(t-timestamp);
+            if (Math.abs(t - timestamp) < closest) {
+                closest = Math.abs(t - timestamp);
                 object = timestampedElement.getObject();
             }
         }
@@ -55,7 +55,7 @@ public class TimestampedList<E> extends ArrayList<TimestampedElement<E>> {
         return get(elementIndex).getTimestamp();
     }
 
-    public TimestampedElement<E> getLatest(){
+    public TimestampedElement<E> getLatest() {
         return get(0);
     }
 }

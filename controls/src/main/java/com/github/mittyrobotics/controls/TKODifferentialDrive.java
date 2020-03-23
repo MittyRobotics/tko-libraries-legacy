@@ -30,7 +30,7 @@ import edu.wpi.first.wpilibj.controller.PIDController;
 public class TKODifferentialDrive {
     SpeedController leftController;
     SpeedController rightController;
-    
+
     public TKODifferentialDrive(SpeedController leftController, SpeedController rightController) {
         this.leftController = leftController;
         this.rightController = rightController;
@@ -49,27 +49,28 @@ public class TKODifferentialDrive {
         }
     }
 
-    public void carDriveCarSteering(double turn, boolean isLeftPressed, boolean isRightPressed, boolean brake, double customAcceleration, double DRIVE_EMPHASIS, double deadZone) {
+    public void carDriveCarSteering(double turn, boolean isLeftPressed, boolean isRightPressed, boolean brake,
+                                    double customAcceleration, double DRIVE_EMPHASIS, double deadZone) {
         double speed = 0;
         double acceleration = 0;
 
 
-        if(brake){
+        if (brake) {
             speed = 0;
             acceleration = 0;
             turn = 0;
-        } else if(speed < 0) { //if going backward
+        } else if (speed < 0) { //if going backward
             //make if left pressed, right pressed and if nothing pressed
-            if(isLeftPressed){ //left bumper
-                if(speed > -1) { //capped speed
+            if (isLeftPressed) { //left bumper
+                if (speed > -1) { //capped speed
                     acceleration = -customAcceleration;
                 } else {
                     acceleration = 0;
                 }
-            } else if (isRightPressed){ //right bumper
+            } else if (isRightPressed) { //right bumper
                 acceleration = customAcceleration;
             } else { //let go both bumpers
-                if(speed < 0){
+                if (speed < 0) {
                     acceleration = customAcceleration;
                 } else {
                     acceleration = 0;
@@ -77,16 +78,14 @@ public class TKODifferentialDrive {
             }
         } else if (speed == 0) { //robot at rest
             //make if left pressed, right pressed and if nothing pressed
-            if (isLeftPressed){ //left bumper
+            if (isLeftPressed) { //left bumper
                 acceleration = -customAcceleration;
-            }
-            else if (isRightPressed){ //right bumper
+            } else if (isRightPressed) { //right bumper
                 acceleration = customAcceleration;
-            }
-            else { //let go both
+            } else { //let go both
                 acceleration = 0;
             }
-        } else if(speed > 0) { //going forward
+        } else if (speed > 0) { //going forward
             //make if left pressed, right pressed and if nothing pressed
             if (isLeftPressed) { //left bumper
                 acceleration = -customAcceleration;
@@ -109,22 +108,25 @@ public class TKODifferentialDrive {
         speed += acceleration;
 
         double newSpeed = speed * DRIVE_EMPHASIS;
-        double newTurn = turn * (1-DRIVE_EMPHASIS);
-        if(Math.abs(speed) < deadZone && !isLeftPressed && !isRightPressed){
+        double newTurn = turn * (1 - DRIVE_EMPHASIS);
+        if (Math.abs(speed) < deadZone && !isLeftPressed && !isRightPressed) {
             tankDrive(turn, -turn);
         }
 
-        if(speed != 0) {
+        if (speed != 0) {
             tankDrive(newSpeed + newTurn, newSpeed - newTurn);
         }
 
     }
 
-    public void carDriveCarSteering(double turn, boolean isLeftPressed, boolean isRightPressed, boolean brake, int step) {
+    public void carDriveCarSteering(double turn, boolean isLeftPressed, boolean isRightPressed, boolean brake,
+                                    int step) {
         carDriveCarSteering(turn, isLeftPressed, isRightPressed, brake, 0.07, 0.3, 0.1);
     }
 
-    public void carDriveCompassSteering(double p, double i, double d, double steerWheelValue, int step, double gyroAngle, boolean isLeftPressed, boolean isRightPressed, boolean brake, double DRIVE_EMPHASIS, double deadZone, double customAcceleration) {
+    public void carDriveCompassSteering(double p, double i, double d, double steerWheelValue, int step,
+                                        double gyroAngle, boolean isLeftPressed, boolean isRightPressed, boolean brake,
+                                        double DRIVE_EMPHASIS, double deadZone, double customAcceleration) {
         double speed = 0;
         double acceleration = 0;
         double turn = 0;
@@ -135,7 +137,7 @@ public class TKODifferentialDrive {
         //CompassSteering
         steerWheelValue = steerWheelValue * 450;
 
-        if(steerWheelValue > gyroAngle + step) {
+        if (steerWheelValue > gyroAngle + step) {
             controller.setSetpoint(gyroAngle + step);
         } else if (steerWheelValue < gyroAngle - step) {
             controller.setSetpoint(gyroAngle - step);
@@ -144,53 +146,43 @@ public class TKODifferentialDrive {
         }
 
         //BumperDriveCommand
-        if(speed < 0){ //if going backward
+        if (speed < 0) { //if going backward
             //make if left pressed, right pressed and if nothing pressed
-            if (isLeftPressed){ //left bumper
-                if(speed > -1){ //capped speed
+            if (isLeftPressed) { //left bumper
+                if (speed > -1) { //capped speed
                     acceleration = -customAcceleration;
                 } else {
                     acceleration = 0;
                 }
-            }
-            else if (isRightPressed){ //right bumper
+            } else if (isRightPressed) { //right bumper
                 acceleration = customAcceleration;
-            }
-            else { //let go both bumpers
-                if (speed < 0){
+            } else { //let go both bumpers
+                if (speed < 0) {
                     acceleration = customAcceleration;
                 } else {
                     acceleration = 0;
                 }
             }
-        }
-
-        else if (speed == 0){ //robot at rest
+        } else if (speed == 0) { //robot at rest
             //make if left pressed, right pressed and if nothing pressed
-            if (isLeftPressed){ //left bumper
+            if (isLeftPressed) { //left bumper
                 acceleration = -customAcceleration;
-            }
-            else if (isRightPressed){ //right bumper
+            } else if (isRightPressed) { //right bumper
                 acceleration = customAcceleration;
-            }
-            else { //let go both
+            } else { //let go both
                 acceleration = 0;
             }
-        }
-
-        else if(speed > 0){ //going forward
+        } else if (speed > 0) { //going forward
             //make if left pressed, right pressed and if nothing pressed
-            if (isLeftPressed){ //left bumper
+            if (isLeftPressed) { //left bumper
                 acceleration = -customAcceleration;
-            }
-            else if (isRightPressed){ //right bumper
-                if (speed < 1){ //capped speed
+            } else if (isRightPressed) { //right bumper
+                if (speed < 1) { //capped speed
                     acceleration = customAcceleration;
                 } else {
                     acceleration = 0;
                 }
-            }
-            else { //let go both
+            } else { //let go both
                 if (speed > 0) {
                     acceleration = -customAcceleration;
 
@@ -209,9 +201,9 @@ public class TKODifferentialDrive {
         double newSpeed = speed * DRIVE_EMPHASIS;
         double newTurn = turn * (1 - DRIVE_EMPHASIS);
 
-        if(brake){
+        if (brake) {
             tankDrive(0, 0);
-        } else if(Math.abs(speed) < deadZone){
+        } else if (Math.abs(speed) < deadZone) {
             tankDrive(turn, -turn);
         } else if (speed > 0) {
             tankDrive((newSpeed) - newTurn, (newSpeed) + newTurn);
@@ -221,32 +213,33 @@ public class TKODifferentialDrive {
 
     }
 
-    public void carDriveCompassSteering(double steerWheelValue, double gyroAngle, boolean isLeftPressed, boolean isRightPressed, boolean brake) {
-        carDriveCompassSteering(0.03, 0, 0.035, steerWheelValue, 15, gyroAngle, isLeftPressed, isRightPressed, brake, 0.7, 0.1, 0.7);
+    public void carDriveCompassSteering(double steerWheelValue, double gyroAngle, boolean isLeftPressed,
+                                        boolean isRightPressed, boolean brake) {
+        carDriveCompassSteering(0.03, 0, 0.035, steerWheelValue, 15, gyroAngle, isLeftPressed, isRightPressed, brake,
+                0.7, 0.1, 0.7);
     }
 
-    public void joystickCarSteering(double steeringWheelX, double joystickY, boolean joystickTrigger, double deadZone){
+    public void joystickCarSteering(double steeringWheelX, double joystickY, boolean joystickTrigger, double deadZone) {
         double turn = steeringWheelX * 450 / 120;
         double speed = -joystickY;
         boolean brake = joystickTrigger;
 
-        if(Math.abs(turn) > 1){
+        if (Math.abs(turn) > 1) {
             turn = Math.signum(turn);
         }
         double e = 1 - turn;
 
-        if(brake){
+        if (brake) {
             speed = 0;
             turn = 0;
         }
 
-        double newSpeed = speed*e;
+        double newSpeed = speed * e;
         double newTurn = turn;
 
-        if(Math.abs(speed) < deadZone){
-            tankDrive(newTurn, - newTurn);
-        }
-        else if(speed >= 0){
+        if (Math.abs(speed) < deadZone) {
+            tankDrive(newTurn, -newTurn);
+        } else if (speed >= 0) {
             tankDrive(newSpeed + newTurn, newSpeed - newTurn);
         } else {
             tankDrive(newSpeed - newTurn, newSpeed + newTurn);
@@ -254,11 +247,12 @@ public class TKODifferentialDrive {
 
     }
 
-    public void joystickCarSteering(double steeringWheelX, double joystickY, boolean joystickTrigger){
+    public void joystickCarSteering(double steeringWheelX, double joystickY, boolean joystickTrigger) {
         joystickCarSteering(steeringWheelX, joystickY, joystickTrigger, 0.05);
     }
 
-    public void joystickCompassSteering(double p, double i, double d, double joystickY, double steeringWheelX, int step, double gyroAngle){
+    public void joystickCompassSteering(double p, double i, double d, double joystickY, double steeringWheelX, int step,
+                                        double gyroAngle) {
         PIDController controller = new PIDController(p, i, d);
         controller.setIntegratorRange(1, -1);
         double speed = -joystickY;
@@ -266,15 +260,13 @@ public class TKODifferentialDrive {
 
         if (steerWheelValue > gyroAngle + step) {
             controller.setSetpoint(gyroAngle + step);
-        }
-        else if (steerWheelValue < gyroAngle - step) {
+        } else if (steerWheelValue < gyroAngle - step) {
             controller.setSetpoint(gyroAngle - step);
-        }
-        else {
+        } else {
             controller.setSetpoint(steerWheelValue);
         }
         double newTurn = controller.calculate(gyroAngle);
-        double newSpeed = speed * (1-newTurn);
+        double newSpeed = speed * (1 - newTurn);
 
         tankDrive(newSpeed + newTurn, newSpeed - newTurn);
 
@@ -284,7 +276,8 @@ public class TKODifferentialDrive {
         joystickCompassSteering(0.03, 0, 0.035, joystickY, steeringWheelX, 15, gyroAngle);
     }
 
-    public void pedalCarSteering(double steeringWheelX, double gas, double brake, boolean BButton, double DRIVE_EMPHASIS) {
+    public void pedalCarSteering(double steeringWheelX, double gas, double brake, boolean BButton,
+                                 double DRIVE_EMPHASIS) {
         double turn = steeringWheelX * 450 / 180;
         double speed = 1 - gas;
 
@@ -293,7 +286,7 @@ public class TKODifferentialDrive {
             turn = 0;
         }
 
-        if(BButton){
+        if (BButton) {
             speed *= -1;
         }
 
@@ -304,17 +297,14 @@ public class TKODifferentialDrive {
             turn = -1;
         }
 
-        double newSpeed = speed* DRIVE_EMPHASIS;
-        double newTurn = turn * (1- DRIVE_EMPHASIS);
+        double newSpeed = speed * DRIVE_EMPHASIS;
+        double newTurn = turn * (1 - DRIVE_EMPHASIS);
 
-        if(Math.abs(speed) < 0.1){
+        if (Math.abs(speed) < 0.1) {
             tankDrive(turn, -turn);
-        }
-
-        else if (speed > 0) {
+        } else if (speed > 0) {
             tankDrive((newSpeed) + newTurn, (newSpeed) - newTurn);
-        }
-        else if (speed < 0) {
+        } else if (speed < 0) {
             tankDrive((newSpeed) - newTurn, (newSpeed) + newTurn);
         }
 

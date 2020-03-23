@@ -91,9 +91,10 @@ public class Limelight {
                     NetworkTableInstance.getDefault().getTable("limelight").getEntry("thor").getDouble(DEFAULT_VALUE);
             this.boxVerticalSide =
                     NetworkTableInstance.getDefault().getTable("limelight").getEntry("tvert").getDouble(DEFAULT_VALUE);
-            this.target3DCamera = NetworkTableInstance.getDefault().getTable("limelight").getEntry("camtran").getDoubleArray(
-                    new double[]{DEFAULT_VALUE, DEFAULT_VALUE, DEFAULT_VALUE, DEFAULT_VALUE, DEFAULT_VALUE,
-                            DEFAULT_VALUE});
+            this.target3DCamera =
+                    NetworkTableInstance.getDefault().getTable("limelight").getEntry("camtran").getDoubleArray(
+                            new double[]{DEFAULT_VALUE, DEFAULT_VALUE, DEFAULT_VALUE, DEFAULT_VALUE, DEFAULT_VALUE,
+                                    DEFAULT_VALUE});
             this.targetCornerX = NetworkTableInstance.getDefault().getTable("limelight").getEntry("tcornx")
                     .getDoubleArray(new double[]{DEFAULT_VALUE});
             this.targetCornerY = NetworkTableInstance.getDefault().getTable("limelight").getEntry("tcorny")

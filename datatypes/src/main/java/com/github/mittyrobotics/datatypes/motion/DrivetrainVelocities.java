@@ -90,8 +90,9 @@ public class DrivetrainVelocities {
         return new DrivetrainVelocities(linearVelocity, angularVelocity, leftVelocity, rightVelocity, curvature);
     }
 
-    public DrivetrainVelocities reverse(){
-        return new DrivetrainVelocities(-linearVelocity,angularVelocity,-leftVelocity,-rightVelocity,drivingCurvature);
+    public DrivetrainVelocities reverse() {
+        return new DrivetrainVelocities(-linearVelocity, angularVelocity, -leftVelocity, -rightVelocity,
+                drivingCurvature);
     }
 
     private void setValues(DrivetrainVelocities data) {
