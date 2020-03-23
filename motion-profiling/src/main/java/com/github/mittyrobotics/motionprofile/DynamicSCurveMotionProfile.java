@@ -77,6 +77,8 @@ public class DynamicSCurveMotionProfile {
         double velocity = currentState.getVelocity();
         double acceleration = currentState.getAcceleration();
 
+        boolean reversed = currentState.getPosition() > setpoint.getPosition();
+
         double distanceToDecelerate = computeDistanceToStop();
 
         boolean inDeceleration =
@@ -87,6 +89,7 @@ public class DynamicSCurveMotionProfile {
 
             double maxAccelToEnd = Math.sqrt(2 * maxAccelerationAcceleration * velError);
             double desiredAcceleration = -Math.min(maxDeceleration, maxAccelToEnd);
+
             acceleration -= maxAccelerationAcceleration * deltaTime;
             acceleration = Math.max(acceleration, desiredAcceleration);
         } else {
@@ -136,6 +139,17 @@ public class DynamicSCurveMotionProfile {
         );
 
         return positionAccel + positionCruise + positionDecel;
+    }
+
+    /**
+     * Determines whether the motion profile will override at the current state. Returns the distance that it will
+     * override. Will output -1 if it will not override.
+     *
+     * @param currentState the current {@link MotionState} of the system.
+     * @return the distance that the motion profile will override.
+     */
+    private double isOverride(MotionState currentState){
+        return -1;
     }
 
     private double calculateDisplacementFromAccelerationLine(double time, double accelerationSlope,

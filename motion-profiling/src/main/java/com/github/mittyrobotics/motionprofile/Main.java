@@ -38,7 +38,7 @@ public class Main {
 //        MotorGraph graph1 = new MotorGraph();
         MotionState currentState = new MotionState(0, 0, 0);
         MotionState currentState1 = new MotionState(0, 0, 0);
-        MotionState desiredState = new MotionState(50, 0, 0);
+        MotionState desiredState = new MotionState(20, 0, 0);
         double t = 0;
         double deltaT = 0.01;
         while (t < 10) {
