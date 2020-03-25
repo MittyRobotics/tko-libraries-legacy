@@ -249,27 +249,31 @@ public class DynamicSCurveMotionProfile {
         return points.toArray(new Position[0]);
     }
 
-    double sqrt(double x) {
+    public double getVelocityFromTime(double t, double m, double b, double x0, double v0){
+        return (pow(m*t,2)/2)+b*t+v0;
+    }
+
+    private double sqrt(double x) {
         return Math.sqrt(x);
     }
 
-    double cbrt(double x) {
+    private double cbrt(double x) {
         return Math.cbrt(x);
     }
 
-    double pow(double x, double degree) {
+    private double pow(double x, double degree) {
         return Math.pow(x, degree);
     }
 
-    double atan(double x) {
+    private double atan(double x) {
         return Math.atan(x);
     }
 
-    double cos(double x) {
+    private double cos(double x) {
         return Math.cos(x);
     }
 
-    double abs(double x) {
+    private double abs(double x) {
         return Math.abs(x);
     }
 
