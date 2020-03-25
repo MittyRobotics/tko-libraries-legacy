@@ -25,6 +25,9 @@
 package com.github.mittyrobotics.motionprofile;
 
 import com.github.mittyrobotics.datatypes.motion.MotionState;
+import com.github.mittyrobotics.datatypes.positioning.Position;
+
+import java.util.ArrayList;
 
 public class DynamicSCurveMotionProfile {
     private double maxAcceleration;
@@ -83,6 +86,7 @@ public class DynamicSCurveMotionProfile {
         boolean inDeceleration =
                 Math.abs(currentState.getPosition() - setpoint.getPosition()) < distanceToDecelerate;
 
+
         if (inDeceleration) {
             double velError = currentState.getVelocity() - setpoint.getVelocity();
 
@@ -107,7 +111,7 @@ public class DynamicSCurveMotionProfile {
         velocity += acceleration * deltaTime;
         position += velocity * deltaTime;
 
-        return new MotionState(position, velocity, acceleration);
+        return new MotionState(position, velocity, acceleration, inDeceleration ? 20 : -20);
     }
 
     private double computeDistanceToStop() {
@@ -140,25 +144,135 @@ public class DynamicSCurveMotionProfile {
         return positionAccel + positionCruise + positionDecel;
     }
 
+    private double computeTheoreticalMaxVelocity(MotionState currentState, MotionState setpoint, double deltaTime) {
+
+        return 0;
+    }
+
     /**
      * Determines whether the motion profile will override at the current state. Returns the distance that it will
      * override. Will output -1 if it will not override.
      *
-     * @param currentState the current {@link MotionState} of the system.
-     * @param setpoint the setpoint state of the motion profile
-     * @param deltaTime the change in time from the previous call of the motion profile.
+     * @param currentState   the current {@link MotionState} of the system.
+     * @param setpoint       the setpoint state of the motion profile
+     * @param deltaTime      the change in time from the previous call of the motion profile.
      * @param distanceToStop the previously computed minimum distance to end the motion profile
      * @return the distance that the motion profile will override. -1 if it will not override.
      */
-    private double isOverride(MotionState currentState, MotionState setpoint, double deltaTime, double distanceToStop){
+    private double isOverride(MotionState currentState, MotionState setpoint, double deltaTime, double distanceToStop) {
 
         return -1;
     }
 
-    private double computeRequiredVelocity(MotionState currentState, MotionState setpoint, double deltaTime){
-        
-        return 0;
+    public Position[] epicEquation(double y, double m, double b, double x0, double v0) {
+        //Common equations
+        double a = -(pow(b / 2, 3) / (27 * pow(m / 6, 3))) + ((b / 2 * v0) / (6 * pow(m / 6, 2))) -
+                ((x0 - y) / (2 * (m / 6)));
+        double c = pow(a, 2) + (pow((v0 / (3 * (m / 6))) - (pow(b / 2, 2) / (9 * pow(m / 6, 2))), 3));
+        double e = sqrt(c);
+        double f = (-b + sqrt(pow(b, 2) - 2 * m * v0)) / m;
+        double f1 = (-b - sqrt(pow(b, 2) - 2 * m * v0)) / m;
+        double g = (((m * pow((f), 3)) / 6) + ((b * pow(f, 2)) / 2) + (v0 * f) + x0 + ((m * (pow(f1, 3))) / 6) +
+                ((b * pow(f1, 2)) / 2) + (v0 * f1) + x0) / 2;
+        double h = pow(pow(a, 2) - c, 1.0 / 6.0);
+        double k = atan(sqrt(-c) / a) / 3;
+        double o = 2 * h * cos(((2 * Math.PI) / 3) + k);
+        double p = 2 * h * cos(((4 * Math.PI) / 3) + k);
+        double q = (a / abs(a));
+        double u = ((b / 2) / (3 * (m / 6)));
+
+        //Base equations
+        double eqn0 = cbrt(a + e) + cbrt(a - e) - ((b / 2) / (3 * (m / 6)));
+        double eqn1a = q * (o - u);
+        double eqn1b = q * (2 * h * cos(k) + u);
+        double eqn2a = q * (p - u);
+        double eqn2b = q * (o + u);
+        double eqn3a = q * (2 * h * cos(k) - u);
+        double eqn3b = q * (p + u);
+
+        //Conditions
+        boolean condition1a = y > g;
+        boolean condition1b = y <= g;
+        boolean condition2a = y > g;
+        boolean condition2b = y <= g;
+        boolean condition3a = y > g;
+        boolean condition3b = y <= g;
+
+        //Form final equations from conditions. If conditions invalid, set value to infinity and check for that later.
+        double eqn1, eqn2, eqn3;
+        if (condition1a) {
+            eqn1 = eqn1a;
+        } else if (condition1b) {
+            eqn1 = eqn1b;
+        } else {
+            eqn1 = Double.POSITIVE_INFINITY;
+        }
+        if (condition2a) {
+            eqn2 = eqn2a;
+        } else if (condition2b) {
+            eqn2 = eqn2b;
+        } else {
+            eqn2 = Double.POSITIVE_INFINITY;
+        }
+        if (condition3a) {
+            eqn3 = eqn3a;
+        } else if (condition3b) {
+            eqn3 = eqn3b;
+        } else {
+            eqn3 = Double.POSITIVE_INFINITY;
+        }
+
+        //Form points from equations
+        Position p0 = new Position(eqn0, y);
+        Position p1 = new Position(eqn1, y);
+        Position p2 = new Position(eqn2, y);
+        Position p3 = new Position(eqn3, y);
+
+        //Init points list
+        ArrayList<Position> points = new ArrayList<>();
+
+        //Add points to point list if they are valid
+        if (Double.isFinite(eqn0) && !Double.isNaN(eqn0)) {
+            points.add(p0);
+        }
+        if (Double.isFinite(eqn1) && !Double.isNaN(eqn1)) {
+            points.add(p1);
+        }
+        if (Double.isFinite(eqn2) && !Double.isNaN(eqn2)) {
+            points.add(p2);
+        }
+        if (Double.isFinite(eqn3) && !Double.isNaN(eqn3)) {
+            points.add(p3);
+        }
+
+        //Return points list to array
+        return points.toArray(new Position[0]);
     }
+
+    double sqrt(double x) {
+        return Math.sqrt(x);
+    }
+
+    double cbrt(double x) {
+        return Math.cbrt(x);
+    }
+
+    double pow(double x, double degree) {
+        return Math.pow(x, degree);
+    }
+
+    double atan(double x) {
+        return Math.atan(x);
+    }
+
+    double cos(double x) {
+        return Math.cos(x);
+    }
+
+    double abs(double x) {
+        return Math.abs(x);
+    }
+
 
     private double calculateDisplacementFromAccelerationLine(double time, double accelerationSlope,
                                                              double accelerationYIntercept, double initialVelocity) {
@@ -170,6 +284,9 @@ public class DynamicSCurveMotionProfile {
         return m * (x * x * x) / 6 + b * (x * x) / 2 + v0 * x + x0;
     }
 
+    private double computeTimeFromDisplacement(double m, double b, double v0, double x0) {
+        return 0;
+    }
 
     public double getMaxAcceleration() {
         return maxAcceleration;

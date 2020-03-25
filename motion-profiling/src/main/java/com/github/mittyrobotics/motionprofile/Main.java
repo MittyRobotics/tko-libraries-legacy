@@ -25,11 +25,12 @@
 package com.github.mittyrobotics.motionprofile;
 
 import com.github.mittyrobotics.datatypes.motion.MotionState;
+import com.github.mittyrobotics.datatypes.positioning.Position;
 import com.github.mittyrobotics.visualization.MotorGraph;
 
 public class Main {
     public static void main(String[] args) {
-        DynamicSCurveMotionProfile motionProfile = new DynamicSCurveMotionProfile(20, 20, 50, 20,
+        DynamicSCurveMotionProfile motionProfile = new DynamicSCurveMotionProfile(50, 50, 50, 13,
                 OverrideMethod.OVERSHOOT);
         DynamicTrapezoidalMotionProfile motionProfile1 = new DynamicTrapezoidalMotionProfile(10, 20, 20,
                 OverrideMethod.OVERSHOOT);
@@ -38,26 +39,38 @@ public class Main {
 //        MotorGraph graph1 = new MotorGraph();
         MotionState currentState = new MotionState(0, 0, 0);
         MotionState currentState1 = new MotionState(0, 0, 0);
-        MotionState desiredState = new MotionState(20, 0, 0);
-        double t = 0;
-        double deltaT = 0.01;
-        while (t < 10) {
-            double position = motionProfile.calculateNextState(currentState, desiredState, deltaT).getPosition();
-            double velocity = motionProfile.calculateNextState(currentState, desiredState, deltaT).getVelocity();
-            double acceleration =
-                    motionProfile.calculateNextState(currentState, desiredState, deltaT).getAcceleration();
-            graph.addPosition(position, t);
-            graph.addVelocity(velocity, t);
-            graph.addAcceleration(acceleration, t);
-            currentState = new MotionState(position, velocity, acceleration);
-            double position1 = motionProfile1.calculateNextState(currentState1, desiredState, deltaT).getPosition();
-            double velocity1 = motionProfile1.calculateNextState(currentState1, desiredState, deltaT).getVelocity();
-            double acceleration1 =
-                    motionProfile1.calculateNextState(currentState1, desiredState, deltaT).getAcceleration();
-//            graph.addSetpoint(position1, t);
-//            graph.addError(velocity1,t);
-//            graph.addVoltage(acceleration1,t);
-            currentState1 = new MotionState(position1, velocity1, acceleration1);
+        MotionState desiredState = new MotionState(15, 0, 0);
+        double t = -100;
+        double deltaT = .01;
+        double m = 40;
+        double b = -10;
+        double x0 = 0;
+        double v0 = 0;
+        while (t < 100) {
+//            double position = motionProfile.calculateNextState(currentState, desiredState, deltaT).getPosition();
+//            double velocity = motionProfile.calculateNextState(currentState, desiredState, deltaT).getVelocity();
+//            double acceleration =
+//                    motionProfile.calculateNextState(currentState, desiredState, deltaT).getAcceleration();
+//            double temp =
+//                    motionProfile.calculateNextState(currentState, desiredState, deltaT).getTemp();
+//            graph.addPosition(position, t);
+//            graph.addVelocity(velocity, t);
+//            graph.addAcceleration(acceleration, t);
+//            graph.addSetpoint(temp, t);
+//            currentState = new MotionState(position, velocity, acceleration);
+//            double position1 = motionProfile1.calculateNextState(currentState1, desiredState, deltaT).getPosition();
+//            double velocity1 = motionProfile1.calculateNextState(currentState1, desiredState, deltaT).getVelocity();
+//            double acceleration1 =
+//                    motionProfile1.calculateNextState(currentState1, desiredState, deltaT).getAcceleration();
+//
+////            graph.addError(velocity1,t);
+////            graph.addVoltage(acceleration1,t);
+//            currentState1 = new MotionState(position1, velocity1, acceleration1);
+
+            Position[] points = motionProfile.epicEquation(t,m,b,x0,v0);
+            for(Position p : points){
+                graph.addPosition(p.getY(),p.getX());
+            }
             t += deltaT;
         }
     }
