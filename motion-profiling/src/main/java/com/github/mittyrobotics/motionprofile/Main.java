@@ -42,8 +42,8 @@ public class Main {
         MotionState desiredState = new MotionState(15, 0, 0);
         double t = -100;
         double deltaT = .01;
-        double m = 40;
-        double b = -10;
+        double m = 20;
+        double b = 10;
         double x0 = 0;
         double v0 = 0;
         while (t < 100) {
