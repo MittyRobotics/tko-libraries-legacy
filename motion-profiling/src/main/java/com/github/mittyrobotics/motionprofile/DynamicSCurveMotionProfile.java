@@ -79,17 +79,23 @@ public class DynamicSCurveMotionProfile {
         double velocity = currentState.getVelocity();
         double acceleration = currentState.getAcceleration();
 
-        boolean reversed = currentState.getPosition() > setpoint.getPosition();
+        double distanceToDecelerate = setpoint.getPosition() - computeDistanceToStop(currentState);
+        boolean inDeceleration;
+        if (acceleration >= 0) {
+            inDeceleration = currentState.getPosition() >= distanceToDecelerate;
+        } else {
+            inDeceleration = true;
+        }
+        double timeToReachZeroAcceleration = acceleration/maxJerk;
+        double displacementToReachZeroAcceleration = calculateDisplacementFromAccelerationLine(timeToReachZeroAcceleration,-maxJerk,
+                acceleration,velocity);
 
-        double distanceToDecelerate = computeDistanceToStop();
-
-        boolean inDeceleration =
-                Math.abs(currentState.getPosition() - setpoint.getPosition()) < distanceToDecelerate;
-
+        if(displacementToReachZeroAcceleration+currentState.getPosition() >= setpoint.getPosition()/2 && acceleration > 0){
+            inDeceleration = true;
+        }
 
         if (inDeceleration) {
             double velError = currentState.getVelocity() - setpoint.getVelocity();
-
             double maxAccelToEnd = Math.sqrt(2 * maxJerk * velError);
             double desiredAcceleration = -Math.min(maxDeceleration, maxAccelToEnd);
 
@@ -97,7 +103,6 @@ public class DynamicSCurveMotionProfile {
             acceleration = Math.max(acceleration, desiredAcceleration);
         } else {
             double velError = maxVelocity - currentState.getVelocity();
-
             double maxAccelerationToEnd = Math.sqrt(2 * maxJerk * velError);
             if (Double.isNaN(maxAccelerationToEnd)) {
                 maxAccelerationToEnd = 0;
@@ -107,19 +112,21 @@ public class DynamicSCurveMotionProfile {
             acceleration += maxJerk * deltaTime;
             acceleration = Math.min(acceleration, desiredAcceleration);
         }
-
+        if(Double.isNaN(acceleration) || !Double.isFinite(acceleration)){
+            acceleration = 0;
+        }
         velocity += acceleration * deltaTime;
         position += velocity * deltaTime;
 
-        return new MotionState(position, velocity, acceleration, inDeceleration ? 20 : -20);
+        return new MotionState(position, velocity, acceleration);
     }
 
-    private double computeDistanceToStop() {
-        double theoreticalMaxDeceleration = Math.sqrt(2 * maxJerk * maxVelocity / 2);
+    private double computeDistanceToStop(MotionState currentState) {
+        double theoreticalMaxDeceleration = Math.sqrt(2 * maxJerk * currentState.getVelocity() / 2);
         theoreticalMaxDeceleration = Math.min(theoreticalMaxDeceleration, maxDeceleration);
         double tAccel = theoreticalMaxDeceleration / maxJerk;
         double tDecel = theoreticalMaxDeceleration / maxJerk;
-        double vTotal = maxVelocity;
+        double vTotal = currentState.getVelocity();
         double vAccel = theoreticalMaxDeceleration * tAccel / 2;
         double vDecel = theoreticalMaxDeceleration * tDecel / 2;
         double vCruise = vTotal - vAccel - vDecel;
@@ -129,24 +136,19 @@ public class DynamicSCurveMotionProfile {
                 tAccel,
                 -theoreticalMaxDeceleration / tAccel,
                 0,
-                maxVelocity
+                currentState.getVelocity()
         );
 
-        double positionCruise = (maxVelocity - vAccel - vDecel) * tCruise / 2 + (vDecel * tCruise);
+        double positionCruise = (currentState.getVelocity() - vAccel - vDecel) * tCruise / 2 + (vDecel * tCruise);
 
         double positionDecel = calculateDisplacementFromAccelerationLine(
                 tDecel,
                 theoreticalMaxDeceleration / tDecel,
                 -theoreticalMaxDeceleration,
-                maxVelocity - (vAccel + vCruise)
+                currentState.getVelocity() - (vAccel + vCruise)
         );
 
         return positionAccel + positionCruise + positionDecel;
-    }
-
-    private double computeTheoreticalMaxVelocity(MotionState currentState, MotionState setpoint, double deltaTime) {
-
-        return 0;
     }
 
     /**
@@ -160,14 +162,40 @@ public class DynamicSCurveMotionProfile {
      * @return the distance that the motion profile will override. -1 if it will not override.
      */
     private double isOverride(MotionState currentState, MotionState setpoint, double deltaTime, double distanceToStop) {
-
         return -1;
     }
 
-    public Position[] epicEquation(double y, double m, double b, double x0, double v0) {
+    private double calculateDisplacementFromAccelerationLine(double time, double accelerationSlope,
+                                                             double accelerationYIntercept, double initialVelocity) {
+        double x = time;
+        double m = accelerationSlope;
+        double v0 = initialVelocity;
+        double b = accelerationYIntercept;
+        double x0 = 0;
+        return m * (x * x * x) / 6 + b * (x * x) / 2 + v0 * x + x0;
+    }
+
+    /**
+     * Calculates the times that the position value occurs from the equation for position over time defined by an
+     * acceleration over time line with slope m and y-intercept b.
+     *
+     * In other words, for a given segment of the s-curve motion profile, this function will take in the equation for
+     * the line that makes up the acceleration graph over time. It then takes in the initial position and initial
+     * velocity. It then takes in the position in which you want to find time for, and will return all times that the
+     * position occurs at. On a position over time graph, you input the y value (position) and it outputs the x
+     * values that it occurs at (times).
+     *
+     * @param position the position to find times at
+     * @param m the slope of the acceleration over time line
+     * @param b the y-intercept of the acceleration over time line
+     * @param x0 the initial position (the y-intercept of the position over time curve)
+     * @param v0 the initial velocity (the y-intercept of the velocity over time curve)
+     * @return the times that the position occurs at in the position over time curve
+     */
+    public Double[] computeTimesFromDisplacement(double position, double m, double b, double x0, double v0) {
         //Common equations
         double a = -(pow(b / 2, 3) / (27 * pow(m / 6, 3))) + ((b / 2 * v0) / (6 * pow(m / 6, 2))) -
-                ((x0 - y) / (2 * (m / 6)));
+                ((x0 - position) / (2 * (m / 6)));
         double c = pow(a, 2) + (pow((v0 / (3 * (m / 6))) - (pow(b / 2, 2) / (9 * pow(m / 6, 2))), 3));
         double e = sqrt(c);
         double f = (-b + sqrt(pow(b, 2) - 2 * m * v0)) / m;
@@ -191,12 +219,20 @@ public class DynamicSCurveMotionProfile {
         double eqn3b = q * (p + u);
 
         //Conditions
-        boolean condition1a = y > g;
-        boolean condition1b = y <= g;
-        boolean condition2a = y > g;
-        boolean condition2b = y <= g;
-        boolean condition3a = y > g;
-        boolean condition3b = y <= g;
+        boolean condition1a = position > g;
+        boolean condition1b = position <= g;
+        boolean condition2a = position > g;
+        boolean condition2b = position <= g;
+        boolean condition3a = position > g;
+        boolean condition3b = position <= g;
+        if (m < 0) {
+            condition1a = position < g;
+            condition1b = position >= g;
+            condition2a = position < g;
+            condition2b = position >= g;
+            condition3a = position < g;
+            condition3b = position >= g;
+        }
 
         //Form final equations from conditions. If conditions invalid, set value to infinity and check for that later.
         double eqn1, eqn2, eqn3;
@@ -223,34 +259,38 @@ public class DynamicSCurveMotionProfile {
         }
 
         //Form points from equations
-        Position p0 = new Position(eqn0, y);
-        Position p1 = new Position(eqn1, y);
-        Position p2 = new Position(eqn2, y);
-        Position p3 = new Position(eqn3, y);
+        Position p0 = new Position(eqn0, position);
+        Position p1 = new Position(eqn1, position);
+        Position p2 = new Position(eqn2, position);
+        Position p3 = new Position(eqn3, position);
 
         //Init points list
-        ArrayList<Position> points = new ArrayList<>();
+        ArrayList<Double> points = new ArrayList<>();
 
         //Add points to point list if they are valid
         if (Double.isFinite(eqn0) && !Double.isNaN(eqn0)) {
-            points.add(p0);
+            points.add(p0.getX());
         }
         if (Double.isFinite(eqn1) && !Double.isNaN(eqn1)) {
-            points.add(p1);
+            points.add(p1.getX());
         }
         if (Double.isFinite(eqn2) && !Double.isNaN(eqn2)) {
-            points.add(p2);
+            points.add(p2.getX());
         }
         if (Double.isFinite(eqn3) && !Double.isNaN(eqn3)) {
-            points.add(p3);
+            points.add(p3.getX());
         }
 
         //Return points list to array
-        return points.toArray(new Position[0]);
+        return points.toArray(new Double[0]);
     }
 
-    public double getVelocityFromTime(double t, double m, double b, double x0, double v0){
-        return (pow(m*t,2)/2)+b*t+v0;
+    public double getVelocityFromTime(double t, double m, double b, double v0) {
+        return (m * pow(t, 2) / 2) + b * t + v0;
+    }
+
+    public double getAccelerationFromTime(double t, double m, double b) {
+        return m * t + b;
     }
 
     private double sqrt(double x) {
@@ -275,21 +315,6 @@ public class DynamicSCurveMotionProfile {
 
     private double abs(double x) {
         return Math.abs(x);
-    }
-
-
-    private double calculateDisplacementFromAccelerationLine(double time, double accelerationSlope,
-                                                             double accelerationYIntercept, double initialVelocity) {
-        double x = time;
-        double m = accelerationSlope;
-        double v0 = initialVelocity;
-        double b = accelerationYIntercept;
-        double x0 = 0;
-        return m * (x * x * x) / 6 + b * (x * x) / 2 + v0 * x + x0;
-    }
-
-    private double computeTimeFromDisplacement(double m, double b, double v0, double x0) {
-        return 0;
     }
 
     public double getMaxAcceleration() {

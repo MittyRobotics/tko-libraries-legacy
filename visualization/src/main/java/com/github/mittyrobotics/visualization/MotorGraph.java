@@ -39,7 +39,8 @@ public class MotorGraph extends Graph {
         super(name, yName, xName);
         XYSeriesWithRenderer positionSeries = new XYSeriesWithRenderer(positionKey);
         positionSeries.setShowLines(false);
-        XYSeries velocitySeries = new XYSeries(velocityKey, false);
+        XYSeriesWithRenderer velocitySeries = new XYSeriesWithRenderer(velocityKey);
+        velocitySeries.setShowLines(false);
         XYSeries accelerationSeries = new XYSeries(accelerationKey, false);
         XYSeries voltageSeries = new XYSeries(voltageKey, false);
         XYSeries setpointSeries = new XYSeries(setpointKey, false);
