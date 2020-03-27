@@ -25,30 +25,43 @@
 package com.github.mittyrobotics.motionprofile;
 
 import com.github.mittyrobotics.datatypes.motion.MotionState;
-import com.github.mittyrobotics.datatypes.positioning.Position;
 import com.github.mittyrobotics.visualization.MotorGraph;
 
-public class Main {
+import javax.swing.*;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
+import java.awt.*;
+
+public class Main extends JFrame{
+    private MotionState currentState = new MotionState(80, 0, 0);
+    private MotionState desiredState = new MotionState(100, 0, 0);
+    private MotorGraph graph;
     public static void main(String[] args) {
-        DynamicSCurveMotionProfile motionProfile = new DynamicSCurveMotionProfile(20, 20, 50, 20,
-                OverrideMethod.OVERSHOOT);
-        MotorGraph graph = new MotorGraph("S-curve Motion Profile", "position (m), velocity (m/s), acceleration " +
+        new Main().start();
+    }
+
+    public void start(){
+        this.graph = new MotorGraph("S-curve Motion Profile", "position (m), velocity (m/s), acceleration " +
                 "(m/s^2)", "time (s)");
-        MotionState currentState = new MotionState(0, 0, 0);
-        MotionState desiredState = new MotionState(6, 0, 0);
+        calcProfile();
+    }
+
+    public void calcProfile(){
+        SCurveProfileV2 motionProfile = new SCurveProfileV2(currentState, desiredState, 20, 20, 50, 20,
+                OverrideMethod.OVERSHOOT);
         double t = 0;
-        double deltaT = .01;
-        while (t < 10 ) {
-            MotionState state = motionProfile.calculateNextState(currentState,desiredState,deltaT);
+        double deltaT = .001;
+        while (t < 10) {
+            MotionState state = motionProfile.calculateState(t);
             double position = state.getPosition();
             double velocity = state.getVelocity();
             double acceleration = state.getAcceleration();
-            System.out.println(position);
             graph.addPosition(position, t);
             graph.addVelocity(velocity, t);
             graph.addAcceleration(acceleration, t);
-            currentState = new MotionState(position, velocity, acceleration);
+
             t += deltaT;
         }
     }
 }
+
