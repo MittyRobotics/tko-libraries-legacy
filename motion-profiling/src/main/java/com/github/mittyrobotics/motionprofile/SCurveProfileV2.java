@@ -25,15 +25,15 @@ public class SCurveProfileV2 {
         this.maxJerk = maxJerk;
         this.maxVelocity = maxVelocity;
         this.overrideMethod = overrideMethod;
-        calculateMotionProfile(startPoint, setpoint);
+        calculateMotionProfile(startPoint, setpoint, maxVelocity);
     }
 
-    public void calculateMotionProfile(MotionState startPoint, MotionState setpoint) {
+    public void calculateMotionProfile(MotionState startPoint, MotionState setpoint, double currentMaxVelocity) {
         TrapezoidTimeSegment accelerationTrapezoid =
-                calculateTrapezoid(maxVelocity - startPoint.getVelocity(), startPoint.getAcceleration(), 0,
+                calculateTrapezoid(currentMaxVelocity - startPoint.getVelocity(), startPoint.getAcceleration(), 0,
                         maxAcceleration);
         TrapezoidTimeSegment decelerationTrapezoid =
-                calculateTrapezoid(maxVelocity - setpoint.getVelocity(), 0, setpoint.getAcceleration(),
+                calculateTrapezoid(currentMaxVelocity - setpoint.getVelocity(), 0, setpoint.getAcceleration(),
                         maxDeceleration);
         double tAAccel = accelerationTrapezoid.getTAccel();
         double tACruise = accelerationTrapezoid.getTCruise();
@@ -63,7 +63,7 @@ public class SCurveProfileV2 {
                         dcSegment.getVelocity(), dcSegment.getPosition());
         double totalPos = ddSegment.getPosition();
 
-        double tCruise = (setpoint.getPosition() - totalPos) / maxVelocity;
+        double tCruise = (setpoint.getPosition() - totalPos) / currentMaxVelocity;
         MotionSegment cruiseSegment;
         if (tCruise > 0) {
             cruiseSegment = new MotionSegment(new Line(0, 0), adSegment.getEndTime(), tCruise,
@@ -83,27 +83,27 @@ public class SCurveProfileV2 {
         }
 
         if (totalPos > setpoint.getPosition()) {
-
+            calculateMotionProfile(startPoint,setpoint,currentMaxVelocity-1);
         }
+        else{
+            System.out.println(
+                    "Times: " + tAAccel + " " + tACruise + " " + tADecel + " " + tCruise + " " + tDAccel + " " + tDCruise +
+                            " " + tDDecel);
+            System.out.println("Positions: " + aaSegment.getPosition() + " " + acSegment.getPosition() + " " +
+                    adSegment.getPosition() + " " + cruiseSegment.getPosition() + " " + daSegment.getPosition() + " " +
+                    dcSegment.getPosition() + " " + ddSegment.getPosition());
+            System.out.println("Velocities: " + aaSegment.getVelocity() + " " + acSegment.getVelocity() + " " +
+                    adSegment.getVelocity() + " " + cruiseSegment.getVelocity() + " " + daSegment.getVelocity() + " " +
+                    dcSegment.getVelocity() + " " + ddSegment.getVelocity());
 
-
-        System.out.println(
-                "Times: " + tAAccel + " " + tACruise + " " + tADecel + " " + tCruise + " " + tDAccel + " " + tDCruise +
-                        " " + tDDecel);
-        System.out.println("Positions: " + aaSegment.getPosition() + " " + acSegment.getPosition() + " " +
-                adSegment.getPosition() + " " + cruiseSegment.getPosition() + " " + daSegment.getPosition() + " " +
-                dcSegment.getPosition() + " " + ddSegment.getPosition());
-        System.out.println("Velocities: " + aaSegment.getVelocity() + " " + acSegment.getVelocity() + " " +
-                adSegment.getVelocity() + " " + cruiseSegment.getVelocity() + " " + daSegment.getVelocity() + " " +
-                dcSegment.getVelocity() + " " + ddSegment.getVelocity());
-
-        this.aaSegment = aaSegment;
-        this.acSegment = acSegment;
-        this.adSegment = adSegment;
-        this.cruiseSegment = cruiseSegment;
-        this.daSegment = daSegment;
-        this.dcSegment = dcSegment;
-        this.ddSegment = ddSegment;
+            this.aaSegment = aaSegment;
+            this.acSegment = acSegment;
+            this.adSegment = adSegment;
+            this.cruiseSegment = cruiseSegment;
+            this.daSegment = daSegment;
+            this.dcSegment = dcSegment;
+            this.ddSegment = ddSegment;
+        }
     }
 
     public MotionState calculateState(double t) {

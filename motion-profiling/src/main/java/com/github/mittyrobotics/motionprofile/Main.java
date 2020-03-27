@@ -47,10 +47,10 @@ public class Main extends JFrame{
     }
 
     public void calcProfile(){
-        SCurveProfileV2 motionProfile = new SCurveProfileV2(currentState, desiredState, 20, 20, 50, 20,
+        SCurveProfileV2 motionProfile = new SCurveProfileV2(currentState, desiredState, 20, 40, 50, 20,
                 OverrideMethod.OVERSHOOT);
         double t = 0;
-        double deltaT = .001;
+        double deltaT = .01;
         while (t < 10) {
             MotionState state = motionProfile.calculateState(t);
             double position = state.getPosition();
