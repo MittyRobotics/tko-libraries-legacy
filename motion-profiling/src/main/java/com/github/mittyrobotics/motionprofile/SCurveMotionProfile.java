@@ -20,16 +20,17 @@ public class SCurveMotionProfile {
     /**
      * Creates a new {@link SCurveMotionProfile}. The s-curve motion profile is a more complex form of the
      * trapezoidal motion profile, resulting in a trapezoidal acceleration over time shape versus a trapezoidal
-     * velocity over time shape, and overall resulting in smoother motion with the tradeoff of a slightly greater time.
+     * velocity over time shape, and overall resulting in smoother motion with the tradeoff of a slightly greater
+     * travel time.
      * <p>
      * In s-curve motion profiles, because the acceleration over time graph is trapezoidal, there is an overall reduced
      * amount of jerk in the motion versus trapezoidal motion profiles.
      * <p>
-     * The motion profile also supports handling cases where the setpoint is impossible to reach from the system's
-     * current state. This is the override method, and the types of override include overshooting the setpoint and
-     * coming back within the bounds of the system's velocity and acceleration constraints, violating the system's
-     * velocity and acceleration constraints to reach the setpoint on time, or stopping as close to the setpoint as
-     * possible within the velocity and acceleration constraints without coming back.
+     * The motion profile also supports handling cases where the end state is impossible to reach from the system's
+     * start state. This is the override method, and the types of override include: overshooting the end state position
+     * and coming back within the bounds of the system's velocity and acceleration constraints, violating the system's
+     * velocity and acceleration constraints to reach the end state position on time, or stopping as close to the
+     * end state as possible within the velocity and acceleration constraints without coming back.
      *
      * @param startState      the starting {@link MotionState} of the motion profile.
      * @param endState        the ending {@link MotionState} of the motion profile.
@@ -37,8 +38,8 @@ public class SCurveMotionProfile {
      * @param maxDeceleration the maximum deceleration of the motion profile. (units/s^2)
      * @param maxJerk         the maximum jerk of the motion profile. (units/s^3)
      * @param maxVelocity     the maximum velocity of the motion profile. (units/s)
-     * @param overrideMethod  the method to override the motion profile if the setpoint is impossible to reach at the
-     *                        system's current state.
+     * @param overrideMethod  the method to override the motion profile if the endState is impossible to reach from the
+     *                        system's start state.
      */
     public SCurveMotionProfile(MotionState startState, MotionState endState, double maxAcceleration,
                                double maxDeceleration,
@@ -49,10 +50,25 @@ public class SCurveMotionProfile {
         this.maxVelocity = maxVelocity;
         this.overrideMethod = overrideMethod;
 
-        calculateMotionProfile(startState, endState, maxVelocity);
+        generateMotionProfile(startState, endState, maxVelocity);
     }
 
-    public void calculateMotionProfile(MotionState startState, MotionState endState, double currentMaxVelocity) {
+    /**
+     * Generates the motion profile.
+     * <p>
+     * Breaks up the motion profile in it's seven acceleration segments: acceleration acceleration, acceleration
+     * cruise, acceleration deceleration, cruise, deceleration acceleration, deceleration cruise, and deceleration
+     * deceleration. Each acceleration segment is treated as a line in the form of y=mx+b, and the first and second
+     * integral equations for y=mx+b are used to determine the velocity and position given an input of time in the
+     * <code>calculateState(double t)</code> function.
+     *
+     * @param startState         the starting {@link MotionState} of the motion profile
+     * @param endState           the ending {@link MotionState} of the motion profile
+     * @param currentMaxVelocity the current max velocity value, used for recursively lowering max velocity in the
+     *                           case of the total distance taking less time than it takes to fully accelerate and
+     *                           decelerate.
+     */
+    public void generateMotionProfile(MotionState startState, MotionState endState, double currentMaxVelocity) {
         TrapezoidTimeSegment accelerationTrapezoid =
                 calculateTrapezoid(currentMaxVelocity - startState.getVelocity(), startState.getAcceleration(), 0,
                         maxAcceleration);
@@ -123,7 +139,7 @@ public class SCurveMotionProfile {
         }
 
         if (totalPos > endState.getPosition()) {
-            calculateMotionProfile(startState, endState, currentMaxVelocity - 1);
+            generateMotionProfile(startState, endState, currentMaxVelocity - 1);
         } else {
             System.out.println(
                     "Times: " + tAAccel + " " + tACruise + " " + tADecel + " " + tCruise + " " + tDAccel + " " +
@@ -146,6 +162,17 @@ public class SCurveMotionProfile {
         }
     }
 
+    /**
+     * Calculates the {@link MotionState} at time <code>t</code>.
+     * <p>
+     * This starts by finding which {@link MotionSegment} of the motion profile the time is in. It then gets the
+     * the acceleration from the acceleration line of that segment, the velocity from the first integral of the
+     * acceleration line of that segment, and the position from the second integral of the acceleration line of that
+     * segment.
+     *
+     * @param t the time to find the {@link MotionState} at.
+     * @return the {@link MotionState} at time <code>t</code>.
+     */
     public MotionState calculateState(double t) {
         MotionSegment[] segments = new MotionSegment[]{aaSegment, acSegment, adSegment, cruiseSegment, daSegment,
                 dcSegment,
@@ -154,21 +181,50 @@ public class SCurveMotionProfile {
                 getAccelerationFromSegments(t, segments));
     }
 
+    /**
+     * Returns the position at time <code>t</code> from a time-ordered array of {@link MotionSegment}s.
+     *
+     * @param t        time
+     * @param segments array of {@link MotionSegment}s. Must be in sequential order based on time.
+     * @return the position at time <code>t</code> from the segments
+     */
     private double getPositionFromSegments(double t, MotionSegment[] segments) {
         MotionSegment segment = identifySegment(t, segments);
         return segment.getPositionFromTime(t - segment.getStartTime());
     }
 
+    /**
+     * Returns the velocity at time <code>t</code> from a time-ordered array of {@link MotionSegment}s.
+     *
+     * @param t        time
+     * @param segments array of {@link MotionSegment}s. Must be in sequential order based on time.
+     * @return the velocity at time <code>t</code> from the segments
+     */
     private double getVelocityFromSegments(double t, MotionSegment[] segments) {
         MotionSegment segment = identifySegment(t, segments);
         return segment.getVelocityFromTime(t - segment.getStartTime());
     }
 
+    /**
+     * Returns the acceleration at time <code>t</code> from a time-ordered array of {@link MotionSegment}s.
+     *
+     * @param t        time
+     * @param segments array of {@link MotionSegment}s. Must be in sequential order based on time.
+     * @return the acceleration at time <code>t</code> from the segments
+     */
     private double getAccelerationFromSegments(double t, MotionSegment[] segments) {
         MotionSegment segment = identifySegment(t, segments);
         return segment.getAccelerationFromTime(t - segment.getStartTime());
     }
 
+    /**
+     * Identifies which segment of the motion profile time <code>t</code> is in given a time-ordered input array of
+     * {@link MotionSegment}s.
+     *
+     * @param t        time
+     * @param segments array of {@link MotionSegment}s. Must be in sequential order based on time.
+     * @return the {@link MotionSegment} that time <code>t</code> is in.
+     */
     private MotionSegment identifySegment(double t, MotionSegment[] segments) {
         MotionSegment segment = new MotionSegment(new Line(0, 0), 0, 0, 0, 0);
         for (int i = 0; i < segments.length; i++) {
@@ -182,6 +238,17 @@ public class SCurveMotionProfile {
         return segment;
     }
 
+    /**
+     * Calculates the {@link TrapezoidTimeSegment} given the velocity setpoint, start acceleration, end acceleration,
+     * and max velocity. The {@link TrapezoidTimeSegment} contains the acceleration, cruise, and deceleration times
+     * in a trapezoidal acceleration graph to reach the velocity setpoint from a start and end acceleration.
+     *
+     * @param velocitySetpoint  the total change in velocity that must be covered by the acceleration trapezoid.
+     * @param startAcceleration the starting acceleration of the acceleration trapezoid.
+     * @param endAcceleration   the ending acceleration of the acceleration trapezoid.
+     * @param localMaxAccel     the max velocity for the acceleration trapezoid to reach.
+     * @return the {@link TrapezoidTimeSegment} from the input parameters.
+     */
     private TrapezoidTimeSegment calculateTrapezoid(double velocitySetpoint, double startAcceleration,
                                                     double endAcceleration, double localMaxAccel) {
         double zeroToStartAccelerationTime = startAcceleration / maxJerk;
@@ -219,15 +286,15 @@ public class SCurveMotionProfile {
             dCruise = totalDistanceWithEnds - triangleDAccel - dDecel;
             tCruise = dCruise / theoreticalMaxAcceleration;
         }
-        //If the ending velocity is greater than or equal to the theoretical max velocity
+        //If the ending acceleration is greater than or equal to the theoretical max acceleration
         else if (endAcceleration >= theoreticalMaxAcceleration) {
-            //Make the theoretical max velocity the ending velocity velocity instead
+            //Make the theoretical max acceleration the ending acceleration instead
             theoreticalMaxAcceleration = endAcceleration;
 
-            //Make sure theoretical max velocity never goes above the actual max velocity
+            //Make sure theoretical max acceleration never goes above the actual max acceleration
             theoreticalMaxAcceleration = Math.min(theoreticalMaxAcceleration, localMaxAccel);
 
-            //Since the ending velocity is greater than or equal to the max velocity, it will never decelerate.
+            //Since the ending acceleration is greater than or equal to the max acceleration, it will never decelerate.
             tDecel = 0;
             dDecel = 0;
 
@@ -238,9 +305,9 @@ public class SCurveMotionProfile {
             tCruise = dCruise / theoreticalMaxAcceleration;
 
         }
-        //If the start and end velocity are below the theoretical max velocity (a regular trapezoidal profile)
+        //If the start and end acceleration are below the theoretical max acceleration (a regular trapezoidal profile)
         else {
-            //Make sure theoretical max velocity never goes above the actual max velocity
+            //Make sure theoretical max acceleration never goes above the actual max acceleration
             theoreticalMaxAcceleration = Math.min(theoreticalMaxAcceleration, localMaxAccel);
 
             //Calculate the acceleration, deceleration, and cruise as normal
