@@ -60,7 +60,7 @@ allprojects {
         wpi.deps.vendor.jni(NativePlatforms.roborio).forEach { nativeZip(it) }
         wpi.deps.vendor.jni(NativePlatforms.desktop).forEach { nativeDesktopZip(it) }
 
-// https://mvnrepository.com/artifact/org.jfree/jfreechart
+        // https://mvnrepository.com/artifact/org.jfree/jfreechart
         compile(group = "org.jfree", name = "jfreechart", version = "1.5.0")
         compile(group = "org.apache.commons", name = "commons-collections4", version = "4.1")
     }

@@ -2,6 +2,7 @@ package com.github.mittyrobotics.motionprofile;
 
 import com.github.mittyrobotics.datatypes.geometry.Line;
 import com.github.mittyrobotics.datatypes.motion.MotionState;
+import edu.wpi.first.wpilibj.Talon;
 
 public class SCurveMotionProfile {
     private double maxAcceleration;

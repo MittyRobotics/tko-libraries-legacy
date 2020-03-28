@@ -39,6 +39,7 @@ repositories {
 }
 
 dependencies {
+    compile(group = "edu.wpi.first.wpilibNewCommands", name = "wpilibNewCommands-java", version = "2020.1.2")
 }
 
 publishing {
