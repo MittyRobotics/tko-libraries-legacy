@@ -3,7 +3,7 @@ package com.github.mittyrobotics.motionprofile;
 import com.github.mittyrobotics.datatypes.geometry.Line;
 import com.github.mittyrobotics.datatypes.motion.MotionState;
 
-public class SCurveProfileV2 {
+public class SCurveMotionProfile {
     private double maxAcceleration;
     private double maxDeceleration;
     private double maxJerk;
@@ -17,32 +17,72 @@ public class SCurveProfileV2 {
     private MotionSegment dcSegment;
     private MotionSegment ddSegment;
 
-    public SCurveProfileV2(MotionState startPoint, MotionState setpoint, double maxAcceleration, double maxDeceleration,
-                           double maxJerk, double maxVelocity,
-                           OverrideMethod overrideMethod) {
+    /**
+     * Creates a new {@link SCurveMotionProfile}. The s-curve motion profile is a more complex form of the
+     * trapezoidal motion profile, resulting in a trapezoidal acceleration over time shape versus a trapezoidal
+     * velocity over time shape, and overall resulting in smoother motion with the tradeoff of a slightly greater time.
+     * <p>
+     * In s-curve motion profiles, because the acceleration over time graph is trapezoidal, there is an overall reduced
+     * amount of jerk in the motion versus trapezoidal motion profiles.
+     * <p>
+     * The motion profile also supports handling cases where the setpoint is impossible to reach from the system's
+     * current state. This is the override method, and the types of override include overshooting the setpoint and
+     * coming back within the bounds of the system's velocity and acceleration constraints, violating the system's
+     * velocity and acceleration constraints to reach the setpoint on time, or stopping as close to the setpoint as
+     * possible within the velocity and acceleration constraints without coming back.
+     *
+     * @param startState      the starting {@link MotionState} of the motion profile.
+     * @param endState        the ending {@link MotionState} of the motion profile.
+     * @param maxAcceleration the maximum acceleration of the motion profile. (units/s^2)
+     * @param maxDeceleration the maximum deceleration of the motion profile. (units/s^2)
+     * @param maxJerk         the maximum jerk of the motion profile. (units/s^3)
+     * @param maxVelocity     the maximum velocity of the motion profile. (units/s)
+     * @param overrideMethod  the method to override the motion profile if the setpoint is impossible to reach at the
+     *                        system's current state.
+     */
+    public SCurveMotionProfile(MotionState startState, MotionState endState, double maxAcceleration,
+                               double maxDeceleration,
+                               double maxJerk, double maxVelocity, OverrideMethod overrideMethod) {
         this.maxAcceleration = maxAcceleration;
         this.maxDeceleration = maxDeceleration;
         this.maxJerk = maxJerk;
         this.maxVelocity = maxVelocity;
         this.overrideMethod = overrideMethod;
-        calculateMotionProfile(startPoint, setpoint, maxVelocity);
+
+        calculateMotionProfile(startState, endState, maxVelocity);
     }
 
-    public void calculateMotionProfile(MotionState startPoint, MotionState setpoint, double currentMaxVelocity) {
+    public void calculateMotionProfile(MotionState startState, MotionState endState, double currentMaxVelocity) {
         TrapezoidTimeSegment accelerationTrapezoid =
-                calculateTrapezoid(currentMaxVelocity - startPoint.getVelocity(), startPoint.getAcceleration(), 0,
+                calculateTrapezoid(currentMaxVelocity - startState.getVelocity(), startState.getAcceleration(), 0,
                         maxAcceleration);
         TrapezoidTimeSegment decelerationTrapezoid =
-                calculateTrapezoid(currentMaxVelocity - setpoint.getVelocity(), 0, setpoint.getAcceleration(),
+                calculateTrapezoid(currentMaxVelocity - endState.getVelocity(), 0, endState.getAcceleration(),
                         maxDeceleration);
         double tAAccel = accelerationTrapezoid.getTAccel();
         double tACruise = accelerationTrapezoid.getTCruise();
         double tADecel = accelerationTrapezoid.getTDecel();
+
+        System.out.println(startState.getVelocity() + " " + maxVelocity);
+
+        if (startState.getVelocity() >= maxVelocity) {
+            tAAccel = 0;
+            tACruise = 0;
+            tADecel = 0;
+        }
+
         double tDAccel = decelerationTrapezoid.getTAccel();
         double tDCruise = decelerationTrapezoid.getTCruise();
         double tDDecel = decelerationTrapezoid.getTDecel();
-        MotionSegment aaSegment = new MotionSegment(new Line(maxJerk, startPoint.getAcceleration()), 0, tAAccel,
-                startPoint.getVelocity(), startPoint.getPosition());
+
+        if (endState.getVelocity() >= maxVelocity) {
+            tDAccel = 0;
+            tDCruise = 0;
+            tDDecel = 0;
+        }
+
+        MotionSegment aaSegment = new MotionSegment(new Line(maxJerk, startState.getAcceleration()), 0, tAAccel,
+                startState.getVelocity(), startState.getPosition());
         MotionSegment acSegment =
                 new MotionSegment(new Line(0, accelerationTrapezoid.getMaxAcceleration()), aaSegment.getEndTime(),
                         tACruise,
@@ -63,7 +103,7 @@ public class SCurveProfileV2 {
                         dcSegment.getVelocity(), dcSegment.getPosition());
         double totalPos = ddSegment.getPosition();
 
-        double tCruise = (setpoint.getPosition() - totalPos) / currentMaxVelocity;
+        double tCruise = (endState.getPosition() - totalPos) / currentMaxVelocity;
         MotionSegment cruiseSegment;
         if (tCruise > 0) {
             cruiseSegment = new MotionSegment(new Line(0, 0), adSegment.getEndTime(), tCruise,
@@ -82,12 +122,12 @@ public class SCurveProfileV2 {
             cruiseSegment = new MotionSegment(new Line(0, 0), 0, 0, 0, 0);
         }
 
-        if (totalPos > setpoint.getPosition()) {
-            calculateMotionProfile(startPoint,setpoint,currentMaxVelocity-1);
-        }
-        else{
+        if (totalPos > endState.getPosition()) {
+            calculateMotionProfile(startState, endState, currentMaxVelocity - 1);
+        } else {
             System.out.println(
-                    "Times: " + tAAccel + " " + tACruise + " " + tADecel + " " + tCruise + " " + tDAccel + " " + tDCruise +
+                    "Times: " + tAAccel + " " + tACruise + " " + tADecel + " " + tCruise + " " + tDAccel + " " +
+                            tDCruise +
                             " " + tDDecel);
             System.out.println("Positions: " + aaSegment.getPosition() + " " + acSegment.getPosition() + " " +
                     adSegment.getPosition() + " " + cruiseSegment.getPosition() + " " + daSegment.getPosition() + " " +
@@ -130,7 +170,7 @@ public class SCurveProfileV2 {
     }
 
     private MotionSegment identifySegment(double t, MotionSegment[] segments) {
-        MotionSegment segment = new MotionSegment(new Line(0, 0), 0, 0, 0,0);
+        MotionSegment segment = new MotionSegment(new Line(0, 0), 0, 0, 0, 0);
         for (int i = 0; i < segments.length; i++) {
             MotionSegment s = segments[i];
             double minTime = s.getStartTime();

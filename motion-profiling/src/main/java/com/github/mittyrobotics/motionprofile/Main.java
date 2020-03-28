@@ -28,12 +28,9 @@ import com.github.mittyrobotics.datatypes.motion.MotionState;
 import com.github.mittyrobotics.visualization.MotorGraph;
 
 import javax.swing.*;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
-import java.awt.*;
 
 public class Main extends JFrame{
-    private MotionState currentState = new MotionState(80, 0, 0);
+    private MotionState currentState = new MotionState(0, 0, 0);
     private MotionState desiredState = new MotionState(100, 0, 0);
     private MotorGraph graph;
     public static void main(String[] args) {
@@ -47,7 +44,7 @@ public class Main extends JFrame{
     }
 
     public void calcProfile(){
-        SCurveProfileV2 motionProfile = new SCurveProfileV2(currentState, desiredState, 20, 40, 50, 20,
+        SCurveMotionProfile motionProfile = new SCurveMotionProfile(currentState, desiredState, 20, 20, 50, 20,
                 OverrideMethod.OVERSHOOT);
         double t = 0;
         double deltaT = .01;
