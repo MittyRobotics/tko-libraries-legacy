@@ -26,7 +26,7 @@ import edu.wpi.first.toolchain.NativePlatforms
 
 plugins {
     id("java")
-    id("edu.wpi.first.GradleRIO") version "2020.1.2"
+    id("edu.wpi.first.GradleRIO") version "2020.3.2"
     id("maven")
     `maven-publish`
 }
@@ -59,6 +59,8 @@ allprojects {
         wpi.deps.vendor.java().forEach { compile(it) }
         wpi.deps.vendor.jni(NativePlatforms.roborio).forEach { nativeZip(it) }
         wpi.deps.vendor.jni(NativePlatforms.desktop).forEach { nativeDesktopZip(it) }
+
+        compile(group = "edu.wpi.first.wpilibNewCommands", name = "wpilibNewCommands-java", version = "2020.3.2")
 
         // https://mvnrepository.com/artifact/org.jfree/jfreechart
         compile(group = "org.jfree", name = "jfreechart", version = "1.5.0")
