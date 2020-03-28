@@ -246,11 +246,11 @@ public class SCurveMotionProfile {
      * @param velocitySetpoint  the total change in velocity that must be covered by the acceleration trapezoid.
      * @param startAcceleration the starting acceleration of the acceleration trapezoid.
      * @param endAcceleration   the ending acceleration of the acceleration trapezoid.
-     * @param localMaxAccel     the max velocity for the acceleration trapezoid to reach.
+     * @param macAccel          the max acceleration for the acceleration trapezoid to reach.
      * @return the {@link TrapezoidTimeSegment} from the input parameters.
      */
     private TrapezoidTimeSegment calculateTrapezoid(double velocitySetpoint, double startAcceleration,
-                                                    double endAcceleration, double localMaxAccel) {
+                                                    double endAcceleration, double macAccel) {
         double zeroToStartAccelerationTime = startAcceleration / maxJerk;
         double zeroToStartAccelerationDistance =
                 zeroToStartAccelerationTime * zeroToStartAccelerationTime * maxJerk / 2;
@@ -268,14 +268,14 @@ public class SCurveMotionProfile {
         triangleDDecel = totalDistanceWithEnds * accelDecelRatio;
         triangleDAccel = totalDistanceWithEnds - triangleDDecel;
 
-        double theoreticalMaxAcceleration = Math.sqrt(2 * localMaxAccel * triangleDAccel);
+        double theoreticalMaxAcceleration = Math.sqrt(2 * macAccel * triangleDAccel);
 
         double tAccel, tDecel, dAccel, dDecel, dCruise, tCruise;
 
         if (startAcceleration >= theoreticalMaxAcceleration) {
             theoreticalMaxAcceleration = startAcceleration;
 
-            theoreticalMaxAcceleration = Math.min(theoreticalMaxAcceleration, localMaxAccel);
+            theoreticalMaxAcceleration = Math.min(theoreticalMaxAcceleration, macAccel);
 
             tAccel = 0;
             dAccel = 0;
@@ -292,7 +292,7 @@ public class SCurveMotionProfile {
             theoreticalMaxAcceleration = endAcceleration;
 
             //Make sure theoretical max acceleration never goes above the actual max acceleration
-            theoreticalMaxAcceleration = Math.min(theoreticalMaxAcceleration, localMaxAccel);
+            theoreticalMaxAcceleration = Math.min(theoreticalMaxAcceleration, macAccel);
 
             //Since the ending acceleration is greater than or equal to the max acceleration, it will never decelerate.
             tDecel = 0;
@@ -308,7 +308,7 @@ public class SCurveMotionProfile {
         //If the start and end acceleration are below the theoretical max acceleration (a regular trapezoidal profile)
         else {
             //Make sure theoretical max acceleration never goes above the actual max acceleration
-            theoreticalMaxAcceleration = Math.min(theoreticalMaxAcceleration, localMaxAccel);
+            theoreticalMaxAcceleration = Math.min(theoreticalMaxAcceleration, macAccel);
 
             //Calculate the acceleration, deceleration, and cruise as normal
             tAccel = theoreticalMaxAcceleration / maxJerk;
