@@ -8,9 +8,12 @@ public class TKOSparkMax extends CANSparkMax {
     private CANEncoder encoder, altEncoder;
     private CANAnalog analog;
     private CANAnalog.AnalogMode analogMode;
+    private double ticksPerInch;
 
     public TKOSparkMax(int deviceID, MotorType type) {
         super(deviceID, type);
+        super.restoreFactoryDefaults();
+        setTicksPerInch(1);
     }
 
     @Override
@@ -50,6 +53,10 @@ public class TKOSparkMax extends CANSparkMax {
         return analog;
     }
 
+    public void setEncoderType(EncoderType encoderType){
+        encoder = super.getEncoder(encoderType, 0);
+    }
+
     public void setAnalogMode(CANAnalog.AnalogMode analogMode){
         this.analogMode = analogMode;
     }
@@ -77,12 +84,24 @@ public class TKOSparkMax extends CANSparkMax {
         setPID(p, i, d, 0);
     }
 
-    public double getPosition(){
+    public double getPositionRaw(){
         return getEncoder().getPosition();
     }
 
-    public double getVelocity(){
+    public double getVelocityRaw(){
         return getEncoder().getVelocity();
     }
-    
+
+    public double getPosition(){
+        return getPositionRaw() / ticksPerInch;
+    }
+
+    public double getVelocity(){ // inches per second
+        return getVelocityRaw() / (60 * ticksPerInch);
+    }
+
+    public void setTicksPerInch(double ticksPerInch){
+        this.ticksPerInch = ticksPerInch;
+    }
+
 }
