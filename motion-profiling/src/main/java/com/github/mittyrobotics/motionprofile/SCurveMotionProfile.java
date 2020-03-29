@@ -2,7 +2,6 @@ package com.github.mittyrobotics.motionprofile;
 
 import com.github.mittyrobotics.datatypes.geometry.Line;
 import com.github.mittyrobotics.datatypes.motion.MotionState;
-import edu.wpi.first.wpilibj.Talon;
 
 public class SCurveMotionProfile {
     private double maxAcceleration;
@@ -17,6 +16,9 @@ public class SCurveMotionProfile {
     private MotionSegment daSegment;
     private MotionSegment dcSegment;
     private MotionSegment ddSegment;
+    private boolean reversed = false;
+    private MotionState startState;
+    private MotionState endState;
 
     /**
      * Creates a new {@link SCurveMotionProfile}. The s-curve motion profile is a more complex form of the
@@ -70,6 +72,23 @@ public class SCurveMotionProfile {
      *                           decelerate.
      */
     public void generateMotionProfile(MotionState startState, MotionState endState, double currentMaxVelocity) {
+        this.startState =
+                new MotionState(startState.getPosition(), startState.getVelocity(), startState.getAcceleration());
+        this.endState = new MotionState(endState.getPosition(), endState.getVelocity(), endState.getAcceleration());
+
+        reversed = startState.getPosition() > endState.getPosition();
+
+        if (reversed) {
+            startState.setPosition(this.endState.getPosition());
+            endState.setPosition(this.startState.getPosition());
+            startState.setVelocity(-startState.getVelocity());
+            endState.setVelocity(-endState.getVelocity());
+            startState.setAcceleration(-startState.getAcceleration());
+        }
+        else{
+            endState.setAcceleration(-endState.getAcceleration());
+        }
+
         TrapezoidTimeSegment accelerationTrapezoid =
                 calculateTrapezoid(currentMaxVelocity - startState.getVelocity(), startState.getAcceleration(), 0,
                         maxAcceleration);
@@ -79,8 +98,6 @@ public class SCurveMotionProfile {
         double tAAccel = accelerationTrapezoid.getTAccel();
         double tACruise = accelerationTrapezoid.getTCruise();
         double tADecel = accelerationTrapezoid.getTDecel();
-
-        System.out.println(startState.getVelocity() + " " + maxVelocity);
 
         if (startState.getVelocity() >= maxVelocity) {
             tAAccel = 0;
@@ -140,7 +157,7 @@ public class SCurveMotionProfile {
         }
 
         if (totalPos > endState.getPosition()) {
-            generateMotionProfile(startState, endState, currentMaxVelocity - 1);
+            generateMotionProfile(this.startState, this.endState, currentMaxVelocity - 1);
         } else {
             System.out.println(
                     "Times: " + tAAccel + " " + tACruise + " " + tADecel + " " + tCruise + " " + tDAccel + " " +
@@ -191,6 +208,14 @@ public class SCurveMotionProfile {
      */
     private double getPositionFromSegments(double t, MotionSegment[] segments) {
         MotionSegment segment = identifySegment(t, segments);
+        if (t >= ddSegment.getEndTime()) {
+            return endState.getPosition();
+        }
+        if (reversed) {
+            System.out.println(startState.getPosition());
+            return startState.getPosition() - segment.getPositionFromTime(t - segment.getStartTime()) +
+                    endState.getPosition();
+        }
         return segment.getPositionFromTime(t - segment.getStartTime());
     }
 
@@ -203,6 +228,9 @@ public class SCurveMotionProfile {
      */
     private double getVelocityFromSegments(double t, MotionSegment[] segments) {
         MotionSegment segment = identifySegment(t, segments);
+        if (reversed) {
+            return -segment.getVelocityFromTime(t - segment.getStartTime());
+        }
         return segment.getVelocityFromTime(t - segment.getStartTime());
     }
 
@@ -215,6 +243,9 @@ public class SCurveMotionProfile {
      */
     private double getAccelerationFromSegments(double t, MotionSegment[] segments) {
         MotionSegment segment = identifySegment(t, segments);
+        if (reversed) {
+            return -segment.getAccelerationFromTime(t - segment.getStartTime());
+        }
         return segment.getAccelerationFromTime(t - segment.getStartTime());
     }
 
