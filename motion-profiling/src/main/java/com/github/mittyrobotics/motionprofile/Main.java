@@ -29,21 +29,22 @@ import com.github.mittyrobotics.visualization.MotorGraph;
 
 import javax.swing.*;
 
-public class Main extends JFrame{
+public class Main extends JFrame {
     private MotionState currentState = new MotionState(0, 0, 0);
     private MotionState desiredState = new MotionState(100, 0, 0);
     private MotorGraph graph;
+
     public static void main(String[] args) {
         new Main().start();
     }
 
-    public void start(){
+    public void start() {
         this.graph = new MotorGraph("S-curve Motion Profile", "position (m), velocity (m/s), acceleration " +
                 "(m/s^2)", "time (s)");
         calcProfile();
     }
 
-    public void calcProfile(){
+    public void calcProfile() {
         SCurveMotionProfile motionProfile = new SCurveMotionProfile(currentState, desiredState, 20, 20, 50, 20,
                 OverrideMethod.OVERSHOOT);
         double t = 0;

@@ -53,6 +53,20 @@ public class XYSeriesWithRenderer extends XYSeries {
         this.shape = shape;
     }
 
+    public static XYSeriesWithRenderer withLines(Comparable key) {
+        XYSeriesWithRenderer series = new XYSeriesWithRenderer(key);
+        series.setShowLines(true);
+        series.setShowShapes(false);
+        return series;
+    }
+
+    public static XYSeriesWithRenderer withShapes(Comparable key) {
+        XYSeriesWithRenderer series = new XYSeriesWithRenderer(key);
+        series.setShowLines(false);
+        series.setShowShapes(true);
+        return series;
+    }
+
     public void setRenderer(Color color, boolean showLines, boolean showShapes, Shape shape) {
         this.color = color;
         this.showLines = showLines;

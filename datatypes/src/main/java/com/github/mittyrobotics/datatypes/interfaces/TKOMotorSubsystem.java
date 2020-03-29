@@ -8,27 +8,27 @@ public abstract class TKOMotorSubsystem extends TKOSubsystem {
 
     abstract void overrideSetMotor(double percent);
 
-    public void setMotor(double percent){
+    public void setMotor(double percent) {
         overrideSetMotor(percent);
     }
 
-    public void stopMotor(){
+    public void stopMotor() {
         overrideSetMotor(0);
     }
 
-    public void resetEncoder(){
+    public void resetEncoder() {
 
     }
 
-    public double getPosition(){
+    public double getPosition() {
         return 0;
     }
 
-    public double getVelocity(){
+    public double getVelocity() {
         return 0;
     }
 
-    public boolean getSwitch(){
+    public boolean getSwitch() {
         return false;
     }
 

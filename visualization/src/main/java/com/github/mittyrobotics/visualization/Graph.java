@@ -44,20 +44,6 @@ import java.util.ArrayList;
 
 public class Graph extends JFrame {
 
-    public Graph() {
-        this("Graph", "y", "x");
-    }
-
-    public Graph(String titleName, String yAxisName, String xAxisName) {
-        this.titleName = titleName;
-        this.yAxisName = yAxisName;
-        this.xAxisName = xAxisName;
-
-        initUI();
-        setGraphTheme(new DefaultDarkTheme());
-        setVisible(true);
-    }
-
     private String titleName;
     private String yAxisName;
     private String xAxisName;
@@ -67,6 +53,18 @@ public class Graph extends JFrame {
     private XYSeriesCollection defaultDataset = new XYSeriesCollection();
     private XYLineAndShapeRenderer defaultRenderer = new XYLineAndShapeRenderer();
     private ArrayList<XYSeriesWithRenderer> seriesWithRenderers = new ArrayList<>();
+    public Graph() {
+        this("Graph", "y", "x");
+    }
+    public Graph(String titleName, String yAxisName, String xAxisName) {
+        this.titleName = titleName;
+        this.yAxisName = yAxisName;
+        this.xAxisName = xAxisName;
+
+        initUI();
+        setGraphTheme(new DefaultDarkTheme());
+        setVisible(true);
+    }
 
     private void initUI() {
         JFreeChart chart = createChart();

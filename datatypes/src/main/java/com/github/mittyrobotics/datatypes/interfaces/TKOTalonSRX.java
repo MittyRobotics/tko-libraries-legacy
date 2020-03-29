@@ -11,34 +11,34 @@ public class TKOTalonSRX extends WPI_TalonSRX {
         configFactoryDefault();
     }
 
-    public void configRoborioForwardLimitSwitch(int id, boolean inversion){
+    public void configRoborioForwardLimitSwitch(int id, boolean inversion) {
         forwardLimitSwitch = new TKODigitalInput(id);
         forwardLimitSwitch.setInverted(inversion);
     }
 
-    public void configRoborioReverseLimitSwitch(int id, boolean inversion){
+    public void configRoborioReverseLimitSwitch(int id, boolean inversion) {
         reverseLimitSwitch = new TKODigitalInput(id);
         reverseLimitSwitch.setInverted(inversion);
     }
 
-    public void configRoborioForwardLimitSwitch(int id){
+    public void configRoborioForwardLimitSwitch(int id) {
         configRoborioForwardLimitSwitch(id, false);
     }
 
-    public void configRoborioReverseLimitSwitch(int id){
+    public void configRoborioReverseLimitSwitch(int id) {
         configRoborioReverseLimitSwitch(id, false);
     }
 
-    public boolean getRoborioForwardLimitSwitch(){
-        if(forwardLimitSwitch == null){
+    public boolean getRoborioForwardLimitSwitch() {
+        if (forwardLimitSwitch == null) {
             return false;
         } else {
             return forwardLimitSwitch.get();
         }
     }
 
-    public boolean getRoborioReverseLimitSwitch(){
-        if(reverseLimitSwitch == null){
+    public boolean getRoborioReverseLimitSwitch() {
+        if (reverseLimitSwitch == null) {
             return false;
         } else {
             return reverseLimitSwitch.get();

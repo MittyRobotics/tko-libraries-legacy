@@ -24,30 +24,43 @@
 
 package com.github.mittyrobotics.path.generation;
 
+import com.github.mittyrobotics.datatypes.path.Parametric;
 import com.github.mittyrobotics.datatypes.positioning.Transform;
+import com.github.mittyrobotics.datatypes.positioning.TransformWithVelocity;
 import com.github.mittyrobotics.datatypes.positioning.TransformWithVelocityAndCurvature;
+import com.github.mittyrobotics.path.generation.splines.CubicHermiteSpline;
 import com.github.mittyrobotics.path.generation.splines.QuinticHermiteSpline;
-import com.github.mittyrobotics.visualization.Graph;
-import com.github.mittyrobotics.visualization.GraphUtil;
-import com.github.mittyrobotics.visualization.XYSeriesWithRenderer;
-import org.jfree.data.xy.XYSeries;
 
-import java.awt.*;
+public class PathGenerator {
+    private static PathGenerator instance = new PathGenerator();
 
+    public static PathGenerator getInstance() {
+        return instance;
+    }
 
-public class Main {
-    public static void main(String[] args) {
-        Graph graph = new Graph();
+    public Parametric[] generateCubicHermiteSplinePath(TransformWithVelocity[] waypoints) {
+        Parametric[] parametrics = new Parametric[waypoints.length - 1];
+        for (int i = 0; i < parametrics.length; i++) {
+            parametrics[i] = new CubicHermiteSpline(waypoints[i], waypoints[i + 1]);
+        }
+        return parametrics;
+    }
 
-        graph.scaleGraphToScale(.1, 40, 25);
+    public Parametric[] generateQuinticHermiteSplinePath(TransformWithVelocityAndCurvature[] waypoints) {
+        Parametric[] parametrics = new Parametric[waypoints.length - 1];
 
-        graph.getChart().removeLegend();
+        for (int i = 0; i < parametrics.length; i++) {
+            parametrics[i] = new QuinticHermiteSpline(waypoints[i], waypoints[i + 1]);
+        }
+        return parametrics;
+    }
 
-        TransformWithVelocityAndCurvature p1 = new TransformWithVelocityAndCurvature(new Transform(0, 0, 0), 0, 0);
-        TransformWithVelocityAndCurvature p2 = new TransformWithVelocityAndCurvature(new Transform(80, 50, 0), 0, 0);
+    public Parametric[] generateQuinticHermiteSplinePath(Transform[] waypoints) {
+        Parametric[] parametrics = new Parametric[waypoints.length - 1];
 
-        QuinticHermiteSpline spline = new QuinticHermiteSpline(p1, p2);
-        graph.addSeries(GraphUtil.populateSeries(XYSeriesWithRenderer.withLines("Series"), GraphUtil.parametric(spline,
-                0.01, 2)));
+        for (int i = 0; i < parametrics.length; i++) {
+            parametrics[i] = new QuinticHermiteSpline(waypoints[i], waypoints[i + 1]);
+        }
+        return parametrics;
     }
 }

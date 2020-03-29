@@ -6,7 +6,7 @@ public class TrapezoidTimeSegment {
     private double tDecel;
     private double maxAcceleration;
 
-    public TrapezoidTimeSegment(double tAccel, double tCruise, double tDecel, double maxAcceleration){
+    public TrapezoidTimeSegment(double tAccel, double tCruise, double tDecel, double maxAcceleration) {
         this.tAccel = tAccel;
         this.tCruise = tCruise;
         this.tDecel = tDecel;
@@ -37,8 +37,8 @@ public class TrapezoidTimeSegment {
         this.tDecel = tDecel;
     }
 
-    public double getTTotal(){
-        return tAccel+tCruise+tDecel;
+    public double getTTotal() {
+        return tAccel + tCruise + tDecel;
     }
 
     public double getMaxAcceleration() {

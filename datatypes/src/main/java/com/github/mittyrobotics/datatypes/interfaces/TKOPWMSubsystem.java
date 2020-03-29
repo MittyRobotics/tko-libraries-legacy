@@ -7,5 +7,5 @@ public abstract class TKOPWMSubsystem extends TKOSubsystem {
     }
 
     abstract void setPosition(double position);
-    
+
 }

@@ -84,8 +84,7 @@ public class SCurveMotionProfile {
             startState.setVelocity(-startState.getVelocity());
             endState.setVelocity(-endState.getVelocity());
             startState.setAcceleration(-startState.getAcceleration());
-        }
-        else{
+        } else {
             endState.setAcceleration(-endState.getAcceleration());
         }
 

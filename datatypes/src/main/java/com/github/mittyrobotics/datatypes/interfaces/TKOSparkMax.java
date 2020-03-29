@@ -19,7 +19,7 @@ public class TKOSparkMax extends CANSparkMax {
 
     @Override
     public CANEncoder getEncoder() {
-        if(encoder == null){
+        if (encoder == null) {
             encoder = super.getEncoder();
         }
         return encoder;
@@ -27,7 +27,7 @@ public class TKOSparkMax extends CANSparkMax {
 
     @Override
     public CANEncoder getAlternateEncoder() {
-        if(altEncoder == null){
+        if (altEncoder == null) {
             altEncoder = super.getAlternateEncoder();
         }
         return altEncoder;
@@ -35,7 +35,7 @@ public class TKOSparkMax extends CANSparkMax {
 
     @Override
     public CANPIDController getPIDController() {
-        if(controller == null){
+        if (controller == null) {
             controller = super.getPIDController();
         }
         return controller;
@@ -47,92 +47,92 @@ public class TKOSparkMax extends CANSparkMax {
         return getAnalog();
     }
 
-    public CANAnalog getAnalog(){
-        if(analog == null){
+    public CANAnalog getAnalog() {
+        if (analog == null) {
             analog = super.getAnalog(analogMode);
         }
         return analog;
     }
 
-    public void setEncoderType(EncoderType encoderType){
+    public void setEncoderType(EncoderType encoderType) {
         encoder = super.getEncoder(encoderType, 0);
     }
 
-    public void setAnalogMode(CANAnalog.AnalogMode analogMode){
+    public void setAnalogMode(CANAnalog.AnalogMode analogMode) {
         this.analogMode = analogMode;
     }
 
-    public void set(ControlType controlType, double value){
+    public void set(ControlType controlType, double value) {
         getPIDController().setReference(value, controlType);
     }
 
-    public void setPIDF(double p, double i, double d, double ff, int slotIdx){
+    public void setPIDF(double p, double i, double d, double ff, int slotIdx) {
         getPIDController().setP(p, slotIdx);
         getPIDController().setI(i, slotIdx);
         getPIDController().setD(d, slotIdx);
         getPIDController().setFF(ff, slotIdx);
     }
 
-    public void setPIDF(double p, double i, double d, double ff){
+    public void setPIDF(double p, double i, double d, double ff) {
         setPIDF(p, i, d, ff, 0);
     }
 
-    public void setPID(double p, double i, double d, int slotIdx){
+    public void setPID(double p, double i, double d, int slotIdx) {
         setPIDF(p, i, d, 0, slotIdx);
     }
 
-    public void setPID(double p, double i, double d){
+    public void setPID(double p, double i, double d) {
         setPID(p, i, d, 0);
     }
 
-    public double getPositionRaw(){
+    public double getPositionRaw() {
         return getEncoder().getPosition();
     }
 
-    public double getVelocityRaw(){
+    public double getVelocityRaw() {
         return getEncoder().getVelocity();
     }
 
-    public double getPosition(){
+    public double getPosition() {
         return getPositionRaw() / ticksPerInch;
     }
 
-    public double getVelocity(){ // inches per second
+    public double getVelocity() { // inches per second
         return getVelocityRaw() / (60 * ticksPerInch);
     }
 
-    public void setTicksPerInch(double ticksPerInch){
+    public void setTicksPerInch(double ticksPerInch) {
         this.ticksPerInch = ticksPerInch;
     }
 
-    public void configRoborioForwardLimitSwitch(int id, boolean inversion){
+    public void configRoborioForwardLimitSwitch(int id, boolean inversion) {
         forwardLimitSwitch = new TKODigitalInput(id);
         forwardLimitSwitch.setInverted(inversion);
     }
 
-    public void configRoborioReverseLimitSwitch(int id, boolean inversion){
+    public void configRoborioReverseLimitSwitch(int id, boolean inversion) {
         reverseLimitSwitch = new TKODigitalInput(id);
         reverseLimitSwitch.setInverted(inversion);
     }
 
-    public void configRoborioForwardLimitSwitch(int id){
+    public void configRoborioForwardLimitSwitch(int id) {
         configRoborioForwardLimitSwitch(id, false);
     }
 
-    public void configRoborioReverseLimitSwitch(int id){
+    public void configRoborioReverseLimitSwitch(int id) {
         configRoborioReverseLimitSwitch(id, false);
     }
 
-    public boolean getRoborioForwardLimitSwitch(){
-        if(forwardLimitSwitch == null){
+    public boolean getRoborioForwardLimitSwitch() {
+        if (forwardLimitSwitch == null) {
             return false;
         } else {
             return forwardLimitSwitch.get();
         }
     }
 
-    public boolean getRoborioReverseLimitSwitch(){
-        if(reverseLimitSwitch == null){
+    public boolean getRoborioReverseLimitSwitch() {
+        if (reverseLimitSwitch == null) {
             return false;
         } else {
             return reverseLimitSwitch.get();

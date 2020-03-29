@@ -9,23 +9,23 @@ public abstract class TKOSolenoidSubsystem extends TKOSubsystem {
         this.isExtended = startsExtended;
     }
 
-    public TKOSolenoidSubsystem(String name){
+    public TKOSolenoidSubsystem(String name) {
         this(name, false);
     }
 
     abstract void setSolenoid(boolean extend);
 
-    public void extendSolenoid(){
+    public void extendSolenoid() {
         setSolenoid(true);
         isExtended = true;
     }
 
-    public void retractSolenoid(){
+    public void retractSolenoid() {
         setSolenoid(false);
         isExtended = false;
     }
 
-    public boolean isExtended(){
+    public boolean isExtended() {
         return isExtended;
     }
 }

@@ -10,7 +10,7 @@ public class TKODigitalInput extends DigitalInput {
         super(channel);
     }
 
-    public void setInverted(boolean inversion){
+    public void setInverted(boolean inversion) {
         isInverted = inversion;
     }
 

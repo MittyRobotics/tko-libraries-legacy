@@ -84,8 +84,8 @@ public class MotionSegment {
         this.startTime = startTime;
     }
 
-    public double getEndTime(){
-        return startTime+time;
+    public double getEndTime() {
+        return startTime + time;
     }
 
     public double getX0() {

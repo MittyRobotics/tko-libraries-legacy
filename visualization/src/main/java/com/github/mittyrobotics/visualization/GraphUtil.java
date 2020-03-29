@@ -27,6 +27,7 @@ package com.github.mittyrobotics.visualization;
 import com.github.mittyrobotics.datatypes.geometry.ArcSegment;
 import com.github.mittyrobotics.datatypes.geometry.Circle;
 import com.github.mittyrobotics.datatypes.geometry.Line;
+import com.github.mittyrobotics.datatypes.path.Parametric;
 import com.github.mittyrobotics.datatypes.positioning.Position;
 import com.github.mittyrobotics.datatypes.positioning.Rotation;
 import com.github.mittyrobotics.datatypes.positioning.Transform;
@@ -106,4 +107,50 @@ public class GraphUtil {
 
         return positions.toArray(new Position[0]);
     }
+
+    public static Position[] arrow(Transform transform, double length, double arrowWidth) {
+        ArrayList<Position> positions = new ArrayList<>();
+
+        //   ^
+        //  /1\
+        // 2 | 3
+        //   |
+        //   |
+        //   |
+        //   0
+
+        double halfWidth = arrowWidth / 2;
+        Transform p0 = new Transform(0, 0).transformBy(transform)
+                .rotateAround(transform.getPosition(), transform.getRotation());
+        Transform p1 = new Transform(length, 0).transformBy(transform)
+                .rotateAround(transform.getPosition(), transform.getRotation());
+        Transform p2 = new Transform(length - halfWidth, halfWidth).transformBy(transform)
+                .rotateAround(transform.getPosition(), transform.getRotation());
+        Transform p3 = new Transform(length - halfWidth, -halfWidth).transformBy(transform)
+                .rotateAround(transform.getPosition(), transform.getRotation());
+
+        positions.add(p0.getPosition());
+        positions.add(p1.getPosition());
+        positions.add(p2.getPosition());
+        positions.add(p1.getPosition());
+        positions.add(p3.getPosition());
+        positions.add(p1.getPosition());
+
+        return positions.toArray(new Position[0]);
+    }
+
+    public static Position[] parametric(Parametric parametric, double stepInterval,
+                                        double arrowWidth) {
+        ArrayList<Position> positions = new ArrayList<>();
+
+        for (double t = 0; t < 1; t += stepInterval) {
+            Position[] arrow = arrow(parametric.getTransform(t), 0, arrowWidth);
+            for (Position p : arrow) {
+                positions.add(p);
+            }
+        }
+
+        return positions.toArray(new Position[0]);
+    }
+
 }
