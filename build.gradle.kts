@@ -48,6 +48,8 @@ allprojects {
         mavenLocal()
         jcenter()
         maven(url = "https://jitpack.io")
+        maven(url = "http://www.revrobotics.com/content/sw/max/sdk/maven/")
+        maven(url = "http://devsite.ctr-electronics.com/maven/release/")
     }
 
     dependencies {
@@ -61,8 +63,7 @@ allprojects {
         wpi.deps.vendor.jni(NativePlatforms.desktop).forEach { nativeDesktopZip(it) }
 
         compile(group = "edu.wpi.first.wpilibNewCommands", name = "wpilibNewCommands-java", version = "2020.3.2")
-        compile(group = "com.revrobotics.frc", name = "SparkMax-java", version = "1.5.2")
-        // https://mvnrepository.com/artifact/org.jfree/jfreechart
+        compile(group = "com.revrobotics.frc", name="SparkMax-java", version = "1.5.2")
         compile(group = "org.jfree", name = "jfreechart", version = "1.5.0")
         compile(group = "org.apache.commons", name = "commons-collections4", version = "4.1")
     }
