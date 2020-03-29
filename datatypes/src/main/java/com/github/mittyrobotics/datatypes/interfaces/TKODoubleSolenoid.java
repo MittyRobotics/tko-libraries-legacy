@@ -3,6 +3,9 @@ package com.github.mittyrobotics.datatypes.interfaces;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 
 public class TKODoubleSolenoid extends DoubleSolenoid implements InversionInterface {
+
+    private boolean isInverted;
+
     public TKODoubleSolenoid(int forwardChannel, int reverseChannel, int pcmID) {
         super(pcmID, forwardChannel, reverseChannel);
         setInverted(false);
@@ -22,5 +25,15 @@ public class TKODoubleSolenoid extends DoubleSolenoid implements InversionInterf
             }
         }
         super.set(value);
+    }
+
+    @Override
+    public void setInverted(boolean inversion) {
+        isInverted = inversion;
+    }
+
+    @Override
+    public boolean getInverted() {
+        return isInverted;
     }
 }
