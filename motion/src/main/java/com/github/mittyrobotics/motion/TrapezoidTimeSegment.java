@@ -1,4 +1,4 @@
-package com.github.mittyrobotics.motionprofile;
+package com.github.mittyrobotics.motion;
 
 public class TrapezoidTimeSegment {
     private double tAccel;

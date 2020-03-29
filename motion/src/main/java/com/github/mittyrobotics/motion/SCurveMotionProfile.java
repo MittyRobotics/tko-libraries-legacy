@@ -1,4 +1,4 @@
-package com.github.mittyrobotics.motionprofile;
+package com.github.mittyrobotics.motion;
 
 import com.github.mittyrobotics.datatypes.geometry.Line;
 import com.github.mittyrobotics.datatypes.motion.MotionState;
@@ -84,7 +84,8 @@ public class SCurveMotionProfile {
             startState.setVelocity(-startState.getVelocity());
             endState.setVelocity(-endState.getVelocity());
             startState.setAcceleration(-startState.getAcceleration());
-        } else {
+        }
+        else{
             endState.setAcceleration(-endState.getAcceleration());
         }
 

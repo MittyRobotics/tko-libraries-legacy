@@ -23,7 +23,7 @@
  */
 
 rootProject.name = "tko-libraries"
-include("motion-profiling")
+include("motion")
 include("path-following")
 include("path-generation")
 include("simulation")
