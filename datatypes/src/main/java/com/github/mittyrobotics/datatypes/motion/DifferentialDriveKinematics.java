@@ -30,35 +30,19 @@ package com.github.mittyrobotics.datatypes.motion;
  * http://www.cs.columbia.edu/~allen/F17/NOTES/icckinematics.pdf
  */
 public class DifferentialDriveKinematics {
-    private static DifferentialDriveKinematics instance = new DifferentialDriveKinematics();
-
-    private double trackWidth;
-
-    private DifferentialDriveKinematics() {
-
-    }
-
-    public static DifferentialDriveKinematics getInstance() {
-        return instance;
-    }
-
     /**
      * Calculates the {@link DrivetrainWheelVelocities} given a base robot velocity and a radius of the circle that it wants
      * to follow using differential drive kinematics.
      *
      * @param linearVelocity the base linear robot velocity in units per second (how fast the robot moves forward).
      * @param radius         the radius to follow in units.
+     * @param trackWidth     the width between left and right wheels of the drivetrain.
      * @return the calculated {@link DrivetrainWheelVelocities}.
      */
-    public DrivetrainWheelVelocities calculateFromRadius(double linearVelocity, double radius) {
+    public static DrivetrainWheelVelocities calculateFromRadius(double linearVelocity, double radius,
+                                                                double trackWidth) {
         //Calculate the angular velocity of the robot in radians per second
         double angularVelocity = linearVelocity / radius;
-
-        //If track width has not been set, send a warning and return velocities of 0 to avoid any damage
-        if (trackWidth == 0) {
-            System.out.println("WARNING: Track width in DifferentialDriveKinematics.java has not been set!");
-            return new DrivetrainWheelVelocities(0, 0);
-        }
 
         //Calculate left and right drivetrain velocities
         double left = angularVelocity * (radius - (trackWidth / 2));
@@ -75,9 +59,11 @@ public class DifferentialDriveKinematics {
      *
      * @param linearVelocity  the base linear robot velocity in units per second (how fast the robot moves forward).
      * @param angularVelocity the angular velocity of the robot in radians per second
+     * @param trackWidth      the width between left and right wheels of the drivetrain.
      * @return the calculated {@link DrivetrainWheelVelocities}.
      */
-    public DrivetrainWheelVelocities calculateFromAngularVelocity(double linearVelocity, double angularVelocity) {
+    public static DrivetrainWheelVelocities calculateFromAngularVelocity(double linearVelocity, double angularVelocity,
+                                                                  double trackWidth) {
         if (linearVelocity == 0 && angularVelocity == 0) {
             return new DrivetrainWheelVelocities(0, 0);
         }
@@ -85,43 +71,24 @@ public class DifferentialDriveKinematics {
         //Calculate the radius given linear velocity and angular velocity
         double radius = linearVelocity / angularVelocity;
 
-        //If track width has not been set, send a warning and return velocities of 0 to avoid any damage
-        if (trackWidth == 0) {
-            System.out.println("WARNING: Track width in DifferentialDriveKinematics.java has not been set!");
-            return new DrivetrainWheelVelocities(0, 0);
-        }
-
         //Return the calculated drivetrain velocities
         return new DrivetrainWheelVelocities(angularVelocity * (radius - (trackWidth / 2)),
                 angularVelocity * (radius + (trackWidth / 2)));
     }
 
-    public double getRadiusFromWheelSpeeds(DrivetrainWheelVelocities wheelSpeeds) {
+    public static double getRadiusFromWheelSpeeds(DrivetrainWheelVelocities wheelSpeeds, double trackWidth) {
         double linearVelocity = wheelSpeeds.getAvgVelocity();
 
-        return linearVelocity / getAngularVelocityFromWheelSpeeds(wheelSpeeds);
+        return linearVelocity / getAngularVelocityFromWheelSpeeds(wheelSpeeds, trackWidth);
     }
 
-    public double getAngularVelocityFromWheelSpeeds(DrivetrainWheelVelocities wheelSpeeds) {
+    public static double getAngularVelocityFromWheelSpeeds(DrivetrainWheelVelocities wheelSpeeds, double trackWidth) {
         double rightVelocity = wheelSpeeds.getRightVelocity();
         double linearVelocity = wheelSpeeds.getAvgVelocity();
 
-        //If track width has not been set, send a warning and return velocities of 0 to avoid any damage
-        if (trackWidth == 0) {
-            System.out.println("WARNING: Track width in DifferentialDriveKinematics.java has not been set!");
-            return 2e16;
-        }
 
         double angularVelocity = (2 * (rightVelocity - linearVelocity)) / trackWidth;
 
         return angularVelocity;
-    }
-
-    public double getTrackWidth() {
-        return trackWidth;
-    }
-
-    public void setTrackWidth(double trackWidth) {
-        this.trackWidth = trackWidth;
     }
 }

@@ -67,6 +67,7 @@ allprojects {
         compile(group = "com.revrobotics.frc", name = "SparkMax-java", version = "1.5.2")
         compile(group = "org.jfree", name = "jfreechart", version = "1.5.0")
         compile(group = "org.apache.commons", name = "commons-collections4", version = "4.1")
+        compile(group = "org.ejml", name =  "ejml-all", version = "0.38")
     }
 }
 

@@ -45,8 +45,7 @@ public class Main extends JFrame {
     }
 
     public void calcProfile() {
-        SCurveMotionProfile motionProfile = new SCurveMotionProfile(currentState, desiredState, 20, 20, 50, 20,
-                OverrideMethod.OVERSHOOT);
+        SCurveMotionProfile motionProfile = new SCurveMotionProfile(currentState, desiredState, 20, 20, 50, 20, OverrideMethod.OVERSHOOT);
         double t = 0;
         double deltaT = .01;
         while (t < 10) {

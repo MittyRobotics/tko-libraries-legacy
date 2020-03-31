@@ -36,6 +36,7 @@ public class PulleyModel {
 
     private double resistance;
     private double Kv;
+
     private double Kt;
 
     private double acceleration;
@@ -89,5 +90,29 @@ public class PulleyModel {
 
     public double getPosition() {
         return position * Conversions.M_TO_IN;
+    }
+
+    public double getMass(){
+        return mass;
+    }
+
+    public double getGearRatio() {
+        return gearRatio;
+    }
+
+    public double getPulleyRadius() {
+        return pulleyRadius;
+    }
+
+    public double getResistance() {
+        return resistance;
+    }
+
+    public double getKv() {
+        return Kv;
+    }
+
+    public double getKt() {
+        return Kt;
     }
 }
