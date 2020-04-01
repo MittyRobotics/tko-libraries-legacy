@@ -30,11 +30,11 @@ public interface LimitSwitchInterface {
 
     void configRoborioReverseLimitSwitch(int id, boolean inversion);
 
-    default void configRoborioForwardLimitSwitch(int id){
+    default void configRoborioForwardLimitSwitch(int id) {
         configRoborioForwardLimitSwitch(id, false);
     }
 
-    default void configRoborioReverseLimitSwitch(int id){
+    default void configRoborioReverseLimitSwitch(int id) {
         configRoborioReverseLimitSwitch(id, false);
     }
 

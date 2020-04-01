@@ -40,12 +40,12 @@ public class TKODigitalInput extends DigitalInput implements InversionInterface 
     }
 
     @Override
-    public void setInverted(boolean inversion) {
-        isInverted = inversion;
+    public boolean getInverted() {
+        return isInverted;
     }
 
     @Override
-    public boolean getInverted() {
-        return isInverted;
+    public void setInverted(boolean inversion) {
+        isInverted = inversion;
     }
 }

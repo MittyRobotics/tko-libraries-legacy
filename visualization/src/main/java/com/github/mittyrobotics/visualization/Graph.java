@@ -53,9 +53,11 @@ public class Graph extends JFrame {
     private XYSeriesCollection defaultDataset = new XYSeriesCollection();
     private XYLineAndShapeRenderer defaultRenderer = new XYLineAndShapeRenderer();
     private ArrayList<XYSeriesWithRenderer> seriesWithRenderers = new ArrayList<>();
+
     public Graph() {
         this("Graph", "y", "x");
     }
+
     public Graph(String titleName, String yAxisName, String xAxisName) {
         this.titleName = titleName;
         this.yAxisName = yAxisName;

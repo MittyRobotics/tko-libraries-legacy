@@ -92,7 +92,7 @@ public class PulleyModel {
         return position * Conversions.M_TO_IN;
     }
 
-    public double getMass(){
+    public double getMass() {
         return mass;
     }
 

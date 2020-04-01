@@ -35,16 +35,16 @@ public class TKODoubleSolenoid extends DoubleSolenoid implements InversionInterf
         setInverted(false);
     }
 
-    public TKODoubleSolenoid(int forwardChannel, int reverseChannel){
+    public TKODoubleSolenoid(int forwardChannel, int reverseChannel) {
         this(0, forwardChannel, reverseChannel);
     }
 
     @Override
     public void set(Value value) {
-        if(getInverted()){
-            if(value == Value.kReverse){
+        if (getInverted()) {
+            if (value == Value.kReverse) {
                 value = Value.kForward;
-            } else if(value == Value.kForward){
+            } else if (value == Value.kForward) {
                 value = Value.kReverse;
             }
         }
@@ -52,12 +52,12 @@ public class TKODoubleSolenoid extends DoubleSolenoid implements InversionInterf
     }
 
     @Override
-    public void setInverted(boolean inversion) {
-        isInverted = inversion;
+    public boolean getInverted() {
+        return isInverted;
     }
 
     @Override
-    public boolean getInverted() {
-        return isInverted;
+    public void setInverted(boolean inversion) {
+        isInverted = inversion;
     }
 }

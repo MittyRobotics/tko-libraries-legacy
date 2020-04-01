@@ -30,9 +30,6 @@ import com.github.mittyrobotics.path.generation.splines.QuinticHermiteSpline;
 import com.github.mittyrobotics.visualization.Graph;
 import com.github.mittyrobotics.visualization.GraphUtil;
 import com.github.mittyrobotics.visualization.XYSeriesWithRenderer;
-import org.jfree.data.xy.XYSeries;
-
-import java.awt.*;
 
 
 public class Main {

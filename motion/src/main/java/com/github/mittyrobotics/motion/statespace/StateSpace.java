@@ -80,10 +80,11 @@ public class StateSpace {
         stateSpace.uMin = -12;
         stateSpace.uMax = 12;
 
-        SCurveMotionProfile motionProfile = new SCurveMotionProfile(new MotionState(0,0,0), new MotionState(5,0,0), 1,
-                1, 2,
-                1,
-                OverrideMethod.OVERSHOOT);
+        SCurveMotionProfile motionProfile =
+                new SCurveMotionProfile(new MotionState(0, 0, 0), new MotionState(5, 0, 0), 1,
+                        1, 2,
+                        1,
+                        OverrideMethod.OVERSHOOT);
         MotorGraph graph = new MotorGraph("State-Space Elevator Controller following S-curve Motion Profile",
                 "position (m), velocity (m/s), voltage (V)", "time (s)");
         for (double t = 0; t < 20; t += 0.00505) {
@@ -97,7 +98,7 @@ public class StateSpace {
             graph.addVelocity(stateSpace.x.get(1), t);
 //            graph.addSetpoint(setpoint, t);
 //            graph.addAcceleration(motionProfile.calculateState(t).getVelocity(), t);
-            stateSpace.x.set(0, stateSpace.x.get(0)- new Random().nextDouble()*0.0001);
+            stateSpace.x.set(0, stateSpace.x.get(0) - new Random().nextDouble() * 0.0001);
         }
     }
 

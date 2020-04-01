@@ -91,7 +91,8 @@ public class DrivetrainVelocities {
         //Get driving curvature from linear velocity and angular velocity
         double curvature = 1 / (linearVelocity / angularVelocity);
 
-        return new DrivetrainVelocities(linearVelocity, angularVelocity, leftVelocity, rightVelocity, curvature, trackWidth);
+        return new DrivetrainVelocities(linearVelocity, angularVelocity, leftVelocity, rightVelocity, curvature,
+                trackWidth);
     }
 
     public DrivetrainVelocities reverse() {

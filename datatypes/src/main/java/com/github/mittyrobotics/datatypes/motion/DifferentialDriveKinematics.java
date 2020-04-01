@@ -63,7 +63,7 @@ public class DifferentialDriveKinematics {
      * @return the calculated {@link DrivetrainWheelVelocities}.
      */
     public static DrivetrainWheelVelocities calculateFromAngularVelocity(double linearVelocity, double angularVelocity,
-                                                                  double trackWidth) {
+                                                                         double trackWidth) {
         if (linearVelocity == 0 && angularVelocity == 0) {
             return new DrivetrainWheelVelocities(0, 0);
         }
