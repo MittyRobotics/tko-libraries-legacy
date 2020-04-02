@@ -86,11 +86,11 @@ public class DrivetrainModel {
 
     public void updateModel(double leftVoltage, double rightVoltage, double deltaTime) {
         DrivetrainWheelSpeeds accelerations = calculateAccelerations(leftVoltage, rightVoltage);
-        this.leftAcceleration = accelerations.getLeftSpeed();
+        this.leftAcceleration = accelerations.getLeft();
         this.leftVelocity += leftAcceleration * deltaTime;
         this.leftPosition += leftVelocity * deltaTime;
 
-        this.rightAcceleration = accelerations.getRightSpeed();
+        this.rightAcceleration = accelerations.getRight();
         this.rightVelocity += rightAcceleration * deltaTime;
         this.rightPosition += rightVelocity * deltaTime;
     }

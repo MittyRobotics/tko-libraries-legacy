@@ -76,14 +76,14 @@ public class DifferentialDriveKinematics {
     }
 
     public static double getRadiusFromWheelSpeeds(DrivetrainWheelSpeeds wheelSpeeds, double trackWidth) {
-        double linearVelocity = wheelSpeeds.getAvgSpeed();
+        double linearVelocity = wheelSpeeds.getAvg();
 
         return linearVelocity / getAngularVelocityFromWheelSpeeds(wheelSpeeds, trackWidth);
     }
 
     public static double getAngularVelocityFromWheelSpeeds(DrivetrainWheelSpeeds wheelSpeeds, double trackWidth) {
-        double rightVelocity = wheelSpeeds.getRightSpeed();
-        double linearVelocity = wheelSpeeds.getAvgSpeed();
+        double rightVelocity = wheelSpeeds.getRight();
+        double linearVelocity = wheelSpeeds.getAvg();
 
 
         double angularVelocity = (2 * (rightVelocity - linearVelocity)) / trackWidth;

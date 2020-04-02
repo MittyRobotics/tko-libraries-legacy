@@ -25,19 +25,19 @@
 package com.github.mittyrobotics.datatypes.motion;
 
 public class DrivetrainState {
-    private final DrivetrainVelocities velocity;
-    private final DrivetrainVelocities acceleration;
+    private final DrivetrainSpeeds velocity;
+    private final DrivetrainSpeeds acceleration;
 
-    public DrivetrainState(DrivetrainVelocities velocity, DrivetrainVelocities acceleration){
+    public DrivetrainState(DrivetrainSpeeds velocity, DrivetrainSpeeds acceleration){
         this.velocity = velocity;
         this.acceleration = acceleration;
     }
 
-    public DrivetrainVelocities getVelocity() {
+    public DrivetrainSpeeds getVelocity() {
         return velocity;
     }
 
-    public DrivetrainVelocities getAcceleration() {
+    public DrivetrainSpeeds getAcceleration() {
         return acceleration;
     }
 }
