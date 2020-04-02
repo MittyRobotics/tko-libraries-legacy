@@ -24,5 +24,33 @@
 
 package com.github.mittyrobotics.motion.controllers;
 
-public class PIDFController {
+import edu.wpi.first.wpilibj.controller.PIDController;
+
+public class PIDFController extends PIDController {
+    private double Kf;
+    public PIDFController(double Kp, double Ki, double Kd, double Kf, double period) {
+        super(Kp, Ki, Kd, period);
+        setF(Kf);
+    }
+
+    public PIDFController(double Kp, double Ki, double Kd, double Kf){
+        this(Kp, Ki, Kd, Kf, 0.02);
+    }
+
+    public PIDFController(double Kp, double Ki, double Kd){
+        this(Kp, Ki, Kd, 0);
+    }
+
+    public void setF(double Kf){
+        this.Kf = Kf;
+    }
+
+    public double getF(){
+        return Kf;
+    }
+
+    @Override
+    public double calculate(double measurement) {
+        return super.calculate(measurement) + super.getSetpoint() * getF();
+    }
 }
