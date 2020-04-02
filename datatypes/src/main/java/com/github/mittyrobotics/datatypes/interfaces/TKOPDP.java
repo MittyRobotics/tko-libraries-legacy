@@ -30,12 +30,12 @@ public class TKOPDP extends PowerDistributionPanel {
 
     private static TKOPDP instance;
 
-    private TKOPDP(){
+    private TKOPDP() {
         super();
     }
 
-    public static TKOPDP getInstance(){
-        if(instance == null){
+    public static TKOPDP getInstance() {
+        if (instance == null) {
             instance = new TKOPDP();
         }
         return instance;

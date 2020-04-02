@@ -34,9 +34,9 @@ public class DifferentialDriveKinematics {
      * Calculates the {@link DrivetrainWheelSpeeds} given a linear robot movement and a radius of the circle that it
      * wants to follow using differential drive kinematics.
      *
-     * @param linear the linear robot movement in units per second (how fast the robot moves forward).
-     * @param radius         the radius to follow in units.
-     * @param trackWidth     the width between left and right wheels of the drivetrain.
+     * @param linear     the linear robot movement in units per second (how fast the robot moves forward).
+     * @param radius     the radius to follow in units.
+     * @param trackWidth the width between left and right wheels of the drivetrain.
      * @return the calculated {@link DrivetrainWheelSpeeds}.
      */
     public static DrivetrainWheelSpeeds calculateFromRadius(double linear, double radius,
@@ -56,9 +56,9 @@ public class DifferentialDriveKinematics {
     /**
      * Calculates the {@link DrivetrainWheelSpeeds} given a robot linear and angular movement.
      *
-     * @param linear  the linear robot movement in units per second (how fast the robot moves forward).
-     * @param angular the angular movement of the robot in radians per second
-     * @param trackWidth      the width between left and right wheels of the drivetrain.
+     * @param linear     the linear robot movement in units per second (how fast the robot moves forward).
+     * @param angular    the angular movement of the robot in radians per second
+     * @param trackWidth the width between left and right wheels of the drivetrain.
      * @return the calculated {@link DrivetrainWheelSpeeds}.
      */
     public static DrivetrainWheelSpeeds calculateFromAngularMovement(double linear, double angular,

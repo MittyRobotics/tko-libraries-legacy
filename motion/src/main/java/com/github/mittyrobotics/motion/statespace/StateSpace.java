@@ -24,13 +24,8 @@
 
 package com.github.mittyrobotics.motion.statespace;
 
-import com.github.mittyrobotics.datatypes.motion.MotionState;
-import com.github.mittyrobotics.motion.OverrideMethod;
-import com.github.mittyrobotics.motion.SCurveMotionProfile;
 import com.github.mittyrobotics.visualization.MotorGraph;
 import org.ejml.simple.SimpleMatrix;
-
-import java.util.Random;
 
 public class StateSpace {
     SimpleMatrix r, A, B, C, D, K, Kff, xHat, x, y, u, kalmanGain;

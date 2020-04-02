@@ -28,7 +28,7 @@ public class DrivetrainState {
     private final DrivetrainSpeeds velocity;
     private final DrivetrainSpeeds acceleration;
 
-    public DrivetrainState(DrivetrainSpeeds velocity, DrivetrainSpeeds acceleration){
+    public DrivetrainState(DrivetrainSpeeds velocity, DrivetrainSpeeds acceleration) {
         this.velocity = velocity;
         this.acceleration = acceleration;
     }

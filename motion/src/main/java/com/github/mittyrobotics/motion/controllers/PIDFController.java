@@ -60,12 +60,12 @@ public class PIDFController {
         this(Kp, Ki, Kd, 0, ControlType.Position);
     }
 
-    public void setControlType(ControlType controlType) {
-        this.controlType = controlType;
-    }
-
     public ControlType getControlType() {
         return controlType;
+    }
+
+    public void setControlType(ControlType controlType) {
+        this.controlType = controlType;
     }
 
     /**
@@ -73,7 +73,7 @@ public class PIDFController {
      * <code>calculate()</code> call.
      *
      * @param measurement current measured value.
-     * @param deltaTime time since last <code>calculate()</code> call.
+     * @param deltaTime   time since last <code>calculate()</code> call.
      * @return next voltage for PIDF controller.
      */
     public double calculate(double measurement, double deltaTime) {
@@ -148,19 +148,11 @@ public class PIDFController {
         this.kF = kF;
     }
 
-    public void setGains(double kP, double kI, double kD, double kF){
+    public void setGains(double kP, double kI, double kD, double kF) {
         setKp(kP);
         setKi(kI);
         setKd(kD);
         setKf(kF);
-    }
-
-    public void setPeriod(double period) {
-        this.period = period;
-    }
-
-    public void setSetpoint(double setpoint) {
-        this.setpoint = setpoint;
     }
 
     public double getkP() {
@@ -183,8 +175,16 @@ public class PIDFController {
         return period;
     }
 
+    public void setPeriod(double period) {
+        this.period = period;
+    }
+
     public double getSetpoint() {
         return setpoint;
+    }
+
+    public void setSetpoint(double setpoint) {
+        this.setpoint = setpoint;
     }
 
     public double getError() {

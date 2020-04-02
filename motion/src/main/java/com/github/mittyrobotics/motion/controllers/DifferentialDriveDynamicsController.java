@@ -154,7 +154,7 @@ public class DifferentialDriveDynamicsController {
      * Represents a DC motor transmission on a drivetrain. This can be thought of as a model of the dynamics of a
      * side of the drivetrain, in which torque can be solved for voltage or voltage solved for torque. Used in the
      * {@link DifferentialDriveDynamicsController} to compute the voltage for a desired {@link DrivetrainState}.
-     *
+     * <p>
      * Equations from Team 254's DCMotorTransmission physics class:
      * https://github.com/Team254/FRC-2018-Public/blob/master/src/main/java/com/team254/lib/physics/DCMotorTransmission.java
      */
@@ -162,6 +162,19 @@ public class DifferentialDriveDynamicsController {
         private final double speedPerVolt;
         private final double torquePerVolt;
         private final double vIntercept;
+
+        /**
+         * Represents a DC motor transmission on a drivetrain.
+         *
+         * @param speedPerVolt
+         * @param torquePerVolt
+         * @param vIntercept
+         */
+        public DCMotorTransmission(double speedPerVolt, double torquePerVolt, double vIntercept) {
+            this.speedPerVolt = speedPerVolt;
+            this.torquePerVolt = torquePerVolt;
+            this.vIntercept = vIntercept;
+        }
 
         /**
          * Builds a {@link DCMotorTransmission} from some measurable properties of the drivetrain.
@@ -178,19 +191,6 @@ public class DifferentialDriveDynamicsController {
             double speedPerVolt = 1 / kV;
             double torquePerVolt = wheelRadius * wheelRadius * mass / (2.0 * kA);
             return new DCMotorTransmission(speedPerVolt, torquePerVolt, vIntercept);
-        }
-
-        /**
-         * Represents a DC motor transmission on a drivetrain.
-         *
-         * @param speedPerVolt
-         * @param torquePerVolt
-         * @param vIntercept
-         */
-        public DCMotorTransmission(double speedPerVolt, double torquePerVolt, double vIntercept) {
-            this.speedPerVolt = speedPerVolt;
-            this.torquePerVolt = torquePerVolt;
-            this.vIntercept = vIntercept;
         }
 
         /**
