@@ -31,60 +31,59 @@ package com.github.mittyrobotics.datatypes.motion;
  */
 public class DifferentialDriveKinematics {
     /**
-     * Calculates the {@link DrivetrainWheelVelocities} given a base robot velocity and a radius of the circle that it wants
-     * to follow using differential drive kinematics.
+     * Calculates the {@link DrivetrainWheelSpeeds} given a linear robot movement and a radius of the circle that it
+     * wants to follow using differential drive kinematics.
      *
-     * @param linearVelocity the base linear robot velocity in units per second (how fast the robot moves forward).
+     * @param linear the linear robot movement in units per second (how fast the robot moves forward).
      * @param radius         the radius to follow in units.
      * @param trackWidth     the width between left and right wheels of the drivetrain.
-     * @return the calculated {@link DrivetrainWheelVelocities}.
+     * @return the calculated {@link DrivetrainWheelSpeeds}.
      */
-    public static DrivetrainWheelVelocities calculateFromRadius(double linearVelocity, double radius,
-                                                                double trackWidth) {
+    public static DrivetrainWheelSpeeds calculateFromRadius(double linear, double radius,
+                                                            double trackWidth) {
         //Calculate the angular velocity of the robot in radians per second
-        double angularVelocity = linearVelocity / radius;
+        double angular = linear / radius;
 
         //Calculate left and right drivetrain velocities
-        double left = angularVelocity * (radius - (trackWidth / 2));
-        double right = angularVelocity * (radius + (trackWidth / 2));
-        //left/(linearVelocity / angularVelocity - (track/2)) = angular
+        double left = angular * (radius - (trackWidth / 2));
+        double right = angular * (radius + (trackWidth / 2));
+        //left/(linearVelocity / angular - (track/2)) = angular
         //left/(linear/angular) - left/(track/2)
         //Return the calculated drivetrain velocities
-        return new DrivetrainWheelVelocities(left, right);
+        return new DrivetrainWheelSpeeds(left, right);
     }
 
     /**
-     * Calculates the {@link DrivetrainWheelVelocities} given a base robot velocity and a radius of the circle that it wants
-     * to follow using differential drive kinematics.
+     * Calculates the {@link DrivetrainWheelSpeeds} given a robot linear and angular movement.
      *
-     * @param linearVelocity  the base linear robot velocity in units per second (how fast the robot moves forward).
-     * @param angularVelocity the angular velocity of the robot in radians per second
+     * @param linear  the linear robot movement in units per second (how fast the robot moves forward).
+     * @param angular the angular movement of the robot in radians per second
      * @param trackWidth      the width between left and right wheels of the drivetrain.
-     * @return the calculated {@link DrivetrainWheelVelocities}.
+     * @return the calculated {@link DrivetrainWheelSpeeds}.
      */
-    public static DrivetrainWheelVelocities calculateFromAngularVelocity(double linearVelocity, double angularVelocity,
-                                                                         double trackWidth) {
-        if (linearVelocity == 0 && angularVelocity == 0) {
-            return new DrivetrainWheelVelocities(0, 0);
+    public static DrivetrainWheelSpeeds calculateFromAngularMovement(double linear, double angular,
+                                                                     double trackWidth) {
+        if (linear == 0 && angular == 0) {
+            return new DrivetrainWheelSpeeds(0, 0);
         }
 
         //Calculate the radius given linear velocity and angular velocity
-        double radius = linearVelocity / angularVelocity;
+        double radius = linear / angular;
 
         //Return the calculated drivetrain velocities
-        return new DrivetrainWheelVelocities(angularVelocity * (radius - (trackWidth / 2)),
-                angularVelocity * (radius + (trackWidth / 2)));
+        return new DrivetrainWheelSpeeds(angular * (radius - (trackWidth / 2)),
+                angular * (radius + (trackWidth / 2)));
     }
 
-    public static double getRadiusFromWheelSpeeds(DrivetrainWheelVelocities wheelSpeeds, double trackWidth) {
-        double linearVelocity = wheelSpeeds.getAvgVelocity();
+    public static double getRadiusFromWheelSpeeds(DrivetrainWheelSpeeds wheelSpeeds, double trackWidth) {
+        double linearVelocity = wheelSpeeds.getAvgSpeed();
 
         return linearVelocity / getAngularVelocityFromWheelSpeeds(wheelSpeeds, trackWidth);
     }
 
-    public static double getAngularVelocityFromWheelSpeeds(DrivetrainWheelVelocities wheelSpeeds, double trackWidth) {
-        double rightVelocity = wheelSpeeds.getRightVelocity();
-        double linearVelocity = wheelSpeeds.getAvgVelocity();
+    public static double getAngularVelocityFromWheelSpeeds(DrivetrainWheelSpeeds wheelSpeeds, double trackWidth) {
+        double rightVelocity = wheelSpeeds.getRightSpeed();
+        double linearVelocity = wheelSpeeds.getAvgSpeed();
 
 
         double angularVelocity = (2 * (rightVelocity - linearVelocity)) / trackWidth;

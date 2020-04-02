@@ -25,21 +25,20 @@
 package com.github.mittyrobotics.datatypes.motion;
 
 public class DrivetrainVelocities {
-    private double linearVelocity;
-    private double angularVelocity;
-    private double leftVelocity;
-    private double rightVelocity;
-    private double drivingCurvature;
+    private double linear;
+    private double angular;
+    private double left;
+    private double right;
+    private double curvature;
     private double trackWidth;
 
-    private DrivetrainVelocities(double linearVelocity, double angularVelocity, double leftVelocity,
-                                 double rightVelocity,
-                                 double drivingCurvature, double trackWidth) {
-        this.linearVelocity = linearVelocity;
-        this.angularVelocity = angularVelocity;
-        this.leftVelocity = leftVelocity;
-        this.rightVelocity = rightVelocity;
-        this.drivingCurvature = drivingCurvature;
+    public DrivetrainVelocities(double linear, double angular, double left, double right, double curvature,
+                                double trackWidth) {
+        this.linear = linear;
+        this.angular = angular;
+        this.left = left;
+        this.right = right;
+        this.curvature = curvature;
         this.trackWidth = trackWidth;
     }
 
@@ -47,110 +46,108 @@ public class DrivetrainVelocities {
         return new DrivetrainVelocities(0, 0, 0, 0, 0, 0);
     }
 
-    public static DrivetrainVelocities calculateFromLinearVelocityAndRadius(double linearVelocity,
-                                                                            double radius, double trackWidth) {
-        DrivetrainWheelVelocities drivetrainWheelVelocities =
-                DifferentialDriveKinematics.calculateFromRadius(linearVelocity, radius, trackWidth);
-        return calculateFromWheelVelocities(drivetrainWheelVelocities, trackWidth);
+    public static DrivetrainVelocities calculateFromLinearMovementAndRadius(double linear, double radius,
+                                                                            double trackWidth) {
+        DrivetrainWheelSpeeds drivetrainWheelVelocities =
+                DifferentialDriveKinematics.calculateFromRadius(linear, radius, trackWidth);
+        return calculateFromWheelMovement(drivetrainWheelVelocities, trackWidth);
     }
 
-    public static DrivetrainVelocities calculateFromWheelVelocities(double leftVelocity, double rightVelocity,
-                                                                    double trackWidth) {
-        return calculateFromWheelVelocities(new DrivetrainWheelVelocities(leftVelocity, rightVelocity), trackWidth);
+    public static DrivetrainVelocities calculateFromWheelMovement(double left, double right, double trackWidth) {
+        return calculateFromWheelMovement(new DrivetrainWheelSpeeds(left, right), trackWidth);
     }
 
-    public static DrivetrainVelocities calculateFromWheelVelocities(
-            DrivetrainWheelVelocities drivetrainWheelVelocities, double trackWidth) {
+    public static DrivetrainVelocities calculateFromWheelMovement(
+            DrivetrainWheelSpeeds drivetrainWheelVelocities, double trackWidth) {
         //Get linear and angular velocity from drivetrain velocities
-        double linearVelocity = drivetrainWheelVelocities.getAvgVelocity();
-        double angularVelocity =
+        double linear = drivetrainWheelVelocities.getAvgSpeed();
+        double angular =
                 DifferentialDriveKinematics.getAngularVelocityFromWheelSpeeds(drivetrainWheelVelocities, trackWidth);
 
         //Get driving curvature from linear velocity and angular velocity
-        double curvature = 1 / (linearVelocity / angularVelocity);
+        double curvature = 1 / (linear / angular);
 
         if (Double.isNaN(curvature)) {
             curvature = 0;
         }
 
-        return new DrivetrainVelocities(linearVelocity, angularVelocity, drivetrainWheelVelocities.getLeftVelocity(),
-                drivetrainWheelVelocities.getRightVelocity(), curvature, trackWidth);
+        return new DrivetrainVelocities(linear, angular, drivetrainWheelVelocities.getLeftSpeed(),
+                drivetrainWheelVelocities.getRightSpeed(), curvature, trackWidth);
     }
 
-    public static DrivetrainVelocities calculateFromLinearAndAngularVelocity(double linearVelocity,
-                                                                             double angularVelocity,
+    public static DrivetrainVelocities calculateFromLinearAndAngularVelocity(double linear, double angular,
                                                                              double trackWidth) {
         //Calculate drivetrain velocities from linear and angular velocities
-        DrivetrainWheelVelocities drivetrainWheelVelocities =
-                DifferentialDriveKinematics.calculateFromAngularVelocity(linearVelocity, angularVelocity, trackWidth);
+        DrivetrainWheelSpeeds drivetrainWheelVelocities =
+                DifferentialDriveKinematics.calculateFromAngularMovement(linear, angular, trackWidth);
 
         //Get left and right velocity from drivetrain velocities
-        double leftVelocity = drivetrainWheelVelocities.getLeftVelocity();
-        double rightVelocity = drivetrainWheelVelocities.getRightVelocity();
+        double left = drivetrainWheelVelocities.getLeftSpeed();
+        double right = drivetrainWheelVelocities.getRightSpeed();
 
         //Get driving curvature from linear velocity and angular velocity
-        double curvature = 1 / (linearVelocity / angularVelocity);
+        double curvature = 1 / (linear / angular);
 
-        return new DrivetrainVelocities(linearVelocity, angularVelocity, leftVelocity, rightVelocity, curvature,
+        return new DrivetrainVelocities(linear, angular, left, right, curvature,
                 trackWidth);
     }
 
     public DrivetrainVelocities reverse() {
-        return new DrivetrainVelocities(-linearVelocity, angularVelocity, -leftVelocity, -rightVelocity,
-                drivingCurvature, trackWidth);
+        return new DrivetrainVelocities(-linear, angular, -left, -right,
+                curvature, trackWidth);
     }
 
     private void setValues(DrivetrainVelocities data) {
-        this.linearVelocity = data.getLinearVelocity();
-        this.angularVelocity = data.getAngularVelocity();
-        this.leftVelocity = data.getLeftVelocity();
-        this.rightVelocity = data.getRightVelocity();
-        this.drivingCurvature = data.getDrivingCurvature();
+        this.linear = data.getLinear();
+        this.angular = data.getAngular();
+        this.left = data.getLeft();
+        this.right = data.getRight();
+        this.curvature = data.getCurvature();
         this.trackWidth = data.getTrackWidth();
     }
 
-    public double getLinearVelocity() {
-        return linearVelocity;
+    public double getLinear() {
+        return linear;
     }
 
-    public void setLinearVelocity(double linearVelocity) {
-        this.linearVelocity = linearVelocity;
-        setValues(calculateFromLinearAndAngularVelocity(linearVelocity, angularVelocity, trackWidth));
+    public void setLinear(double linear) {
+        this.linear = linear;
+        setValues(calculateFromLinearAndAngularVelocity(linear, angular, trackWidth));
     }
 
-    public double getAngularVelocity() {
-        return angularVelocity;
+    public double getAngular() {
+        return angular;
     }
 
-    public void setAngularVelocity(double angularVelocity) {
-        this.angularVelocity = angularVelocity;
-        setValues(calculateFromLinearAndAngularVelocity(linearVelocity, angularVelocity, trackWidth));
+    public void setAngular(double angular) {
+        this.angular = angular;
+        setValues(calculateFromLinearAndAngularVelocity(linear, angular, trackWidth));
     }
 
-    public double getLeftVelocity() {
-        return leftVelocity;
+    public double getLeft() {
+        return left;
     }
 
-    public void setLeftVelocity(double leftVelocity) {
-        this.leftVelocity = leftVelocity;
-        setValues(calculateFromWheelVelocities(leftVelocity, rightVelocity, trackWidth));
+    public void setLeft(double left) {
+        this.left = left;
+        setValues(calculateFromWheelMovement(left, right, trackWidth));
     }
 
-    public double getRightVelocity() {
-        return rightVelocity;
+    public double getRight() {
+        return right;
     }
 
-    public void setRightVelocity(double rightVelocity) {
-        this.rightVelocity = rightVelocity;
-        setValues(calculateFromWheelVelocities(leftVelocity, rightVelocity, trackWidth));
+    public void setRight(double right) {
+        this.right = right;
+        setValues(calculateFromWheelMovement(left, right, trackWidth));
     }
 
-    public double getDrivingCurvature() {
-        return drivingCurvature;
+    public double getCurvature() {
+        return curvature;
     }
 
     public double getDrivingRadius() {
-        return 1 / drivingCurvature;
+        return 1 / curvature;
     }
 
     public double getTrackWidth() {

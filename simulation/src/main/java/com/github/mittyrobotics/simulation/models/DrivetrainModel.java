@@ -24,7 +24,7 @@
 
 package com.github.mittyrobotics.simulation.models;
 
-import com.github.mittyrobotics.datatypes.motion.DrivetrainWheelVelocities;
+import com.github.mittyrobotics.datatypes.motion.DrivetrainWheelSpeeds;
 import com.github.mittyrobotics.datatypes.units.Conversions;
 import com.github.mittyrobotics.simulation.motors.Motor;
 
@@ -85,12 +85,12 @@ public class DrivetrainModel {
     }
 
     public void updateModel(double leftVoltage, double rightVoltage, double deltaTime) {
-        DrivetrainWheelVelocities accelerations = calculateAccelerations(leftVoltage, rightVoltage);
-        this.leftAcceleration = accelerations.getLeftVelocity();
+        DrivetrainWheelSpeeds accelerations = calculateAccelerations(leftVoltage, rightVoltage);
+        this.leftAcceleration = accelerations.getLeftSpeed();
         this.leftVelocity += leftAcceleration * deltaTime;
         this.leftPosition += leftVelocity * deltaTime;
 
-        this.rightAcceleration = accelerations.getRightVelocity();
+        this.rightAcceleration = accelerations.getRightSpeed();
         this.rightVelocity += rightAcceleration * deltaTime;
         this.rightPosition += rightVelocity * deltaTime;
     }
@@ -101,7 +101,7 @@ public class DrivetrainModel {
      * @param leftVoltage
      * @param rightVoltage
      */
-    public DrivetrainWheelVelocities calculateAccelerations(double leftVoltage, double rightVoltage) {
+    public DrivetrainWheelSpeeds calculateAccelerations(double leftVoltage, double rightVoltage) {
         double Vl = leftVoltage;
         double Vr = rightVoltage;
         double vl = leftVelocity;
@@ -123,7 +123,7 @@ public class DrivetrainModel {
         double rightAcceleration =
                 ((1 / m) - ((rb * rb) / J)) * Fl + ((1 / m) + ((rb * rb) / J)) * Fr;
 
-        return new DrivetrainWheelVelocities(leftAcceleration, rightAcceleration);
+        return new DrivetrainWheelSpeeds(leftAcceleration, rightAcceleration);
     }
 
     public double getTrackWidth() {
