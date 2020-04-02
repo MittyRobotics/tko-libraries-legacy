@@ -24,25 +24,25 @@
 
 package com.github.mittyrobotics.datatypes.interfaces;
 
-import edu.wpi.first.wpilibj.ADXRS450_Gyro;
+import edu.wpi.first.wpilibj.Compressor;
 
-public class Gyro extends ADXRS450_Gyro implements IHardware {
-    private static Gyro instance;
+public class TKOCompressor extends Compressor implements IHardware {
 
-    private Gyro() {
+    private static TKOCompressor instance;
+
+    private TKOCompressor() {
         super();
     }
 
-    public static Gyro getInstance() {
+    public static TKOCompressor getInstance() {
         if (instance == null) {
-            instance = new Gyro();
+            instance = new TKOCompressor();
         }
         return instance;
     }
 
     @Override
     public void initHardware() {
-        super.reset();
-        super.calibrate();
+        super.setClosedLoopControl(true);
     }
 }
