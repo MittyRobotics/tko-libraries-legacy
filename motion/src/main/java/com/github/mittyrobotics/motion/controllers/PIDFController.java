@@ -24,6 +24,8 @@
 
 package com.github.mittyrobotics.motion.controllers;
 
+import edu.wpi.first.wpilibj.controller.PIDController;
+
 public class PIDFController {
     private double kP;
     private double kI;
@@ -118,6 +120,22 @@ public class PIDFController {
      */
     public double calculate(double measurement) {
         return calculate(measurement, period);
+    }
+
+    /**
+     * Resets the controller.
+     */
+    public void reset(){
+        previousError = 0;
+        integral = 0;
+    }
+
+    public boolean isFinished(double positionTolerance, double derivativeTolerance){
+        return Math.abs(error) < positionTolerance && Math.abs(derivativeError) < derivativeTolerance;
+    }
+
+    public boolean isFinished(double positionTolerance){
+        return isFinished(positionTolerance, Double.POSITIVE_INFINITY);
     }
 
     /**
