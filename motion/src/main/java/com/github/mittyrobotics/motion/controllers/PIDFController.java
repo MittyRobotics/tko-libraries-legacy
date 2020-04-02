@@ -103,7 +103,7 @@ public class PIDFController {
                 feedForward = kF;
                 break;
             case Velocity:
-                feedForward = measurement * kF;
+                feedForward = setpoint * kF;
                 break;
         }
 
