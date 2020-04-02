@@ -25,6 +25,7 @@
 package com.github.mittyrobotics.motion;
 
 import com.github.mittyrobotics.datatypes.motion.MotionState;
+import com.github.mittyrobotics.motion.controllers.PIDFController;
 import com.github.mittyrobotics.visualization.MotorGraph;
 
 import javax.swing.*;
@@ -42,6 +43,7 @@ public class Main extends JFrame {
         this.graph = new MotorGraph("S-curve Motion Profile", "position (m), velocity (m/s), acceleration " +
                 "(m/s^2)", "time (s)");
         calcProfile();
+        new PIDFController(0,0,0,0, PIDFController.ControlType.Position);
     }
 
     public void calcProfile() {
