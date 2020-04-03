@@ -24,18 +24,50 @@
 
 package com.github.mittyrobotics.datatypes.interfaces;
 
-public interface PIDInterface {
+/**
+ * Interface for setting up PIDF for various motor controllers
+ */
+public interface PIDFInterface {
 
+    /**
+     * Configures PIDF and the slot idx
+     * Needs to be overridden
+     * @param p the proportional value
+     * @param i the integral value
+     * @param d the derivative value
+     * @param ff the feed forward value
+     * @param slotIdx the slotIdx for PIDF control to store different PIDF values
+     */
     void configPIDF(double p, double i, double d, double ff, int slotIdx);
 
+    /**
+     * Configures PIDF on slot 0
+     * @param p the proportional value
+     * @param i the integral value
+     * @param d the derivative value
+     * @param ff the feed forward value
+     */
     default void configPIDF(double p, double i, double d, double ff) {
         configPIDF(p, i, d, ff, 0);
     }
 
+    /**
+     * Configures PID on a slot idx (sets feed forward to 0)
+     * @param p the proportional value
+     * @param i the integral value
+     * @param d the derivative value
+     * @param slotIdx the slotIdx for PID control
+     */
     default void configPID(double p, double i, double d, int slotIdx) {
         configPIDF(p, i, d, 0, slotIdx);
     }
 
+    /**
+     * Configures PID on slot 0 (sets feed forward to 0)
+     * @param p the proportional value
+     * @param i the integral value
+     * @param d the derivative value
+     */
     default void configPID(double p, double i, double d) {
         configPID(p, i, d, 0);
     }

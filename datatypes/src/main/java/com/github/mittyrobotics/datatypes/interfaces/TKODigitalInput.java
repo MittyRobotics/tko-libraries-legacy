@@ -26,24 +26,46 @@ package com.github.mittyrobotics.datatypes.interfaces;
 
 import edu.wpi.first.wpilibj.DigitalInput;
 
+/**
+ * Enhanced {@link DigitalInput} with extra features for switches wired through the roborio
+ */
 public class TKODigitalInput extends DigitalInput implements InversionInterface {
 
+    /**
+     * If the switch is inverted or not
+     */
     private boolean isInverted;
 
+    /**
+     * Constructs a new {@link TKODigitalInput} object
+     * @param channel the port the switch is wired to on the roborio
+     */
     public TKODigitalInput(int channel) {
         super(channel);
     }
 
+    /**
+     * Returns if the switch is triggered
+     * @return the raw {@link DigitalInput} value xor isInverted
+     */
     @Override
     public boolean get() {
         return getInverted() != super.get();
     }
 
+    /**
+     * Returns if the switch is inverted
+     * @return isInverted
+     */
     @Override
     public boolean getInverted() {
         return isInverted;
     }
 
+    /**
+     * Sets the switch to be inverted
+     * @param inversion the value to set the switch inversion to
+     */
     @Override
     public void setInverted(boolean inversion) {
         isInverted = inversion;

@@ -24,7 +24,7 @@
 
 package com.github.mittyrobotics.motion.controllers;
 
-import edu.wpi.first.wpilibj.controller.PIDController;
+import edu.wpi.first.wpiutil.math.MathUtil;
 
 public class PIDFController {
     private double kP;
@@ -39,27 +39,34 @@ public class PIDFController {
     private double derivativeError;
     private double integral;
 
-    private double minIntegral = -1;
-    private double maxIntegral = 1;
+    private double minIntegral;
+    private double maxIntegral;
+
+    private double minOutput;
+    private double maxOutput;
 
     private double setpoint;
+    private double positionTolerance;
+    private double derivativeTolerance;
+    private ContinuousManager continousManager;
 
     public PIDFController(double kP, double kI, double kD, double kF, double period, ControlType controlType) {
-        this.kP = kP;
-        this.kI = kI;
-        this.kD = kD;
-        this.kF = kF;
-        this.period = period;
-        this.controlType = controlType;
+        setGains(kP, kI, kD, kF);
+        setPeriod(period);
         setControlType(controlType);
+        setPositionTolerance(Double.POSITIVE_INFINITY);
+        setDerivativeTolerance(Double.POSITIVE_INFINITY);
+        setOutputRange(-1, 1);
+        setIntegralRange(-1, 1);
+        continousManager = new ContinuousManager();
     }
 
-    public PIDFController(double Kp, double Ki, double Kd, double Kf, ControlType controlType) {
-        this(Kp, Ki, Kd, Kf, 0.02, controlType);
+    public PIDFController(double kP, double kI, double kD, double kF, ControlType controlType) {
+        this(kP, kI, kD, kF, 0.02, controlType);
     }
 
-    public PIDFController(double Kp, double Ki, double Kd) {
-        this(Kp, Ki, Kd, 0, ControlType.Position);
+    public PIDFController(double kP, double kI, double kD) {
+        this(kP, kI, kD, 0, ControlType.Position);
     }
 
     public ControlType getControlType() {
@@ -84,7 +91,8 @@ public class PIDFController {
         //Keep track of previous error
         previousError = error;
         //Set current error
-        error = setpoint - measurement;
+        measurement = continousManager.mapValue(measurement);
+        error = continousManager.getContinousError(setpoint, measurement);
         //Set derivative error
         derivativeError = (error - previousError) / period;
 
@@ -103,12 +111,12 @@ public class PIDFController {
                 feedForward = kF;
                 break;
             case Velocity:
-                feedForward = setpoint * kF;
+                feedForward = getSetpoint() * kF;
                 break;
         }
 
         //Output feedback plus feed forward
-        return feedback + feedForward;
+        return MathUtil.clamp(feedback + feedForward, minOutput, maxOutput);
     }
 
     /**
@@ -135,7 +143,11 @@ public class PIDFController {
     }
 
     public boolean isFinished(double positionTolerance){
-        return isFinished(positionTolerance, Double.POSITIVE_INFINITY);
+        return isFinished(positionTolerance, derivativeTolerance);
+    }
+
+    public boolean isFinished(){
+        return isFinished(positionTolerance, derivativeTolerance);
     }
 
     /**
@@ -149,28 +161,37 @@ public class PIDFController {
         this.maxIntegral = maxIntegral;
     }
 
-    public void setKp(double kP) {
+    public void setOutputRange(double minOutput, double maxOutput){
+        this.minOutput = minOutput;
+        this.maxOutput = maxOutput;
+    }
+
+    public void setInputRange(double minInput, double maxInput){
+        continousManager.setInputRange(minInput, maxInput);
+    }
+
+    public void setP(double kP) {
         this.kP = kP;
     }
 
-    public void setKi(double kI) {
+    public void setI(double kI) {
         this.kI = kI;
     }
 
 
-    public void setKd(double kD) {
+    public void setD(double kD) {
         this.kD = kD;
     }
 
-    public void setKf(double kF) {
+    public void setF(double kF) {
         this.kF = kF;
     }
 
     public void setGains(double kP, double kI, double kD, double kF) {
-        setKp(kP);
-        setKi(kI);
-        setKd(kD);
-        setKf(kF);
+        setP(kP);
+        setI(kI);
+        setD(kD);
+        setF(kF);
     }
 
     public double getkP() {
@@ -197,12 +218,16 @@ public class PIDFController {
         this.period = period;
     }
 
-    public double getSetpoint() {
-        return setpoint;
+    public void setSetpoint(double setpoint) {
+        this.setpoint = continousManager.mapValue(setpoint);
     }
 
-    public void setSetpoint(double setpoint) {
-        this.setpoint = setpoint;
+    public void setPositionTolerance(double tolerance){
+        positionTolerance = tolerance;
+    }
+
+    public void setDerivativeTolerance(double tolerance){
+        derivativeTolerance = tolerance;
     }
 
     public double getError() {
@@ -225,7 +250,41 @@ public class PIDFController {
         return maxIntegral;
     }
 
+    public double getMinOutput() {
+        return minOutput;
+    }
+
+    public double getMaxOutput() {
+        return maxOutput;
+    }
+
+    public double getMinInput() {
+        return continousManager.getMinInput();
+    }
+
+    public double getMaxInput() {
+        return continousManager.getMaxInput();
+    }
+
+    public void disableContinuousInput(){
+        setInputRange(0, 0);
+    }
+
+    public double getSetpoint() {
+        return setpoint;
+    }
+
+    public double getPositionTolerance(){
+        return positionTolerance;
+    }
+
+    public double getDerivativeTolerance(){
+        return derivativeTolerance;
+    }
+
+
     public enum ControlType {
         Position, Velocity
     }
+
 }

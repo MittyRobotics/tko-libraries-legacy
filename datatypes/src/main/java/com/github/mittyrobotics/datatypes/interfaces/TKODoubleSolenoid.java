@@ -26,19 +26,42 @@ package com.github.mittyrobotics.datatypes.interfaces;
 
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 
+/**
+ * Enchanced {@link DoubleSolenoid} with extra features
+ */
 public class TKODoubleSolenoid extends DoubleSolenoid implements InversionInterface {
 
+    /**
+     * If the double solenoid is inverted or not
+     */
     private boolean isInverted;
 
+    /**
+     * Constructs a new Double Solenoid
+     * @param forwardChannel the forward channel port plugged into the PCM
+     * @param reverseChannel the reverse channel port plugged into the PCM
+     * @param pcmID the ID of the PCM
+     */
     public TKODoubleSolenoid(int forwardChannel, int reverseChannel, int pcmID) {
         super(pcmID, forwardChannel, reverseChannel);
         setInverted(false);
     }
 
+    /**
+     * Constructs a new Double Solenoid
+     * Sets the PCM ID to 0
+     * @param forwardChannel the forward channel port plugged into the PCM
+     * @param reverseChannel the reverse channel port plugged into the PCM
+     */
     public TKODoubleSolenoid(int forwardChannel, int reverseChannel) {
-        this(0, forwardChannel, reverseChannel);
+        this(forwardChannel, reverseChannel, 0);
     }
 
+    /**
+     * Sets the value of the double solenoid
+     * Flips forward and reverse if the double solenoid is inverted
+     * @param value the value to set the double solenoid to
+     */
     @Override
     public void set(Value value) {
         if (getInverted()) {
@@ -51,11 +74,19 @@ public class TKODoubleSolenoid extends DoubleSolenoid implements InversionInterf
         super.set(value);
     }
 
+    /**
+     * Returns if the double solenoid is inverted
+     * @return isInverted
+     */
     @Override
     public boolean getInverted() {
         return isInverted;
     }
 
+    /**
+     * Sets the inversion of the double solenoid
+     * @param inversion the value to set the double solenoid inversion to
+     */
     @Override
     public void setInverted(boolean inversion) {
         isInverted = inversion;
