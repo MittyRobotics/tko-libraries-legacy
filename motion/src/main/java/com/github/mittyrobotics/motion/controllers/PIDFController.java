@@ -133,20 +133,20 @@ public class PIDFController {
     /**
      * Resets the controller.
      */
-    public void reset(){
+    public void reset() {
         previousError = 0;
         integral = 0;
     }
 
-    public boolean isFinished(double positionTolerance, double derivativeTolerance){
+    public boolean isFinished(double positionTolerance, double derivativeTolerance) {
         return Math.abs(error) < positionTolerance && Math.abs(derivativeError) < derivativeTolerance;
     }
 
-    public boolean isFinished(double positionTolerance){
+    public boolean isFinished(double positionTolerance) {
         return isFinished(positionTolerance, derivativeTolerance);
     }
 
-    public boolean isFinished(){
+    public boolean isFinished() {
         return isFinished(positionTolerance, derivativeTolerance);
     }
 
@@ -161,12 +161,12 @@ public class PIDFController {
         this.maxIntegral = maxIntegral;
     }
 
-    public void setOutputRange(double minOutput, double maxOutput){
+    public void setOutputRange(double minOutput, double maxOutput) {
         this.minOutput = minOutput;
         this.maxOutput = maxOutput;
     }
 
-    public void setInputRange(double minInput, double maxInput){
+    public void setInputRange(double minInput, double maxInput) {
         continousManager.setInputRange(minInput, maxInput);
     }
 
@@ -218,18 +218,6 @@ public class PIDFController {
         this.period = period;
     }
 
-    public void setSetpoint(double setpoint) {
-        this.setpoint = continousManager.mapValue(setpoint);
-    }
-
-    public void setPositionTolerance(double tolerance){
-        positionTolerance = tolerance;
-    }
-
-    public void setDerivativeTolerance(double tolerance){
-        derivativeTolerance = tolerance;
-    }
-
     public double getError() {
         return error;
     }
@@ -266,7 +254,7 @@ public class PIDFController {
         return continousManager.getMaxInput();
     }
 
-    public void disableContinuousInput(){
+    public void disableContinuousInput() {
         setInputRange(0, 0);
     }
 
@@ -274,12 +262,24 @@ public class PIDFController {
         return setpoint;
     }
 
-    public double getPositionTolerance(){
+    public void setSetpoint(double setpoint) {
+        this.setpoint = continousManager.mapValue(setpoint);
+    }
+
+    public double getPositionTolerance() {
         return positionTolerance;
     }
 
-    public double getDerivativeTolerance(){
+    public void setPositionTolerance(double tolerance) {
+        positionTolerance = tolerance;
+    }
+
+    public double getDerivativeTolerance() {
         return derivativeTolerance;
+    }
+
+    public void setDerivativeTolerance(double tolerance) {
+        derivativeTolerance = tolerance;
     }
 
 

@@ -32,32 +32,32 @@ public class ElevatorStateSpaceController extends StateSpaceController {
                                         SimpleMatrix D, SimpleMatrix K, SimpleMatrix Kff, SimpleMatrix kalmanGain) {
         super(
                 new SimpleMatrix(new double[][]{
-                {referencePosition},
-                {referenceVelocity}
+                        {referencePosition},
+                        {referenceVelocity}
                 }),
                 A, B, C, D, K, Kff,
                 new SimpleMatrix(new double[][]{
-                {startPosition},
-                {startVelocity}
+                        {startPosition},
+                        {startVelocity}
                 }),
                 new SimpleMatrix(new double[][]{
-                {0}
+                        {0}
                 }),
                 kalmanGain);
     }
 
     public double calculate(double measuredPosition, double referencePosition,
-                            double referenceVelocity){
+                            double referenceVelocity) {
         return calculate(new SimpleMatrix(new double[][]{
                         {measuredPosition}
                 }),
                 new SimpleMatrix(new double[][]{
-                {referencePosition},
-                {referenceVelocity}
-        })).get(0);
+                        {referencePosition},
+                        {referenceVelocity}
+                })).get(0);
     }
 
-    public double calculate(double measuredPosition){
+    public double calculate(double measuredPosition) {
         return calculate(measuredPosition, getR().get(0), getR().get(1));
     }
 
@@ -73,7 +73,7 @@ public class ElevatorStateSpaceController extends StateSpaceController {
         return getxHat().get(1);
     }
 
-    public void setReference(double position, double velocity){
+    public void setReference(double position, double velocity) {
         SimpleMatrix r = getR();
         r.set(0, position);
         r.set(1, velocity);

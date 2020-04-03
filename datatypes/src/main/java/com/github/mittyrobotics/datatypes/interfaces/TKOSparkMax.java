@@ -126,7 +126,7 @@ public class TKOSparkMax extends CANSparkMax implements PIDFInterface, LimitSwit
 
     @Override
     public void setTicksPerUnit(double ticksPerUnit) {
-        if(ticksPerUnit > 0){
+        if (ticksPerUnit > 0) {
             this.ticksPerUnit = ticksPerUnit;
         }
     }

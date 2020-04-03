@@ -31,20 +31,23 @@ public interface LimitSwitchInterface {
 
     /**
      * Configures the forward limit switch
-     * @param id the id of the forward limit switch
+     *
+     * @param id        the id of the forward limit switch
      * @param inversion if the forward limit switch is inverted
      */
     void configRoborioForwardLimitSwitch(int id, boolean inversion);
 
     /**
      * Configures the reverse limit switch
-     * @param id the id of the reverse limit switch
+     *
+     * @param id        the id of the reverse limit switch
      * @param inversion if the reverse limit switch is inverted
      */
     void configRoborioReverseLimitSwitch(int id, boolean inversion);
 
     /**
      * Configures the forward limit switch
+     *
      * @param id the id of the forward limit switch
      */
     default void configRoborioForwardLimitSwitch(int id) {
@@ -53,6 +56,7 @@ public interface LimitSwitchInterface {
 
     /**
      * Configures the reverse limit switch
+     *
      * @param id the id of the reverse limit switch
      */
     default void configRoborioReverseLimitSwitch(int id) {
@@ -61,12 +65,14 @@ public interface LimitSwitchInterface {
 
     /**
      * Gets if the forward limit switch is triggered
+     *
      * @return forward limit switch value
      */
     boolean getRoborioForwardLimitSwitch();
 
     /**
      * Gets if the reverse limit switch is triggered
+     *
      * @return reverse limit switch value
      */
     boolean getRoborioReverseLimitSwitch();

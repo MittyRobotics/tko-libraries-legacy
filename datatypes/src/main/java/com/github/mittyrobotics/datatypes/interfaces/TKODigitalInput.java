@@ -38,6 +38,7 @@ public class TKODigitalInput extends DigitalInput implements InversionInterface 
 
     /**
      * Constructs a new {@link TKODigitalInput} object
+     *
      * @param channel the port the switch is wired to on the roborio
      */
     public TKODigitalInput(int channel) {
@@ -46,6 +47,7 @@ public class TKODigitalInput extends DigitalInput implements InversionInterface 
 
     /**
      * Returns if the switch is triggered
+     *
      * @return the raw {@link DigitalInput} value xor isInverted
      */
     @Override
@@ -55,6 +57,7 @@ public class TKODigitalInput extends DigitalInput implements InversionInterface 
 
     /**
      * Returns if the switch is inverted
+     *
      * @return isInverted
      */
     @Override
@@ -64,6 +67,7 @@ public class TKODigitalInput extends DigitalInput implements InversionInterface 
 
     /**
      * Sets the switch to be inverted
+     *
      * @param inversion the value to set the switch inversion to
      */
     @Override

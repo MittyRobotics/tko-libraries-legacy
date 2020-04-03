@@ -59,13 +59,13 @@ public class ControllerTesting {
                 kalmanGain);
         double measuredPosition = 0;
         double measuredVelocity = 0;
-        for(double t = 0; t < 10; t+=0.00505){
+        for (double t = 0; t < 10; t += 0.00505) {
             double v = controller.calculate(measuredPosition);
             graph.addVoltage(v, t);
             measuredPosition = controller.getEstimatedPosition();
             measuredVelocity = controller.getEstimatedVelocity();
-            graph.addPosition(measuredPosition,t);
-            graph.addVelocity(measuredVelocity,t);
+            graph.addPosition(measuredPosition, t);
+            graph.addVelocity(measuredVelocity, t);
         }
     }
 }

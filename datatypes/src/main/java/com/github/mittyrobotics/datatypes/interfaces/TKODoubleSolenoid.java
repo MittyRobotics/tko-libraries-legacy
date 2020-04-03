@@ -38,9 +38,10 @@ public class TKODoubleSolenoid extends DoubleSolenoid implements InversionInterf
 
     /**
      * Constructs a new Double Solenoid
+     *
      * @param forwardChannel the forward channel port plugged into the PCM
      * @param reverseChannel the reverse channel port plugged into the PCM
-     * @param pcmID the ID of the PCM
+     * @param pcmID          the ID of the PCM
      */
     public TKODoubleSolenoid(int forwardChannel, int reverseChannel, int pcmID) {
         super(pcmID, forwardChannel, reverseChannel);
@@ -50,6 +51,7 @@ public class TKODoubleSolenoid extends DoubleSolenoid implements InversionInterf
     /**
      * Constructs a new Double Solenoid
      * Sets the PCM ID to 0
+     *
      * @param forwardChannel the forward channel port plugged into the PCM
      * @param reverseChannel the reverse channel port plugged into the PCM
      */
@@ -60,6 +62,7 @@ public class TKODoubleSolenoid extends DoubleSolenoid implements InversionInterf
     /**
      * Sets the value of the double solenoid
      * Flips forward and reverse if the double solenoid is inverted
+     *
      * @param value the value to set the double solenoid to
      */
     @Override
@@ -76,6 +79,7 @@ public class TKODoubleSolenoid extends DoubleSolenoid implements InversionInterf
 
     /**
      * Returns if the double solenoid is inverted
+     *
      * @return isInverted
      */
     @Override
@@ -85,6 +89,7 @@ public class TKODoubleSolenoid extends DoubleSolenoid implements InversionInterf
 
     /**
      * Sets the inversion of the double solenoid
+     *
      * @param inversion the value to set the double solenoid inversion to
      */
     @Override

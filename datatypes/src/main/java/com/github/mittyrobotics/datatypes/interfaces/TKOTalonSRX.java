@@ -30,6 +30,7 @@ public class TKOTalonSRX extends WPI_TalonSRX implements PIDFInterface, LimitSwi
     //Use these if you want to have limit switches but they are wired through the roborio
     private TKODigitalInput forwardLimitSwitch, reverseLimitSwitch;
     private double ticksPerUnit;
+
     public TKOTalonSRX(int deviceNumber) {
         super(deviceNumber);
         configFactoryDefault();
@@ -74,11 +75,6 @@ public class TKOTalonSRX extends WPI_TalonSRX implements PIDFInterface, LimitSwi
     }
 
     @Override
-    public void setTicksPerUnit(double ticksPerUnit) {
-        this.ticksPerUnit = ticksPerUnit;
-    }
-
-    @Override
     public double getPositionRaw() {
         return getSelectedSensorPosition();
     }
@@ -101,5 +97,10 @@ public class TKOTalonSRX extends WPI_TalonSRX implements PIDFInterface, LimitSwi
     @Override
     public double getTicksPerUnit() {
         return ticksPerUnit;
+    }
+
+    @Override
+    public void setTicksPerUnit(double ticksPerUnit) {
+        this.ticksPerUnit = ticksPerUnit;
     }
 }

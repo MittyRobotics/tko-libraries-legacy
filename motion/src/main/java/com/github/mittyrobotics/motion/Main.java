@@ -25,7 +25,6 @@
 package com.github.mittyrobotics.motion;
 
 import com.github.mittyrobotics.datatypes.motion.MotionState;
-import com.github.mittyrobotics.motion.controllers.PIDFController;
 import com.github.mittyrobotics.visualization.MotorGraph;
 
 import javax.swing.*;

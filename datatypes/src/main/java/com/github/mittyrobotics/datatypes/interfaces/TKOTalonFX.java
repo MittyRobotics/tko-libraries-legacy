@@ -75,11 +75,6 @@ public class TKOTalonFX extends WPI_TalonFX implements PIDFInterface, LimitSwitc
     }
 
     @Override
-    public void setTicksPerUnit(double ticksPerUnit) {
-        this.ticksPerUnit = ticksPerUnit;
-    }
-
-    @Override
     public double getPositionRaw() {
         return getSelectedSensorPosition();
     }
@@ -102,5 +97,10 @@ public class TKOTalonFX extends WPI_TalonFX implements PIDFInterface, LimitSwitc
     @Override
     public double getTicksPerUnit() {
         return ticksPerUnit;
+    }
+
+    @Override
+    public void setTicksPerUnit(double ticksPerUnit) {
+        this.ticksPerUnit = ticksPerUnit;
     }
 }
