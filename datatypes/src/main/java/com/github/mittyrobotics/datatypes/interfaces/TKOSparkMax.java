@@ -26,7 +26,7 @@ package com.github.mittyrobotics.datatypes.interfaces;
 
 import com.revrobotics.*;
 
-public class TKOSparkMax extends CANSparkMax implements PIDInterface, LimitSwitchInterface, TicksConversionInterface {
+public class TKOSparkMax extends CANSparkMax implements PIDFInterface, LimitSwitchInterface, TicksConversionInterface {
 
     private CANPIDController controller;
     private CANEncoder encoder, altEncoder;
@@ -38,7 +38,7 @@ public class TKOSparkMax extends CANSparkMax implements PIDInterface, LimitSwitc
     public TKOSparkMax(int deviceID, MotorType type) {
         super(deviceID, type);
         super.restoreFactoryDefaults();
-        setTicksToUnit(1);
+        setTicksPerUnit(1);
     }
 
     @Override
@@ -91,6 +91,7 @@ public class TKOSparkMax extends CANSparkMax implements PIDInterface, LimitSwitc
         getPIDController().setReference(value, controlType);
     }
 
+    @Override
     public void configPIDF(double p, double i, double d, double ff, int slotIdx) {
         getPIDController().setP(p, slotIdx);
         getPIDController().setI(i, slotIdx);
@@ -98,38 +99,51 @@ public class TKOSparkMax extends CANSparkMax implements PIDInterface, LimitSwitc
         getPIDController().setFF(ff, slotIdx);
     }
 
+    @Override
     public double getPositionRaw() {
         return getEncoder().getPosition();
     }
 
+    @Override
     public double getVelocityRaw() {
         return getEncoder().getVelocity();
     }
 
+    @Override
     public double getPosition() {
         return getPositionRaw() / ticksPerUnit;
     }
 
+    @Override
     public double getVelocity() { // inches per second
         return getVelocityRaw() / (60 * ticksPerUnit);
     }
 
-    public void setTicksToUnit(double ticksPerUnit) {
+    @Override
+    public double getTicksPerUnit() {
+        return ticksPerUnit;
+    }
+
+    @Override
+    public void setTicksPerUnit(double ticksPerUnit) {
         if(ticksPerUnit > 0){
             this.ticksPerUnit = ticksPerUnit;
         }
     }
 
+    @Override
     public void configRoborioForwardLimitSwitch(int id, boolean inversion) {
         forwardLimitSwitch = new TKODigitalInput(id);
         forwardLimitSwitch.setInverted(inversion);
     }
 
+    @Override
     public void configRoborioReverseLimitSwitch(int id, boolean inversion) {
         reverseLimitSwitch = new TKODigitalInput(id);
         reverseLimitSwitch.setInverted(inversion);
     }
 
+    @Override
     public boolean getRoborioForwardLimitSwitch() {
         if (forwardLimitSwitch == null) {
             return false;
@@ -138,6 +152,7 @@ public class TKOSparkMax extends CANSparkMax implements PIDInterface, LimitSwitc
         }
     }
 
+    @Override
     public boolean getRoborioReverseLimitSwitch() {
         if (reverseLimitSwitch == null) {
             return false;

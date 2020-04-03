@@ -24,8 +24,15 @@
 
 package com.github.mittyrobotics.datatypes.interfaces;
 
+/**
+ * Interface for any class containing hardware that needs to be setup
+ * Generally used in classes that extend {@link TKOSubsystem}
+ */
 public interface IHardware {
 
+    /**
+     * Initializes all the hardware of the class
+     */
     void initHardware();
 
 }

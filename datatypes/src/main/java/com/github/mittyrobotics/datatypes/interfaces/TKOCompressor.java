@@ -26,14 +26,27 @@ package com.github.mittyrobotics.datatypes.interfaces;
 
 import edu.wpi.first.wpilibj.Compressor;
 
+/**
+ * Singleton Class for the {@link Compressor} class
+ */
 public class TKOCompressor extends Compressor implements IHardware {
 
+    /**
+     * An instance of the TKOCompressor
+     */
     private static TKOCompressor instance;
 
+    /**
+     * Constructs the TKOCompressor
+     */
     private TKOCompressor() {
         super();
     }
 
+    /**
+     * Instantiates instance if it is null and returns instance
+     * @return instance
+     */
     public static TKOCompressor getInstance() {
         if (instance == null) {
             instance = new TKOCompressor();
@@ -41,6 +54,9 @@ public class TKOCompressor extends Compressor implements IHardware {
         return instance;
     }
 
+    /**
+     * initializes the compressor with the default desired settings
+     */
     @Override
     public void initHardware() {
         super.setClosedLoopControl(true);

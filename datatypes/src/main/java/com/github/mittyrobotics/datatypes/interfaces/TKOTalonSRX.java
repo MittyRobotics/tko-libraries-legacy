@@ -26,7 +26,7 @@ package com.github.mittyrobotics.datatypes.interfaces;
 
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
-public class TKOTalonSRX extends WPI_TalonSRX implements PIDInterface, LimitSwitchInterface, TicksConversionInterface {
+public class TKOTalonSRX extends WPI_TalonSRX implements PIDFInterface, LimitSwitchInterface, TicksConversionInterface {
     //Use these if you want to have limit switches but they are wired through the roborio
     private TKODigitalInput forwardLimitSwitch, reverseLimitSwitch;
     private double ticksPerUnit;
@@ -35,16 +35,19 @@ public class TKOTalonSRX extends WPI_TalonSRX implements PIDInterface, LimitSwit
         configFactoryDefault();
     }
 
+    @Override
     public void configRoborioForwardLimitSwitch(int id, boolean inversion) {
         forwardLimitSwitch = new TKODigitalInput(id);
         forwardLimitSwitch.setInverted(inversion);
     }
 
+    @Override
     public void configRoborioReverseLimitSwitch(int id, boolean inversion) {
         reverseLimitSwitch = new TKODigitalInput(id);
         reverseLimitSwitch.setInverted(inversion);
     }
 
+    @Override
     public boolean getRoborioForwardLimitSwitch() {
         if (forwardLimitSwitch == null) {
             return false;
@@ -53,6 +56,7 @@ public class TKOTalonSRX extends WPI_TalonSRX implements PIDInterface, LimitSwit
         }
     }
 
+    @Override
     public boolean getRoborioReverseLimitSwitch() {
         if (reverseLimitSwitch == null) {
             return false;
@@ -70,7 +74,7 @@ public class TKOTalonSRX extends WPI_TalonSRX implements PIDInterface, LimitSwit
     }
 
     @Override
-    public void setTicksToUnit(double ticksPerUnit) {
+    public void setTicksPerUnit(double ticksPerUnit) {
         this.ticksPerUnit = ticksPerUnit;
     }
 
@@ -92,5 +96,10 @@ public class TKOTalonSRX extends WPI_TalonSRX implements PIDInterface, LimitSwit
     @Override
     public double getVelocity() { // units / sec
         return getVelocityRaw() / ticksPerUnit * 10;
+    }
+
+    @Override
+    public double getTicksPerUnit() {
+        return ticksPerUnit;
     }
 }

@@ -24,9 +24,28 @@
 
 package com.github.mittyrobotics.datatypes.interfaces;
 
+/**
+ * Interface for inverting hardware
+ */
 public interface InversionInterface {
 
+    /**
+     * Gets if the hardware is inverted
+     * @return hardware inversion
+     */
     boolean getInverted();
 
+    /**
+     * Sets the hard to be inverted based on the value of inversion
+     * @param inversion the value to set the inversion to
+     */
     void setInverted(boolean inversion);
+
+    /**
+     * Sets the hardware to be inverted from its current inversion state
+     */
+    default void invert(){
+        setInverted(!getInverted());
+    }
+
 }
