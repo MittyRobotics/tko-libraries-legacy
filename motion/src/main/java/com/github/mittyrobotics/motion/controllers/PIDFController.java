@@ -48,7 +48,7 @@ public class PIDFController {
     private double setpoint;
     private double positionTolerance;
     private double derivativeTolerance;
-    private ContinousManager continousManager;
+    private ContinuousManager continousManager;
 
     public PIDFController(double kP, double kI, double kD, double kF, double period, ControlType controlType) {
         setGains(kP, kI, kD, kF);
@@ -56,11 +56,9 @@ public class PIDFController {
         setControlType(controlType);
         setPositionTolerance(Double.POSITIVE_INFINITY);
         setDerivativeTolerance(Double.POSITIVE_INFINITY);
-        setInputRange(0, 0);
         setOutputRange(-1, 1);
         setIntegralRange(-1, 1);
-        setInputRange(0, 0);
-        continousManager = new ContinousManager(0, 0);
+        continousManager = new ContinuousManager();
     }
 
     public PIDFController(double kP, double kI, double kD, double kF, ControlType controlType) {

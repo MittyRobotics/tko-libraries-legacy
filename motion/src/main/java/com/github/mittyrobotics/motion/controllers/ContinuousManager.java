@@ -1,11 +1,15 @@
 package com.github.mittyrobotics.motion.controllers;
 
-public class ContinousManager {
+public class ContinuousManager {
     private double minInput, maxInput;
     private double inputRange;
 
-    public ContinousManager(double minInput, double maxInput){
+    public ContinuousManager(double minInput, double maxInput){
         setInputRange(minInput, maxInput);
+    }
+
+    public ContinuousManager(){
+        this(0, 0);
     }
 
     public void setInputRange(double minInput, double maxInput){
