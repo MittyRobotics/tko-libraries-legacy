@@ -93,6 +93,7 @@ public class StateSpaceController {
         this.Kff = Kff;
         this.xHat = xHat;
         this.u = u;
+        this.x = new SimpleMatrix(new double[][]{{0},{0}});
         this.kalmanGain = kalmanGain;
     }
 

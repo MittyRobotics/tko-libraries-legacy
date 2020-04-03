@@ -41,26 +41,24 @@ public class ElevatorStateSpaceController extends StateSpaceController {
                 {startVelocity}
                 }),
                 new SimpleMatrix(new double[][]{
-                {0},
                 {0}
                 }),
                 kalmanGain);
     }
 
-    public double calculate(double measuredPosition, double measuredVelocity, double referencePosition,
+    public double calculate(double measuredPosition, double referencePosition,
                             double referenceVelocity){
         return calculate(new SimpleMatrix(new double[][]{
-                {measuredPosition},
-                {measuredVelocity}
-        }),
+                        {measuredPosition}
+                }),
                 new SimpleMatrix(new double[][]{
                 {referencePosition},
                 {referenceVelocity}
         })).get(0);
     }
 
-    public double calculate(double measuredPosition, double measuredVelocity){
-        return calculate(measuredPosition, measuredVelocity, getR().get(0), getR().get(1));
+    public double calculate(double measuredPosition){
+        return calculate(measuredPosition, getR().get(0), getR().get(1));
     }
 
     public double getControllerVoltage() {
