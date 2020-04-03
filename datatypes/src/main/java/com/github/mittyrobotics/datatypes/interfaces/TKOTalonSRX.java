@@ -26,10 +26,10 @@ package com.github.mittyrobotics.datatypes.interfaces;
 
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
-public class TKOTalonSRX extends WPI_TalonSRX implements PIDInterface, LimitSwitchInterface {
+public class TKOTalonSRX extends WPI_TalonSRX implements PIDInterface, LimitSwitchInterface, TicksConversionInterface {
     //Use these if you want to have limit switches but they are wired through the roborio
     private TKODigitalInput forwardLimitSwitch, reverseLimitSwitch;
-
+    private double ticksPerUnit;
     public TKOTalonSRX(int deviceNumber) {
         super(deviceNumber);
         configFactoryDefault();
@@ -67,5 +67,30 @@ public class TKOTalonSRX extends WPI_TalonSRX implements PIDInterface, LimitSwit
         super.config_kI(slotIdx, i);
         super.config_kD(slotIdx, d);
         super.config_kF(slotIdx, ff);
+    }
+
+    @Override
+    public void setTicksToUnit(double ticksPerUnit) {
+        this.ticksPerUnit = ticksPerUnit;
+    }
+
+    @Override
+    public double getPositionRaw() {
+        return getSelectedSensorPosition();
+    }
+
+    @Override
+    public double getVelocityRaw() {
+        return getSelectedSensorVelocity();
+    }
+
+    @Override
+    public double getPosition() {
+        return getPosition() / ticksPerUnit;
+    }
+
+    @Override
+    public double getVelocity() { // units / sec
+        return getVelocityRaw() / ticksPerUnit * 10;
     }
 }

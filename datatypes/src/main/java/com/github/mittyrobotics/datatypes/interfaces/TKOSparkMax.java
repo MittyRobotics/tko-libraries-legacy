@@ -26,19 +26,19 @@ package com.github.mittyrobotics.datatypes.interfaces;
 
 import com.revrobotics.*;
 
-public class TKOSparkMax extends CANSparkMax implements PIDInterface, LimitSwitchInterface {
+public class TKOSparkMax extends CANSparkMax implements PIDInterface, LimitSwitchInterface, TicksConversionInterface {
 
     private CANPIDController controller;
     private CANEncoder encoder, altEncoder;
     private CANAnalog analog;
     private CANAnalog.AnalogMode analogMode;
-    private double ticksPerInch;
+    private double ticksPerUnit;
     private TKODigitalInput forwardLimitSwitch, reverseLimitSwitch;
 
     public TKOSparkMax(int deviceID, MotorType type) {
         super(deviceID, type);
         super.restoreFactoryDefaults();
-        setTicksPerInch(1);
+        setTicksToUnit(1);
     }
 
     @Override
@@ -78,8 +78,9 @@ public class TKOSparkMax extends CANSparkMax implements PIDInterface, LimitSwitc
         return analog;
     }
 
-    public void setEncoderType(EncoderType encoderType) {
-        encoder = super.getEncoder(encoderType, 0);
+    public void configEncoder(EncoderType encoderType, int cpr) {
+        encoder = super.getEncoder(encoderType, cpr);
+        controller.setFeedbackDevice(encoder);
     }
 
     public void setAnalogMode(CANAnalog.AnalogMode analogMode) {
@@ -106,15 +107,17 @@ public class TKOSparkMax extends CANSparkMax implements PIDInterface, LimitSwitc
     }
 
     public double getPosition() {
-        return getPositionRaw() / ticksPerInch;
+        return getPositionRaw() / ticksPerUnit;
     }
 
     public double getVelocity() { // inches per second
-        return getVelocityRaw() / (60 * ticksPerInch);
+        return getVelocityRaw() / (60 * ticksPerUnit);
     }
 
-    public void setTicksPerInch(double ticksPerInch) {
-        this.ticksPerInch = ticksPerInch;
+    public void setTicksToUnit(double ticksPerUnit) {
+        if(ticksPerUnit > 0){
+            this.ticksPerUnit = ticksPerUnit;
+        }
     }
 
     public void configRoborioForwardLimitSwitch(int id, boolean inversion) {
