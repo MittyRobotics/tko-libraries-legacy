@@ -45,7 +45,6 @@ public class TKOCompressor extends Compressor implements IHardware {
 
     /**
      * Instantiates instance if it is null and returns instance
-     *
      * @return instance
      */
     public static TKOCompressor getInstance() {
@@ -56,7 +55,7 @@ public class TKOCompressor extends Compressor implements IHardware {
     }
 
     /**
-     * initializes the compressor with the default desired settings
+     * Configures the compressor with the default desired settings
      */
     @Override
     public void initHardware() {
