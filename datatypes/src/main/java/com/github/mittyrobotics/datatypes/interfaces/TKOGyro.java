@@ -26,13 +26,26 @@ package com.github.mittyrobotics.datatypes.interfaces;
 
 import edu.wpi.first.wpilibj.ADXRS450_Gyro;
 
+/**
+ * Singleton Class for {@link ADXRS450_Gyro} class
+ */
 public class TKOGyro extends ADXRS450_Gyro implements IHardware {
+    /**
+     * An instance of TKOGyro
+     */
     private static TKOGyro instance;
 
+    /**
+     * Constructs the TKOGyro
+     */
     private TKOGyro() {
         super();
     }
 
+    /**
+     * Instantiates instance if it is null and returns instance
+     * @return instance
+     */
     public static TKOGyro getInstance() {
         if (instance == null) {
             instance = new TKOGyro();
@@ -40,6 +53,9 @@ public class TKOGyro extends ADXRS450_Gyro implements IHardware {
         return instance;
     }
 
+    /**
+     * Configures the Gyro with the default desired settings
+     */
     @Override
     public void initHardware() {
         super.reset();

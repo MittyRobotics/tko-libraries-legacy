@@ -26,18 +26,39 @@ package com.github.mittyrobotics.datatypes.interfaces;
 
 import edu.wpi.first.wpilibj.PowerDistributionPanel;
 
-public class TKOPDP extends PowerDistributionPanel {
+/**
+ * Singleton Class for {@link PowerDistributionPanel} Class
+ */
+public class TKOPDP extends PowerDistributionPanel implements IHardware {
 
+    /**
+     * An instance of TKOPDP
+     */
     private static TKOPDP instance;
 
+    /**
+     * Constructs the TKOPDP
+     */
     private TKOPDP() {
         super();
     }
 
+    /**
+     * Instantiates instance if it is null and returns instance
+     * @return instance
+     */
     public static TKOPDP getInstance() {
         if (instance == null) {
             instance = new TKOPDP();
         }
         return instance;
+    }
+
+    /**
+     * Configures the PDP with the default desired settings
+     */
+    @Override
+    public void initHardware() {
+        super.clearStickyFaults();
     }
 }
