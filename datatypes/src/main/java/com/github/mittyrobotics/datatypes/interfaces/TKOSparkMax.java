@@ -52,7 +52,7 @@ public class TKOSparkMax extends CANSparkMax implements PIDFInterface, LimitSwit
     private CANAnalog.AnalogMode analogMode;
 
     /**
-     * The ticks conversion factor
+     * The conversion factor to convert encoder ticks to other units
      */
     private double ticksPerUnit;
 
@@ -231,7 +231,7 @@ public class TKOSparkMax extends CANSparkMax implements PIDFInterface, LimitSwit
      * @return encoder velocity in units / second
      */
     @Override
-    public double getVelocity() { // units per second
+    public double getVelocity() {
         return getVelocityRaw() / (60 * ticksPerUnit);
     }
 
@@ -253,6 +253,29 @@ public class TKOSparkMax extends CANSparkMax implements PIDFInterface, LimitSwit
         if (ticksPerUnit > 0) {
             this.ticksPerUnit = ticksPerUnit;
         }
+    }
+
+    /**
+     * Inverts the encoder based on the value of inversion
+     * @param inversion if the encoder should be inverted
+     */
+    public void setEncoderInversion(boolean inversion){
+        getEncoder().setInverted(inversion);
+    }
+
+    /**
+     * Returns if the encoder is inverted
+     * @return true if inverted
+     */
+    public boolean getEncoderInverted(){
+        return getEncoder().getInverted();
+    }
+
+    /**
+     * Inverts the encoder from it's current state
+     */
+    public void invertEncoder(){
+        setEncoderInversion(!getEncoderInverted());
     }
 
     /**
