@@ -25,7 +25,7 @@
 package com.github.mittyrobotics.simulation.models;
 
 import com.github.mittyrobotics.datatypes.units.Conversions;
-import com.github.mittyrobotics.simulation.motors.Motor;
+import com.github.mittyrobotics.motion.statespace.motors.Motor;
 
 public class FlywheelModel {
     private final Motor motor;

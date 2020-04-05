@@ -22,10 +22,10 @@
  * SOFTWARE.
  */
 
-package com.github.mittyrobotics.simulation.motors;
+package com.github.mittyrobotics.motion.statespace.motors;
 
-public class BagMotor extends Motor {
-    public BagMotor() {
-        super(.43, 53, 13180, 1.8);
+public class MiniCIMMotor extends Motor {
+    public MiniCIMMotor(double numMotors) {
+        super(1.41, 89, 5840, 3, numMotors);
     }
 }

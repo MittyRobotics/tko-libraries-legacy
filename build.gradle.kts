@@ -68,6 +68,8 @@ allprojects {
         compile(group = "org.jfree", name = "jfreechart", version = "1.5.0")
         compile(group = "org.apache.commons", name = "commons-collections4", version = "4.1")
         compile(group = "org.ejml", name = "ejml-all", version = "0.38")
+        compile(group = "org.jblas", name = "jblas", version = "1.2.4")
+        compile(group = "org.la4j", name = "la4j", version = "0.6.0")
     }
 }
 

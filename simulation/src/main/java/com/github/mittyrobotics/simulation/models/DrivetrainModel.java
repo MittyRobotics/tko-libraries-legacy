@@ -26,7 +26,7 @@ package com.github.mittyrobotics.simulation.models;
 
 import com.github.mittyrobotics.datatypes.motion.DrivetrainWheelSpeeds;
 import com.github.mittyrobotics.datatypes.units.Conversions;
-import com.github.mittyrobotics.simulation.motors.Motor;
+import com.github.mittyrobotics.motion.statespace.motors.Motor;
 
 public class DrivetrainModel {
     private final double mass;
@@ -54,20 +54,18 @@ public class DrivetrainModel {
      * @param momentOfInertia  kg*m^2
      * @param trackWidth       in
      * @param motor
-     * @param numMotorsPerSide
      * @param gearRatio
      * @param wheelRadius      in
      */
     public DrivetrainModel(double mass, double momentOfInertia, double trackWidth, double drivetrainLength,
                            Motor motor,
-                           double numMotorsPerSide,
                            double gearRatio, double wheelRadius) {
         this.mass = mass * Conversions.LBS_TO_KG;
         this.momentOfInertia = momentOfInertia;
         this.trackWidth = trackWidth * Conversions.IN_TO_M;
         this.drivetrainLength = drivetrainLength;
         this.motor = motor;
-        this.numMotorsPerSide = numMotorsPerSide;
+        this.numMotorsPerSide = motor.getNumMotors();
         this.gearRatio = gearRatio;
         this.wheelRadius = wheelRadius * Conversions.IN_TO_M;
         computeModelValues();

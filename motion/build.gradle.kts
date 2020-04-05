@@ -41,7 +41,6 @@ dependencies {
     compile(project(":datatypes"))
     compile(project(":visualization"))
     compile(project(":data-collection"))
-    compile(project(":simulation"))
 }
 
 publishing {

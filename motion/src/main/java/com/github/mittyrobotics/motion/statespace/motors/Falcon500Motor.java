@@ -22,21 +22,10 @@
  * SOFTWARE.
  */
 
-package com.github.mittyrobotics.simulation;
+package com.github.mittyrobotics.motion.statespace.motors;
 
-import com.github.mittyrobotics.motion.statespace.motors.CIMMotor;
-import com.github.mittyrobotics.simulation.models.DrivetrainModel;
-import com.github.mittyrobotics.simulation.sim.RobotSimulator;
-import com.github.mittyrobotics.simulation.sim.SimDrivetrain;
-import com.github.mittyrobotics.simulation.sim.SimRobot;
-import com.github.mittyrobotics.visualization.RobotGraph;
-
-public class Main {
-    public static void main(String[] args) {
-        DrivetrainModel drivetrainModel = new DrivetrainModel(125, 1.585, 20, 30, new CIMMotor(2), 7.0, 2);
-        SimRobot robot = new SimRobot(new SimDrivetrain(drivetrainModel));
-
-        RobotSimulator simulator = new RobotSimulator(robot, 0.02, new RobotGraph());
-        robot.getDrivetrain().setPercentOutput(1, 1);
+public class Falcon500Motor extends Motor {
+    public Falcon500Motor(double numMotors) {
+        super(4.69, 257, 6380, 1.5, numMotors);
     }
 }

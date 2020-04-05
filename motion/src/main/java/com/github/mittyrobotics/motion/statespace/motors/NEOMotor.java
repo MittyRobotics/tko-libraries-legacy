@@ -22,10 +22,10 @@
  * SOFTWARE.
  */
 
-package com.github.mittyrobotics.simulation.motors;
+package com.github.mittyrobotics.motion.statespace.motors;
 
-public class Falcon500Motor extends Motor {
-    public Falcon500Motor() {
-        super(4.69, 257, 6380, 1.5);
+public class NEOMotor extends Motor {
+    public NEOMotor(double numMotors) {
+        super(3.36, 166.0, 5880.0, 1.3, numMotors);
     }
 }

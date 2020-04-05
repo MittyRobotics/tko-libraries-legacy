@@ -22,10 +22,55 @@
  * SOFTWARE.
  */
 
-package com.github.mittyrobotics.simulation.motors;
+package com.github.mittyrobotics.motion.statespace;
 
-public class MiniCIMMotor extends Motor {
-    public MiniCIMMotor() {
-        super(1.41, 89, 5840, 3);
+import org.ejml.simple.SimpleMatrix;
+
+public class StateSpaceSystem {
+    private SimpleMatrix a;
+    private SimpleMatrix b;
+    private SimpleMatrix c;
+    private SimpleMatrix d;
+
+    public StateSpaceSystem(){
+    }
+
+    public StateSpaceSystem(SimpleMatrix a, SimpleMatrix b, SimpleMatrix c, SimpleMatrix d){
+        this.a = a;
+        this.b = b;
+        this.c = c;
+        this.d = d;
+    }
+
+    public SimpleMatrix getA() {
+        return a;
+    }
+
+    public void setA(SimpleMatrix a) {
+        this.a = a;
+    }
+
+    public SimpleMatrix getB() {
+        return b;
+    }
+
+    public void setB(SimpleMatrix b) {
+        this.b = b;
+    }
+
+    public SimpleMatrix getC() {
+        return c;
+    }
+
+    public void setC(SimpleMatrix c) {
+        this.c = c;
+    }
+
+    public SimpleMatrix getD() {
+        return d;
+    }
+
+    public void setD(SimpleMatrix d) {
+        this.d = d;
     }
 }

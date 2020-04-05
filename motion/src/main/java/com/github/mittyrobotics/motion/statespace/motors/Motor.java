@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-package com.github.mittyrobotics.simulation.motors;
+package com.github.mittyrobotics.motion.statespace.motors;
 
 /**
  * Motor class.
@@ -35,12 +35,25 @@ public class Motor {
     private final double stallCurrent; //Amps
     private final double freeSpeed; //RPM
     private final double freeCurrent; //Amps
+    private double numMotors;
 
-    public Motor(double stallTorque, double stallCurrent, double freeSpeed, double freeCurrent) {
+    private double resistance;
+    private double Kv;
+    private double Kt;
+
+    public Motor(double stallTorque, double stallCurrent, double freeSpeed, double freeCurrent, double numMotors) {
         this.stallTorque = stallTorque;
         this.stallCurrent = stallCurrent;
         this.freeSpeed = freeSpeed;
         this.freeCurrent = freeCurrent;
+        this.numMotors = numMotors;
+        computeMotorValues();
+    }
+
+    private void computeMotorValues() {
+        this.resistance = 12 / stallCurrent;
+        this.Kv = ((freeSpeed / 60.0 * 2.0 * Math.PI) / (12.0 - resistance * freeCurrent));
+        this.Kt = (numMotors * stallTorque) / stallCurrent;
     }
 
     public double getStallTorque() {
@@ -57,5 +70,21 @@ public class Motor {
 
     public double getFreeCurrent() {
         return freeCurrent;
+    }
+
+    public double getNumMotors() {
+        return numMotors;
+    }
+
+    public double getResistance() {
+        return resistance;
+    }
+
+    public double getKv() {
+        return Kv;
+    }
+
+    public double getKt() {
+        return Kt;
     }
 }

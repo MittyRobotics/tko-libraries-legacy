@@ -22,10 +22,10 @@
  * SOFTWARE.
  */
 
-package com.github.mittyrobotics.simulation.motors;
+package com.github.mittyrobotics.motion.statespace.motors;
 
-public class NEOMotor extends Motor {
-    public NEOMotor() {
-        super(3.36, 166.0, 5880.0, 1.3);
+public class BagMotor extends Motor {
+    public BagMotor(double numMotors) {
+        super(.43, 53, 13180, 1.8, numMotors);
     }
 }
