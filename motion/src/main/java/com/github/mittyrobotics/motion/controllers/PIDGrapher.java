@@ -46,29 +46,39 @@ public class PIDGrapher extends JFrame {
         final double GRAPH_UPDATE_TIME = .001;
         double setpoint = 5;
         final double VELOCITY_PER_PERCENT = 1;
-        PIDFController controller = new PIDFController(60, 0, 60);
+        PIDFController controller = new PIDFController(5/1.7, .5/2, 1.0/8);
 //        controller.setIntegralRange(Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY);
         controller.setPeriod(DELTA_T);
 //        controller.setOutputRange(Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY);
         controller.setSetpoint(setpoint);
         double position = 0;
-        double thePrevPos;
+        double thePrevPos = 0;
         double t = 0;
+        double acceleration = 0;
+        double theVelocity = 0;
         while (t < 10) {
             if((int)(t* 1000) % (int)(1000 * DELTA_T) == 0){
                 thePrevPos = position;
+                theVelocity = velocity;
                 final double MAX_MOTOR_ACCELERATION = .1;
                 if(Math.abs(velocity - controller.calculate(thePrevPos)) < MAX_MOTOR_ACCELERATION){
                     velocity = controller.calculate(thePrevPos);
+                    acceleration = controller.calculate(thePrevPos) - velocity;
                 } else if(velocity < controller.calculate(thePrevPos)){
                     velocity += MAX_MOTOR_ACCELERATION;
+                    acceleration = MAX_MOTOR_ACCELERATION;
                 } else {
                     velocity -= MAX_MOTOR_ACCELERATION;
+                    acceleration = -MAX_MOTOR_ACCELERATION;
                 }
             }
             graph.addPosition(position, t);
-            graph.addVelocity(velocity, t);
+            graph.addVelocity(theVelocity, t);
+            graph.addSetpoint(setpoint, t);
+            graph.addError(setpoint - position, t);
+
             position += VELOCITY_PER_PERCENT * velocity * GRAPH_UPDATE_TIME;
+            theVelocity += acceleration * GRAPH_UPDATE_TIME / DELTA_T;
             t += GRAPH_UPDATE_TIME;
         }
     }
