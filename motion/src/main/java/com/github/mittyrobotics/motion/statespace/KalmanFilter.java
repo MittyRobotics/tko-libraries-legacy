@@ -24,16 +24,7 @@
 
 package com.github.mittyrobotics.motion.statespace;
 
-import com.github.mittyrobotics.motion.jna.CppUtilJNA;
-import com.sun.jna.Native;
-import com.sun.jna.Pointer;
-import com.sun.jna.ptr.IntByReference;
-import com.sun.jna.ptr.PointerByReference;
-import edu.wpi.first.wpiutil.math.SimpleMatrixUtils;
 import org.ejml.simple.SimpleMatrix;
-import org.jblas.DoubleMatrix;
-import org.jblas.MatrixFunctions;
-import org.la4j.matrix.functor.MatrixFunction;
 
 public class KalmanFilter {
     private Plant plant;
@@ -57,11 +48,15 @@ public class KalmanFilter {
         SimpleMatrix Q = makeCovarianceMatrix(stateDeviation);
         SimpleMatrix R = makeCovarianceMatrix(measurementDeviation);
 
-        this.kalmanGain = makeKalmanGain(new StateSpaceSystem(A, new SimpleMatrix(new double[][]{{0}}), C,
+        this.kalmanGain = makeKalmanGain(new StateSpaceSystemGains(A, new SimpleMatrix(new double[][]{{0}}), C,
                 new SimpleMatrix(new double[][]{{0}})), Q, R);
     }
 
-    private SimpleMatrix makeKalmanGain(StateSpaceSystem discreteSystemGains, SimpleMatrix Q, SimpleMatrix R){
+    public static void main(String[] args) {
+
+    }
+
+    private SimpleMatrix makeKalmanGain(StateSpaceSystemGains discreteSystemGains, SimpleMatrix Q, SimpleMatrix R) {
         SimpleMatrix pPrior = MatrixUtils.discreteAlgebraicRiccatiEquation(discreteSystemGains.getA().transpose(),
                 discreteSystemGains.getC().transpose(), Q, R);
         SimpleMatrix s =
@@ -72,10 +67,6 @@ public class KalmanFilter {
 
     private SimpleMatrix makeCovarianceMatrix(SimpleMatrix standardDeviations) {
         return SimpleMatrix.diag(standardDeviations.elementPower(2).getDDRM().getData());
-    }
-
-    public static void main(String[] args) {
-
     }
 
     public SimpleMatrix getKalmanGain() {

@@ -31,11 +31,23 @@ public class Plant {
     private final SimpleMatrix states;
     private final SimpleMatrix inputs;
     private final SimpleMatrix outputs;
-    private final StateSpaceSystem continuousSystem;
-    private final StateSpaceSystem discreteSystem;
+    private final StateSpaceSystemGains continuousSystem;
+    private final StateSpaceSystemGains discreteSystem;
     private final SimpleMatrix uMin;
     private final SimpleMatrix uMax;
     private double deltaTime;
+
+    public Plant(SimpleMatrix states, SimpleMatrix inputs, SimpleMatrix outputs, StateSpaceSystemGains continuousSystem,
+                 SimpleMatrix uMin, SimpleMatrix uMax, double deltaTime) {
+        this.states = states;
+        this.inputs = inputs;
+        this.outputs = outputs;
+        this.continuousSystem = continuousSystem;
+        this.discreteSystem = discretizeSystem(continuousSystem, deltaTime);
+        this.uMin = uMin;
+        this.uMax = uMax;
+        this.deltaTime = deltaTime;
+    }
 
     public static Plant createElevatorPlant(Motor motor, double mass, double pulleyRadius,
                                             double gearReduction, double maxVoltage, double deltaTime) {
@@ -53,12 +65,12 @@ public class Plant {
 
         a = new SimpleMatrix(new double[][]{
                 {0.0, 1.0},
-                {0.0, (-(G*G) * Kt) / (R*(r*r)*m*Kv)}
+                {0.0, (-(G * G) * Kt) / (R * (r * r) * m * Kv)}
         });
 
         b = new SimpleMatrix(new double[][]{
                 {0.0},
-                {(G*Kt)/(R*r*m)}
+                {(G * Kt) / (R * r * m)}
         });
 
         c = new SimpleMatrix(new double[][]{
@@ -72,7 +84,7 @@ public class Plant {
         uMin = new SimpleMatrix(new double[][]{{-maxVoltage}});
         uMax = new SimpleMatrix(new double[][]{{maxVoltage}});
 
-        StateSpaceSystem continuousSystem = new StateSpaceSystem(a, b, c, d);
+        StateSpaceSystemGains continuousSystem = new StateSpaceSystemGains(a, b, c, d);
         return new Plant(states, inputs, outputs, continuousSystem, uMin, uMax, deltaTime);
     }
 
@@ -106,23 +118,11 @@ public class Plant {
         uMin = new SimpleMatrix(new double[][]{{-maxVoltage}});
         uMax = new SimpleMatrix(new double[][]{{maxVoltage}});
 
-        StateSpaceSystem continuousSystem = new StateSpaceSystem(a, b, c, d);
+        StateSpaceSystemGains continuousSystem = new StateSpaceSystemGains(a, b, c, d);
         return new Plant(states, inputs, outputs, continuousSystem, uMin, uMax, deltaTime);
     }
 
-    public Plant(SimpleMatrix states, SimpleMatrix inputs, SimpleMatrix outputs, StateSpaceSystem continuousSystem,
-                 SimpleMatrix uMin, SimpleMatrix uMax, double deltaTime) {
-        this.states = states;
-        this.inputs = inputs;
-        this.outputs = outputs;
-        this.continuousSystem = continuousSystem;
-        this.discreteSystem = discretizeSystem(continuousSystem, deltaTime);
-        this.uMin = uMin;
-        this.uMax = uMax;
-        this.deltaTime = deltaTime;
-    }
-
-    public StateSpaceSystem discretizeSystem(StateSpaceSystem input, double dt) {
+    public StateSpaceSystemGains discretizeSystem(StateSpaceSystemGains input, double dt) {
 
         SimpleMatrix emUpper = MatrixUtils.hStack(input.getA(), input.getB());
         SimpleMatrix lowerA = new SimpleMatrix(new double[input.getB().numCols()][input.getA().numRows()]);
@@ -141,7 +141,7 @@ public class Plant {
 
         SimpleMatrix bd = MatrixUtils.cut(0, ms.numRows(), input.getA().numCols(), ms.numCols(), ms);
 
-        return new StateSpaceSystem(ad, bd, input.getC(), input.getD());
+        return new StateSpaceSystemGains(ad, bd, input.getC(), input.getD());
     }
 
     public SimpleMatrix getStates() {
@@ -156,11 +156,11 @@ public class Plant {
         return outputs;
     }
 
-    public StateSpaceSystem getContinuousSystem(){
+    public StateSpaceSystemGains getContinuousSystem() {
         return continuousSystem;
     }
 
-    public StateSpaceSystem getDiscreteSystem(){
+    public StateSpaceSystemGains getDiscreteSystem() {
         return discreteSystem;
     }
 

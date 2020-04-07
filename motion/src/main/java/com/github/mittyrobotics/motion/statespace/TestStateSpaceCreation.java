@@ -27,12 +27,10 @@ package com.github.mittyrobotics.motion.statespace;
 import com.github.mittyrobotics.motion.statespace.motors.CIMMotor;
 import org.ejml.simple.SimpleMatrix;
 
-import static com.github.mittyrobotics.motion.statespace.MatrixUtils.discreteAlgebraicRiccatiEquation;
-
 public class TestStateSpaceCreation {
     public static void main(String[] args) {
-        Plant plant = Plant.createElevatorPlant(new CIMMotor(2), 6.803886, 0.02762679089,  42.0 / 12.0 * 40.0 / 14.0,
-                12,0.00505);
+        Plant plant = Plant.createElevatorPlant(new CIMMotor(2), 6.803886, 0.02762679089, 42.0 / 12.0 * 40.0 / 14.0,
+                12, 0.00505);
         KalmanFilter filter = new KalmanFilter(plant,
                 new SimpleMatrix(new double[][]{{0.05, 1.0}}),
                 new SimpleMatrix(new double[][]{{0.0001}}));

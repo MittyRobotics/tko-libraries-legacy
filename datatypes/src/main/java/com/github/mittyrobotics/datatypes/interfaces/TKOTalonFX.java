@@ -44,6 +44,7 @@ public class TKOTalonFX extends WPI_TalonFX implements PIDFInterface, LimitSwitc
 
     /**
      * Constructs a {@link TKOTalonFX} object
+     *
      * @param deviceNumber the id of the {@link WPI_TalonFX}
      */
     public TKOTalonFX(int deviceNumber) {
@@ -53,6 +54,7 @@ public class TKOTalonFX extends WPI_TalonFX implements PIDFInterface, LimitSwitc
 
     /**
      * Configures the forward roborio limit switch
+     *
      * @param id        the id of the forward limit switch
      * @param inversion if the forward limit switch is inverted
      */
@@ -64,6 +66,7 @@ public class TKOTalonFX extends WPI_TalonFX implements PIDFInterface, LimitSwitc
 
     /**
      * Configures the reverse roborio limit switch
+     *
      * @param id        the id of the reverse limit switch
      * @param inversion if the reverse limit switch is inverted
      */
@@ -75,6 +78,7 @@ public class TKOTalonFX extends WPI_TalonFX implements PIDFInterface, LimitSwitc
 
     /**
      * Returns the value of the forward limit switch
+     *
      * @return true if the forward limit switch is triggered
      */
     @Override
@@ -88,6 +92,7 @@ public class TKOTalonFX extends WPI_TalonFX implements PIDFInterface, LimitSwitc
 
     /**
      * Returns the value of the reverse limit switch
+     *
      * @return true if the reverse limit switch is triggered
      */
     @Override
@@ -101,6 +106,7 @@ public class TKOTalonFX extends WPI_TalonFX implements PIDFInterface, LimitSwitc
 
     /**
      * Configures the PIDF on a certain slotIdx for the {@link TKOTalonFX}
+     *
      * @param p       the proportional value
      * @param i       the integral value
      * @param d       the derivative value
@@ -117,6 +123,7 @@ public class TKOTalonFX extends WPI_TalonFX implements PIDFInterface, LimitSwitc
 
     /**
      * Gets the Raw Encoder Position in ticks
+     *
      * @return position in ticks
      */
     @Override
@@ -126,6 +133,7 @@ public class TKOTalonFX extends WPI_TalonFX implements PIDFInterface, LimitSwitc
 
     /**
      * Gets the Raw Encoder Velocity in ticks
+     *
      * @return velocity in ticks / 100ms
      */
     @Override
@@ -136,6 +144,7 @@ public class TKOTalonFX extends WPI_TalonFX implements PIDFInterface, LimitSwitc
     /**
      * Gets the encoder position with unit conversion
      * The default unit conversion is 1
+     *
      * @return encoder position in units
      */
     @Override
@@ -146,6 +155,7 @@ public class TKOTalonFX extends WPI_TalonFX implements PIDFInterface, LimitSwitc
     /**
      * Gets the encoder velocity with unit conversion
      * The default unit conversion is 1
+     *
      * @return encoder velocity in units / second
      */
     @Override
@@ -155,6 +165,7 @@ public class TKOTalonFX extends WPI_TalonFX implements PIDFInterface, LimitSwitc
 
     /**
      * Returns the unit conversion factor for the encoder
+     *
      * @return unit conversion factor
      */
     @Override
@@ -164,6 +175,7 @@ public class TKOTalonFX extends WPI_TalonFX implements PIDFInterface, LimitSwitc
 
     /**
      * Sets the unit conversion factor for the encoder
+     *
      * @param ticksPerUnit The conversion factor
      */
     @Override

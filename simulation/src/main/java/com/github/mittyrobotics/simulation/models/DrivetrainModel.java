@@ -50,12 +50,12 @@ public class DrivetrainModel {
     private double rightPosition;
 
     /**
-     * @param mass             lbs
-     * @param momentOfInertia  kg*m^2
-     * @param trackWidth       in
+     * @param mass            lbs
+     * @param momentOfInertia kg*m^2
+     * @param trackWidth      in
      * @param motor
      * @param gearRatio
-     * @param wheelRadius      in
+     * @param wheelRadius     in
      */
     public DrivetrainModel(double mass, double momentOfInertia, double trackWidth, double drivetrainLength,
                            Motor motor,

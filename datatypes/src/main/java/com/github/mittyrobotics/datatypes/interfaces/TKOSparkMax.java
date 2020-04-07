@@ -64,8 +64,9 @@ public class TKOSparkMax extends CANSparkMax implements PIDFInterface, LimitSwit
 
     /**
      * Constructs a {@link TKOSparkMax} object
+     *
      * @param deviceID the id of the motor controller
-     * @param type if the motor is brushed or brushless
+     * @param type     if the motor is brushed or brushless
      */
     public TKOSparkMax(int deviceID, MotorType type) {
         super(deviceID, type);
@@ -77,6 +78,7 @@ public class TKOSparkMax extends CANSparkMax implements PIDFInterface, LimitSwit
     /**
      * Returns {@link CANEncoder} configured to this {@link TKOSparkMax}
      * Configures the encoder to a Hall Sensor with cpr of 42 (default for brushless encoder) if the encoder is not configured
+     *
      * @return encoder
      */
     @Override
@@ -90,6 +92,7 @@ public class TKOSparkMax extends CANSparkMax implements PIDFInterface, LimitSwit
     /**
      * Returns {@link CANEncoder} configured to this {@link TKOSparkMax}
      * Configures the encoder to a Quadrature encoder with cpr of 0
+     *
      * @return encoder
      */
     @Override
@@ -103,6 +106,7 @@ public class TKOSparkMax extends CANSparkMax implements PIDFInterface, LimitSwit
     /**
      * Returns a {@link CANPIDController} configured to this {@link TKOSparkMax}
      * Instantiates controller if null
+     *
      * @return controller
      */
     @Override
@@ -116,6 +120,7 @@ public class TKOSparkMax extends CANSparkMax implements PIDFInterface, LimitSwit
     /**
      * Returns a {@link CANAnalog} configured to this {@link TKOSparkMax}
      * Instantiates analog if null
+     *
      * @param analogMode The type of {@link CANAnalog.AnalogMode} to set the {@link CANAnalog to}
      * @return analog
      */
@@ -129,6 +134,7 @@ public class TKOSparkMax extends CANSparkMax implements PIDFInterface, LimitSwit
      * Returns a {@link CANAnalog} configured to this {@link TKOSparkMax}
      * Instantiates analog if null
      * If setAnalog is never called, the default {@link CANAnalog.AnalogMode} is kRelative
+     *
      * @return analog
      */
     public CANAnalog getAnalog() {
@@ -140,11 +146,12 @@ public class TKOSparkMax extends CANSparkMax implements PIDFInterface, LimitSwit
 
     /**
      * Configures the encoder if null
+     *
      * @param encoderType the {@link EncoderType} to set the encoder to
-     * @param cpr the counts per revolution of the encoder
+     * @param cpr         the counts per revolution of the encoder
      */
     public void configEncoder(EncoderType encoderType, int cpr) {
-        if(encoder == null){
+        if (encoder == null) {
             encoder = super.getEncoder(encoderType, cpr);
             getPIDController().setFeedbackDevice(encoder);
         }
@@ -154,12 +161,13 @@ public class TKOSparkMax extends CANSparkMax implements PIDFInterface, LimitSwit
      * Configures the encoder if null
      * Sets the {@link EncoderType} to kHallSensor and the cpr to 42 (the default of the Spark Max Brushless Encoder)
      */
-    public void configEncoder(){
+    public void configEncoder() {
         configEncoder(EncoderType.kHallSensor, 42);
     }
 
     /**
      * Sets the {@link CANAnalog.AnalogMode} for the {@link CANAnalog} device
+     *
      * @param analogMode the {@link CANAnalog.AnalogMode} to set analog mode to
      */
     public void setAnalogMode(CANAnalog.AnalogMode analogMode) {
@@ -168,14 +176,15 @@ public class TKOSparkMax extends CANSparkMax implements PIDFInterface, LimitSwit
 
     /**
      * Sets the output of the {@link TKOSparkMax} depending on the control type
+     *
      * @param controlType The {@link ControlType} to set the motor to
-     * kDutyCycle sets the motor to apply a percentage of it's voltage (1 is 100%, 0.5 is 50%, -1 is 100% backwards)
+     *                    kDutyCycle sets the motor to apply a percentage of it's voltage (1 is 100%, 0.5 is 50%, -1 is 100% backwards)
      *                    This is the same as calling set without specifying the controlType
-     * kVelocity sets the motor to use Velocity PID to control the output
-     * kVoltage sets the motor to use value amounts of voltage
-     * kPosition sets the motor to move to the position value using the PIDController
-     * kCurrent sets the motor to use value amounts of amperes
-     * @param value the value to set the motor to based on controlType
+     *                    kVelocity sets the motor to use Velocity PID to control the output
+     *                    kVoltage sets the motor to use value amounts of voltage
+     *                    kPosition sets the motor to move to the position value using the PIDController
+     *                    kCurrent sets the motor to use value amounts of amperes
+     * @param value       the value to set the motor to based on controlType
      */
     public void set(ControlType controlType, double value) {
         getPIDController().setReference(value, controlType);
@@ -183,6 +192,7 @@ public class TKOSparkMax extends CANSparkMax implements PIDFInterface, LimitSwit
 
     /**
      * Configures the PIDF on a certain slotIdx for the {@link TKOSparkMax}
+     *
      * @param p       the proportional value
      * @param i       the integral value
      * @param d       the derivative value
@@ -199,6 +209,7 @@ public class TKOSparkMax extends CANSparkMax implements PIDFInterface, LimitSwit
 
     /**
      * Gets the Raw Encoder Position in ticks
+     *
      * @return position in ticks
      */
     @Override
@@ -208,6 +219,7 @@ public class TKOSparkMax extends CANSparkMax implements PIDFInterface, LimitSwit
 
     /**
      * Gets the Raw Encoder Velocity in ticks
+     *
      * @return velocity in ticks / minute
      */
     @Override
@@ -218,6 +230,7 @@ public class TKOSparkMax extends CANSparkMax implements PIDFInterface, LimitSwit
     /**
      * Gets the encoder position with unit conversion
      * The default unit conversion is 1
+     *
      * @return encoder position in units
      */
     @Override
@@ -228,6 +241,7 @@ public class TKOSparkMax extends CANSparkMax implements PIDFInterface, LimitSwit
     /**
      * Gets the encoder velocity with unit conversion
      * The default unit conversion is 1
+     *
      * @return encoder velocity in units / second
      */
     @Override
@@ -237,6 +251,7 @@ public class TKOSparkMax extends CANSparkMax implements PIDFInterface, LimitSwit
 
     /**
      * Returns the unit conversion factor for the encoder
+     *
      * @return unit conversion factor
      */
     @Override
@@ -246,6 +261,7 @@ public class TKOSparkMax extends CANSparkMax implements PIDFInterface, LimitSwit
 
     /**
      * Sets the unit conversion factor for the encoder
+     *
      * @param ticksPerUnit The conversion factor
      */
     @Override
@@ -257,29 +273,32 @@ public class TKOSparkMax extends CANSparkMax implements PIDFInterface, LimitSwit
 
     /**
      * Inverts the encoder based on the value of inversion
+     *
      * @param inversion if the encoder should be inverted
      */
-    public void setEncoderInversion(boolean inversion){
+    public void setEncoderInversion(boolean inversion) {
         getEncoder().setInverted(inversion);
     }
 
     /**
      * Returns if the encoder is inverted
+     *
      * @return true if inverted
      */
-    public boolean getEncoderInverted(){
+    public boolean getEncoderInverted() {
         return getEncoder().getInverted();
     }
 
     /**
      * Inverts the encoder from it's current state
      */
-    public void invertEncoder(){
+    public void invertEncoder() {
         setEncoderInversion(!getEncoderInverted());
     }
 
     /**
      * Configures the forward roborio limit switch
+     *
      * @param id        the id of the forward limit switch
      * @param inversion if the forward limit switch is inverted
      */
@@ -291,6 +310,7 @@ public class TKOSparkMax extends CANSparkMax implements PIDFInterface, LimitSwit
 
     /**
      * Configures the reverse roborio limit switch
+     *
      * @param id        the id of the reverse limit switch
      * @param inversion if the reverse limit switch is inverted
      */
@@ -302,6 +322,7 @@ public class TKOSparkMax extends CANSparkMax implements PIDFInterface, LimitSwit
 
     /**
      * Returns the value of the forward limit switch
+     *
      * @return true if the forward limit switch is triggered
      */
     @Override
@@ -315,6 +336,7 @@ public class TKOSparkMax extends CANSparkMax implements PIDFInterface, LimitSwit
 
     /**
      * Returns the value of the reverse limit switch
+     *
      * @return true if the reverse limit switch is triggered
      */
     @Override

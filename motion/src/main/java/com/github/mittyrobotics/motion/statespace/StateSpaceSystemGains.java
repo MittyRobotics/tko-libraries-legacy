@@ -26,16 +26,16 @@ package com.github.mittyrobotics.motion.statespace;
 
 import org.ejml.simple.SimpleMatrix;
 
-public class StateSpaceSystem {
+public class StateSpaceSystemGains {
     private SimpleMatrix a;
     private SimpleMatrix b;
     private SimpleMatrix c;
     private SimpleMatrix d;
 
-    public StateSpaceSystem(){
+    public StateSpaceSystemGains() {
     }
 
-    public StateSpaceSystem(SimpleMatrix a, SimpleMatrix b, SimpleMatrix c, SimpleMatrix d){
+    public StateSpaceSystemGains(SimpleMatrix a, SimpleMatrix b, SimpleMatrix c, SimpleMatrix d) {
         this.a = a;
         this.b = b;
         this.c = c;

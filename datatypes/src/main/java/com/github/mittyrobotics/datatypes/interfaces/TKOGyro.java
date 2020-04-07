@@ -44,6 +44,7 @@ public class TKOGyro extends ADXRS450_Gyro implements IHardware {
 
     /**
      * Instantiates instance if it is null and returns instance
+     *
      * @return instance
      */
     public static TKOGyro getInstance() {

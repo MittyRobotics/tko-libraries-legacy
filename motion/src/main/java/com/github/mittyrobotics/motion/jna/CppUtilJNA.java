@@ -28,10 +28,10 @@ import com.sun.jna.Library;
 import com.sun.jna.Native;
 import com.sun.jna.ptr.PointerByReference;
 
-public interface CppUtilJNA extends Library
-{
+public interface CppUtilJNA extends Library {
     CppUtilJNA INSTANCE = (CppUtilJNA) Native.load("cpp-util/cmake-build-debug/tko-libraries-cpp-util.dll",
             CppUtilJNA.class);
+
     double discreteAlgebraicRiccatiEquation(double[] A, double[] B, double[] Q, double[] R, int states, int inputs,
                                             PointerByReference output);
 }

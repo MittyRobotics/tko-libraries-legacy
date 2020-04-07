@@ -45,6 +45,7 @@ public class TKOPDP extends PowerDistributionPanel implements IHardware {
 
     /**
      * Instantiates instance if it is null and returns instance
+     *
      * @return instance
      */
     public static TKOPDP getInstance() {

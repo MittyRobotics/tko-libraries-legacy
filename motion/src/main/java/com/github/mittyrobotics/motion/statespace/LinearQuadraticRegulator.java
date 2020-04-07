@@ -27,7 +27,7 @@ package com.github.mittyrobotics.motion.statespace;
 import org.ejml.simple.SimpleMatrix;
 
 public class LinearQuadraticRegulator {
-    public LinearQuadraticRegulator(SimpleMatrix A, SimpleMatrix B, SimpleMatrix q, SimpleMatrix r, double deltaTime){
-        
+    public LinearQuadraticRegulator(SimpleMatrix A, SimpleMatrix B, SimpleMatrix q, SimpleMatrix r, double deltaTime) {
+
     }
 }
