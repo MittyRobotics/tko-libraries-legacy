@@ -37,14 +37,53 @@ public class Plant {
     private final SimpleMatrix uMax;
     private double deltaTime;
 
+    public static Plant createElevatorPlant(Motor motor, double mass, double pulleyRadius,
+                                            double gearReduction, double maxVoltage, double deltaTime) {
+        SimpleMatrix states, inputs, outputs, a, b, c, d, uMin, uMax;
+        states = new SimpleMatrix(new double[][]{{0}, {0}}); //[[position], [velocity]]
+        inputs = new SimpleMatrix(new double[][]{{0}}); //[[voltage]]
+        outputs = new SimpleMatrix(new double[][]{{0}}); //[[position]]
+
+        double G = gearReduction;
+        double Kt = motor.getKt();
+        double Kv = motor.getKv();
+        double R = motor.getResistance();
+        double m = mass;
+        double r = pulleyRadius;
+
+        a = new SimpleMatrix(new double[][]{
+                {0.0, 1.0},
+                {0.0, (-(G*G) * Kt) / (R*(r*r)*m*Kv)}
+        });
+
+        b = new SimpleMatrix(new double[][]{
+                {0.0},
+                {(G*Kt)/(R*r*m)}
+        });
+
+        c = new SimpleMatrix(new double[][]{
+                {1.0, 0.0}
+        });
+
+        d = new SimpleMatrix(new double[][]{
+                {0.0}
+        });
+
+        uMin = new SimpleMatrix(new double[][]{{-maxVoltage}});
+        uMax = new SimpleMatrix(new double[][]{{maxVoltage}});
+
+        StateSpaceSystem continuousSystem = new StateSpaceSystem(a, b, c, d);
+        return new Plant(states, inputs, outputs, continuousSystem, uMin, uMax, deltaTime);
+    }
+
     public static Plant createFlywheelPlant(Motor motor, double momentOfInertia, double gearReduction,
                                             double maxVoltage, double deltaTime) {
         SimpleMatrix states, inputs, outputs, a, b, c, d, uMin, uMax;
-        states = new SimpleMatrix(new double[1][1]);
+        states = new SimpleMatrix(new double[1][1]); //[[angular velocity]]
         states.zero();
-        inputs = new SimpleMatrix(new double[1][1]);
+        inputs = new SimpleMatrix(new double[1][1]); //[[voltage]]
         inputs.zero();
-        outputs = new SimpleMatrix(new double[1][1]);
+        outputs = new SimpleMatrix(new double[1][1]); //[[angular velocity]]
         outputs.zero();
 
         double G = gearReduction;
@@ -84,6 +123,7 @@ public class Plant {
     }
 
     public StateSpaceSystem discretizeSystem(StateSpaceSystem input, double dt) {
+
         SimpleMatrix emUpper = MatrixUtils.hStack(input.getA(), input.getB());
         SimpleMatrix lowerA = new SimpleMatrix(new double[input.getB().numCols()][input.getA().numRows()]);
         lowerA.zero();
@@ -95,12 +135,10 @@ public class Plant {
 
         SimpleMatrix ms = MatrixUtils.expm(MatrixUtils.multByDouble(em, dt));
 
-        SimpleMatrix testExp = new SimpleMatrix(new double[2][2]);
-        testExp.zero();
-
         ms = MatrixUtils.cut(0, input.getA().numRows(), 0, ms.numCols(), ms);
 
         SimpleMatrix ad = MatrixUtils.cut(0, ms.numRows(), 0, input.getA().numCols(), ms);
+
         SimpleMatrix bd = MatrixUtils.cut(0, ms.numRows(), input.getA().numCols(), ms.numCols(), ms);
 
         return new StateSpaceSystem(ad, bd, input.getC(), input.getD());
