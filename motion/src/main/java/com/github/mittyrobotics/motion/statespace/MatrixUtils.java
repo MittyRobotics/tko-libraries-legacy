@@ -24,77 +24,104 @@
 
 package com.github.mittyrobotics.motion.statespace;
 
+import com.github.mittyrobotics.motion.jna.CppUtilJNA;
+import com.sun.jna.Native;
+import com.sun.jna.Pointer;
+import com.sun.jna.ptr.PointerByReference;
+import org.ejml.data.CMatrixRMaj;
+import org.ejml.data.MatrixType;
+import org.ejml.dense.row.misc.TransposeAlgs_CDRM;
+import org.ejml.ops.ConvertMatrixType;
 import org.ejml.simple.SimpleMatrix;
 import org.jblas.DoubleMatrix;
 import org.jblas.MatrixFunctions;
 
 public class MatrixUtils {
-    public static SimpleMatrix expm(SimpleMatrix input){
+    public static SimpleMatrix expm(SimpleMatrix input) {
         DoubleMatrix mat;
         double[][] matDoubles = new double[input.numRows()][input.numCols()];
-        for(int c = 0; c < input.numCols(); c++){
-            for(int r = 0; r < input.numRows(); r++){
-                matDoubles[r][c] = input.get(r,c);
+        for (int c = 0; c < input.numCols(); c++) {
+            for (int r = 0; r < input.numRows(); r++) {
+                matDoubles[r][c] = input.get(r, c);
             }
         }
         mat = new DoubleMatrix(matDoubles);
         mat = MatrixFunctions.expm(mat);
         SimpleMatrix output = new SimpleMatrix(new double[mat.rows][mat.columns]);
-        for(int c = 0; c < mat.columns; c++){
-            for(int r = 0; r < mat.rows; r++){
-                output.set(r,c,mat.get(r,c));
+        for (int c = 0; c < mat.columns; c++) {
+            for (int r = 0; r < mat.rows; r++) {
+                output.set(r, c, mat.get(r, c));
             }
         }
         return output;
     }
 
-    public static SimpleMatrix multByDouble(SimpleMatrix matrix, double scalar){
+    public static SimpleMatrix multByDouble(SimpleMatrix matrix, double scalar) {
         SimpleMatrix output = new SimpleMatrix(new double[matrix.numRows()][matrix.numCols()]);
-        for(int i = 0; i < output.getNumElements(); i++){
+        for (int i = 0; i < output.getNumElements(); i++) {
             output.set(i, matrix.get(i) * scalar);
         }
         return output;
     }
 
-    public static SimpleMatrix cut(int startRow, int endRow, int startCol, int endCol, SimpleMatrix matrix){
-        SimpleMatrix output = new SimpleMatrix(new double[endRow-startRow][endCol-startCol]);
-        for(int c = 0; c < output.numCols(); c++){
-            for(int r = 0; r < output.numRows(); r++){
-                output.set(r,c,matrix.get(r+startRow, c+startCol));
+    public static SimpleMatrix cut(int startRow, int endRow, int startCol, int endCol, SimpleMatrix matrix) {
+        SimpleMatrix output = new SimpleMatrix(new double[endRow - startRow][endCol - startCol]);
+        for (int c = 0; c < output.numCols(); c++) {
+            for (int r = 0; r < output.numRows(); r++) {
+                output.set(r, c, matrix.get(r + startRow, c + startCol));
             }
         }
         return output;
     }
 
-    public static SimpleMatrix hStack(SimpleMatrix a, SimpleMatrix b){
-        SimpleMatrix output = new SimpleMatrix(new double[a.numRows()][a.numCols()+b.numCols()]);
-        for(int c = 0; c < a.numCols(); c++){
-            for(int r = 0; r < a.numRows(); r++){
-                output.set(r,c,a.get(r,c));
+    public static SimpleMatrix hStack(SimpleMatrix a, SimpleMatrix b) {
+        SimpleMatrix output = new SimpleMatrix(new double[a.numRows()][a.numCols() + b.numCols()]);
+        for (int c = 0; c < a.numCols(); c++) {
+            for (int r = 0; r < a.numRows(); r++) {
+                output.set(r, c, a.get(r, c));
             }
         }
-        for(int c = 0; c < b.numCols(); c++){
-            for(int r = 0; r < b.numRows(); r++){
-                output.set(r,c+a.numCols(),b.get(r,c));
+        for (int c = 0; c < b.numCols(); c++) {
+            for (int r = 0; r < b.numRows(); r++) {
+                output.set(r, c + a.numCols(), b.get(r, c));
             }
         }
 
         return output;
     }
 
-    public static SimpleMatrix vStack(SimpleMatrix a, SimpleMatrix b){
-        SimpleMatrix output = new SimpleMatrix(new double[a.numRows()+b.numRows()][a.numCols()]);
-        for(int c = 0; c < a.numCols(); c++){
-            for(int r = 0; r < a.numRows(); r++){
-                output.set(r,c,a.get(r,c));
+    public static SimpleMatrix vStack(SimpleMatrix a, SimpleMatrix b) {
+        SimpleMatrix output = new SimpleMatrix(new double[a.numRows() + b.numRows()][a.numCols()]);
+        for (int c = 0; c < a.numCols(); c++) {
+            for (int r = 0; r < a.numRows(); r++) {
+                output.set(r, c, a.get(r, c));
             }
         }
-        for(int c = 0; c < b.numCols(); c++){
-            for(int r = 0; r < b.numRows(); r++){
-                output.set(r+a.numRows(),c,b.get(r,c));
+        for (int c = 0; c < b.numCols(); c++) {
+            for (int r = 0; r < b.numRows(); r++) {
+                output.set(r + a.numRows(), c, b.get(r, c));
             }
         }
 
         return output;
+    }
+
+    public static SimpleMatrix discreteAlgebraicRiccatiEquation(SimpleMatrix A, SimpleMatrix B, SimpleMatrix Q,
+                                                                SimpleMatrix R) {
+        int states = A.numCols();
+        int inputs = B.numCols();
+
+        final PointerByReference outputPtr = new PointerByReference();
+        CppUtilJNA lib = CppUtilJNA.INSTANCE;
+        lib.discreteAlgebraicRiccatiEquation(A.getDDRM().getData(), B.getDDRM().getData(), Q.getDDRM().getData(),
+                R.getDDRM().getData(), states, inputs, outputPtr);
+        final Pointer result = outputPtr.getValue();
+
+        double[] resultArray = new double[states * states];
+        for (int i = 0; i < resultArray.length; i++) {
+            resultArray[i] = result.getDouble(i * Native.getNativeSize(Double.TYPE));
+        }
+
+        return new SimpleMatrix(states, states, true, resultArray);
     }
 }

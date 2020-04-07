@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6"/>
+	<Project>
+		<Option title="cpp_util"/>
+		<Option makefile_is_custom="1"/>
+		<Option compiler="msvc8"/>
+		<Option virtualFolders="CMake Files\;"/>
+		<Build>
+			<Target title="all">
+				<Option working_dir="C:/Users/Owen/Documents/GitHub/tko-libraries/cpp-util/cmake-build-debug"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="nmake /NOLOGO /f C:\Users\Owen\Documents\GitHub\tko-libraries\cpp-util\cmake-build-debug\Makefile VERBOSE=1 all"/>
+					<CompileFile command="nmake /NOLOGO /f C:\Users\Owen\Documents\GitHub\tko-libraries\cpp-util\cmake-build-debug\Makefile VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="nmake /NOLOGO /f C:\Users\Owen\Documents\GitHub\tko-libraries\cpp-util\cmake-build-debug\Makefile VERBOSE=1 clean"/>
+					<DistClean command="nmake /NOLOGO /f C:\Users\Owen\Documents\GitHub\tko-libraries\cpp-util\cmake-build-debug\Makefile VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="tko-libraries-cpp-util">
+				<Option output="C:/Users/Owen/Documents/GitHub/tko-libraries/cpp-util/cmake-build-debug/tko-libraries-cpp-util.dll" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="C:/Users/Owen/Documents/GitHub/tko-libraries/cpp-util/cmake-build-debug"/>
+				<Option object_output="./"/>
+				<Option type="3"/>
+				<Option compiler="msvc8"/>
+				<Compiler>
+					<Add directory="C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\INCLUDE"/>
+					<Add directory="C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\ATLMFC\INCLUDE"/>
+					<Add directory="C:\Program Files (x86)\Windows Kits\10\include\10.0.10586.0\ucrt"/>
+					<Add directory="C:\Program Files (x86)\Windows Kits\NETFXSDK\4.6.1\include\um"/>
+					<Add directory="C:\Program Files (x86)\Windows Kits\10\include\10.0.10586.0\shared"/>
+					<Add directory="C:\Program Files (x86)\Windows Kits\10\include\10.0.10586.0\um"/>
+					<Add directory="C:\Program Files (x86)\Windows Kits\10\include\10.0.10586.0\winrt"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="nmake /NOLOGO /f C:\Users\Owen\Documents\GitHub\tko-libraries\cpp-util\cmake-build-debug\Makefile VERBOSE=1 tko-libraries-cpp-util"/>
+					<CompileFile command="nmake /NOLOGO /f C:\Users\Owen\Documents\GitHub\tko-libraries\cpp-util\cmake-build-debug\Makefile VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="nmake /NOLOGO /f C:\Users\Owen\Documents\GitHub\tko-libraries\cpp-util\cmake-build-debug\Makefile VERBOSE=1 clean"/>
+					<DistClean command="nmake /NOLOGO /f C:\Users\Owen\Documents\GitHub\tko-libraries\cpp-util\cmake-build-debug\Makefile VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="tko-libraries-cpp-util/fast">
+				<Option output="C:/Users/Owen/Documents/GitHub/tko-libraries/cpp-util/cmake-build-debug/tko-libraries-cpp-util.dll" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="C:/Users/Owen/Documents/GitHub/tko-libraries/cpp-util/cmake-build-debug"/>
+				<Option object_output="./"/>
+				<Option type="3"/>
+				<Option compiler="msvc8"/>
+				<Compiler>
+					<Add directory="C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\INCLUDE"/>
+					<Add directory="C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\ATLMFC\INCLUDE"/>
+					<Add directory="C:\Program Files (x86)\Windows Kits\10\include\10.0.10586.0\ucrt"/>
+					<Add directory="C:\Program Files (x86)\Windows Kits\NETFXSDK\4.6.1\include\um"/>
+					<Add directory="C:\Program Files (x86)\Windows Kits\10\include\10.0.10586.0\shared"/>
+					<Add directory="C:\Program Files (x86)\Windows Kits\10\include\10.0.10586.0\um"/>
+					<Add directory="C:\Program Files (x86)\Windows Kits\10\include\10.0.10586.0\winrt"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="nmake /NOLOGO /f C:\Users\Owen\Documents\GitHub\tko-libraries\cpp-util\cmake-build-debug\Makefile VERBOSE=1 tko-libraries-cpp-util/fast"/>
+					<CompileFile command="nmake /NOLOGO /f C:\Users\Owen\Documents\GitHub\tko-libraries\cpp-util\cmake-build-debug\Makefile VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="nmake /NOLOGO /f C:\Users\Owen\Documents\GitHub\tko-libraries\cpp-util\cmake-build-debug\Makefile VERBOSE=1 clean"/>
+					<DistClean command="nmake /NOLOGO /f C:\Users\Owen\Documents\GitHub\tko-libraries\cpp-util\cmake-build-debug\Makefile VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="edit_cache">
+				<Option working_dir="C:/Users/Owen/Documents/GitHub/tko-libraries/cpp-util/cmake-build-debug"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="nmake /NOLOGO /f C:\Users\Owen\Documents\GitHub\tko-libraries\cpp-util\cmake-build-debug\Makefile VERBOSE=1 edit_cache"/>
+					<CompileFile command="nmake /NOLOGO /f C:\Users\Owen\Documents\GitHub\tko-libraries\cpp-util\cmake-build-debug\Makefile VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="nmake /NOLOGO /f C:\Users\Owen\Documents\GitHub\tko-libraries\cpp-util\cmake-build-debug\Makefile VERBOSE=1 clean"/>
+					<DistClean command="nmake /NOLOGO /f C:\Users\Owen\Documents\GitHub\tko-libraries\cpp-util\cmake-build-debug\Makefile VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="rebuild_cache">
+				<Option working_dir="C:/Users/Owen/Documents/GitHub/tko-libraries/cpp-util/cmake-build-debug"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="nmake /NOLOGO /f C:\Users\Owen\Documents\GitHub\tko-libraries\cpp-util\cmake-build-debug\Makefile VERBOSE=1 rebuild_cache"/>
+					<CompileFile command="nmake /NOLOGO /f C:\Users\Owen\Documents\GitHub\tko-libraries\cpp-util\cmake-build-debug\Makefile VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="nmake /NOLOGO /f C:\Users\Owen\Documents\GitHub\tko-libraries\cpp-util\cmake-build-debug\Makefile VERBOSE=1 clean"/>
+					<DistClean command="nmake /NOLOGO /f C:\Users\Owen\Documents\GitHub\tko-libraries\cpp-util\cmake-build-debug\Makefile VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+		</Build>
+		<Unit filename="C:/Users/Owen/Documents/GitHub/tko-libraries/cpp-util/drake/discrete_algebraic_riccati_equation.cc">
+			<Option target="tko-libraries-cpp-util"/>
+		</Unit>
+		<Unit filename="C:/Users/Owen/Documents/GitHub/tko-libraries/cpp-util/drake/discrete_algebraic_riccati_equation.h">
+			<Option target="tko-libraries-cpp-util"/>
+		</Unit>
+		<Unit filename="C:/Users/Owen/Documents/GitHub/tko-libraries/cpp-util/library.cpp">
+			<Option target="tko-libraries-cpp-util"/>
+		</Unit>
+		<Unit filename="C:/Users/Owen/Documents/GitHub/tko-libraries/cpp-util/CMakeLists.txt">
+			<Option virtualFolder="CMake Files\"/>
+		</Unit>
+	</Project>
+</CodeBlocks_project_file>

@@ -28,6 +28,9 @@ plugins {
     id("java")
     id("edu.wpi.first.GradleRIO") version "2020.3.2"
     id("maven")
+    id("cpp")
+    id("edu.wpi.first.GradleVsCode") version "0.8.0"
+    id("edu.wpi.first.GradleJni") version "0.4.1"
     `maven-publish`
 }
 
@@ -61,6 +64,7 @@ allprojects {
         wpi.deps.vendor.java().forEach { compile(it) }
         wpi.deps.vendor.jni(NativePlatforms.roborio).forEach { nativeZip(it) }
         wpi.deps.vendor.jni(NativePlatforms.desktop).forEach { nativeDesktopZip(it) }
+
         compile(group = "com.ctre.phoenix", name = "wpiapi-java", version = "5.18.3")
         compile(group = "com.ctre.phoenix", name = "api-java", version = "5.18.3")
         compile(group = "edu.wpi.first.wpilibNewCommands", name = "wpilibNewCommands-java", version = "2020.3.2")
@@ -70,6 +74,7 @@ allprojects {
         compile(group = "org.ejml", name = "ejml-all", version = "0.38")
         compile(group = "org.jblas", name = "jblas", version = "1.2.4")
         compile(group = "org.la4j", name = "la4j", version = "0.6.0")
+        compile(group = "net.java.dev.jna", name = "jna", version = "5.5.0")
     }
 }
 
