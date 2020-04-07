@@ -113,6 +113,14 @@ public class MatrixUtils {
         return output;
     }
 
+    public static SimpleMatrix clamp(SimpleMatrix matrix, double min, double max){
+        SimpleMatrix output = new SimpleMatrix(matrix.numRows(), matrix.numCols());
+        for(int i = 0; i < output.getNumElements(); i++){
+            output.set(i, Math.max(min, Math.min(max, matrix.get(i))));
+        }
+        return output;
+    }
+
     public static SimpleMatrix discreteAlgebraicRiccatiEquation(SimpleMatrix A, SimpleMatrix B, SimpleMatrix Q,
                                                                 SimpleMatrix R) {
         int states = A.numCols();

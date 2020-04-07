@@ -37,6 +37,10 @@ public class Plant {
     private final SimpleMatrix uMax;
     private double deltaTime;
 
+    private SimpleMatrix x;
+    private SimpleMatrix y;
+    private SimpleMatrix uDelayed;
+
     public Plant(SimpleMatrix states, SimpleMatrix inputs, SimpleMatrix outputs, StateSpaceSystemGains continuousSystem,
                  SimpleMatrix uMin, SimpleMatrix uMax, double deltaTime) {
         this.states = states;
@@ -144,6 +148,33 @@ public class Plant {
         return new StateSpaceSystemGains(ad, bd, input.getC(), input.getD());
     }
 
+    public void reset() {
+        this.x = new SimpleMatrix(new double[states.numRows()][states.numCols()]);
+        this.y = new SimpleMatrix(new double[outputs.numRows()][outputs.numCols()]);
+        this.uDelayed = new SimpleMatrix(new double[inputs.numRows()][inputs.numCols()]);
+    }
+
+    public void update(SimpleMatrix currentState, SimpleMatrix controlInput, double deltaTime) {
+        this.x = calculateX(currentState, uDelayed, deltaTime);
+        this.y = calculateY(this.x, uDelayed);
+        this.uDelayed = controlInput;
+    }
+
+    public SimpleMatrix calculateX(SimpleMatrix currentState, SimpleMatrix controlInput, double deltaTime) {
+        StateSpaceSystemGains reDiscretizedGains = discretizeSystem(continuousSystem, deltaTime);
+
+        SimpleMatrix reDiscretizedA = reDiscretizedGains.getA();
+        SimpleMatrix reDiscretizedB = reDiscretizedGains.getB();
+
+        return (reDiscretizedA.mult(currentState))
+                .plus(reDiscretizedB.mult(MatrixUtils.clamp(controlInput, uMin.get(0), uMax.get(0))));
+    }
+
+    public SimpleMatrix calculateY(SimpleMatrix currentState, SimpleMatrix controlInput) {
+        return getContinuousSystem().getC().mult(currentState)
+                .plus(getContinuousSystem().getD().mult(MatrixUtils.clamp(controlInput, uMin.get(0), uMax.get(0))));
+    }
+
     public SimpleMatrix getStates() {
         return states;
     }
@@ -174,5 +205,21 @@ public class Plant {
 
     public double getDeltaTime() {
         return deltaTime;
+    }
+
+    public SimpleMatrix getX() {
+        return x;
+    }
+
+    public void setX(SimpleMatrix x) {
+        this.x = x;
+    }
+
+    public SimpleMatrix getY() {
+        return y;
+    }
+
+    public void setY(SimpleMatrix y) {
+        this.y = y;
     }
 }

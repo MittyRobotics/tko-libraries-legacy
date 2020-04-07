@@ -39,7 +39,7 @@ public class KalmanFilter {
         SimpleMatrix Q = makeCovarianceMatrix(stateDeviation);
         SimpleMatrix R = makeCovarianceMatrix(measurementDeviation);
 
-        this.kalmanGain = makeKalmanGain(plant.getDiscreteSystem(), Q, R);
+        this.kalmanGain = computeKalmanGain(plant.getDiscreteSystem(), Q, R);
     }
 
     public KalmanFilter(SimpleMatrix A, SimpleMatrix C, SimpleMatrix stateDeviation,
@@ -48,11 +48,11 @@ public class KalmanFilter {
         SimpleMatrix Q = makeCovarianceMatrix(stateDeviation);
         SimpleMatrix R = makeCovarianceMatrix(measurementDeviation);
 
-        this.kalmanGain = makeKalmanGain(new StateSpaceSystemGains(A, new SimpleMatrix(new double[][]{{0}}), C,
+        this.kalmanGain = computeKalmanGain(new StateSpaceSystemGains(A, new SimpleMatrix(new double[][]{{0}}), C,
                 new SimpleMatrix(new double[][]{{0}})), Q, R);
     }
 
-    private SimpleMatrix makeKalmanGain(StateSpaceSystemGains discreteSystemGains, SimpleMatrix Q, SimpleMatrix R) {
+    private SimpleMatrix computeKalmanGain(StateSpaceSystemGains discreteSystemGains, SimpleMatrix Q, SimpleMatrix R) {
         SimpleMatrix pPrior = MatrixUtils.discreteAlgebraicRiccatiEquation(discreteSystemGains.getA().transpose(),
                 discreteSystemGains.getC().transpose(), Q, R);
         SimpleMatrix s =
@@ -63,6 +63,10 @@ public class KalmanFilter {
 
     private SimpleMatrix makeCovarianceMatrix(SimpleMatrix standardDeviations) {
         return SimpleMatrix.diag(standardDeviations.elementPower(2).getDDRM().getData());
+    }
+
+    public void predict(SimpleMatrix input, double deltaTime){
+
     }
 
     public SimpleMatrix getKalmanGain() {
