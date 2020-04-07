@@ -51,7 +51,7 @@ public class KalmanFilter {
         this.kalmanGain = makeKalmanGain(new StateSpaceSystemGains(A, new SimpleMatrix(new double[][]{{0}}), C,
                 new SimpleMatrix(new double[][]{{0}})), Q, R);
     }
-    
+
     private SimpleMatrix makeKalmanGain(StateSpaceSystemGains discreteSystemGains, SimpleMatrix Q, SimpleMatrix R) {
         SimpleMatrix pPrior = MatrixUtils.discreteAlgebraicRiccatiEquation(discreteSystemGains.getA().transpose(),
                 discreteSystemGains.getC().transpose(), Q, R);

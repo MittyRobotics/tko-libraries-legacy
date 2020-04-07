@@ -102,6 +102,17 @@ public class MatrixUtils {
         return output;
     }
 
+    public static SimpleMatrix makeCostMatrix(SimpleMatrix cost) {
+        SimpleMatrix output = new SimpleMatrix(cost.numRows(), cost.numRows());
+        output.fill(0.0);
+
+        for (int i = 0; i < cost.numRows(); i++) {
+            output.set(i, i, 1.0 / Math.pow(cost.get(i, 0), 2));
+        }
+
+        return output;
+    }
+
     public static SimpleMatrix discreteAlgebraicRiccatiEquation(SimpleMatrix A, SimpleMatrix B, SimpleMatrix Q,
                                                                 SimpleMatrix R) {
         int states = A.numCols();
