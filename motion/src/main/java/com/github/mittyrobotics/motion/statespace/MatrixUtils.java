@@ -120,14 +120,16 @@ public class MatrixUtils {
         }
         return output;
     }
-
+    public static CppUtilJNA lib = CppUtilJNA.INSTANCE;
     public static SimpleMatrix discreteAlgebraicRiccatiEquation(SimpleMatrix A, SimpleMatrix B, SimpleMatrix Q,
                                                                 SimpleMatrix R) {
         int states = A.numCols();
         int inputs = B.numCols();
 
+        System.out.println(A);
+
         final PointerByReference outputPtr = new PointerByReference();
-        CppUtilJNA lib = CppUtilJNA.INSTANCE;
+
         lib.discreteAlgebraicRiccatiEquation(A.getDDRM().getData(), B.getDDRM().getData(), Q.getDDRM().getData(),
                 R.getDDRM().getData(), states, inputs, outputPtr);
         final Pointer result = outputPtr.getValue();

@@ -179,6 +179,10 @@ public class Plant {
         return states;
     }
 
+    public int getNumStates(){
+        return states.numRows();
+    }
+
     public SimpleMatrix getInputs() {
         return inputs;
     }

@@ -29,6 +29,11 @@ import org.ejml.simple.SimpleMatrix;
 public class KalmanFilter {
     private Plant plant;
     private SimpleMatrix kalmanGain;
+    private SimpleMatrix p;
+    private SimpleMatrix contQ;
+    private SimpleMatrix contR;
+    private SimpleMatrix discR;
+    private SimpleMatrix discQ;
 
     public KalmanFilter() {
 
@@ -36,28 +41,23 @@ public class KalmanFilter {
 
     public KalmanFilter(Plant plant, SimpleMatrix stateDeviation, SimpleMatrix measurementDeviation) {
         this.plant = plant;
-        SimpleMatrix Q = makeCovarianceMatrix(stateDeviation);
-        SimpleMatrix R = makeCovarianceMatrix(measurementDeviation);
+        this.contQ = makeCovarianceMatrix(stateDeviation);
+        this.contR = makeCovarianceMatrix(measurementDeviation);
 
-        this.kalmanGain = computeKalmanGain(plant.getDiscreteSystem(), Q, R);
-    }
+        this.discR = MatrixUtils.multByDouble(contR, 1/plant.getDeltaTime());
 
-    public KalmanFilter(SimpleMatrix A, SimpleMatrix C, SimpleMatrix stateDeviation,
-                        SimpleMatrix measurementDeviation) {
-        this.plant = plant;
-        SimpleMatrix Q = makeCovarianceMatrix(stateDeviation);
-        SimpleMatrix R = makeCovarianceMatrix(measurementDeviation);
-
-        this.kalmanGain = computeKalmanGain(new StateSpaceSystemGains(A, new SimpleMatrix(new double[][]{{0}}), C,
-                new SimpleMatrix(new double[][]{{0}})), Q, R);
+        this.kalmanGain = computeKalmanGain(new StateSpaceSystemGains(plant.getDiscreteSystem().getA(),
+                new SimpleMatrix(new double[][]{{0}})
+                , plant.getDiscreteSystem().getC(),
+                new SimpleMatrix(new double[][]{{0}})), contQ, discR);
     }
 
     private SimpleMatrix computeKalmanGain(StateSpaceSystemGains discreteSystemGains, SimpleMatrix Q, SimpleMatrix R) {
-        SimpleMatrix pPrior = MatrixUtils.discreteAlgebraicRiccatiEquation(discreteSystemGains.getA().transpose(),
+        this.p = MatrixUtils.discreteAlgebraicRiccatiEquation(discreteSystemGains.getA().transpose(),
                 discreteSystemGains.getC().transpose(), Q, R);
         SimpleMatrix s =
-                discreteSystemGains.getC().mult(pPrior).mult(discreteSystemGains.getC().transpose()).plus(R);
-        SimpleMatrix k = pPrior.mult(discreteSystemGains.getC().transpose()).mult(s.pseudoInverse());
+                discreteSystemGains.getC().mult(p).mult(discreteSystemGains.getC().transpose()).plus(R);
+        SimpleMatrix k = p.mult(discreteSystemGains.getC().transpose()).mult(s.pseudoInverse());
         return k;
     }
 
@@ -65,8 +65,36 @@ public class KalmanFilter {
         return SimpleMatrix.diag(standardDeviations.elementPower(2).getDDRM().getData());
     }
 
-    public void predict(SimpleMatrix input, double deltaTime){
+    public void predict(SimpleMatrix controlInput, double deltaTime) {
+        plant.setX(plant.calculateX(plant.getX(), controlInput, deltaTime));
 
+        StateSpaceSystemGains reDiscretizedSystem = plant.discretizeSystem(plant.getContinuousSystem(), deltaTime);
+
+        SimpleMatrix discA = reDiscretizedSystem.getA();
+
+        this.p = discA.mult(p).mult(discA.transpose()).plus(contQ);
+        this.discR = MatrixUtils.multByDouble(contR, 1 / deltaTime);
+    }
+
+    public void correct(SimpleMatrix controlInput, SimpleMatrix measurement) {
+        SimpleMatrix x = plant.getX();
+        SimpleMatrix S =
+                plant.getDiscreteSystem().getC().mult(p).mult(plant.getDiscreteSystem().getC().transpose()).plus(contR);
+
+        SimpleMatrix K = S.transpose().solve(plant.getDiscreteSystem().getC().mult(p.transpose())).transpose();
+
+        System.out.println(plant.getDiscreteSystem().getC().mult(x).plus(plant.getDiscreteSystem().getD().mult(controlInput)));
+
+        plant.setX(x.plus(new SimpleMatrix(K.mult(measurement.minus(
+                plant.getDiscreteSystem().getC().mult(x)
+                        .plus(plant.getDiscreteSystem().getD().mult(controlInput)))))));
+
+        p = SimpleMatrix.identity(plant.getNumStates())
+                .minus(K.mult(plant.getDiscreteSystem().getC())).mult(p);
+    }
+
+    public SimpleMatrix getXhat(){
+        return plant.getX();
     }
 
     public SimpleMatrix getKalmanGain() {

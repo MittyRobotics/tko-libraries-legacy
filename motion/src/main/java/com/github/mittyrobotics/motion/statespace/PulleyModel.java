@@ -22,15 +22,13 @@
  * SOFTWARE.
  */
 
-package com.github.mittyrobotics.simulation.models;
+package com.github.mittyrobotics.motion.statespace;
 
-import com.github.mittyrobotics.datatypes.units.Conversions;
 import com.github.mittyrobotics.motion.statespace.motors.Motor;
 
 public class PulleyModel {
     private final double mass;
     private final Motor motor;
-    private final double numMotors;
     private final double gearRatio;
     private final double pulleyRadius;
 
@@ -42,12 +40,11 @@ public class PulleyModel {
     private double velocity;
     private double position;
 
-    public PulleyModel(double mass, Motor motor, double numMotors, double gearRatio, double pulleyRadius) {
-        this.mass = mass * Conversions.LBS_TO_KG;
+    public PulleyModel(double mass, Motor motor, double gearRatio, double pulleyRadius) {
+        this.mass = mass;
         this.motor = motor;
-        this.numMotors = numMotors;
         this.gearRatio = gearRatio;
-        this.pulleyRadius = pulleyRadius * Conversions.IN_TO_M;
+        this.pulleyRadius = pulleyRadius;
         computeModelValues();
     }
 
@@ -57,9 +54,9 @@ public class PulleyModel {
         double freeSpeed = motor.getFreeSpeed();
         double freeCurrent = motor.getFreeCurrent();
 
-        this.resistance = 12 / stallCurrent;
-        this.Kv = ((freeSpeed / 60.0 * 2.0 * Math.PI) / (12.0 - resistance * freeCurrent));
-        this.Kt = (numMotors * stallTorque) / stallCurrent;
+        this.resistance = motor.getResistance();
+        this.Kv = motor.getKv();
+        this.Kt = motor.getKt();
     }
 
     public void updateModel(double voltage, double deltaTime) {
@@ -80,15 +77,15 @@ public class PulleyModel {
     }
 
     public double getAcceleration() {
-        return acceleration * Conversions.M_TO_IN;
+        return acceleration;
     }
 
     public double getVelocity() {
-        return velocity * Conversions.M_TO_IN;
+        return velocity;
     }
 
     public double getPosition() {
-        return position * Conversions.M_TO_IN;
+        return position;
     }
 
     public double getMass() {
