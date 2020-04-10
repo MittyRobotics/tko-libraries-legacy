@@ -27,20 +27,21 @@ package com.github.mittyrobotics.motion.statespace;
 import com.github.mittyrobotics.datatypes.motion.MotionState;
 import com.github.mittyrobotics.motion.OverrideMethod;
 import com.github.mittyrobotics.motion.SCurveMotionProfile;
+import com.github.mittyrobotics.motion.controllers.StateSpaceController;
 import com.github.mittyrobotics.motion.statespace.models.PulleyModel;
-import com.github.mittyrobotics.motion.statespace.motors.CIMMotor;
 import com.github.mittyrobotics.motion.statespace.motors.Motor;
+import com.github.mittyrobotics.motion.statespace.motors.NEOMotor;
 import com.github.mittyrobotics.visualization.MotorGraph;
 import org.ejml.simple.SimpleMatrix;
 
 public class TestStateSpaceCreation {
     public static void main(String[] args) {
-        double pulleyRadius = .1;
+        double pulleyRadius = 0.0254;
         double mass = 6.803886;
         double gearReduction = 42.0 / 12.0 * 40.0 / 14.0;
         double maxVoltage = 12;
         double dt = 0.00505;
-        Motor motor = new CIMMotor(2);
+        Motor motor = new NEOMotor(1);
 
         Plant plant = Plant.createElevatorPlant(motor, mass, pulleyRadius, gearReduction,
                 maxVoltage, dt);
@@ -54,33 +55,37 @@ public class TestStateSpaceCreation {
                 plant.getDiscreteSystem().getC() + "" + plant.getDiscreteSystem().getD() + "" + controller.getLqrGain() + "" +
                 controller.getUff() + "" + filter.getKalmanGain());
 
-        StateSpaceLoop loop = new StateSpaceLoop(plant, controller, filter);
+        StateSpaceController loop = new StateSpaceController(plant, controller, filter);
 
         MotorGraph graph = new MotorGraph();
 
         PulleyModel pulleyModel = new PulleyModel(mass, motor, gearReduction, pulleyRadius);
 
-        SCurveMotionProfile motionProfile = new SCurveMotionProfile(new MotionState(0, 0, 0), new MotionState(5, 0, 0),
-                1, 1, 1, 5, OverrideMethod.END_AFTER_SETPOINT);
-
-
         double previousPos = 0;
         double previousVel = 0;
+
+        SCurveMotionProfile motionProfile = new SCurveMotionProfile(new MotionState(previousPos, previousVel, 0),
+                new MotionState(previousPos + 5, 0, 0),
+                5, 5, 5, 1.57, OverrideMethod.END_AFTER_SETPOINT);
+
+        plant.setX(new SimpleMatrix(new double[][]{{previousPos},{previousVel}}));
+        pulleyModel.setPosition(previousPos);
+        pulleyModel.setVelocity(previousVel);
         for (double t = 0; t < 10; t += dt) {
             double referencePosition = motionProfile.calculateState(t).getPosition();
             double referenceVelocity = motionProfile.calculateState(t).getVelocity();
-            loop.setNextR(new SimpleMatrix(new double[][]{{5}, {0}}));
-            loop.correct(new SimpleMatrix(new double[][]{{previousPos}}));
-            loop.predict(dt);
-            double voltage = loop.getU().get(0);
+
+            double voltage = loop.calculate(new SimpleMatrix(new double[][]{{previousPos}}),
+                    new SimpleMatrix(new double[][]{{referencePosition}, {referenceVelocity}}), dt).get(0);
+
             pulleyModel.updateModel(voltage, dt);
             previousPos = pulleyModel.getPosition();
             previousVel = pulleyModel.getVelocity();
+
             graph.addPosition(previousPos, t);
             graph.addVelocity(previousVel, t);
             graph.addVoltage(voltage, t);
             graph.addError(loop.getError(), t);
-//            Thread.sleep(200);
         }
     }
 }

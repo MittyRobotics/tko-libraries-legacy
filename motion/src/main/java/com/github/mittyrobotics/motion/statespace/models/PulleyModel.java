@@ -90,6 +90,14 @@ public class PulleyModel {
         return position / 100;
     }
 
+    public void setPosition(double position){
+        this.position = position*100;
+    }
+
+    public void setVelocity(double velocity){
+        this.velocity = velocity*100;
+    }
+
     public double getMass() {
         return mass;
     }

@@ -24,6 +24,7 @@
 
 package com.github.mittyrobotics.motion.statespace;
 
+import com.github.mittyrobotics.motion.controllers.StateSpaceController;
 import com.github.mittyrobotics.motion.statespace.motors.Motor;
 import org.ejml.simple.SimpleMatrix;
 
@@ -56,7 +57,7 @@ public class Plant {
     private final SimpleMatrix uMax;
     /**
      * Predicted change in time between plant update calls. This value is the initial predicted delta time, but each
-     * call to the {@link StateSpaceLoop} is updated with the true delta time.
+     * call to the {@link StateSpaceController} is updated with the true delta time.
      */
     private double deltaTime;
 
@@ -85,7 +86,7 @@ public class Plant {
 
     public static Plant createElevatorPlant(Motor motor, double mass, double pulleyRadius,
                                             double gearReduction, double maxVoltage, double deltaTime) {
-        SimpleMatrix states, inputs, outputs, a, b, c, d, uMin, uMax;
+        SimpleMatrix states, outputs, a, b, c, d, uMin, uMax;
         states = new SimpleMatrix(new double[][]{{0}, {0}}); //[[position], [velocity]]
         outputs = new SimpleMatrix(new double[][]{{0}}); //[[position]]
 
@@ -125,7 +126,7 @@ public class Plant {
 
     public static Plant createFlywheelPlant(Motor motor, double momentOfInertia, double gearReduction,
                                             double maxVoltage, double deltaTime) {
-        SimpleMatrix states, inputs, outputs, a, b, c, d, uMin, uMax;
+        SimpleMatrix states, outputs, a, b, c, d, uMin, uMax;
         states = new SimpleMatrix(new double[1][1]); //[[angular velocity]]
         states.zero();
         outputs = new SimpleMatrix(new double[1][1]); //[[angular velocity]]
