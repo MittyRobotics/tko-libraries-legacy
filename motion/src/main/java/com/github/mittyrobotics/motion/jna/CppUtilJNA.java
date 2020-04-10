@@ -24,20 +24,17 @@
 
 package com.github.mittyrobotics.motion.jna;
 
-import com.sun.jna.Library;
 import com.sun.jna.Native;
 import com.sun.jna.Pointer;
-import com.sun.jna.ptr.DoubleByReference;
 import com.sun.jna.ptr.IntByReference;
 import com.sun.jna.ptr.PointerByReference;
-import com.sun.jna.win32.W32APIOptions;
 
 public interface CppUtilJNA extends com.sun.jna.win32.StdCallLibrary {
     CppUtilJNA INSTANCE = (CppUtilJNA) Native.load("cpp-util/cmake-build-debug/tko-libraries-cpp-util",
             CppUtilJNA.class);
 
-    Pointer  discreteAlgebraicRiccatiEquation(double[] A, double[] B, double[] Q, double[] R, int states, int inputs,
-                                              PointerByReference valsRef, IntByReference numValsRef);
+    Pointer discreteAlgebraicRiccatiEquation(double[] A, double[] B, double[] Q, double[] R, int states, int inputs,
+                                             PointerByReference valsRef, IntByReference numValsRef);
 
     void cleanup(Pointer p);
 }

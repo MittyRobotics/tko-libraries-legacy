@@ -120,12 +120,12 @@ public class MatrixUtils {
     }
 
     public static SimpleMatrix makeCostMatrix(SimpleMatrix cost) {
-        return SimpleMatrix.diag(divideDoubleByMatrix(1,cost.elementMult(cost)).getDDRM().getData());
+        return SimpleMatrix.diag(divideDoubleByMatrix(1, cost.elementMult(cost)).getDDRM().getData());
     }
 
-    public static SimpleMatrix clamp(SimpleMatrix matrix, double min, double max){
+    public static SimpleMatrix clamp(SimpleMatrix matrix, double min, double max) {
         SimpleMatrix output = new SimpleMatrix(matrix.numRows(), matrix.numCols());
-        for(int i = 0; i < output.getNumElements(); i++){
+        for (int i = 0; i < output.getNumElements(); i++) {
             output.set(i, Math.max(min, Math.min(max, matrix.get(i))));
         }
         return output;
@@ -150,7 +150,7 @@ public class MatrixUtils {
         if (0 < numVals) {
             final Pointer vals = refPtr.getValue();
 
-            for (int i=0; i<numVals; i++) {
+            for (int i = 0; i < numVals; i++) {
                 double val = vals.getDouble(i * Native.getNativeSize(Double.TYPE));
                 resultArray[i] = val;
             }

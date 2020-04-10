@@ -52,7 +52,8 @@ public class TestStateSpaceCreation {
                 new SimpleMatrix(new double[][]{{0.02, 0.4}}), new SimpleMatrix(new double[][]{{12.0}}));
 
         System.out.println("GAINS \n" + plant.getDiscreteSystem().getA() + "" + plant.getDiscreteSystem().getB() + "" +
-                plant.getDiscreteSystem().getC() + "" + plant.getDiscreteSystem().getD() + "" + controller.getLqrGain() + "" +
+                plant.getDiscreteSystem().getC() + "" + plant.getDiscreteSystem().getD() + "" +
+                controller.getLqrGain() + "" +
                 controller.getUff() + "" + filter.getKalmanGain());
 
         StateSpaceController loop = new StateSpaceController(plant, controller, filter);
@@ -68,7 +69,7 @@ public class TestStateSpaceCreation {
                 new MotionState(previousPos + 5, 0, 0),
                 5, 5, 5, 1.57, OverrideMethod.END_AFTER_SETPOINT);
 
-        plant.setX(new SimpleMatrix(new double[][]{{previousPos},{previousVel}}));
+        plant.setX(new SimpleMatrix(new double[][]{{previousPos}, {previousVel}}));
         pulleyModel.setPosition(previousPos);
         pulleyModel.setVelocity(previousVel);
         for (double t = 0; t < 10; t += dt) {

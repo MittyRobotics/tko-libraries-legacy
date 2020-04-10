@@ -61,7 +61,7 @@ public class StateSpaceController {
         this.nextR = new SimpleMatrix(plant.getNumStates(), 0);
     }
 
-    public SimpleMatrix calculate(SimpleMatrix measurement, SimpleMatrix reference, double deltaTime){
+    public SimpleMatrix calculate(SimpleMatrix measurement, SimpleMatrix reference, double deltaTime) {
         setNextR(reference);
         correct(measurement);
         predict(deltaTime);

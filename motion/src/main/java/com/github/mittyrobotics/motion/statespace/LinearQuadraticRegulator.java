@@ -121,7 +121,7 @@ public class LinearQuadraticRegulator {
         this.r = nextReference;
     }
 
-    public void setReference(SimpleMatrix r){
+    public void setReference(SimpleMatrix r) {
         this.r = r;
     }
 
