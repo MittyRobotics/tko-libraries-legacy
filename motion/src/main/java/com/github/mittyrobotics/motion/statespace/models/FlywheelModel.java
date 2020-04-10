@@ -22,29 +22,30 @@
  * SOFTWARE.
  */
 
-package com.github.mittyrobotics.motion.statespace;
+package com.github.mittyrobotics.motion.statespace.models;
 
+import com.github.mittyrobotics.datatypes.units.Conversions;
 import com.github.mittyrobotics.motion.statespace.motors.Motor;
 
-public class PulleyModel {
-    private final double mass;
+public class FlywheelModel {
     private final Motor motor;
+    private final double numMotors;
     private final double gearRatio;
-    private final double pulleyRadius;
+    private final double momentOfInertia;
 
     private double resistance;
     private double Kv;
     private double Kt;
 
-    private double acceleration;
-    private double velocity;
-    private double position;
+    private double angularAcceleration;
+    private double angularVelocity;
+    private double torque;
 
-    public PulleyModel(double mass, Motor motor, double gearRatio, double pulleyRadius) {
-        this.mass = mass;
+    public FlywheelModel(double momentOfInertia, Motor motor, double numMotors, double gearRatio) {
+        this.momentOfInertia = momentOfInertia;
         this.motor = motor;
+        this.numMotors = numMotors;
         this.gearRatio = gearRatio;
-        this.pulleyRadius = pulleyRadius;
         computeModelValues();
     }
 
@@ -54,63 +55,42 @@ public class PulleyModel {
         double freeSpeed = motor.getFreeSpeed();
         double freeCurrent = motor.getFreeCurrent();
 
-        this.resistance = motor.getResistance();
-        this.Kv = motor.getKv();
-        this.Kt = motor.getKt();
+        this.resistance = 12 / stallCurrent;
+        this.Kv = ((freeSpeed / 60.0 * 2.0 * Math.PI) / (12.0 - resistance * freeCurrent));
+        this.Kt = (numMotors * stallTorque) / stallCurrent;
     }
 
     public void updateModel(double voltage, double deltaTime) {
-        this.acceleration = calculateAcceleration(voltage) / 100;
-        this.velocity += acceleration * deltaTime;
-        this.position += velocity * deltaTime;
+        this.angularAcceleration = calculateAcceleration(voltage);
+        this.angularVelocity += angularAcceleration * deltaTime;
+        this.torque = calculateTorque(this.angularAcceleration);
+    }
+
+    private double calculateTorque(double angularAcceleration) {
+        double wf = angularAcceleration;
+        double J = momentOfInertia;
+        return J * wf;
     }
 
     private double calculateAcceleration(double voltage) {
-        double G = gearRatio * 100;
-        double R = resistance * 100;
-        double r = pulleyRadius * 100;
-        double m = mass * 100;
-        double V = voltage * 100;
-        double v = velocity * 100;
-        double Kt = this.Kt * 100;
-        double Kv = this.Kv * 100;
+        double G = gearRatio;
+        double R = resistance;
+        double V = voltage;
+        double w = angularVelocity;
+        double J = momentOfInertia;
 
-        return (G * Kt) / (R * r * m) * V - (G * G * Kt) / (R * (r * r) * m * Kv) * v;
+        return (G * Kt) / (R * J) * V - (G * G * Kt) / (Kv * R * J) * w;
     }
 
-    public double getAcceleration() {
-        return acceleration;
+    public double getAngularAcceleration() {
+        return angularAcceleration * Conversions.M_TO_IN;
     }
 
-    public double getVelocity() {
-        return velocity;
+    public double getAngularVelocity() {
+        return angularVelocity * Conversions.M_TO_IN;
     }
 
-    public double getPosition() {
-        return position;
-    }
-
-    public double getMass() {
-        return mass;
-    }
-
-    public double getGearRatio() {
-        return gearRatio;
-    }
-
-    public double getPulleyRadius() {
-        return pulleyRadius;
-    }
-
-    public double getResistance() {
-        return resistance;
-    }
-
-    public double getKv() {
-        return Kv;
-    }
-
-    public double getKt() {
-        return Kt;
+    public double getTorque() {
+        return torque;
     }
 }

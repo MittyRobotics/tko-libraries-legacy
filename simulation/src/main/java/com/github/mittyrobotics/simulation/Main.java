@@ -25,7 +25,7 @@
 package com.github.mittyrobotics.simulation;
 
 import com.github.mittyrobotics.motion.statespace.motors.CIMMotor;
-import com.github.mittyrobotics.simulation.models.DrivetrainModel;
+import com.github.mittyrobotics.motion.statespace.models.DrivetrainModel;
 import com.github.mittyrobotics.simulation.sim.RobotSimulator;
 import com.github.mittyrobotics.simulation.sim.SimDrivetrain;
 import com.github.mittyrobotics.simulation.sim.SimRobot;

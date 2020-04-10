@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-package com.github.mittyrobotics.simulation.models;
+package com.github.mittyrobotics.motion.statespace.models;
 
 import com.github.mittyrobotics.datatypes.motion.DrivetrainWheelSpeeds;
 import com.github.mittyrobotics.datatypes.units.Conversions;

@@ -27,6 +27,7 @@ package com.github.mittyrobotics.motion.statespace;
 import com.github.mittyrobotics.datatypes.motion.MotionState;
 import com.github.mittyrobotics.motion.OverrideMethod;
 import com.github.mittyrobotics.motion.SCurveMotionProfile;
+import com.github.mittyrobotics.motion.statespace.models.PulleyModel;
 import com.github.mittyrobotics.motion.statespace.motors.CIMMotor;
 import com.github.mittyrobotics.motion.statespace.motors.Motor;
 import com.github.mittyrobotics.visualization.MotorGraph;
@@ -73,8 +74,8 @@ public class TestStateSpaceCreation {
             loop.predict(dt);
             double voltage = loop.getU().get(0);
             pulleyModel.updateModel(voltage, dt);
-            previousPos = loop.getObserver().getXhat().get(0);
-            previousVel = loop.getObserver().getXhat().get(1);
+            previousPos = pulleyModel.getPosition();
+            previousVel = pulleyModel.getVelocity();
             graph.addPosition(previousPos, t);
             graph.addVelocity(previousVel, t);
             graph.addVoltage(voltage, t);
