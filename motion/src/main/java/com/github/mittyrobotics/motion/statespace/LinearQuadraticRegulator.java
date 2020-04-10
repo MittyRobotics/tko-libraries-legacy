@@ -27,20 +27,34 @@ package com.github.mittyrobotics.motion.statespace;
 import org.ejml.simple.SimpleMatrix;
 
 public class LinearQuadraticRegulator {
-    /**{@link Plant} discrete A matrix*/
+    /**
+     * {@link Plant} discrete A matrix.
+     */
     private SimpleMatrix A;
-    /**{@link Plant} discrete B matrix*/
+    /**
+     * {@link Plant} discrete B matrix.
+     */
     private SimpleMatrix B;
-    /**LQR Controller gain matrix*/
+    /**
+     * LQR Controller gain matrix.
+     */
     private SimpleMatrix lqrGain;
-    /**LQR Controller feedforward gain matrix*/
+    /**
+     * LQR Controller feedforward gain matrix.
+     */
     private SimpleMatrix lqrFFGain;
-    /**Controller reference state matrix*/
+    /**
+     * Controller reference state matrix.
+     */
     private SimpleMatrix r;
-    /**Control input matrix (also known as controller output, voltage to apply to motor). Feedforward matrix,
-     * <code>uff</code> is already applied to this matrix.*/
+    /**
+     * Control input matrix (also known as controller output, voltage to apply to motor). Feedforward matrix,
+     * <code>uff</code> is already applied to this matrix.
+     */
     private SimpleMatrix u;
-    /**Control input feedforward matrix*/
+    /**
+     * Control input feedforward matrix.
+     */
     private SimpleMatrix uff;
 
     public LinearQuadraticRegulator(SimpleMatrix A, SimpleMatrix B, SimpleMatrix qElms, SimpleMatrix rElms) {

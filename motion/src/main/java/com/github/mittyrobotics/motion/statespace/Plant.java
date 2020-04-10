@@ -28,23 +28,53 @@ import com.github.mittyrobotics.motion.statespace.motors.Motor;
 import org.ejml.simple.SimpleMatrix;
 
 public class Plant {
+    /**
+     * Empty states vector. Represents number of rows and columns in the state vector, <code>x</code>, and is used to
+     * reset the {@link Plant} to zero.
+     */
     private final SimpleMatrix states;
-    private final SimpleMatrix inputs;
+    /**
+     * Empty outputs vector. Represents number of rows and columns in the output vector, <code>y</code>, and is used
+     * to reset the {@link Plant} to zero.
+     */
     private final SimpleMatrix outputs;
+    /**
+     * Continuous {@link StateSpaceSystemGains}. Holds the continuous A, B, C, and D matrices of the {@link Plant}.
+     */
     private final StateSpaceSystemGains continuousSystem;
+    /**
+     * Discrete {@link StateSpaceSystemGains}. Holds the discretized A, B, C, and D matrices of the {@link Plant}.
+     */
     private final StateSpaceSystemGains discreteSystem;
+    /**
+     * Minimum control input matrix. Usually a 1x1 matrix containing the desired min voltage of the controller.
+     */
     private final SimpleMatrix uMin;
+    /**
+     * Maximum control input matrix. Usually a 1x1 matrix containing the desired max voltage of the controller.
+     */
     private final SimpleMatrix uMax;
+    /**
+     * Predicted change in time between plant update calls. This value is the initial predicted delta time, but each
+     * call to the {@link StateSpaceLoop} is updated with the true delta time.
+     */
     private double deltaTime;
 
+    /**
+     * {@link Plant} states matrix. The state of the plant is all the values that define it's current motion. This
+     * could be position, velocity, acceleration, angular velocity, etc.
+     */
     private SimpleMatrix x;
+    /**
+     * {@link Plant} outputs matrix. This is the value that can actually be measured in the plant, such as position
+     * using an encoder. This is a theoretical estimate of the measurement, and can be used to either simulate the
+     * plant's motion or stabilize the actual measured value with a theoretically calcualted one.
+     */
     private SimpleMatrix y;
-    private SimpleMatrix uDelayed;
 
-    public Plant(SimpleMatrix states, SimpleMatrix inputs, SimpleMatrix outputs, StateSpaceSystemGains continuousSystem,
+    public Plant(SimpleMatrix states, SimpleMatrix outputs, StateSpaceSystemGains continuousSystem,
                  SimpleMatrix uMin, SimpleMatrix uMax, double deltaTime) {
         this.states = states;
-        this.inputs = inputs;
         this.outputs = outputs;
         this.continuousSystem = continuousSystem;
         this.discreteSystem = discretizeSystem(continuousSystem, deltaTime);
@@ -57,7 +87,6 @@ public class Plant {
                                             double gearReduction, double maxVoltage, double deltaTime) {
         SimpleMatrix states, inputs, outputs, a, b, c, d, uMin, uMax;
         states = new SimpleMatrix(new double[][]{{0}, {0}}); //[[position], [velocity]]
-        inputs = new SimpleMatrix(new double[][]{{0}}); //[[voltage]]
         outputs = new SimpleMatrix(new double[][]{{0}}); //[[position]]
 
         double G = gearReduction;
@@ -91,7 +120,7 @@ public class Plant {
         uMax = new SimpleMatrix(new double[][]{{maxVoltage}});
 
         StateSpaceSystemGains continuousSystem = new StateSpaceSystemGains(a, b, c, d);
-        return new Plant(states, inputs, outputs, continuousSystem, uMin, uMax, deltaTime);
+        return new Plant(states, outputs, continuousSystem, uMin, uMax, deltaTime);
     }
 
     public static Plant createFlywheelPlant(Motor motor, double momentOfInertia, double gearReduction,
@@ -99,8 +128,6 @@ public class Plant {
         SimpleMatrix states, inputs, outputs, a, b, c, d, uMin, uMax;
         states = new SimpleMatrix(new double[1][1]); //[[angular velocity]]
         states.zero();
-        inputs = new SimpleMatrix(new double[1][1]); //[[voltage]]
-        inputs.zero();
         outputs = new SimpleMatrix(new double[1][1]); //[[angular velocity]]
         outputs.zero();
 
@@ -125,7 +152,7 @@ public class Plant {
         uMax = new SimpleMatrix(new double[][]{{maxVoltage}});
 
         StateSpaceSystemGains continuousSystem = new StateSpaceSystemGains(a, b, c, d);
-        return new Plant(states, inputs, outputs, continuousSystem, uMin, uMax, deltaTime);
+        return new Plant(states, outputs, continuousSystem, uMin, uMax, deltaTime);
     }
 
     public StateSpaceSystemGains discretizeSystem(StateSpaceSystemGains input, double dt) {
@@ -153,13 +180,11 @@ public class Plant {
     public void reset() {
         this.x = new SimpleMatrix(new double[states.numRows()][states.numCols()]);
         this.y = new SimpleMatrix(new double[outputs.numRows()][outputs.numCols()]);
-        this.uDelayed = new SimpleMatrix(new double[inputs.numRows()][inputs.numCols()]);
     }
 
     public void update(SimpleMatrix currentState, SimpleMatrix controlInput, double deltaTime) {
-        this.x = calculateX(currentState, uDelayed, deltaTime);
-        this.y = calculateY(this.x, uDelayed);
-        this.uDelayed = controlInput;
+        this.x = calculateX(currentState, controlInput, deltaTime);
+        this.y = calculateY(this.x, controlInput);
     }
 
     public SimpleMatrix calculateX(SimpleMatrix currentState, SimpleMatrix controlInput, double deltaTime) {
@@ -183,10 +208,6 @@ public class Plant {
 
     public int getNumStates() {
         return states.numRows();
-    }
-
-    public SimpleMatrix getInputs() {
-        return inputs;
     }
 
     public SimpleMatrix getOutputs() {
