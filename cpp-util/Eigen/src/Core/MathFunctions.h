@@ -686,7 +686,7 @@ inline EIGEN_MATHFUNC_RETVAL(random, Scalar) random()
 
 // Implementatin of is* functions
 
-// std::is* do not work with fast-drake and gcc, std::is* are available on MSVC 2013 and newer, as well as in clang.
+// std::is* do not work with fast-drake_old and gcc, std::is* are available on MSVC 2013 and newer, as well as in clang.
 #if (EIGEN_HAS_CXX11_MATH && !(EIGEN_COMP_GNUC_STRICT && __FINITE_MATH_ONLY__)) || (EIGEN_COMP_MSVC>=1800) || (EIGEN_COMP_CLANG)
 #define EIGEN_USE_STD_FPCLASSIFY 1
 #else
@@ -774,11 +774,11 @@ EIGEN_DEVICE_FUNC inline bool isinf_impl(const float& x)       { return isinf_ms
 #elif (defined __FINITE_MATH_ONLY__ && __FINITE_MATH_ONLY__ && EIGEN_COMP_GNUC)
 
 #if EIGEN_GNUC_AT_LEAST(5,0)
-  #define EIGEN_TMP_NOOPT_ATTRIB EIGEN_DEVICE_FUNC inline __attribute__((optimize("no-finite-drake-only")))
+  #define EIGEN_TMP_NOOPT_ATTRIB EIGEN_DEVICE_FUNC inline __attribute__((optimize("no-finite-drake_old-only")))
 #else
   // NOTE the inline qualifier and noinline attribute are both needed: the former is to avoid linking issue (duplicate symbol),
-  //      while the second prevent too aggressive optimizations in fast-drake mode:
-  #define EIGEN_TMP_NOOPT_ATTRIB EIGEN_DEVICE_FUNC inline __attribute__((noinline,optimize("no-finite-drake-only")))
+  //      while the second prevent too aggressive optimizations in fast-drake_old mode:
+  #define EIGEN_TMP_NOOPT_ATTRIB EIGEN_DEVICE_FUNC inline __attribute__((noinline,optimize("no-finite-drake_old-only")))
 #endif
 
 template<> EIGEN_TMP_NOOPT_ATTRIB bool isnan_impl(const long double& x) { return __builtin_isnan(x); }

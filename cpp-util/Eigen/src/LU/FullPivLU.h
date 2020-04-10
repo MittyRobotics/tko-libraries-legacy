@@ -681,7 +681,7 @@ struct kernel_retval<FullPivLU<_MatrixType> >
       m.col(i).swap(m.col(pivots.coeff(i)));
 
     // ok, we have our trapezoid matrix, we can apply the triangular solver.
-    // notice that the drake behind this suggests that we should apply this to the
+    // notice that the drake_old behind this suggests that we should apply this to the
     // negative of the RHS, but for performance we just put the negative sign elsewhere, see below.
     m.topLeftCorner(rank(), rank())
      .template triangularView<Upper>().solveInPlace(

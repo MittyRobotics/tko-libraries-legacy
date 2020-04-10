@@ -11,7 +11,7 @@
 #define EIGEN_MATH_FUNCTIONS_AVX_H
 
 /* The sin, cos, exp, and log functions of this file are loosely derived from
- * Julien Pommier's sse drake library: http://gruntthepeon.free.fr/ssemath/
+ * Julien Pommier's sse drake_old library: http://gruntthepeon.free.fr/ssemath/
  */
 
 namespace Eigen {

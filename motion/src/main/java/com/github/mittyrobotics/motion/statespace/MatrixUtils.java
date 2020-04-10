@@ -27,6 +27,7 @@ package com.github.mittyrobotics.motion.statespace;
 import com.github.mittyrobotics.motion.jna.CppUtilJNA;
 import com.sun.jna.Native;
 import com.sun.jna.Pointer;
+import com.sun.jna.ptr.IntByReference;
 import com.sun.jna.ptr.PointerByReference;
 import org.ejml.simple.SimpleMatrix;
 import org.jblas.DoubleMatrix;
@@ -56,6 +57,22 @@ public class MatrixUtils {
         SimpleMatrix output = new SimpleMatrix(new double[matrix.numRows()][matrix.numCols()]);
         for (int i = 0; i < output.getNumElements(); i++) {
             output.set(i, matrix.get(i) * scalar);
+        }
+        return output;
+    }
+
+    public static SimpleMatrix divideByDouble(SimpleMatrix matrix, double scalar) {
+        SimpleMatrix output = new SimpleMatrix(new double[matrix.numRows()][matrix.numCols()]);
+        for (int i = 0; i < output.getNumElements(); i++) {
+            output.set(i, matrix.get(i) / scalar);
+        }
+        return output;
+    }
+
+    public static SimpleMatrix divideDoubleByMatrix(double scalar, SimpleMatrix matrix) {
+        SimpleMatrix output = new SimpleMatrix(new double[matrix.numRows()][matrix.numCols()]);
+        for (int i = 0; i < output.getNumElements(); i++) {
+            output.set(i, scalar / matrix.get(i));
         }
         return output;
     }
@@ -103,14 +120,7 @@ public class MatrixUtils {
     }
 
     public static SimpleMatrix makeCostMatrix(SimpleMatrix cost) {
-        SimpleMatrix output = new SimpleMatrix(cost.numRows(), cost.numRows());
-        output.fill(0.0);
-
-        for (int i = 0; i < cost.numRows(); i++) {
-            output.set(i, i, 1.0 / Math.pow(cost.get(i, 0), 2));
-        }
-
-        return output;
+        return SimpleMatrix.diag(divideDoubleByMatrix(1,cost.elementMult(cost)).getDDRM().getData());
     }
 
     public static SimpleMatrix clamp(SimpleMatrix matrix, double min, double max){
@@ -120,23 +130,32 @@ public class MatrixUtils {
         }
         return output;
     }
-    public static CppUtilJNA lib = CppUtilJNA.INSTANCE;
+
     public static SimpleMatrix discreteAlgebraicRiccatiEquation(SimpleMatrix A, SimpleMatrix B, SimpleMatrix Q,
                                                                 SimpleMatrix R) {
         int states = A.numCols();
         int inputs = B.numCols();
 
-        System.out.println(A);
+        CppUtilJNA lib = CppUtilJNA.INSTANCE;
 
-        final PointerByReference outputPtr = new PointerByReference();
+        final PointerByReference refPtr = new PointerByReference();
+        final IntByReference numValsRef = new IntByReference();
 
         lib.discreteAlgebraicRiccatiEquation(A.getDDRM().getData(), B.getDDRM().getData(), Q.getDDRM().getData(),
-                R.getDDRM().getData(), states, inputs, outputPtr);
-        final Pointer result = outputPtr.getValue();
+                R.getDDRM().getData(), states, inputs, refPtr, numValsRef);
+        int numVals = numValsRef.getValue();
 
-        double[] resultArray = new double[states * states];
-        for (int i = 0; i < resultArray.length; i++) {
-            resultArray[i] = result.getDouble(i * Native.getNativeSize(Double.TYPE));
+        double[] resultArray = new double[numVals];
+
+        if (0 < numVals) {
+            final Pointer vals = refPtr.getValue();
+
+            for (int i=0; i<numVals; i++) {
+                double val = vals.getDouble(i * Native.getNativeSize(Double.TYPE));
+                resultArray[i] = val;
+            }
+
+            lib.cleanup(vals);
         }
 
         return new SimpleMatrix(states, states, true, resultArray);

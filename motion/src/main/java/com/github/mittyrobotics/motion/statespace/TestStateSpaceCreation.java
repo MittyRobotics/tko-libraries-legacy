@@ -29,43 +29,56 @@ import com.github.mittyrobotics.motion.OverrideMethod;
 import com.github.mittyrobotics.motion.SCurveMotionProfile;
 import com.github.mittyrobotics.motion.statespace.motors.CIMMotor;
 import com.github.mittyrobotics.motion.statespace.motors.Motor;
-import com.github.mittyrobotics.motion.statespace.motors.Pro775Motor;
 import com.github.mittyrobotics.visualization.MotorGraph;
 import org.ejml.simple.SimpleMatrix;
 
 public class TestStateSpaceCreation {
-    public static void main(String[] args) throws InterruptedException {
-        Plant plant = Plant.createElevatorPlant(new Pro775Motor(2), 6.803886, .1, 10,
-                12, 0.00505);
+    public static void main(String[] args) {
+        double pulleyRadius = .1;
+        double mass = 6.803886;
+        double gearReduction = 42.0 / 12.0 * 40.0 / 14.0;
+        double maxVoltage = 12;
+        double dt = 0.00505;
+        Motor motor = new CIMMotor(2);
+
+        Plant plant = Plant.createElevatorPlant(motor, mass, pulleyRadius, gearReduction,
+                maxVoltage, dt);
         KalmanFilter filter = new KalmanFilter(plant,
                 new SimpleMatrix(new double[][]{{0.05, 1.0}}),
                 new SimpleMatrix(new double[][]{{0.0001}}));
         LinearQuadraticRegulator controller = new LinearQuadraticRegulator(plant,
                 new SimpleMatrix(new double[][]{{0.02, 0.4}}), new SimpleMatrix(new double[][]{{12.0}}));
-        StateSpaceLoop loop = new StateSpaceLoop(plant,controller,filter);
+
+        System.out.println("GAINS \n" + plant.getDiscreteSystem().getA() + "" + plant.getDiscreteSystem().getB() + "" +
+                plant.getDiscreteSystem().getC() + "" + plant.getDiscreteSystem().getD() + "" + controller.getLqrGain() + "" +
+                controller.getUff() + "" + filter.getKalmanGain());
+
+        StateSpaceLoop loop = new StateSpaceLoop(plant, controller, filter);
 
         MotorGraph graph = new MotorGraph();
 
-        PulleyModel pulleyModel = new PulleyModel(6.803886, new Pro775Motor(2), 10, .1);
+        PulleyModel pulleyModel = new PulleyModel(mass, motor, gearReduction, pulleyRadius);
 
-        SCurveMotionProfile motionProfile = new SCurveMotionProfile(new MotionState(0,0,0), new MotionState(5,0,0),
+        SCurveMotionProfile motionProfile = new SCurveMotionProfile(new MotionState(0, 0, 0), new MotionState(5, 0, 0),
                 1, 1, 1, 5, OverrideMethod.END_AFTER_SETPOINT);
 
-        double dt = 0.00505;
+
         double previousPos = 0;
         double previousVel = 0;
-        for(double t = 0; t < 10; t += dt){
-            double reference = motionProfile.calculateState(t).getPosition();
-            loop.setNextR(new SimpleMatrix(new double[][]{{reference}, {motionProfile.calculateState(t).getVelocity()}}));
+        for (double t = 0; t < 10; t += dt) {
+            double referencePosition = motionProfile.calculateState(t).getPosition();
+            double referenceVelocity = motionProfile.calculateState(t).getVelocity();
+            loop.setNextR(new SimpleMatrix(new double[][]{{5}, {0}}));
             loop.correct(new SimpleMatrix(new double[][]{{previousPos}}));
             loop.predict(dt);
             double voltage = loop.getU().get(0);
             pulleyModel.updateModel(voltage, dt);
-            previousPos = pulleyModel.getPosition();
-            previousVel = pulleyModel.getVelocity();
+            previousPos = loop.getObserver().getXhat().get(0);
+            previousVel = loop.getObserver().getXhat().get(1);
             graph.addPosition(previousPos, t);
             graph.addVelocity(previousVel, t);
-            graph.addVoltage(voltage,t);
+            graph.addVoltage(voltage, t);
+            graph.addError(loop.getError(), t);
 //            Thread.sleep(200);
         }
     }

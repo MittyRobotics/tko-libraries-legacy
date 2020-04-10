@@ -60,18 +60,20 @@ public class PulleyModel {
     }
 
     public void updateModel(double voltage, double deltaTime) {
-        this.acceleration = calculateAcceleration(voltage);
+        this.acceleration = calculateAcceleration(voltage) / 100;
         this.velocity += acceleration * deltaTime;
         this.position += velocity * deltaTime;
     }
 
     private double calculateAcceleration(double voltage) {
-        double G = gearRatio;
-        double R = resistance;
-        double r = pulleyRadius;
-        double m = mass;
-        double V = voltage;
-        double v = velocity;
+        double G = gearRatio * 100;
+        double R = resistance * 100;
+        double r = pulleyRadius * 100;
+        double m = mass * 100;
+        double V = voltage * 100;
+        double v = velocity * 100;
+        double Kt = this.Kt * 100;
+        double Kv = this.Kv * 100;
 
         return (G * Kt) / (R * r * m) * V - (G * G * Kt) / (R * (r * r) * m * Kv) * v;
     }

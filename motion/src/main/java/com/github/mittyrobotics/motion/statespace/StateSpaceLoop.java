@@ -66,6 +66,10 @@ public class StateSpaceLoop {
         return MatrixUtils.clamp(controller.getU(), plant.getuMin().get(0), plant.getuMax().get(0));
     }
 
+    public double getError(){
+        return controller.getR().minus(observer.getXhat()).get(0);
+    }
+
     public Plant getPlant() {
         return plant;
     }

@@ -124,32 +124,59 @@ tko-libraries-cpp-util\fast:
 	$(MAKE) -f CMakeFiles\tko-libraries-cpp-util.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\tko-libraries-cpp-util.dir\build
 .PHONY : tko-libraries-cpp-util\fast
 
-drake\discrete_algebraic_riccati_equation.obj: drake\discrete_algebraic_riccati_equation.cc.obj
+drake\common\drake_assert_and_throw.obj: drake\common\drake_assert_and_throw.cpp.obj
 
-.PHONY : drake\discrete_algebraic_riccati_equation.obj
+.PHONY : drake\common\drake_assert_and_throw.obj
 
 # target to build an object file
-drake\discrete_algebraic_riccati_equation.cc.obj:
-	$(MAKE) -f CMakeFiles\tko-libraries-cpp-util.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\tko-libraries-cpp-util.dir\drake\discrete_algebraic_riccati_equation.cc.obj
-.PHONY : drake\discrete_algebraic_riccati_equation.cc.obj
+drake\common\drake_assert_and_throw.cpp.obj:
+	$(MAKE) -f CMakeFiles\tko-libraries-cpp-util.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\tko-libraries-cpp-util.dir\drake\common\drake_assert_and_throw.cpp.obj
+.PHONY : drake\common\drake_assert_and_throw.cpp.obj
 
-drake\discrete_algebraic_riccati_equation.i: drake\discrete_algebraic_riccati_equation.cc.i
+drake\common\drake_assert_and_throw.i: drake\common\drake_assert_and_throw.cpp.i
 
-.PHONY : drake\discrete_algebraic_riccati_equation.i
+.PHONY : drake\common\drake_assert_and_throw.i
 
 # target to preprocess a source file
-drake\discrete_algebraic_riccati_equation.cc.i:
-	$(MAKE) -f CMakeFiles\tko-libraries-cpp-util.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\tko-libraries-cpp-util.dir\drake\discrete_algebraic_riccati_equation.cc.i
-.PHONY : drake\discrete_algebraic_riccati_equation.cc.i
+drake\common\drake_assert_and_throw.cpp.i:
+	$(MAKE) -f CMakeFiles\tko-libraries-cpp-util.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\tko-libraries-cpp-util.dir\drake\common\drake_assert_and_throw.cpp.i
+.PHONY : drake\common\drake_assert_and_throw.cpp.i
 
-drake\discrete_algebraic_riccati_equation.s: drake\discrete_algebraic_riccati_equation.cc.s
+drake\common\drake_assert_and_throw.s: drake\common\drake_assert_and_throw.cpp.s
 
-.PHONY : drake\discrete_algebraic_riccati_equation.s
+.PHONY : drake\common\drake_assert_and_throw.s
 
 # target to generate assembly for a file
-drake\discrete_algebraic_riccati_equation.cc.s:
-	$(MAKE) -f CMakeFiles\tko-libraries-cpp-util.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\tko-libraries-cpp-util.dir\drake\discrete_algebraic_riccati_equation.cc.s
-.PHONY : drake\discrete_algebraic_riccati_equation.cc.s
+drake\common\drake_assert_and_throw.cpp.s:
+	$(MAKE) -f CMakeFiles\tko-libraries-cpp-util.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\tko-libraries-cpp-util.dir\drake\common\drake_assert_and_throw.cpp.s
+.PHONY : drake\common\drake_assert_and_throw.cpp.s
+
+drake\math\discrete_algebraic_riccati_equation.obj: drake\math\discrete_algebraic_riccati_equation.cpp.obj
+
+.PHONY : drake\math\discrete_algebraic_riccati_equation.obj
+
+# target to build an object file
+drake\math\discrete_algebraic_riccati_equation.cpp.obj:
+	$(MAKE) -f CMakeFiles\tko-libraries-cpp-util.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\tko-libraries-cpp-util.dir\drake\math\discrete_algebraic_riccati_equation.cpp.obj
+.PHONY : drake\math\discrete_algebraic_riccati_equation.cpp.obj
+
+drake\math\discrete_algebraic_riccati_equation.i: drake\math\discrete_algebraic_riccati_equation.cpp.i
+
+.PHONY : drake\math\discrete_algebraic_riccati_equation.i
+
+# target to preprocess a source file
+drake\math\discrete_algebraic_riccati_equation.cpp.i:
+	$(MAKE) -f CMakeFiles\tko-libraries-cpp-util.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\tko-libraries-cpp-util.dir\drake\math\discrete_algebraic_riccati_equation.cpp.i
+.PHONY : drake\math\discrete_algebraic_riccati_equation.cpp.i
+
+drake\math\discrete_algebraic_riccati_equation.s: drake\math\discrete_algebraic_riccati_equation.cpp.s
+
+.PHONY : drake\math\discrete_algebraic_riccati_equation.s
+
+# target to generate assembly for a file
+drake\math\discrete_algebraic_riccati_equation.cpp.s:
+	$(MAKE) -f CMakeFiles\tko-libraries-cpp-util.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\tko-libraries-cpp-util.dir\drake\math\discrete_algebraic_riccati_equation.cpp.s
+.PHONY : drake\math\discrete_algebraic_riccati_equation.cpp.s
 
 library.obj: library.cpp.obj
 
@@ -187,9 +214,12 @@ help:
 	@echo ... tko-libraries-cpp-util
 	@echo ... edit_cache
 	@echo ... rebuild_cache
-	@echo ... drake/discrete_algebraic_riccati_equation.obj
-	@echo ... drake/discrete_algebraic_riccati_equation.i
-	@echo ... drake/discrete_algebraic_riccati_equation.s
+	@echo ... drake/common/drake_assert_and_throw.obj
+	@echo ... drake/common/drake_assert_and_throw.i
+	@echo ... drake/common/drake_assert_and_throw.s
+	@echo ... drake/math/discrete_algebraic_riccati_equation.obj
+	@echo ... drake/math/discrete_algebraic_riccati_equation.i
+	@echo ... drake/math/discrete_algebraic_riccati_equation.s
 	@echo ... library.obj
 	@echo ... library.i
 	@echo ... library.s

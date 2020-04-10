@@ -27,28 +27,42 @@ package com.github.mittyrobotics.motion.statespace;
 import org.ejml.simple.SimpleMatrix;
 
 public class LinearQuadraticRegulator {
+    /**{@link Plant} discrete A matrix*/
     private SimpleMatrix A;
+    /**{@link Plant} discrete B matrix*/
     private SimpleMatrix B;
-    private SimpleMatrix k;
+    /**LQR Controller gain matrix*/
+    private SimpleMatrix lqrGain;
+    /**LQR Controller feedforward gain matrix*/
+    private SimpleMatrix lqrFFGain;
+    /**Controller reference state matrix*/
     private SimpleMatrix r;
+    /**Control input matrix (also known as controller output, voltage to apply to motor). Feedforward matrix,
+     * <code>uff</code> is already applied to this matrix.*/
     private SimpleMatrix u;
+    /**Control input feedforward matrix*/
     private SimpleMatrix uff;
 
     public LinearQuadraticRegulator(SimpleMatrix A, SimpleMatrix B, SimpleMatrix qElms, SimpleMatrix rElms) {
         this.A = A;
         this.B = B;
 
+        //Create cost matrices of q and r elements
         SimpleMatrix Q = MatrixUtils.makeCostMatrix(qElms);
         SimpleMatrix R = MatrixUtils.makeCostMatrix(rElms);
 
+        //Solve discrete algrbraic riccati equation
         SimpleMatrix S = MatrixUtils.discreteAlgebraicRiccatiEquation(A, B, Q, R);
 
+        //Calculate LQR gain and LQR feedforward gain
         SimpleMatrix temp = B.transpose().mult(S).mult(B).plus(R);
-        this.k = temp.solve(B.transpose().mult(S).mult(A));
+        this.lqrGain = temp.solve(B.transpose().mult(S).mult(A));
+        this.lqrFFGain = B.pseudoInverse();
 
         int states = B.numRows();
         int inputs = B.numCols();
 
+        //Initiate initial reference, control input, and control input feedforward matrices
         this.r = new SimpleMatrix(states, 1);
         this.u = new SimpleMatrix(inputs, 1);
         this.uff = new SimpleMatrix(inputs, 1);
@@ -56,15 +70,15 @@ public class LinearQuadraticRegulator {
         reset();
     }
 
-    public LinearQuadraticRegulator(Plant plant, SimpleMatrix qElms, SimpleMatrix rElms, SimpleMatrix k) {
+    public LinearQuadraticRegulator(Plant plant, SimpleMatrix qElms, SimpleMatrix rElms, SimpleMatrix lqrGain) {
         this(plant, qElms, rElms);
-        this.k = k;
+        this.lqrGain = lqrGain;
     }
 
     public LinearQuadraticRegulator(SimpleMatrix A, SimpleMatrix B, SimpleMatrix qElms, SimpleMatrix rElms,
-                                    SimpleMatrix k) {
+                                    SimpleMatrix lqrGain) {
         this(A, B, qElms, rElms);
-        this.k = k;
+        this.lqrGain = lqrGain;
     }
 
     public LinearQuadraticRegulator(Plant plant, SimpleMatrix qElms, SimpleMatrix rElms) {
@@ -77,8 +91,9 @@ public class LinearQuadraticRegulator {
      * @param currentState the current state matrix of the system.
      */
     public void update(SimpleMatrix currentState) {
-        uff = new SimpleMatrix(B.solve(r.minus(A.mult(r))));
-        u = k.mult(r.minus(currentState)).plus(uff);
+        uff = lqrFFGain.mult(r.minus(A.mult(r)));
+        SimpleMatrix u = lqrGain.mult(r.minus(currentState));
+        this.u = u.plus(uff);
     }
 
     /**
@@ -92,6 +107,10 @@ public class LinearQuadraticRegulator {
         this.r = nextReference;
     }
 
+    public void setReference(SimpleMatrix r){
+        this.r = r;
+    }
+
     /**
      * Resets the {@link LinearQuadraticRegulator}.
      */
@@ -101,8 +120,8 @@ public class LinearQuadraticRegulator {
         uff.fill(0.0);
     }
 
-    public SimpleMatrix getK() {
-        return k;
+    public SimpleMatrix getLqrGain() {
+        return lqrGain;
     }
 
     public SimpleMatrix getR() {
@@ -115,5 +134,9 @@ public class LinearQuadraticRegulator {
 
     public SimpleMatrix getUff() {
         return uff;
+    }
+
+    public SimpleMatrix getLqrFFGain() {
+        return lqrFFGain;
     }
 }

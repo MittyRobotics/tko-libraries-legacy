@@ -69,8 +69,10 @@ public class Plant {
 
         a = new SimpleMatrix(new double[][]{
                 {0.0, 1.0},
-                {0.0, (-(G * G) * Kt) / (R * (r * r) * m * Kv)}
+                {0.0, -(G * G) * motor.getKt() / (motor.getResistance() * (r * r) * m * motor.getKv())}
         });
+
+        System.out.println(motor.getKt());
 
         b = new SimpleMatrix(new double[][]{
                 {0.0},
@@ -166,20 +168,20 @@ public class Plant {
         SimpleMatrix reDiscretizedA = reDiscretizedGains.getA();
         SimpleMatrix reDiscretizedB = reDiscretizedGains.getB();
 
-        return (reDiscretizedA.mult(currentState))
+        return reDiscretizedA.mult(currentState)
                 .plus(reDiscretizedB.mult(MatrixUtils.clamp(controlInput, uMin.get(0), uMax.get(0))));
     }
 
     public SimpleMatrix calculateY(SimpleMatrix currentState, SimpleMatrix controlInput) {
-        return getContinuousSystem().getC().mult(currentState)
-                .plus(getContinuousSystem().getD().mult(MatrixUtils.clamp(controlInput, uMin.get(0), uMax.get(0))));
+        return getDiscreteSystem().getC().mult(currentState)
+                .plus(getDiscreteSystem().getD().mult(MatrixUtils.clamp(controlInput, uMin.get(0), uMax.get(0))));
     }
 
     public SimpleMatrix getStates() {
         return states;
     }
 
-    public int getNumStates(){
+    public int getNumStates() {
         return states.numRows();
     }
 

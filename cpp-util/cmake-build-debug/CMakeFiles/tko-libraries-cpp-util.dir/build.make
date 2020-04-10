@@ -77,38 +77,59 @@ CMakeFiles\tko-libraries-cpp-util.dir\library.cpp.s: cmake_force
  /nologo /TP $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) /FoNUL /FAs /FaCMakeFiles\tko-libraries-cpp-util.dir\library.cpp.s /c C:\Users\Owen\Documents\GitHub\tko-libraries\cpp-util\library.cpp
 <<
 
-CMakeFiles\tko-libraries-cpp-util.dir\drake\discrete_algebraic_riccati_equation.cc.obj: CMakeFiles\tko-libraries-cpp-util.dir\flags.make
-CMakeFiles\tko-libraries-cpp-util.dir\drake\discrete_algebraic_riccati_equation.cc.obj: ..\drake\discrete_algebraic_riccati_equation.cc
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=C:\Users\Owen\Documents\GitHub\tko-libraries\cpp-util\cmake-build-debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building CXX object CMakeFiles/tko-libraries-cpp-util.dir/drake/discrete_algebraic_riccati_equation.cc.obj"
+CMakeFiles\tko-libraries-cpp-util.dir\drake\math\discrete_algebraic_riccati_equation.cpp.obj: CMakeFiles\tko-libraries-cpp-util.dir\flags.make
+CMakeFiles\tko-libraries-cpp-util.dir\drake\math\discrete_algebraic_riccati_equation.cpp.obj: ..\drake\math\discrete_algebraic_riccati_equation.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=C:\Users\Owen\Documents\GitHub\tko-libraries\cpp-util\cmake-build-debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building CXX object CMakeFiles/tko-libraries-cpp-util.dir/drake/math/discrete_algebraic_riccati_equation.cpp.obj"
 	C:\PROGRA~2\MICROS~1.0\VC\bin\amd64\cl.exe @<<
- /nologo /TP $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) /FoCMakeFiles\tko-libraries-cpp-util.dir\drake\discrete_algebraic_riccati_equation.cc.obj /FdCMakeFiles\tko-libraries-cpp-util.dir\ /FS -c C:\Users\Owen\Documents\GitHub\tko-libraries\cpp-util\drake\discrete_algebraic_riccati_equation.cc
+ /nologo /TP $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) /FoCMakeFiles\tko-libraries-cpp-util.dir\drake\math\discrete_algebraic_riccati_equation.cpp.obj /FdCMakeFiles\tko-libraries-cpp-util.dir\ /FS -c C:\Users\Owen\Documents\GitHub\tko-libraries\cpp-util\drake\math\discrete_algebraic_riccati_equation.cpp
 <<
 
-CMakeFiles\tko-libraries-cpp-util.dir\drake\discrete_algebraic_riccati_equation.cc.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/tko-libraries-cpp-util.dir/drake/discrete_algebraic_riccati_equation.cc.i"
-	C:\PROGRA~2\MICROS~1.0\VC\bin\amd64\cl.exe > CMakeFiles\tko-libraries-cpp-util.dir\drake\discrete_algebraic_riccati_equation.cc.i @<<
- /nologo /TP $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E C:\Users\Owen\Documents\GitHub\tko-libraries\cpp-util\drake\discrete_algebraic_riccati_equation.cc
+CMakeFiles\tko-libraries-cpp-util.dir\drake\math\discrete_algebraic_riccati_equation.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/tko-libraries-cpp-util.dir/drake/math/discrete_algebraic_riccati_equation.cpp.i"
+	C:\PROGRA~2\MICROS~1.0\VC\bin\amd64\cl.exe > CMakeFiles\tko-libraries-cpp-util.dir\drake\math\discrete_algebraic_riccati_equation.cpp.i @<<
+ /nologo /TP $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E C:\Users\Owen\Documents\GitHub\tko-libraries\cpp-util\drake\math\discrete_algebraic_riccati_equation.cpp
 <<
 
-CMakeFiles\tko-libraries-cpp-util.dir\drake\discrete_algebraic_riccati_equation.cc.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/tko-libraries-cpp-util.dir/drake/discrete_algebraic_riccati_equation.cc.s"
+CMakeFiles\tko-libraries-cpp-util.dir\drake\math\discrete_algebraic_riccati_equation.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/tko-libraries-cpp-util.dir/drake/math/discrete_algebraic_riccati_equation.cpp.s"
 	C:\PROGRA~2\MICROS~1.0\VC\bin\amd64\cl.exe @<<
- /nologo /TP $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) /FoNUL /FAs /FaCMakeFiles\tko-libraries-cpp-util.dir\drake\discrete_algebraic_riccati_equation.cc.s /c C:\Users\Owen\Documents\GitHub\tko-libraries\cpp-util\drake\discrete_algebraic_riccati_equation.cc
+ /nologo /TP $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) /FoNUL /FAs /FaCMakeFiles\tko-libraries-cpp-util.dir\drake\math\discrete_algebraic_riccati_equation.cpp.s /c C:\Users\Owen\Documents\GitHub\tko-libraries\cpp-util\drake\math\discrete_algebraic_riccati_equation.cpp
+<<
+
+CMakeFiles\tko-libraries-cpp-util.dir\drake\common\drake_assert_and_throw.cpp.obj: CMakeFiles\tko-libraries-cpp-util.dir\flags.make
+CMakeFiles\tko-libraries-cpp-util.dir\drake\common\drake_assert_and_throw.cpp.obj: ..\drake\common\drake_assert_and_throw.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=C:\Users\Owen\Documents\GitHub\tko-libraries\cpp-util\cmake-build-debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building CXX object CMakeFiles/tko-libraries-cpp-util.dir/drake/common/drake_assert_and_throw.cpp.obj"
+	C:\PROGRA~2\MICROS~1.0\VC\bin\amd64\cl.exe @<<
+ /nologo /TP $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) /FoCMakeFiles\tko-libraries-cpp-util.dir\drake\common\drake_assert_and_throw.cpp.obj /FdCMakeFiles\tko-libraries-cpp-util.dir\ /FS -c C:\Users\Owen\Documents\GitHub\tko-libraries\cpp-util\drake\common\drake_assert_and_throw.cpp
+<<
+
+CMakeFiles\tko-libraries-cpp-util.dir\drake\common\drake_assert_and_throw.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/tko-libraries-cpp-util.dir/drake/common/drake_assert_and_throw.cpp.i"
+	C:\PROGRA~2\MICROS~1.0\VC\bin\amd64\cl.exe > CMakeFiles\tko-libraries-cpp-util.dir\drake\common\drake_assert_and_throw.cpp.i @<<
+ /nologo /TP $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E C:\Users\Owen\Documents\GitHub\tko-libraries\cpp-util\drake\common\drake_assert_and_throw.cpp
+<<
+
+CMakeFiles\tko-libraries-cpp-util.dir\drake\common\drake_assert_and_throw.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/tko-libraries-cpp-util.dir/drake/common/drake_assert_and_throw.cpp.s"
+	C:\PROGRA~2\MICROS~1.0\VC\bin\amd64\cl.exe @<<
+ /nologo /TP $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) /FoNUL /FAs /FaCMakeFiles\tko-libraries-cpp-util.dir\drake\common\drake_assert_and_throw.cpp.s /c C:\Users\Owen\Documents\GitHub\tko-libraries\cpp-util\drake\common\drake_assert_and_throw.cpp
 <<
 
 # Object files for target tko-libraries-cpp-util
 tko__libraries__cpp__util_OBJECTS = \
 "CMakeFiles\tko-libraries-cpp-util.dir\library.cpp.obj" \
-"CMakeFiles\tko-libraries-cpp-util.dir\drake\discrete_algebraic_riccati_equation.cc.obj"
+"CMakeFiles\tko-libraries-cpp-util.dir\drake\math\discrete_algebraic_riccati_equation.cpp.obj" \
+"CMakeFiles\tko-libraries-cpp-util.dir\drake\common\drake_assert_and_throw.cpp.obj"
 
 # External object files for target tko-libraries-cpp-util
 tko__libraries__cpp__util_EXTERNAL_OBJECTS =
 
 tko-libraries-cpp-util.dll: CMakeFiles\tko-libraries-cpp-util.dir\library.cpp.obj
-tko-libraries-cpp-util.dll: CMakeFiles\tko-libraries-cpp-util.dir\drake\discrete_algebraic_riccati_equation.cc.obj
+tko-libraries-cpp-util.dll: CMakeFiles\tko-libraries-cpp-util.dir\drake\math\discrete_algebraic_riccati_equation.cpp.obj
+tko-libraries-cpp-util.dll: CMakeFiles\tko-libraries-cpp-util.dir\drake\common\drake_assert_and_throw.cpp.obj
 tko-libraries-cpp-util.dll: CMakeFiles\tko-libraries-cpp-util.dir\build.make
 tko-libraries-cpp-util.dll: CMakeFiles\tko-libraries-cpp-util.dir\objects1.rsp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=C:\Users\Owen\Documents\GitHub\tko-libraries\cpp-util\cmake-build-debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Linking CXX shared library tko-libraries-cpp-util.dll"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=C:\Users\Owen\Documents\GitHub\tko-libraries\cpp-util\cmake-build-debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Linking CXX shared library tko-libraries-cpp-util.dll"
 	"D:\CLion 2019.1.1\bin\cmake\win\bin\cmake.exe" -E vs_link_dll --intdir=CMakeFiles\tko-libraries-cpp-util.dir --rc=C:\PROGRA~2\WI3CF2~1\10\bin\x64\rc.exe --mt=C:\PROGRA~2\WI3CF2~1\10\bin\x64\mt.exe --manifests  -- C:\PROGRA~2\MICROS~1.0\VC\bin\amd64\link.exe /nologo @CMakeFiles\tko-libraries-cpp-util.dir\objects1.rsp @<<
  /out:tko-libraries-cpp-util.dll /implib:tko-libraries-cpp-util.lib /pdb:C:\Users\Owen\Documents\GitHub\tko-libraries\cpp-util\cmake-build-debug\tko-libraries-cpp-util.pdb /dll /version:0.0 /machine:x64 /debug /INCREMENTAL kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib  
 <<

@@ -26,7 +26,7 @@ package com.github.mittyrobotics.motion.statespace.motors;
 
 public class CIMMotor extends Motor {
     public CIMMotor(double numMotors) {
-        super(2.24, 131.0, 5330, 2.7, numMotors);
+        super(2.42, 133.0, 5310.0, 2.7, numMotors);
     }
 
 }

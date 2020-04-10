@@ -385,8 +385,8 @@ public class SCurveMotionProfile {
 
         //If any of of the times or distances are less than 0, set them to 0.
         if (tCruise < 0 || dCruise < 0) {
-            dCruise = 0;
             tCruise = 0;
+            dCruise = 0;
         }
         if (tAccel < 0 || dAccel < 0) {
             tAccel = 0;

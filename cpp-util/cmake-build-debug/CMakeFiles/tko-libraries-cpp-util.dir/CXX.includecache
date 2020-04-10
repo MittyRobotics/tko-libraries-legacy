@@ -1066,12 +1066,12 @@ C:/Users/Owen/Documents/GitHub/tko-libraries/cpp-util/Eigen/src/plugins/MatrixCw
 
 C:/Users/Owen/Documents/GitHub/tko-libraries/cpp-util/Eigen/src/plugins/MatrixCwiseUnaryOps.h
 
-C:/Users/Owen/Documents/GitHub/tko-libraries/cpp-util/drake/discrete_algebraic_riccati_equation.h
+C:/Users/Owen/Documents/GitHub/tko-libraries/cpp-util/drake/math/discrete_algebraic_riccati_equation.h
 cmath
 -
 cstdlib
 -
-../Eigen/Dense
+../../Eigen/Dense
 C:/Users/Owen/Documents/GitHub/tko-libraries/cpp-util/Eigen/Dense
 
 C:/Users/Owen/Documents/GitHub/tko-libraries/cpp-util/library.cpp
@@ -1079,6 +1079,6 @@ iostream
 -
 Eigen/Dense
 C:/Users/Owen/Documents/GitHub/tko-libraries/cpp-util/Eigen/Dense
-drake/discrete_algebraic_riccati_equation.h
-C:/Users/Owen/Documents/GitHub/tko-libraries/cpp-util/drake/discrete_algebraic_riccati_equation.h
+drake/math/discrete_algebraic_riccati_equation.h
+C:/Users/Owen/Documents/GitHub/tko-libraries/cpp-util/drake/math/discrete_algebraic_riccati_equation.h
 

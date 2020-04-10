@@ -52,7 +52,7 @@ public class Motor {
 
     private void computeMotorValues() {
         this.resistance = 12 / stallCurrent;
-        this.Kv = ((freeSpeed / 60.0 * 2.0 * Math.PI) / (12.0 - resistance * freeCurrent));
+        this.Kv = ((freeSpeed / 60.0 * (2.0 * Math.PI)) / (12.0 - resistance * freeCurrent));
         this.Kt = (numMotors * stallTorque) / stallCurrent;
     }
 
