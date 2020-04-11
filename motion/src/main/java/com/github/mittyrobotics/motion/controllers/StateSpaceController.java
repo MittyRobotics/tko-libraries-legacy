@@ -66,7 +66,7 @@ public class StateSpaceController {
         correct(measurement);
         predict(deltaTime);
 
-        return controller.getU();
+        return getU();
     }
 
     public void predict(double deltaTime) {

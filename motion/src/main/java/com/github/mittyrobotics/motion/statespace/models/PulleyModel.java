@@ -24,101 +24,52 @@
 
 package com.github.mittyrobotics.motion.statespace.models;
 
+import com.github.mittyrobotics.motion.statespace.Plant;
 import com.github.mittyrobotics.motion.statespace.motors.Motor;
+import org.ejml.simple.SimpleMatrix;
 
 public class PulleyModel {
-    private final double mass;
-    private final Motor motor;
-    private final double gearRatio;
-    private final double pulleyRadius;
-
-    private double resistance;
-    private double Kv;
-    private double Kt;
-
     private double acceleration;
     private double velocity;
     private double position;
 
-    public PulleyModel(double mass, Motor motor, double gearRatio, double pulleyRadius) {
-        this.mass = mass;
-        this.motor = motor;
-        this.gearRatio = gearRatio;
-        this.pulleyRadius = pulleyRadius;
-        computeModelValues();
-    }
+    private Plant plant;
 
-    public void computeModelValues() {
-        double stallTorque = motor.getStallTorque();
-        double stallCurrent = motor.getStallCurrent();
-        double freeSpeed = motor.getFreeSpeed();
-        double freeCurrent = motor.getFreeCurrent();
-
-        this.resistance = motor.getResistance();
-        this.Kv = motor.getKv();
-        this.Kt = motor.getKt();
+    public PulleyModel( Motor motor, double mass, double gearReduction, double pulleyRadius, double maxVoltage) {
+        this.plant = Plant.createElevatorPlant(motor,mass,pulleyRadius,gearReduction, maxVoltage, 1);
     }
 
     public void updateModel(double voltage, double deltaTime) {
-        this.acceleration = calculateAcceleration(voltage);
-        this.velocity += acceleration * deltaTime;
-        this.position += velocity * deltaTime;
+        plant.update(new SimpleMatrix(new double[][]{{position}, {velocity}}),
+                new SimpleMatrix(new double[][]{{voltage}}),deltaTime);
+        SimpleMatrix states = plant.getX();
+        this.acceleration = (velocity-states.get(1))/deltaTime;
+        this.position = states.get(0);
+        this.velocity = states.get(1);
+
     }
 
-    private double calculateAcceleration(double voltage) {
-        double G = gearRatio * 100;
-        double R = resistance * 100;
-        double r = pulleyRadius * 100;
-        double m = mass * 100;
-        double V = voltage * 100;
-        double v = velocity * 100;
-        double Kt = this.Kt * 100;
-        double Kv = this.Kv * 100;
-
-        return ((G * Kt) / (R * r * m) * V - (G * G * Kt) / (R * (r * r) * m * Kv) * v) * 100;
+    public double getPosition(){
+        return position;
     }
 
-    public double getAcceleration() {
-        return acceleration / 100;
+    public double getVelocity(){
+        return velocity;
     }
 
-    public double getVelocity() {
-        return velocity / 100;
+    public double getAcceleration(){
+        return acceleration;
     }
 
-    public void setVelocity(double velocity) {
-        this.velocity = velocity * 100;
+    public void setPosition(double position){
+        this.position = position;
     }
 
-    public double getPosition() {
-        return position / 100;
+    public void setVelocity(double velocity){
+        this.velocity = velocity;
     }
 
-    public void setPosition(double position) {
-        this.position = position * 100;
-    }
-
-    public double getMass() {
-        return mass;
-    }
-
-    public double getGearRatio() {
-        return gearRatio;
-    }
-
-    public double getPulleyRadius() {
-        return pulleyRadius;
-    }
-
-    public double getResistance() {
-        return resistance;
-    }
-
-    public double getKv() {
-        return Kv;
-    }
-
-    public double getKt() {
-        return Kt;
+    public void setAcceleration(double acceleration) {
+        this.acceleration = acceleration;
     }
 }

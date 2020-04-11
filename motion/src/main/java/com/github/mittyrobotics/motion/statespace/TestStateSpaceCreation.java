@@ -35,12 +35,12 @@ import com.github.mittyrobotics.visualization.MotorGraph;
 import org.ejml.simple.SimpleMatrix;
 
 public class TestStateSpaceCreation {
-    public static void main(String[] args) {
+    public static void main(String[] args) throws InterruptedException {
         double pulleyRadius = 0.0254;
         double mass = 6.803886;
         double gearReduction = 42.0 / 12.0 * 40.0 / 14.0;
         double maxVoltage = 12;
-        double dt = 0.00505;
+        double dt = 0.02;
         Motor motor = new NEOMotor(1);
 
         Plant plant = Plant.createElevatorPlant(motor, mass, pulleyRadius, gearReduction,
@@ -51,16 +51,11 @@ public class TestStateSpaceCreation {
         LinearQuadraticRegulator controller = new LinearQuadraticRegulator(plant,
                 new SimpleMatrix(new double[][]{{0.02, 0.4}}), new SimpleMatrix(new double[][]{{12.0}}));
 
-        System.out.println("GAINS \n" + plant.getDiscreteSystem().getA() + "" + plant.getDiscreteSystem().getB() + "" +
-                plant.getDiscreteSystem().getC() + "" + plant.getDiscreteSystem().getD() + "" +
-                controller.getLqrGain() + "" +
-                controller.getUff() + "" + filter.getKalmanGain());
-
         StateSpaceController loop = new StateSpaceController(plant, controller, filter);
 
         MotorGraph graph = new MotorGraph();
 
-        PulleyModel pulleyModel = new PulleyModel(mass, motor, gearReduction, pulleyRadius);
+        PulleyModel pulleyModel = new PulleyModel(motor, mass, gearReduction, pulleyRadius,12);
 
         double previousPos = 0;
         double previousVel = 0;
@@ -76,17 +71,19 @@ public class TestStateSpaceCreation {
             double referencePosition = motionProfile.calculateState(t).getPosition();
             double referenceVelocity = motionProfile.calculateState(t).getVelocity();
 
-            double voltage = loop.calculate(new SimpleMatrix(new double[][]{{previousPos}}),
-                    new SimpleMatrix(new double[][]{{referencePosition}, {referenceVelocity}}), dt).get(0);
+            SimpleMatrix voltage = loop.calculate(new SimpleMatrix(new double[][]{{previousPos}}),
+                    new SimpleMatrix(new double[][]{{referencePosition}, {referenceVelocity}}), dt);
 
-            pulleyModel.updateModel(voltage, dt);
+            pulleyModel.updateModel(voltage.get(0), dt);
+
             previousPos = pulleyModel.getPosition();
             previousVel = pulleyModel.getVelocity();
 
             graph.addPosition(previousPos, t);
             graph.addVelocity(previousVel, t);
-            graph.addVoltage(voltage, t);
+            graph.addVoltage(voltage.get(0), t);
             graph.addError(loop.getError(), t);
+//            Thread.sleep(200);
         }
     }
 }
