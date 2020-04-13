@@ -29,8 +29,14 @@ import com.sun.jna.Pointer;
 import com.sun.jna.ptr.IntByReference;
 import com.sun.jna.ptr.PointerByReference;
 
+/**
+ * Cpp JNA library.
+ *
+ * Instructions: When you first download the repository, open the <code>cpp-util</code> c++ project in a c++ editor.
+ * Then build the CMakeLists.txt. This will generate a .dll or .so file for your machine that the JNA can access.
+ */
 public interface CppUtilJNA extends com.sun.jna.win32.StdCallLibrary {
-    CppUtilJNA INSTANCE = (CppUtilJNA) Native.load("cpp-util/cmake-build-debug/tko-libraries-cpp-util",
+    CppUtilJNA INSTANCE = (CppUtilJNA) Native.load("cpp-util\\cmake-build-debug\\tko-libraries-cpp-util.dll",
             CppUtilJNA.class);
 
     Pointer discreteAlgebraicRiccatiEquation(double[] A, double[] B, double[] Q, double[] R, int states, int inputs,

@@ -119,8 +119,8 @@ public class MatrixUtils {
         return output;
     }
 
-    public static SimpleMatrix makeCostMatrix(SimpleMatrix cost) {
-        return SimpleMatrix.diag(divideDoubleByMatrix(1, cost.elementMult(cost)).getDDRM().getData());
+    public static SimpleMatrix makeCostMatrix(SimpleMatrix cost, double p) {
+        return SimpleMatrix.diag(divideDoubleByMatrix(p, cost.elementMult(cost)).getDDRM().getData());
     }
 
     public static SimpleMatrix clamp(SimpleMatrix matrix, double min, double max) {

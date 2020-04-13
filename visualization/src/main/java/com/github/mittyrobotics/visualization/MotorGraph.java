@@ -38,13 +38,17 @@ public class MotorGraph extends Graph {
     public MotorGraph(String name, String yName, String xName) {
         super(name, yName, xName);
         XYSeriesWithRenderer positionSeries = new XYSeriesWithRenderer(positionKey);
-        positionSeries.setShowLines(false);
+        positionSeries.setShowShapes(true);
         XYSeriesWithRenderer velocitySeries = new XYSeriesWithRenderer(velocityKey);
-        velocitySeries.setShowLines(false);
-        XYSeries accelerationSeries = new XYSeries(accelerationKey, false);
-        XYSeries voltageSeries = new XYSeries(voltageKey, false);
-        XYSeries setpointSeries = new XYSeries(setpointKey, false);
-        XYSeries errorSeries = new XYSeries(errorKey, false);
+        velocitySeries.setShowShapes(true);
+        XYSeriesWithRenderer accelerationSeries = new XYSeriesWithRenderer(accelerationKey);
+        accelerationSeries.setShowShapes(true);
+        XYSeriesWithRenderer voltageSeries = new XYSeriesWithRenderer(voltageKey);
+        voltageSeries.setShowShapes(true);
+        XYSeriesWithRenderer setpointSeries = new XYSeriesWithRenderer(setpointKey);
+        setpointSeries.setShowShapes(true);
+        XYSeriesWithRenderer errorSeries = new XYSeriesWithRenderer(errorKey);
+        errorSeries.setShowShapes(true);
 
         addSeries(positionSeries);
         addSeries(velocitySeries);

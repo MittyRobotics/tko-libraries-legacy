@@ -57,13 +57,13 @@ public class LinearQuadraticRegulator {
      */
     private SimpleMatrix uff;
 
-    public LinearQuadraticRegulator(SimpleMatrix A, SimpleMatrix B, SimpleMatrix qElms, SimpleMatrix rElms) {
+    public LinearQuadraticRegulator(SimpleMatrix A, SimpleMatrix B, SimpleMatrix qElms, SimpleMatrix rElms, double qWeight) {
         this.A = A;
         this.B = B;
 
         //Create cost matrices of q and r elements
-        SimpleMatrix Q = MatrixUtils.makeCostMatrix(qElms);
-        SimpleMatrix R = MatrixUtils.makeCostMatrix(rElms);
+        SimpleMatrix Q = MatrixUtils.makeCostMatrix(qElms, qWeight);
+        SimpleMatrix R = MatrixUtils.makeCostMatrix(rElms, 1);
 
         //Solve discrete algrbraic riccati equation
         SimpleMatrix S = MatrixUtils.discreteAlgebraicRiccatiEquation(A, B, Q, R);
@@ -84,19 +84,19 @@ public class LinearQuadraticRegulator {
         reset();
     }
 
-    public LinearQuadraticRegulator(Plant plant, SimpleMatrix qElms, SimpleMatrix rElms, SimpleMatrix lqrGain) {
-        this(plant, qElms, rElms);
+    public LinearQuadraticRegulator(Plant plant, SimpleMatrix qElms, SimpleMatrix rElms, SimpleMatrix lqrGain, double qWeight) {
+        this(plant, qElms, rElms, qWeight);
         this.lqrGain = lqrGain;
     }
 
     public LinearQuadraticRegulator(SimpleMatrix A, SimpleMatrix B, SimpleMatrix qElms, SimpleMatrix rElms,
-                                    SimpleMatrix lqrGain) {
-        this(A, B, qElms, rElms);
+                                    SimpleMatrix lqrGain, double qWeight) {
+        this(A, B, qElms, rElms, qWeight);
         this.lqrGain = lqrGain;
     }
 
-    public LinearQuadraticRegulator(Plant plant, SimpleMatrix qElms, SimpleMatrix rElms) {
-        this(plant.getDiscreteSystem().getA(), plant.getDiscreteSystem().getB(), qElms, rElms);
+    public LinearQuadraticRegulator(Plant plant, SimpleMatrix qElms, SimpleMatrix rElms, double qWeight) {
+        this(plant.getDiscreteSystem().getA(), plant.getDiscreteSystem().getB(), qElms, rElms, qWeight);
     }
 
     /**
