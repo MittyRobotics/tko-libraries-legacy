@@ -28,14 +28,14 @@ import com.github.mittyrobotics.motion.statespace.Plant;
 import com.github.mittyrobotics.motion.statespace.motors.Motor;
 import org.ejml.simple.SimpleMatrix;
 
-public class PulleyModel {
+public class ElevatorModel {
     private double acceleration;
     private double velocity;
     private double position;
 
     private Plant plant;
 
-    public PulleyModel( Motor motor, double mass, double gearReduction, double pulleyRadius, double maxVoltage) {
+    public ElevatorModel(Motor motor, double mass, double gearReduction, double pulleyRadius, double maxVoltage) {
         this.plant = Plant.createElevatorPlant(motor,mass,pulleyRadius,gearReduction, maxVoltage, 1);
     }
 
@@ -43,10 +43,13 @@ public class PulleyModel {
         plant.update(new SimpleMatrix(new double[][]{{position}, {velocity}}),
                 new SimpleMatrix(new double[][]{{voltage}}),deltaTime);
         SimpleMatrix states = plant.getX();
-        this.acceleration = (velocity-states.get(1))/deltaTime;
+        this.acceleration = (states.get(1)-velocity)/deltaTime;
         this.position = states.get(0);
         this.velocity = states.get(1);
+    }
 
+    public Plant getPlant(){
+        return plant;
     }
 
     public double getPosition(){

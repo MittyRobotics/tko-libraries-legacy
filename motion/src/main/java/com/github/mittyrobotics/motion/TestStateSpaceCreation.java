@@ -22,22 +22,21 @@
  * SOFTWARE.
  */
 
-package com.github.mittyrobotics.motion.statespace;
+package com.github.mittyrobotics.motion;
 
 import com.github.mittyrobotics.datatypes.motion.MotionState;
 import com.github.mittyrobotics.datatypes.units.Conversions;
-import com.github.mittyrobotics.motion.OverrideMethod;
-import com.github.mittyrobotics.motion.SCurveMotionProfile;
+import com.github.mittyrobotics.motion.profiles.OverrideMethod;
+import com.github.mittyrobotics.motion.profiles.SCurveMotionProfile;
 import com.github.mittyrobotics.motion.controllers.StateSpaceController;
-import com.github.mittyrobotics.motion.statespace.models.PulleyModel;
+import com.github.mittyrobotics.motion.statespace.KalmanFilter;
+import com.github.mittyrobotics.motion.statespace.LinearQuadraticRegulator;
+import com.github.mittyrobotics.motion.statespace.Plant;
+import com.github.mittyrobotics.motion.statespace.models.ElevatorModel;
 import com.github.mittyrobotics.motion.statespace.motors.Motor;
 import com.github.mittyrobotics.motion.statespace.motors.NEOMotor;
-import com.github.mittyrobotics.motion.statespace.motors.Pro775Motor;
 import com.github.mittyrobotics.visualization.MotorGraph;
-import edu.wpi.first.wpilibj.controller.PIDController;
 import org.ejml.simple.SimpleMatrix;
-
-import java.util.Random;
 
 public class TestStateSpaceCreation {
     public static void main(String[] args) {
@@ -46,7 +45,7 @@ public class TestStateSpaceCreation {
         double gearReduction = 10;
         double maxVoltage = 12;
         double dt = 0.001;
-        Motor motor = new Pro775Motor(1);
+        Motor motor = new NEOMotor(2);
 
         double modelPositionAccuracyGain = 0.05; //Model position accuracy
         double modelVelocityAccuracyGain = 1.0; //Model velocity accuracy
@@ -56,7 +55,7 @@ public class TestStateSpaceCreation {
         double voltageTolerance = 12;
         //Weights the Q matrix in the LQR for different response according to Bryson's Rule. Lower Q results in a more
         //gradual response, higher Q results in a more aggressive response. Default of 1.
-        double qWeight = 0.0001;
+        double qWeight = 0.01;
 
         Plant plant = Plant.createElevatorPlant(motor, mass, pulleyRadius, gearReduction,
                 maxVoltage, dt);
@@ -74,35 +73,36 @@ public class TestStateSpaceCreation {
         MotorGraph graph = new MotorGraph("State Space Elevator Step Response", "Position, Velocity, Acceleration, " +
                 "Voltage", "Time");
 
-        PulleyModel pulleyModel = new PulleyModel(motor, mass, gearReduction, pulleyRadius, 12);
+        ElevatorModel elevatorModel = new ElevatorModel(motor, mass, gearReduction, pulleyRadius, 12);
 
         double previousPos = 0;
         double previousVel = 0;
 
         SCurveMotionProfile motionProfile = new SCurveMotionProfile(new MotionState(previousPos, previousVel, 0),
-                new MotionState(previousPos + 5, 0, 0),
-                5, 5, 5, 1.57, OverrideMethod.END_AFTER_SETPOINT);
+                new MotionState(previousPos + 1, 0, 0),
+                50, 50, 100, 2, OverrideMethod.END_AFTER_SETPOINT);
 
         plant.setX(new SimpleMatrix(new double[][]{{previousPos}, {previousVel}}));
-        pulleyModel.setPosition(previousPos);
-        pulleyModel.setVelocity(previousVel);
+        elevatorModel.setPosition(previousPos);
+        elevatorModel.setVelocity(previousVel);
         for (double t = 0; t < 5; t += dt) {
             double referencePosition = 1;
             if (t < 1) {
                 referencePosition = 0;
             }
+            
             double referenceVelocity = 0;
 
             SimpleMatrix voltage = loop.calculate(new SimpleMatrix(new double[][]{{previousPos}}),
                     new SimpleMatrix(new double[][]{{referencePosition}, {referenceVelocity}}), dt);
 
-            pulleyModel.updateModel(voltage.get(0), dt);
+            elevatorModel.updateModel(voltage.get(0), dt);
 
-            previousPos = pulleyModel.getPosition();
-            previousVel = pulleyModel.getVelocity();
+            previousPos = elevatorModel.getPosition();
+            previousVel = elevatorModel.getVelocity();
 
             graph.addPosition(previousPos * 10, t);
-            graph.addVelocity(previousVel, t);
+            graph.addVelocity(previousVel * 10, t);
             graph.addVoltage(voltage.get(0), t);
             graph.addError(loop.getError() * 10, t);
             graph.addSetpoint(referencePosition * 10, t);

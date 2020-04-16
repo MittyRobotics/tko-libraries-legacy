@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-package com.github.mittyrobotics.motion;
+package com.github.mittyrobotics.motion.profiles;
 
 public enum OverrideMethod {
     OVERSHOOT,

@@ -24,73 +24,45 @@
 
 package com.github.mittyrobotics.motion.statespace.models;
 
-import com.github.mittyrobotics.datatypes.units.Conversions;
+import com.github.mittyrobotics.motion.statespace.Plant;
 import com.github.mittyrobotics.motion.statespace.motors.Motor;
+import org.ejml.simple.SimpleMatrix;
 
 public class FlywheelModel {
-    private final Motor motor;
-    private final double numMotors;
-    private final double gearRatio;
-    private final double momentOfInertia;
-
-    private double resistance;
-    private double Kv;
-    private double Kt;
-
     private double angularAcceleration;
     private double angularVelocity;
-    private double torque;
 
-    public FlywheelModel(double momentOfInertia, Motor motor, double numMotors, double gearRatio) {
-        this.momentOfInertia = momentOfInertia;
-        this.motor = motor;
-        this.numMotors = numMotors;
-        this.gearRatio = gearRatio;
-        computeModelValues();
-    }
+    private Plant plant;
 
-    public void computeModelValues() {
-        double stallTorque = motor.getStallTorque();
-        double stallCurrent = motor.getStallCurrent();
-        double freeSpeed = motor.getFreeSpeed();
-        double freeCurrent = motor.getFreeCurrent();
-
-        this.resistance = 12 / stallCurrent;
-        this.Kv = ((freeSpeed / 60.0 * 2.0 * Math.PI) / (12.0 - resistance * freeCurrent));
-        this.Kt = (numMotors * stallTorque) / stallCurrent;
+    public FlywheelModel( Motor motor, double momentOfInertia, double gearReduction, double maxVoltage) {
+        this.plant = Plant.createFlywheelPlant(motor,momentOfInertia,gearReduction, maxVoltage, 1);
     }
 
     public void updateModel(double voltage, double deltaTime) {
-        this.angularAcceleration = calculateAcceleration(voltage);
-        this.angularVelocity += angularAcceleration * deltaTime;
-        this.torque = calculateTorque(this.angularAcceleration);
+        plant.update(new SimpleMatrix(new double[][]{{angularVelocity}}),
+                new SimpleMatrix(new double[][]{{voltage}}),deltaTime);
+        SimpleMatrix states = plant.getX();
+        this.angularAcceleration = (states.get(0)-angularVelocity)*deltaTime;
+        this.angularVelocity = states.get(0);
     }
 
-    private double calculateTorque(double angularAcceleration) {
-        double wf = angularAcceleration;
-        double J = momentOfInertia;
-        return J * wf;
+    public Plant getPlant(){
+        return plant;
     }
 
-    private double calculateAcceleration(double voltage) {
-        double G = gearRatio;
-        double R = resistance;
-        double V = voltage;
-        double w = angularVelocity;
-        double J = momentOfInertia;
-
-        return (G * Kt) / (R * J) * V - (G * G * Kt) / (Kv * R * J) * w;
+    public double getAngularVelocity(){
+        return angularVelocity;
     }
 
-    public double getAngularAcceleration() {
-        return angularAcceleration * Conversions.M_TO_IN;
+    public double getAngularAcceleration(){
+        return angularAcceleration;
     }
 
-    public double getAngularVelocity() {
-        return angularVelocity * Conversions.M_TO_IN;
+    public void setAngularVelocity(double angularVelocity){
+        this.angularVelocity = angularVelocity;
     }
 
-    public double getTorque() {
-        return torque;
+    public void setAngularAcceleration(double angularAcceleration) {
+        this.angularAcceleration = angularAcceleration;
     }
 }

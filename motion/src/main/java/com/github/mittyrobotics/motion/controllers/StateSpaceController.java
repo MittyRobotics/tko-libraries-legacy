@@ -28,6 +28,8 @@ import com.github.mittyrobotics.motion.statespace.KalmanFilter;
 import com.github.mittyrobotics.motion.statespace.LinearQuadraticRegulator;
 import com.github.mittyrobotics.motion.statespace.MatrixUtils;
 import com.github.mittyrobotics.motion.statespace.Plant;
+import com.github.mittyrobotics.motion.statespace.models.ElevatorModel;
+import com.github.mittyrobotics.motion.statespace.models.FlywheelModel;
 import org.ejml.simple.SimpleMatrix;
 
 /**
@@ -40,6 +42,40 @@ public class StateSpaceController {
     private final KalmanFilter observer;
 
     private SimpleMatrix nextR;
+
+    public static StateSpaceController makeElevatorController(ElevatorModel model, double modelPositionAccuracy,
+                                                              double modelVelocityAccuracy, double measurementAccuracy,
+                                                              double positionTolerance, double velocityTolerance,
+                                                              double voltageTolerance, double qWeight) {
+        Plant plant = model.getPlant();
+
+        LinearQuadraticRegulator controller = new LinearQuadraticRegulator(plant,
+                new SimpleMatrix(new double[][]{{positionTolerance, velocityTolerance}}),
+                new SimpleMatrix(new double[][]{{voltageTolerance}}), qWeight);
+
+        KalmanFilter observer = new KalmanFilter(plant,
+                new SimpleMatrix(new double[][]{{modelPositionAccuracy, modelVelocityAccuracy}}),
+                new SimpleMatrix(new double[][]{{measurementAccuracy}}));
+
+        return new StateSpaceController(plant, controller, observer);
+    }
+
+    public static StateSpaceController makeFlywheelController(FlywheelModel model, double modelAngularVelocityAccuracy,
+                                                              double measurementAccuracy,
+                                                              double angularVelocityTolerance, double voltageTolerance,
+                                                              double qWeight) {
+        Plant plant = model.getPlant();
+
+        LinearQuadraticRegulator controller = new LinearQuadraticRegulator(plant,
+                new SimpleMatrix(new double[][]{{angularVelocityTolerance}}),
+                new SimpleMatrix(new double[][]{{voltageTolerance}}), qWeight);
+
+        KalmanFilter observer = new KalmanFilter(plant,
+                new SimpleMatrix(new double[][]{{modelAngularVelocityAccuracy}}),
+                new SimpleMatrix(new double[][]{{measurementAccuracy}}));
+
+        return new StateSpaceController(plant, controller, observer);
+    }
 
     public StateSpaceController(Plant plant, LinearQuadraticRegulator controller, KalmanFilter observer) {
         this.plant = plant;

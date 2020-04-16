@@ -25,17 +25,19 @@
 package com.github.mittyrobotics.motion;
 
 import com.github.mittyrobotics.datatypes.motion.MotionState;
+import com.github.mittyrobotics.motion.profiles.OverrideMethod;
+import com.github.mittyrobotics.motion.profiles.SCurveMotionProfile;
 import com.github.mittyrobotics.visualization.MotorGraph;
 
 import javax.swing.*;
 
-public class Main extends JFrame {
+public class TestMotionProfileCreation extends JFrame {
     private MotionState currentState = new MotionState(0, 0, 0);
-    private MotionState desiredState = new MotionState(20, 0, 0);
+    private MotionState desiredState = new MotionState(0, 0, 0);
     private MotorGraph graph;
 
     public static void main(String[] args) {
-        new Main().start();
+        new TestMotionProfileCreation().start();
     }
 
     public void start() {

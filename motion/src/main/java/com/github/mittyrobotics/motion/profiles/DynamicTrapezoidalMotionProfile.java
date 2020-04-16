@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-package com.github.mittyrobotics.motion;
+package com.github.mittyrobotics.motion.profiles;
 
 import com.github.mittyrobotics.datatypes.motion.MotionState;
 
