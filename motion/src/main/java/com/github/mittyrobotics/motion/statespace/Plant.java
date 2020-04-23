@@ -102,8 +102,6 @@ public class Plant {
                 {0.0, -(G * G) * motor.getKt() / (motor.getResistance() * (r * r) * m * motor.getKv())}
         });
 
-        System.out.println(motor.getKt());
-
         b = new SimpleMatrix(new double[][]{
                 {0.0},
                 {(G * Kt) / (R * r * m)}

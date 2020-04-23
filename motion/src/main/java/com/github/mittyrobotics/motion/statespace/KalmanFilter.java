@@ -65,7 +65,6 @@ public class KalmanFilter {
     }
 
     public void correct(SimpleMatrix controlInput, SimpleMatrix measurement) {
-        System.out.println(plant.getX());
         plant.setX(plant.getX().plus(kalmanGain
                 .mult(measurement.minus(plant.getDiscreteSystem().getC().mult(plant.getX()))
                         .minus(plant.getDiscreteSystem().getD().mult(controlInput)))));

@@ -105,7 +105,7 @@ public class LinearQuadraticRegulator {
      * @param currentState the current state matrix of the system.
      */
     public void update(SimpleMatrix currentState) {
-        uff = lqrFFGain.mult(r.minus(A.mult(r)));
+        this.uff = lqrFFGain.mult(r.minus(A.mult(r)));
         SimpleMatrix u = lqrGain.mult(r.minus(currentState));
         this.u = u.plus(uff);
     }

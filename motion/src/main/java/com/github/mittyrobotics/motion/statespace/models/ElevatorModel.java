@@ -28,51 +28,71 @@ import com.github.mittyrobotics.motion.statespace.Plant;
 import com.github.mittyrobotics.motion.statespace.motors.Motor;
 import org.ejml.simple.SimpleMatrix;
 
+import java.util.Random;
+
 public class ElevatorModel {
     private double acceleration;
     private double velocity;
     private double position;
 
     private Plant plant;
+    private double mass;
+
+    private double measurementNoise;
 
     public ElevatorModel(Motor motor, double mass, double gearReduction, double pulleyRadius, double maxVoltage) {
-        this.plant = Plant.createElevatorPlant(motor,mass,pulleyRadius,gearReduction, maxVoltage, 1);
+        this.plant = Plant.createElevatorPlant(motor, mass, pulleyRadius, gearReduction, maxVoltage, 1);
+        this.mass = mass;
+        this.measurementNoise = 0;
     }
 
     public void updateModel(double voltage, double deltaTime) {
         plant.update(new SimpleMatrix(new double[][]{{position}, {velocity}}),
-                new SimpleMatrix(new double[][]{{voltage}}),deltaTime);
+                new SimpleMatrix(new double[][]{{voltage}}), deltaTime);
         SimpleMatrix states = plant.getX();
-        this.acceleration = (states.get(1)-velocity)/deltaTime;
-        this.position = states.get(0);
+
+        this.acceleration = (states.get(1) - velocity) / deltaTime;
         this.velocity = states.get(1);
+        this.position = states.get(0);
     }
 
-    public Plant getPlant(){
+    private double calculateMeasurementNoise(double measurementNoise) {
+        return (measurementNoise != 0 ? ((new Random().nextDouble()-0.5) * measurementNoise) : 0);
+    }
+
+    public Plant getPlant() {
         return plant;
     }
 
-    public double getPosition(){
-        return position;
+    public double getPosition() {
+        return position + calculateMeasurementNoise(measurementNoise);
     }
 
-    public double getVelocity(){
-        return velocity;
+    public double getVelocity() {
+        return velocity + calculateMeasurementNoise(measurementNoise);
     }
 
-    public double getAcceleration(){
-        return acceleration;
+    public double getAcceleration() {
+        return acceleration + calculateMeasurementNoise(measurementNoise);
     }
 
-    public void setPosition(double position){
+    public void setPosition(double position) {
         this.position = position;
     }
 
-    public void setVelocity(double velocity){
+    public void setVelocity(double velocity) {
         this.velocity = velocity;
     }
 
     public void setAcceleration(double acceleration) {
         this.acceleration = acceleration;
+    }
+
+    public double getMeasurementNoise() {
+        return measurementNoise;
+    }
+
+    public void setMeasurementNoise(double measurementNoise) {
+        this.measurementNoise = measurementNoise;
     }
 }

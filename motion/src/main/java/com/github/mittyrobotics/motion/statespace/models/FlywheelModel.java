@@ -28,14 +28,18 @@ import com.github.mittyrobotics.motion.statespace.Plant;
 import com.github.mittyrobotics.motion.statespace.motors.Motor;
 import org.ejml.simple.SimpleMatrix;
 
+import java.util.Random;
+
 public class FlywheelModel {
     private double angularAcceleration;
     private double angularVelocity;
+    private double measurementNoise;
 
     private Plant plant;
 
     public FlywheelModel( Motor motor, double momentOfInertia, double gearReduction, double maxVoltage) {
         this.plant = Plant.createFlywheelPlant(motor,momentOfInertia,gearReduction, maxVoltage, 1);
+        this.measurementNoise = 0;
     }
 
     public void updateModel(double voltage, double deltaTime) {
@@ -46,16 +50,20 @@ public class FlywheelModel {
         this.angularVelocity = states.get(0);
     }
 
+    private double calculateMeasurementNoise(double measurementNoise) {
+        return (measurementNoise != 0 ? ((new Random().nextDouble()-0.5) * measurementNoise) : 0);
+    }
+
     public Plant getPlant(){
         return plant;
     }
 
     public double getAngularVelocity(){
-        return angularVelocity;
+        return angularVelocity + calculateMeasurementNoise(measurementNoise);
     }
 
     public double getAngularAcceleration(){
-        return angularAcceleration;
+        return angularAcceleration + calculateMeasurementNoise(measurementNoise);
     }
 
     public void setAngularVelocity(double angularVelocity){
@@ -64,5 +72,13 @@ public class FlywheelModel {
 
     public void setAngularAcceleration(double angularAcceleration) {
         this.angularAcceleration = angularAcceleration;
+    }
+
+    public double getMeasurementNoise() {
+        return measurementNoise;
+    }
+
+    public void setMeasurementNoise(double measurementNoise) {
+        this.measurementNoise = measurementNoise;
     }
 }

@@ -49,7 +49,7 @@ public class TestStateSpaceCreation {
 
         double modelPositionAccuracyGain = 0.05; //Model position accuracy
         double modelVelocityAccuracyGain = 1.0; //Model velocity accuracy
-        double measurementAccuracyGain = 0.0001; //Accuracy of measurement, encoder accuracy
+        double measurementAccuracyGain = 0.01; //Accuracy of measurement, encoder accuracy
         double positionTolerance = 0.02;
         double velocityTolerance = 0.4;
         double voltageTolerance = 12;
@@ -74,6 +74,8 @@ public class TestStateSpaceCreation {
                 "Voltage", "Time");
 
         ElevatorModel elevatorModel = new ElevatorModel(motor, mass, gearReduction, pulleyRadius, 12);
+
+        elevatorModel.setMeasurementNoise(.01);
 
         double previousPos = 0;
         double previousVel = 0;
@@ -106,7 +108,6 @@ public class TestStateSpaceCreation {
             graph.addVoltage(voltage.get(0), t);
             graph.addError(loop.getError() * 10, t);
             graph.addSetpoint(referencePosition * 10, t);
-//            Thread.sleep(200);
         }
     }
 }
