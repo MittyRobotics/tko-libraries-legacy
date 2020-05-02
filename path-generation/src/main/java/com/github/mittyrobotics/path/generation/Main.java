@@ -36,15 +36,17 @@ public class Main {
     public static void main(String[] args) {
         Graph graph = new Graph();
 
-        graph.scaleGraphToScale(.1, 40, 25);
+        graph.scaleGraphToScale(.15, 50, 25);
 
         graph.getChart().removeLegend();
 
         TransformWithVelocityAndCurvature p1 = new TransformWithVelocityAndCurvature(new Transform(0, 0, 0), 0, 0);
-        TransformWithVelocityAndCurvature p2 = new TransformWithVelocityAndCurvature(new Transform(80, 50, 0), 0, 0);
+        TransformWithVelocityAndCurvature p2 = new TransformWithVelocityAndCurvature(new Transform(100, 50, 0), 0, 0);
 
         QuinticHermiteSpline spline = new QuinticHermiteSpline(p1, p2);
         graph.addSeries(GraphUtil.populateSeries(XYSeriesWithRenderer.withLines("Series"), GraphUtil.parametric(spline,
                 0.01, 2)));
+
+        System.out.println(spline.getRawLength(1000) + " " + spline.getGaussianQuadratureLength());
     }
 }

@@ -73,4 +73,44 @@ public abstract class Parametric {
      * @return the second derivative {@link Position} at the parameter <code>t</code>.
      */
     public abstract Position getSecondDerivative(double t);
+
+    /**
+     * Computes the estimated length of the parametric by counting the length of each segment for every step. This is
+     * slower but more accurate than the Gaussian quatrature method.
+     *
+     * @param steps the amount of segments it counts. Higher values are more accurate.
+     * @return the estimated length of the parametric.
+     */
+    public double getRawLength(double steps) {
+        double length = 0;
+        for (double t = 0; t < 1; t += 1 / steps) {
+            length += getPosition(t).distance(getPosition(t - 1 / steps));
+        }
+        return length;
+    }
+
+    /**
+     * Computes the estimated length of the parametric using 5-point Gaussian quadrature.
+     * <p>
+     * https://en.wikipedia.org/wiki/Gaussian_quadrature
+     *
+     * @return the estimated length of the parametric.
+     */
+    public double getGaussianQuadratureLength() {
+        //5-point Gaussian quadrature coefficients
+        double[][] coefficients = {
+                {0.0, 0.5688889},
+                {-0.5384693, 0.47862867},
+                {0.5384693, 0.47862867},
+                {-0.90617985, 0.23692688},
+                {0.90617985, 0.23692688}
+        };
+
+        double length = 0;
+        for (int i = 0; i < coefficients.length; i++) {
+            double t = (1.0 + coefficients[i][0]) / 2;
+            length += getFirstDerivative(t).distance(new Position(0, 0)) * coefficients[i][1];
+        }
+        return length / 2;
+    }
 }
