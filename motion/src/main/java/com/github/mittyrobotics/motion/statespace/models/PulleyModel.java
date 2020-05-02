@@ -30,7 +30,7 @@ import org.ejml.simple.SimpleMatrix;
 
 import java.util.Random;
 
-public class ElevatorModel {
+public class PulleyModel {
     private double acceleration;
     private double velocity;
     private double position;
@@ -40,7 +40,7 @@ public class ElevatorModel {
 
     private double measurementNoise;
 
-    public ElevatorModel(Motor motor, double mass, double gearReduction, double pulleyRadius, double maxVoltage) {
+    public PulleyModel(Motor motor, double mass, double gearReduction, double pulleyRadius, double maxVoltage) {
         this.plant = Plant.createElevatorPlant(motor, mass, pulleyRadius, gearReduction, maxVoltage, 1);
         this.mass = mass;
         this.measurementNoise = 0;

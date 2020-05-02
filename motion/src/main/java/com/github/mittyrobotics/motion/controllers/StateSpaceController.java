@@ -28,7 +28,7 @@ import com.github.mittyrobotics.motion.statespace.KalmanFilter;
 import com.github.mittyrobotics.motion.statespace.LinearQuadraticRegulator;
 import com.github.mittyrobotics.motion.statespace.MatrixUtils;
 import com.github.mittyrobotics.motion.statespace.Plant;
-import com.github.mittyrobotics.motion.statespace.models.ElevatorModel;
+import com.github.mittyrobotics.motion.statespace.models.PulleyModel;
 import com.github.mittyrobotics.motion.statespace.models.FlywheelModel;
 import org.ejml.simple.SimpleMatrix;
 
@@ -43,7 +43,7 @@ public class StateSpaceController {
 
     private SimpleMatrix nextR;
 
-    public static StateSpaceController makeElevatorController(ElevatorModel model, double modelPositionAccuracy,
+    public static StateSpaceController makeElevatorController(PulleyModel model, double modelPositionAccuracy,
                                                               double modelVelocityAccuracy, double measurementAccuracy,
                                                               double positionTolerance, double velocityTolerance,
                                                               double voltageTolerance, double qWeight) {

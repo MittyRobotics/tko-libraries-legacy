@@ -33,6 +33,7 @@ import java.util.Random;
 public class FlywheelModel {
     private double angularAcceleration;
     private double angularVelocity;
+    private double position;
     private double measurementNoise;
 
     private Plant plant;
@@ -46,8 +47,9 @@ public class FlywheelModel {
         plant.update(new SimpleMatrix(new double[][]{{angularVelocity}}),
                 new SimpleMatrix(new double[][]{{voltage}}),deltaTime);
         SimpleMatrix states = plant.getX();
-        this.angularAcceleration = (states.get(0)-angularVelocity)*deltaTime;
+        this.angularAcceleration = (states.get(0)-angularVelocity)/deltaTime;
         this.angularVelocity = states.get(0);
+        this.position += angularVelocity*deltaTime;
     }
 
     private double calculateMeasurementNoise(double measurementNoise) {
@@ -66,6 +68,10 @@ public class FlywheelModel {
         return angularAcceleration + calculateMeasurementNoise(measurementNoise);
     }
 
+    public double getPosition() {
+        return position;
+    }
+
     public void setAngularVelocity(double angularVelocity){
         this.angularVelocity = angularVelocity;
     }
@@ -81,4 +87,5 @@ public class FlywheelModel {
     public void setMeasurementNoise(double measurementNoise) {
         this.measurementNoise = measurementNoise;
     }
+
 }

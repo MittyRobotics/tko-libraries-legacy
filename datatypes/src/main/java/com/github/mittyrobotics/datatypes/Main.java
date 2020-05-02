@@ -24,21 +24,19 @@
 
 package com.github.mittyrobotics.datatypes;
 
+import com.github.mittyrobotics.datatypes.motion.SwerveDriveKinematics;
+import com.github.mittyrobotics.datatypes.motion.SwerveDriveState;
+
 public class Main {
     public static void main(String[] args) {
-        CircularTimestampedList<Integer> list = new CircularTimestampedList<>(2);
-        list.addFront(new TimestampedElement<>(0, 0));
-        list.addFront(new TimestampedElement<>(1, 1));
-        list.addFront(new TimestampedElement<>(2, 2));
-        list.addFront(new TimestampedElement<>(3, 3));
-        list.addFront(new TimestampedElement<>(4, 4));
-        list.addFront(new TimestampedElement<>(5, 5));
-        list.addFront(new TimestampedElement<>(6, 6));
-        list.addFront(new TimestampedElement<>(7, 7));
-        list.addFront(new TimestampedElement<>(8, 8));
-        list.addFront(new TimestampedElement<>(9, 9));
-        for (int i = 0; i < list.size(); i++) {
-            System.out.println(list.get(i).getObject() + " " + list.get(i).getTimestamp());
-        }
+        double velX = 5.5;
+        double velY = 2.34;
+        double velRad = .224;
+        double l = 30;
+        double w = 30;
+        SwerveDriveState state = SwerveDriveKinematics.solveInverseKinematics(l, w, velX, velY, velRad);
+        System.out.println(SwerveDriveKinematics
+                .solveForwardKinematics(l, w, state.getFrState(), state.getFlState(), state.getBlState(), state.getBrState()));
+
     }
 }

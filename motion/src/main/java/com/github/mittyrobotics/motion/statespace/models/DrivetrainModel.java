@@ -27,6 +27,8 @@ package com.github.mittyrobotics.motion.statespace.models;
 import com.github.mittyrobotics.datatypes.motion.DrivetrainWheelSpeeds;
 import com.github.mittyrobotics.datatypes.units.Conversions;
 import com.github.mittyrobotics.motion.statespace.motors.Motor;
+import edu.wpi.first.wpilibj.kinematics.SwerveDriveOdometry;
+import org.la4j.linear.LeastSquaresSolver;
 
 public class DrivetrainModel {
     private final double mass;
@@ -116,10 +118,11 @@ public class DrivetrainModel {
         double Fl = (c1 * vl + c2 * Vl);
         double Fr = (c1 * vr + c2 * Vr);
 
-        double leftAcceleration =
-                ((1 / m) + ((rb * rb) / J)) * Fl + ((1 / m) - ((rb * rb) / J)) * Fr;
-        double rightAcceleration =
-                ((1 / m) - ((rb * rb) / J)) * Fl + ((1 / m) + ((rb * rb) / J)) * Fr;
+        double eqn0 = (1 / m) + ((rb * rb) / J);
+        double eqn1 = (1 / m) - ((rb * rb) / J);
+
+        double leftAcceleration = eqn0 * Fl + eqn1 * Fr;
+        double rightAcceleration = eqn1 * Fl + eqn0 * Fr;
 
         return new DrivetrainWheelSpeeds(leftAcceleration, rightAcceleration);
     }

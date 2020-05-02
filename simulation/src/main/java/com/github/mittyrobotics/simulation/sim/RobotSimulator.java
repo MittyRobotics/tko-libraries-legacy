@@ -50,7 +50,7 @@ public class RobotSimulator extends TimerTask {
 
     private void periodic() {
         robot.robotPeriodic();
-        graph.graphRobot(robot.getDrivetrain().getRobotTransform(),
+        graph.graphDifferentialDrive(robot.getDrivetrain().getRobotTransform(),
                 robot.getDrivetrain().getDrivetrainModel().getTrackWidth(),
                 robot.getDrivetrain().getDrivetrainModel().getDrivetrainLength());
     }

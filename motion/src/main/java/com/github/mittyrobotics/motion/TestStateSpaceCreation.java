@@ -32,7 +32,7 @@ import com.github.mittyrobotics.motion.controllers.StateSpaceController;
 import com.github.mittyrobotics.motion.statespace.KalmanFilter;
 import com.github.mittyrobotics.motion.statespace.LinearQuadraticRegulator;
 import com.github.mittyrobotics.motion.statespace.Plant;
-import com.github.mittyrobotics.motion.statespace.models.ElevatorModel;
+import com.github.mittyrobotics.motion.statespace.models.PulleyModel;
 import com.github.mittyrobotics.motion.statespace.motors.Motor;
 import com.github.mittyrobotics.motion.statespace.motors.NEOMotor;
 import com.github.mittyrobotics.visualization.MotorGraph;
@@ -73,7 +73,7 @@ public class TestStateSpaceCreation {
         MotorGraph graph = new MotorGraph("State Space Elevator Step Response", "Position, Velocity, Acceleration, " +
                 "Voltage", "Time");
 
-        ElevatorModel elevatorModel = new ElevatorModel(motor, mass, gearReduction, pulleyRadius, 12);
+        PulleyModel elevatorModel = new PulleyModel(motor, mass, gearReduction, pulleyRadius, 12);
 
         elevatorModel.setMeasurementNoise(.01);
 
