@@ -13,9 +13,6 @@ public class SwerveDriveModel {
     private final double chassisMomentOfInertia;
     private final double wheelGearReduction;
     private final double wheelRadius;
-    private SwerveDriveState position = new SwerveDriveState();
-    private SwerveDriveState velocity = new SwerveDriveState();
-    private SwerveDriveState acceleration = new SwerveDriveState();
     private final FlywheelModel frModule;
     private final FlywheelModel flModule;
     private final FlywheelModel blModule;
@@ -24,9 +21,12 @@ public class SwerveDriveModel {
     private final PulleyModel flWheelModel;
     private final PulleyModel blWheelModel;
     private final PulleyModel brWheelModel;
+    private SwerveDriveState position = new SwerveDriveState();
+    private SwerveDriveState velocity = new SwerveDriveState();
+    private SwerveDriveState acceleration = new SwerveDriveState();
 
     public SwerveDriveModel(Motor wheelMotor, Motor steerMotor, double mass, double length, double width,
-                            /*double chassisMomentOfInertia,*/ double steerMomentOfInertia, double wheelGearReduction,
+            /*double chassisMomentOfInertia,*/ double steerMomentOfInertia, double wheelGearReduction,
                             double steerGearReduction,
                             double wheelRadius) {
         this.wheelMotor = wheelMotor;
@@ -40,10 +40,10 @@ public class SwerveDriveModel {
         this.flModule = new FlywheelModel(steerMotor, steerMomentOfInertia, steerGearReduction, 12);
         this.blModule = new FlywheelModel(steerMotor, steerMomentOfInertia, steerGearReduction, 12);
         this.brModule = new FlywheelModel(steerMotor, steerMomentOfInertia, steerGearReduction, 12);
-        this.frWheelModel = new PulleyModel(wheelMotor, mass/4, wheelGearReduction, wheelRadius, 12);
-        this.flWheelModel = new PulleyModel(wheelMotor, mass/4, wheelGearReduction, wheelRadius, 12);
-        this.blWheelModel = new PulleyModel(wheelMotor, mass/4, wheelGearReduction, wheelRadius, 12);
-        this.brWheelModel = new PulleyModel(wheelMotor, mass/4, wheelGearReduction, wheelRadius, 12);
+        this.frWheelModel = new PulleyModel(wheelMotor, mass / 4, wheelGearReduction, wheelRadius, 12);
+        this.flWheelModel = new PulleyModel(wheelMotor, mass / 4, wheelGearReduction, wheelRadius, 12);
+        this.blWheelModel = new PulleyModel(wheelMotor, mass / 4, wheelGearReduction, wheelRadius, 12);
+        this.brWheelModel = new PulleyModel(wheelMotor, mass / 4, wheelGearReduction, wheelRadius, 12);
     }
 
     public void updateModel(SwerveModuleState frVoltages, SwerveModuleState flVoltages,
@@ -105,8 +105,11 @@ public class SwerveDriveModel {
         double vDotAngular = 0;
 
 //        acceleration = new SwerveDriveState(vDotX, vDotY, vDotAngular);
-        velocity = SwerveDriveKinematics.solveForwardKinematics(l, w, frWheelModel.getVelocity(), flWheelModel.getVelocity(), blWheelModel.getVelocity(), brWheelModel.getVelocity(), angle1, angle2, angle3, angle4);
-        position = new SwerveDriveState(position.getVelX() + velocity.getVelX()*deltaTime, position.getVelY() + velocity.getVelY()*deltaTime, 0);
+        velocity = SwerveDriveKinematics
+                .solveForwardKinematics(l, w, frWheelModel.getVelocity(), flWheelModel.getVelocity(),
+                        blWheelModel.getVelocity(), brWheelModel.getVelocity(), angle1, angle2, angle3, angle4);
+        position = new SwerveDriveState(position.getVelX() + velocity.getVelX() * deltaTime,
+                position.getVelY() + velocity.getVelY() * deltaTime, 0);
     }
 
     public SwerveDriveState getPosition() {

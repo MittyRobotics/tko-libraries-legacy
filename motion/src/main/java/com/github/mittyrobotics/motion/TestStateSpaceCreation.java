@@ -26,9 +26,9 @@ package com.github.mittyrobotics.motion;
 
 import com.github.mittyrobotics.datatypes.motion.MotionState;
 import com.github.mittyrobotics.datatypes.units.Conversions;
+import com.github.mittyrobotics.motion.controllers.StateSpaceController;
 import com.github.mittyrobotics.motion.profiles.OverrideMethod;
 import com.github.mittyrobotics.motion.profiles.SCurveMotionProfile;
-import com.github.mittyrobotics.motion.controllers.StateSpaceController;
 import com.github.mittyrobotics.motion.statespace.KalmanFilter;
 import com.github.mittyrobotics.motion.statespace.LinearQuadraticRegulator;
 import com.github.mittyrobotics.motion.statespace.Plant;
@@ -92,7 +92,7 @@ public class TestStateSpaceCreation {
             if (t < 1) {
                 referencePosition = 0;
             }
-            
+
             double referenceVelocity = 0;
 
             SimpleMatrix voltage = loop.calculate(new SimpleMatrix(new double[][]{{previousPos}}),

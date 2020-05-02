@@ -27,8 +27,6 @@ package com.github.mittyrobotics.motion.statespace.models;
 import com.github.mittyrobotics.datatypes.motion.DrivetrainWheelSpeeds;
 import com.github.mittyrobotics.datatypes.units.Conversions;
 import com.github.mittyrobotics.motion.statespace.motors.Motor;
-import edu.wpi.first.wpilibj.kinematics.SwerveDriveOdometry;
-import org.la4j.linear.LeastSquaresSolver;
 
 public class DrivetrainModel {
     private final double mass;

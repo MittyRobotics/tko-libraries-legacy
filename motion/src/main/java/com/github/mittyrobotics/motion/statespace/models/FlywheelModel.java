@@ -38,46 +38,46 @@ public class FlywheelModel {
 
     private Plant plant;
 
-    public FlywheelModel( Motor motor, double momentOfInertia, double gearReduction, double maxVoltage) {
-        this.plant = Plant.createFlywheelPlant(motor,momentOfInertia,gearReduction, maxVoltage, 1);
+    public FlywheelModel(Motor motor, double momentOfInertia, double gearReduction, double maxVoltage) {
+        this.plant = Plant.createFlywheelPlant(motor, momentOfInertia, gearReduction, maxVoltage, 1);
         this.measurementNoise = 0;
     }
 
     public void updateModel(double voltage, double deltaTime) {
         plant.update(new SimpleMatrix(new double[][]{{angularVelocity}}),
-                new SimpleMatrix(new double[][]{{voltage}}),deltaTime);
+                new SimpleMatrix(new double[][]{{voltage}}), deltaTime);
         SimpleMatrix states = plant.getX();
-        this.angularAcceleration = (states.get(0)-angularVelocity)/deltaTime;
+        this.angularAcceleration = (states.get(0) - angularVelocity) / deltaTime;
         this.angularVelocity = states.get(0);
-        this.position += angularVelocity*deltaTime;
+        this.position += angularVelocity * deltaTime;
     }
 
     private double calculateMeasurementNoise(double measurementNoise) {
-        return (measurementNoise != 0 ? ((new Random().nextDouble()-0.5) * measurementNoise) : 0);
+        return (measurementNoise != 0 ? ((new Random().nextDouble() - 0.5) * measurementNoise) : 0);
     }
 
-    public Plant getPlant(){
+    public Plant getPlant() {
         return plant;
     }
 
-    public double getAngularVelocity(){
+    public double getAngularVelocity() {
         return angularVelocity + calculateMeasurementNoise(measurementNoise);
     }
 
-    public double getAngularAcceleration(){
-        return angularAcceleration + calculateMeasurementNoise(measurementNoise);
-    }
-
-    public double getPosition() {
-        return position;
-    }
-
-    public void setAngularVelocity(double angularVelocity){
+    public void setAngularVelocity(double angularVelocity) {
         this.angularVelocity = angularVelocity;
+    }
+
+    public double getAngularAcceleration() {
+        return angularAcceleration + calculateMeasurementNoise(measurementNoise);
     }
 
     public void setAngularAcceleration(double angularAcceleration) {
         this.angularAcceleration = angularAcceleration;
+    }
+
+    public double getPosition() {
+        return position;
     }
 
     public double getMeasurementNoise() {

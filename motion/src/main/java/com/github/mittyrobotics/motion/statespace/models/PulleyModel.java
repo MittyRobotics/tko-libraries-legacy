@@ -57,7 +57,7 @@ public class PulleyModel {
     }
 
     private double calculateMeasurementNoise(double measurementNoise) {
-        return (measurementNoise != 0 ? ((new Random().nextDouble()-0.5) * measurementNoise) : 0);
+        return (measurementNoise != 0 ? ((new Random().nextDouble() - 0.5) * measurementNoise) : 0);
     }
 
     public Plant getPlant() {
@@ -68,20 +68,20 @@ public class PulleyModel {
         return position + calculateMeasurementNoise(measurementNoise);
     }
 
-    public double getVelocity() {
-        return velocity + calculateMeasurementNoise(measurementNoise);
-    }
-
-    public double getAcceleration() {
-        return acceleration + calculateMeasurementNoise(measurementNoise);
-    }
-
     public void setPosition(double position) {
         this.position = position;
     }
 
+    public double getVelocity() {
+        return velocity + calculateMeasurementNoise(measurementNoise);
+    }
+
     public void setVelocity(double velocity) {
         this.velocity = velocity;
+    }
+
+    public double getAcceleration() {
+        return acceleration + calculateMeasurementNoise(measurementNoise);
     }
 
     public void setAcceleration(double acceleration) {

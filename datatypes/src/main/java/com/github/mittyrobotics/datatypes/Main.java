@@ -36,7 +36,8 @@ public class Main {
         double w = 30;
         SwerveDriveState state = SwerveDriveKinematics.solveInverseKinematics(l, w, velX, velY, velRad);
         System.out.println(SwerveDriveKinematics
-                .solveForwardKinematics(l, w, state.getFrState(), state.getFlState(), state.getBlState(), state.getBrState()));
+                .solveForwardKinematics(l, w, state.getFrState(), state.getFlState(), state.getBlState(),
+                        state.getBrState()));
 
     }
 }

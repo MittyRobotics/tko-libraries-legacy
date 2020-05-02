@@ -1,6 +1,5 @@
 package com.github.mittyrobotics.motion;
 
-import com.github.mittyrobotics.datatypes.motion.SwerveDriveState;
 import com.github.mittyrobotics.datatypes.motion.SwerveModuleState;
 import com.github.mittyrobotics.datatypes.positioning.Transform;
 import com.github.mittyrobotics.datatypes.units.Conversions;

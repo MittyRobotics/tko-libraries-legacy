@@ -120,7 +120,7 @@ public class PIDFController {
         return MathUtil.clamp(feedback + feedForward, minOutput, maxOutput);
     }
 
-    private double calculateFeedback(double measurement, double deltaTime){
+    private double calculateFeedback(double measurement, double deltaTime) {
         //Set the current period to the delta time
         setPeriod(deltaTime);
         //Keep track of previous error

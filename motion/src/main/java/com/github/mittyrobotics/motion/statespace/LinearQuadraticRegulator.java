@@ -57,7 +57,8 @@ public class LinearQuadraticRegulator {
      */
     private SimpleMatrix uff;
 
-    public LinearQuadraticRegulator(SimpleMatrix A, SimpleMatrix B, SimpleMatrix qElms, SimpleMatrix rElms, double qWeight) {
+    public LinearQuadraticRegulator(SimpleMatrix A, SimpleMatrix B, SimpleMatrix qElms, SimpleMatrix rElms,
+                                    double qWeight) {
         this.A = A;
         this.B = B;
 
@@ -84,7 +85,8 @@ public class LinearQuadraticRegulator {
         reset();
     }
 
-    public LinearQuadraticRegulator(Plant plant, SimpleMatrix qElms, SimpleMatrix rElms, SimpleMatrix lqrGain, double qWeight) {
+    public LinearQuadraticRegulator(Plant plant, SimpleMatrix qElms, SimpleMatrix rElms, SimpleMatrix lqrGain,
+                                    double qWeight) {
         this(plant, qElms, rElms, qWeight);
         this.lqrGain = lqrGain;
     }

@@ -31,7 +31,7 @@ import com.sun.jna.ptr.PointerByReference;
 
 /**
  * Cpp JNA library.
- *
+ * <p>
  * Instructions: When you first download the repository, open the <code>cpp-util</code> c++ project in a c++ editor.
  * Then build the CMakeLists.txt. This will generate a .dll or .so file for your machine that the JNA can access.
  */

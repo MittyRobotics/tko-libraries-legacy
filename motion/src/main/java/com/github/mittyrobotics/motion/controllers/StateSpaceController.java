@@ -28,8 +28,8 @@ import com.github.mittyrobotics.motion.statespace.KalmanFilter;
 import com.github.mittyrobotics.motion.statespace.LinearQuadraticRegulator;
 import com.github.mittyrobotics.motion.statespace.MatrixUtils;
 import com.github.mittyrobotics.motion.statespace.Plant;
-import com.github.mittyrobotics.motion.statespace.models.PulleyModel;
 import com.github.mittyrobotics.motion.statespace.models.FlywheelModel;
+import com.github.mittyrobotics.motion.statespace.models.PulleyModel;
 import org.ejml.simple.SimpleMatrix;
 
 /**
@@ -42,6 +42,15 @@ public class StateSpaceController {
     private final KalmanFilter observer;
 
     private SimpleMatrix nextR;
+
+    public StateSpaceController(Plant plant, LinearQuadraticRegulator controller, KalmanFilter observer) {
+        this.plant = plant;
+        this.controller = controller;
+        this.observer = observer;
+
+        this.nextR = new SimpleMatrix(plant.getNumStates(), 0);
+        reset();
+    }
 
     public static StateSpaceController makeElevatorController(PulleyModel model, double modelPositionAccuracy,
                                                               double modelVelocityAccuracy, double measurementAccuracy,
@@ -75,15 +84,6 @@ public class StateSpaceController {
                 new SimpleMatrix(new double[][]{{measurementAccuracy}}));
 
         return new StateSpaceController(plant, controller, observer);
-    }
-
-    public StateSpaceController(Plant plant, LinearQuadraticRegulator controller, KalmanFilter observer) {
-        this.plant = plant;
-        this.controller = controller;
-        this.observer = observer;
-
-        this.nextR = new SimpleMatrix(plant.getNumStates(), 0);
-        reset();
     }
 
     public void setNextR(SimpleMatrix nextR) {
