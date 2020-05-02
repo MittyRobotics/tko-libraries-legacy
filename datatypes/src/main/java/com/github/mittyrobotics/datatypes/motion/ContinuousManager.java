@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-package com.github.mittyrobotics.motion.controllers;
+package com.github.mittyrobotics.datatypes.motion;
 
 public class ContinuousManager {
     private double minInput, maxInput;

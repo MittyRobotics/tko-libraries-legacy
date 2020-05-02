@@ -24,6 +24,7 @@
 
 package com.github.mittyrobotics.motion.controllers;
 
+import com.github.mittyrobotics.datatypes.motion.ContinuousManager;
 import edu.wpi.first.wpiutil.math.MathUtil;
 
 public class PIDFController {
@@ -86,6 +87,40 @@ public class PIDFController {
      * @return next voltage for PIDF controller.
      */
     public double calculate(double measurement, double deltaTime) {
+        double feedback = calculateFeedback(measurement, deltaTime);
+
+        //Calculate feed forward
+        double feedForward = 0;
+        switch (controlType) {
+            case Position:
+                feedForward = kF;
+                break;
+            case Velocity:
+                feedForward = getSetpoint() * kF;
+                break;
+        }
+
+        //Output feedback plus feed forward
+        return MathUtil.clamp(feedback + feedForward, minOutput, maxOutput);
+    }
+
+    /**
+     * Calculates the next voltage for the PIDF controller given a value measurement, a feedforward voltage, and a delta
+     * time since the last <code>calculate()</code> call.
+     *
+     * @param measurement current measured value.
+     * @param feedForward the feedforward voltage to be applied to the controller.
+     * @param deltaTime   time since last <code>calculate()</code> call.
+     * @return next voltage for PIDF controller.
+     */
+    public double calculate(double measurement, double feedForward, double deltaTime) {
+        double feedback = calculateFeedback(measurement, deltaTime);
+
+        //Output feedback plus feed forward
+        return MathUtil.clamp(feedback + feedForward, minOutput, maxOutput);
+    }
+
+    private double calculateFeedback(double measurement, double deltaTime){
         //Set the current period to the delta time
         setPeriod(deltaTime);
         //Keep track of previous error
@@ -102,21 +137,7 @@ public class PIDFController {
         }
 
         //Calculate feedback
-        double feedback = kP * error + kI * integral + kD * derivativeError;
-
-        //Calculate feed forward
-        double feedForward = 0;
-        switch (controlType) {
-            case Position:
-                feedForward = kF;
-                break;
-            case Velocity:
-                feedForward = getSetpoint() * kF;
-                break;
-        }
-
-        //Output feedback plus feed forward
-        return MathUtil.clamp(feedback + feedForward, minOutput, maxOutput);
+        return kP * error + kI * integral + kD * derivativeError;
     }
 
     /**

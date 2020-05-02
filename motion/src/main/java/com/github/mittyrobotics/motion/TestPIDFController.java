@@ -22,17 +22,18 @@
  * SOFTWARE.
  */
 
-package com.github.mittyrobotics.motion.controllers;
+package com.github.mittyrobotics.motion;
 
+import com.github.mittyrobotics.motion.controllers.PIDFController;
 import com.github.mittyrobotics.visualization.MotorGraph;
 
 import javax.swing.*;
 
-public class PIDGrapher extends JFrame {
+public class TestPIDFController extends JFrame {
     private MotorGraph graph;
 
     public static void main(String[] args) {
-        new PIDGrapher().start();
+        new TestPIDFController().start();
     }
 
     public void start() {
