@@ -24,5 +24,67 @@
 
 package com.github.mittyrobotics.motion.controllers;
 
+import com.github.mittyrobotics.datatypes.motion.DrivetrainSpeeds;
+import com.github.mittyrobotics.datatypes.positioning.Transform;
+
 public class RamseteController {
+    public static double DEFAULT_AGGRESSIVE_GAIN = 2.0;
+    public static double DEFAULT_DAMPING_GAIN = 0.2;
+
+    /**
+     * Calculates the {@link DrivetrainSpeeds} using on the RAMSETE path following algorithm.
+     * <p>
+     * Make sure all inputs are in SI units (m, m/s).
+     *
+     * @param robotTransform
+     * @param desiredTransform
+     * @param robotVelocity
+     * @param drivingCurvature
+     * @param aggressiveGain
+     * @param dampingGain
+     * @param trackWidth
+     * @param reversed
+     * @return
+     */
+    public static DrivetrainSpeeds calculate(Transform robotTransform, Transform desiredTransform, double robotVelocity,
+                                             double drivingCurvature, double aggressiveGain, double dampingGain,
+                                             double trackWidth, boolean reversed) {
+        //Get the transform error in meters.
+        Transform error = desiredTransform.relativeTo(robotTransform);
+
+        //Calculate linear velocity in meters per second given robot velocity in inches per second
+        double linearVelocity = robotVelocity;
+        //Calculate the angular velocity in radians per second given the turning radius and the robot velocity.
+        double angularVelocity = linearVelocity / (1 / drivingCurvature);
+
+        double eX = error.getPosition().getX();
+        double eY = error.getPosition().getY();
+        double eTheta = error.getRotation().getRadians();
+
+        //Calculate the Ramsete k value
+        double k = 2.0 * dampingGain *
+                Math.sqrt(Math.pow(angularVelocity, 2) + aggressiveGain * Math.pow(linearVelocity, 2));
+
+        //Calculate the adjusted linear velocity from the Ramsete algorithm
+        double adjustedLinearVelocity = linearVelocity * error.getRotation().cos() + k * eX;
+
+        //Convert linear velocity back into inches per second
+        adjustedLinearVelocity = adjustedLinearVelocity;
+
+        //Calculate the adjusted angular velocity from the Ramsete algorithm (stays in radians per second)
+        double adjustedAngularVelocity =
+                angularVelocity + k * eTheta + aggressiveGain * linearVelocity * error.getRotation().sinc() * eY;
+
+        //Calculate drivetrain state from linear and angular velocity
+        DrivetrainSpeeds state = DrivetrainSpeeds
+                .fromLinearAndAngular(adjustedLinearVelocity, adjustedAngularVelocity * (reversed ? -1 : 1),
+                        trackWidth);
+
+        //Reversed controller
+        if (reversed) {
+            state = state.reverse();
+        }
+
+        return state;
+    }
 }

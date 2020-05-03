@@ -33,6 +33,16 @@ import com.github.mittyrobotics.datatypes.positioning.Transform;
 public class PurePursuitController {
     public static double DEFAULT_LOOKAHEAD_DISTANCE = 25.0;
 
+    /**
+     * Calculates the {@link DrivetrainSpeeds} using the Pure Pursuit path following algorithm.
+     *
+     * @param robotTransform
+     * @param targetPosition
+     * @param robotVelocity
+     * @param trackWidth
+     * @param reversed
+     * @return
+     */
     public static DrivetrainSpeeds calculate(Transform robotTransform, Position targetPosition, double robotVelocity,
                                              double trackWidth, boolean reversed) {
         //Calculate the pursuit circle to follow, calculated by finding the circle tangent to the robot transform that
