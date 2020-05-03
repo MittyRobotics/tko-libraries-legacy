@@ -41,14 +41,17 @@ public class DifferentialDriveKinematics {
      */
     public static DrivetrainWheelSpeeds calculateFromRadius(double linear, double radius,
                                                             double trackWidth) {
+        if (Double.isInfinite(radius)) {
+            return new DrivetrainWheelSpeeds(linear, linear);
+        }
+
         //Calculate the angular velocity of the robot in radians per second
         double angular = linear / radius;
 
         //Calculate left and right drivetrain velocities
         double left = angular * (radius - (trackWidth / 2));
         double right = angular * (radius + (trackWidth / 2));
-        //left/(linearVelocity / angular - (track/2)) = angular
-        //left/(linear/angular) - left/(track/2)
+
         //Return the calculated drivetrain velocities
         return new DrivetrainWheelSpeeds(left, right);
     }

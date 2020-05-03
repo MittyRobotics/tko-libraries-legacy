@@ -29,28 +29,11 @@ public class MotionState {
     private double position;
     private double velocity;
     private double acceleration;
-    private double temp;
-
-    public MotionState(double velocity) {
-        this.velocity = velocity;
-    }
-
-    public MotionState(double position, double velocity) {
-        this.position = position;
-        this.velocity = velocity;
-    }
 
     public MotionState(double position, double velocity, double acceleration) {
         this.position = position;
         this.velocity = velocity;
         this.acceleration = acceleration;
-    }
-
-    public MotionState(double position, double velocity, double acceleration, double temp) {
-        this.position = position;
-        this.velocity = velocity;
-        this.acceleration = acceleration;
-        this.temp = temp;
     }
 
     public double getPosition() {
@@ -77,14 +60,9 @@ public class MotionState {
         this.acceleration = acceleration;
     }
 
-
     @Override
     public String toString() {
         return String
                 .format("MotionState(pos: %s, vel: %s, accel: %s)", position, velocity, acceleration);
-    }
-
-    public double getTemp() {
-        return temp;
     }
 }

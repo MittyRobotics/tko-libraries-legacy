@@ -22,7 +22,7 @@
  *  SOFTWARE.
  */
 
-package com.github.mittyrobotics.motion.pathfollowing;
+package com.github.mittyrobotics.motion.controllers;
 
-public class PathFollower {
+public class RamseteController {
 }

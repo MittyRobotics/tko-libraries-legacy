@@ -77,8 +77,8 @@ public class SimDrivetrain extends TimerTask {
 
         Rotation rotation =
                 robotTransform.getRotation()
-                        .subtract(new Rotation(Math.toDegrees(Math.atan2((deltaLeftPos - deltaRightPos),
-                                drivetrainModel.getTrackWidth()))));
+                        .subtract(new Rotation(Math.atan2((deltaLeftPos - deltaRightPos),
+                                drivetrainModel.getTrackWidth())));
 
         Position position = robotTransform.getPosition().add(new Position(rotation.cos() * deltaPos,
                 rotation.sin() * deltaPos));

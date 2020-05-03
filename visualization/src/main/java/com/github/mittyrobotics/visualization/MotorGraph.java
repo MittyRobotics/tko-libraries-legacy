@@ -25,7 +25,6 @@
 package com.github.mittyrobotics.visualization;
 
 import org.jfree.data.xy.XYDataItem;
-import org.jfree.data.xy.XYSeries;
 
 public class MotorGraph extends Graph {
     private String positionKey = "Position";
