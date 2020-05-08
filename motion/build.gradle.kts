@@ -36,6 +36,10 @@ repositories {
     jcenter()
     mavenLocal()
 }
+javafx {
+    version = "14"
+    modules("javafx.controls")
+}
 
 dependencies {
     compile(project(":datatypes"))

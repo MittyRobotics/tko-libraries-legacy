@@ -31,6 +31,7 @@ plugins {
     id("cpp")
     id("edu.wpi.first.GradleVsCode") version "0.8.0"
     id("edu.wpi.first.GradleJni") version "0.4.1"
+    id("org.openjfx.javafxplugin") version "0.0.8"
     `maven-publish`
 }
 
@@ -41,10 +42,16 @@ allprojects {
     apply(plugin = "java")
     apply(plugin = "edu.wpi.first.GradleRIO")
     apply(plugin = "maven")
+    apply(plugin = "org.openjfx.javafxplugin")
 
     java {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
+    }
+
+    javafx {
+        version = "14"
+        modules("javafx.controls")
     }
 
     repositories {
@@ -76,6 +83,7 @@ allprojects {
         compile(group = "org.la4j", name = "la4j", version = "0.6.0")
         compile(group = "net.java.dev.jna", name = "jna", version = "5.5.0")
         compile(group = "org.apache.commons", name = "commons-math3", version = "3.6.1")
+
     }
 }
 
