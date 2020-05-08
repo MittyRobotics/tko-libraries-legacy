@@ -24,14 +24,12 @@
 
 package com.github.mittyrobotics.path.generation;
 
-import com.github.mittyrobotics.datacollection.performance.TimeMonitor;
 import com.github.mittyrobotics.datatypes.positioning.Transform;
 import com.github.mittyrobotics.datatypes.positioning.TransformWithVelocityAndCurvature;
 import com.github.mittyrobotics.path.generation.splines.QuinticHermiteSpline;
 import com.github.mittyrobotics.visualization.Graph;
 import com.github.mittyrobotics.visualization.GraphUtil;
 import com.github.mittyrobotics.visualization.XYSeriesWithRenderer;
-
 
 public class Main {
     public static void main(String[] args) {
@@ -47,18 +45,5 @@ public class Main {
         QuinticHermiteSpline spline = new QuinticHermiteSpline(p1, p2);
         graph.addSeries(GraphUtil.populateSeries(XYSeriesWithRenderer.withLines("Series"), GraphUtil.parametric(spline,
                 0.01, 2)));
-
-
-        TimeMonitor monitor1 = new TimeMonitor();
-        monitor1.start();
-        spline.getRawLength(1000);
-        monitor1.end();
-        monitor1.printMillis();
-        TimeMonitor monitor2 = new TimeMonitor();
-        monitor2.start();
-        spline.getGaussianQuadratureLength();
-        monitor2.end();
-        monitor2.printMillis();
-        System.out.println(spline.getRawLength(1000) + " " + spline.getGaussianQuadratureLength());
     }
 }

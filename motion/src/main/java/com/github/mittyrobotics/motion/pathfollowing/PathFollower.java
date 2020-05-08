@@ -24,5 +24,8 @@
 
 package com.github.mittyrobotics.motion.pathfollowing;
 
+import com.github.mittyrobotics.path.generation.Path;
+
 public class PathFollower {
+    private Path currentPath;
 }

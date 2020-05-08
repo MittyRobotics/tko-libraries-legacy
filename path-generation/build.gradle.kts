@@ -39,6 +39,6 @@ repositories {
 
 dependencies {
     compile(project(":datatypes"))
-    compile(project(":motion"))
+    compile(project(":visualization"))
     compile(project(":data-collection"))
 }
