@@ -40,7 +40,7 @@ public class DynamicTrapezoidalMotionProfile {
         this.overrideMethod = overrideMethod;
     }
 
-    public MotionState calculateNextState(MotionState currentState, MotionState setpoint, double deltaTime) {
+    public MotionState calculate(MotionState currentState, MotionState setpoint, double deltaTime) {
         double position = currentState.getPosition();
         double velocity = currentState.getVelocity();
         double acceleration = currentState.getAcceleration();

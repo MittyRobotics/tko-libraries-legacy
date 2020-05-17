@@ -25,22 +25,21 @@
 package com.github.mittyrobotics.motion;
 
 import com.github.mittyrobotics.datatypes.motion.MotionState;
-import com.github.mittyrobotics.motion.profiles.BoxcarFilterProfile;
+import com.github.mittyrobotics.motion.profiles.DoubleLinearFilterMotionProfile;
 import com.github.mittyrobotics.visualization.MotorGraph;
 
-public class TestBoxcarProfile {
+public class TestDoubleLinearFilterMotionProfile {
     public static void main(String[] args) {
         MotorGraph graph = new MotorGraph();
         double dt = 0.001;
 
-        BoxcarFilterProfile profile = new BoxcarFilterProfile(100, 40, .2, .1, dt);
+        DoubleLinearFilterMotionProfile profile = new DoubleLinearFilterMotionProfile(100, 100, .3, .1, dt);
 
-        for(double t = 0; t < 5; t += dt){
+        for (double t = 0; t < 5; t += dt) {
             MotionState state = profile.calculate();
             graph.addPosition(state.getPosition(), t);
             graph.addVelocity(state.getVelocity(), t);
             graph.addAcceleration(state.getAcceleration(), t);
-
         }
     }
 }

@@ -182,17 +182,6 @@ public class SCurveMotionProfile {
         if (totalPos > endState.getPosition()) {
             generateMotionProfile(this.startState, this.endState, currentMaxVelocity - 1);
         } else {
-            System.out.println(
-                    "Times: " + tAAccel + " " + tACruise + " " + tADecel + " " + tCruise + " " + tDAccel + " " +
-                            tDCruise +
-                            " " + tDDecel);
-            System.out.println("Positions: " + aaSegment.getPosition() + " " + acSegment.getPosition() + " " +
-                    adSegment.getPosition() + " " + cruiseSegment.getPosition() + " " + daSegment.getPosition() + " " +
-                    dcSegment.getPosition() + " " + ddSegment.getPosition());
-            System.out.println("Velocities: " + aaSegment.getVelocity() + " " + acSegment.getVelocity() + " " +
-                    adSegment.getVelocity() + " " + cruiseSegment.getVelocity() + " " + daSegment.getVelocity() + " " +
-                    dcSegment.getVelocity() + " " + ddSegment.getVelocity());
-
             this.aaSegment = aaSegment;
             this.acSegment = acSegment;
             this.adSegment = adSegment;
@@ -235,7 +224,6 @@ public class SCurveMotionProfile {
             return endState.getPosition();
         }
         if (reversed) {
-            System.out.println(startState.getPosition());
             return startState.getPosition() - segment.getPositionFromTime(t - segment.getStartTime()) +
                     endState.getPosition();
         }

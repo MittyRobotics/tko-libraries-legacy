@@ -52,6 +52,10 @@ public class PIDPositionSimulator extends Application {
     private double scalar = 500;
     private double velocity = 0;
 
+    public static void main(String[] args) {
+        launch(args);
+    }
+
     @Override
     public void start(Stage stage) throws Exception {
         shouldRun = new AtomicBoolean(false);
@@ -230,7 +234,7 @@ public class PIDPositionSimulator extends Application {
         root.getChildren().addAll(startButton);
         root.getChildren().addAll(robot);
         startButton.setOnMouseClicked(mouseEvent -> {
-            if(shouldRun.get()){
+            if (shouldRun.get()) {
                 shouldRun.set(false);
                 startButton.setText("Start");
             } else {
@@ -250,32 +254,29 @@ public class PIDPositionSimulator extends Application {
         clockTimer.scheduleAtFixedRate(new TimerTask() {
             @Override
             public void run() {
-                if(shouldRun.get()){
-                    if(Math.abs(velocity - controller.calculate(position) * maxSpeed) < maxAcceleration * 0.02 * maxSpeed){
+                if (shouldRun.get()) {
+                    if (Math.abs(velocity - controller.calculate(position) * maxSpeed) <
+                            maxAcceleration * 0.02 * maxSpeed) {
                         velocity = controller.calculate(position) * maxSpeed;
-                    } else if(velocity < controller.calculate(position) * maxSpeed){
+                    } else if (velocity < controller.calculate(position) * maxSpeed) {
                         velocity += maxAcceleration * 0.02 * maxSpeed;
                     } else {
                         velocity -= maxAcceleration * 0.02 * maxSpeed;
                     }
                     position += velocity * .02;
-                    robot.setX(((2 * position / ticksPerPixel - robot.getWidth())/2));
+                    robot.setX(((2 * position / ticksPerPixel - robot.getWidth()) / 2));
                     positionField.setText(Double.toString(position));
                     vField.setText(Double.toString(velocity));
                 }
                 ticksPerPixel = Math.round(slider.getValue() * 10) / 10.0;
                 sliderLabel.setText("Slider " + Math.round(slider.getValue() * 10) / 10.0);
                 scalar = 500 * ticksPerPixel;
-                scalarText.setText(Double.toString(Math.round(scalar * 10)/10.0));
+                scalarText.setText(Double.toString(Math.round(scalar * 10) / 10.0));
             }
         }, 0, 20);
     }
 
-    public static void main(String[] args){
-        launch(args);
-    }
-
-    private void updateValues(){
+    private void updateValues() {
 
     }
 }
