@@ -233,6 +233,10 @@ public class Rotation {
         return rotateBy(Rotation.fromDegrees(degrees));
     }
 
+    public Rotation abs(){
+        return Rotation.fromRadians(Math.abs(radians));
+    }
+
     /**
      * Rotates this {@link Rotation} by <code>other</code>
      *

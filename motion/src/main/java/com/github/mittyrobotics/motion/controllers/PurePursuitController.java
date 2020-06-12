@@ -61,7 +61,7 @@ public class PurePursuitController {
 
         //Use differential drive kinematics to calculate the left and right wheel velocity given the base robot
         //velocity and the radius of the pursuit circle
-        DrivetrainSpeeds state = DrivetrainSpeeds.fromRadius(robotVelocity, radius, trackWidth);
+        DrivetrainSpeeds state = DrivetrainSpeeds.fromLinearAndRadius(robotVelocity, radius, trackWidth);
 
         if (reversed) {
             state = state.reverse();

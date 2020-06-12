@@ -40,21 +40,7 @@ public class RobotGraph extends Graph {
 
     public RobotGraph() {
         super();
-        XYSeries robotSeries = new XYSeries(robotKey, false);
-        XYSeries module1Series = new XYSeries(module1Key, false);
-        XYSeries module2Series = new XYSeries(module2Key, false);
-        XYSeries module3Series = new XYSeries(module3Key, false);
-        XYSeries module4Series = new XYSeries(module4Key, false);
-        XYSeries pathSeries = new XYSeries(pathKey, false);
-
         scaleGraphToScale(1, 0, 0);
-
-        addSeries(robotSeries);
-        addSeries(module1Series);
-        addSeries(module2Series);
-        addSeries(module3Series);
-        addSeries(module4Series);
-        addSeries(pathSeries);
     }
 
     public void graphDifferentialDrive(Transform robotTransform, double robotWidth, double robotHeight) {

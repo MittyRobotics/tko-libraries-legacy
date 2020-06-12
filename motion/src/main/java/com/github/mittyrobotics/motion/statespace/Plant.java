@@ -154,6 +154,15 @@ public class Plant {
         return new Plant(states, outputs, continuousSystem, uMin, uMax, deltaTime);
     }
 
+    public static Plant createInvertedPendulumPlant(Motor motor, double cartMass, double pendulumMass,
+                                                    double cartFrictionCoeff, double pendulumInertia, double gravity,
+                                                    double pendulumLengthToCenterMass, double deltaTime) {
+        SimpleMatrix states = null, outputs = null, a= null, b= null, c= null, d= null, uMin= null, uMax= null;
+
+        StateSpaceSystemGains continuousSystem = new StateSpaceSystemGains(a, b, c, d);
+        return new Plant(states, outputs, continuousSystem, uMin, uMax, deltaTime);
+    }
+
     public StateSpaceSystemGains discretizeSystem(StateSpaceSystemGains input, double dt) {
 
         SimpleMatrix emUpper = MatrixUtils.hStack(input.getA(), input.getB());

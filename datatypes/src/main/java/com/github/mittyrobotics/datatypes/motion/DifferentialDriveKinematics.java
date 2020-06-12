@@ -24,6 +24,9 @@
 
 package com.github.mittyrobotics.datatypes.motion;
 
+import com.github.mittyrobotics.datatypes.geometry.Circle;
+import com.github.mittyrobotics.datatypes.positioning.Transform;
+
 /**
  * Contains differential drive kinematics equations for figuring out wheel velocities.
  * <p>
@@ -39,14 +42,28 @@ public class DifferentialDriveKinematics {
      * @param trackWidth the width between left and right wheels of the drivetrain.
      * @return the calculated {@link DrivetrainWheelSpeeds}.
      */
-    public static DrivetrainWheelSpeeds calculateFromRadius(double linear, double radius,
-                                                            double trackWidth) {
+    public static DrivetrainWheelSpeeds calculateFromLinearAndRadius(double linear, double radius,
+                                                                     double trackWidth) {
         if (Double.isInfinite(radius)) {
             return new DrivetrainWheelSpeeds(linear, linear);
         }
 
         //Calculate the angular velocity of the robot in radians per second
         double angular = linear / radius;
+
+        //Calculate left and right drivetrain velocities
+        double left = angular * (radius - (trackWidth / 2));
+        double right = angular * (radius + (trackWidth / 2));
+
+        //Return the calculated drivetrain velocities
+        return new DrivetrainWheelSpeeds(left, right);
+    }
+
+    public static DrivetrainWheelSpeeds calculateFromAngularAndRadius(double angular, double radius,
+                                                                      double trackWidth) {
+        if (Double.isInfinite(radius)) {
+            return new DrivetrainWheelSpeeds(0, 0);
+        }
 
         //Calculate left and right drivetrain velocities
         double left = angular * (radius - (trackWidth / 2));
@@ -64,8 +81,8 @@ public class DifferentialDriveKinematics {
      * @param trackWidth the width between left and right wheels of the drivetrain.
      * @return the calculated {@link DrivetrainWheelSpeeds}.
      */
-    public static DrivetrainWheelSpeeds calculateFromAngularMovement(double linear, double angular,
-                                                                     double trackWidth) {
+    public static DrivetrainWheelSpeeds calculateFromLinearAndAngular(double linear, double angular,
+                                                                      double trackWidth) {
         if (linear == 0 && angular == 0) {
             return new DrivetrainWheelSpeeds(0, 0);
         }
@@ -92,5 +109,34 @@ public class DifferentialDriveKinematics {
         double angularVelocity = (2 * (rightVelocity - linearVelocity)) / trackWidth;
 
         return angularVelocity;
+    }
+
+    public static DrivetrainSpeeds calculateMaxStateFromPoint(Transform currentTransform, Transform desiredTransform,
+                                                              double maxVelocity, double maxAngularVelocity,
+                                                              double trackWidth) {
+        Circle circle = new Circle(currentTransform, desiredTransform.getPosition());
+        if (Double.isInfinite(circle.getRadius()) || Double.isNaN(circle.getRadius())) {
+            return DrivetrainSpeeds.fromLinearAndAngular(maxVelocity, 0, trackWidth);
+        }
+        DrivetrainSpeeds theoreticalAngularSpeeds =
+                DrivetrainSpeeds.fromLinearAndRadius(maxVelocity, circle.getRadius(), trackWidth);
+        if (theoreticalAngularSpeeds.getAngular() < maxAngularVelocity) {
+            return theoreticalAngularSpeeds;
+        } else {
+            return DrivetrainSpeeds.fromAngularAndRadius(maxAngularVelocity, circle.getRadius(), trackWidth);
+        }
+    }
+
+    public static DrivetrainSpeeds calculateMaxStateFromCurvature(double curvature, double maxVelocity, double maxAngularVelocity, double trackWidth) {
+        if (Double.isInfinite(curvature) || Double.isNaN(curvature)) {
+            return DrivetrainSpeeds.fromLinearAndAngular(maxVelocity, 0, trackWidth);
+        }
+        DrivetrainSpeeds theoreticalAngularSpeeds =
+                DrivetrainSpeeds.fromLinearAndRadius(maxVelocity, 1/curvature, trackWidth);
+        if (theoreticalAngularSpeeds.getAngular() < maxAngularVelocity) {
+            return theoreticalAngularSpeeds;
+        } else {
+            return DrivetrainSpeeds.fromAngularAndRadius(maxAngularVelocity, 1/curvature, trackWidth);
+        }
     }
 }

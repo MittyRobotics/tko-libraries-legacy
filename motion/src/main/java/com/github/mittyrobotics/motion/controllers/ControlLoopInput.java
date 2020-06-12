@@ -22,10 +22,42 @@
  *  SOFTWARE.
  */
 
-package com.github.mittyrobotics.motion.pathfollowing;
+package com.github.mittyrobotics.motion.controllers;
 
-import com.github.mittyrobotics.path.generation.Path;
+import org.ejml.simple.SimpleMatrix;
 
-public class PathFollower {
-    private Path currentPath;
+import javax.sound.sampled.Control;
+
+public class ControlLoopInput {
+    private SimpleMatrix values;
+
+    public ControlLoopInput(){
+
+    }
+
+    public ControlLoopInput(double... values){
+        this.values = new SimpleMatrix(values.length, 1, true, values);
+    }
+
+    public SimpleMatrix getValues() {
+        return values;
+    }
+
+    public double getValue(int index) {
+        return getValues().get(index);
+    }
+
+    public void setValues(SimpleMatrix values) {
+        this.values = values;
+    }
+
+    public static class VoltageOutput extends ControlLoopInput{
+        public VoltageOutput(double voltage){
+            super(voltage);
+        }
+
+        public double getVoltage(){
+            return getValue(0);
+        }
+    }
 }

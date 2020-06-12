@@ -46,10 +46,17 @@ public class DrivetrainSpeeds {
         return new DrivetrainSpeeds(0, 0, 0, 0, 0, 0);
     }
 
-    public static DrivetrainSpeeds fromRadius(double linear, double radius,
-                                              double trackWidth) {
+    public static DrivetrainSpeeds fromLinearAndRadius(double linear, double radius,
+                                                       double trackWidth) {
         DrivetrainWheelSpeeds drivetrainWheelVelocities =
-                DifferentialDriveKinematics.calculateFromRadius(linear, radius, trackWidth);
+                DifferentialDriveKinematics.calculateFromLinearAndRadius(linear, radius, trackWidth);
+        return fromWheelSpeeds(drivetrainWheelVelocities, trackWidth);
+    }
+
+    public static DrivetrainSpeeds fromAngularAndRadius(double angular, double radius,
+                                                       double trackWidth) {
+        DrivetrainWheelSpeeds drivetrainWheelVelocities =
+                DifferentialDriveKinematics.calculateFromAngularAndRadius(angular, radius, trackWidth);
         return fromWheelSpeeds(drivetrainWheelVelocities, trackWidth);
     }
 
@@ -79,7 +86,7 @@ public class DrivetrainSpeeds {
                                                         double trackWidth) {
         //Calculate drivetrain velocities from linear and angular velocities
         DrivetrainWheelSpeeds drivetrainWheelVelocities =
-                DifferentialDriveKinematics.calculateFromAngularMovement(linear, angular, trackWidth);
+                DifferentialDriveKinematics.calculateFromLinearAndAngular(linear, angular, trackWidth);
 
         //Get left and right velocity from drivetrain velocities
         double left = drivetrainWheelVelocities.getLeft();
@@ -152,5 +159,17 @@ public class DrivetrainSpeeds {
 
     public double getTrackWidth() {
         return trackWidth;
+    }
+
+    @Override
+    public String toString() {
+        return "DrivetrainSpeeds{" +
+                "linear=" + linear +
+                ", angular=" + angular +
+                ", left=" + left +
+                ", right=" + right +
+                ", curvature=" + curvature +
+                ", trackWidth=" + trackWidth +
+                '}';
     }
 }

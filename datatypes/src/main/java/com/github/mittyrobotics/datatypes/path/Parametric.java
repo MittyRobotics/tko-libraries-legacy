@@ -27,6 +27,10 @@ package com.github.mittyrobotics.datatypes.path;
 import com.github.mittyrobotics.datatypes.positioning.Position;
 import com.github.mittyrobotics.datatypes.positioning.Rotation;
 import com.github.mittyrobotics.datatypes.positioning.Transform;
+import edu.wpi.first.wpiutil.math.MathUtil;
+import org.apache.commons.math3.analysis.integration.IterativeLegendreGaussIntegrator;
+import org.apache.commons.math3.analysis.integration.LegendreGaussIntegrator;
+import org.apache.commons.math3.util.MathUtils;
 
 public abstract class Parametric {
     /**
@@ -81,9 +85,9 @@ public abstract class Parametric {
      * @param steps the amount of segments it counts. Higher values are more accurate.
      * @return the estimated length of the parametric.
      */
-    public double getRawLength(double steps) {
+    public double getRawLength(double steps, double startT, double endT) {
         double length = 0;
-        for (double t = 0; t < 1; t += 1 / steps) {
+        for (double t = startT; t < endT; t += 1 / steps) {
             length += getPosition(t).distance(getPosition(t - 1 / steps));
         }
         return length;
@@ -96,7 +100,7 @@ public abstract class Parametric {
      *
      * @return the estimated length of the parametric.
      */
-    public double getGaussianQuadratureLength() {
+    public double getGaussianQuadratureLength(double startT, double endT) {
         //5-point Gaussian quadrature coefficients
         double[][] coefficients = {
                 {0.0, 0.5688889},
@@ -105,11 +109,10 @@ public abstract class Parametric {
                 {-0.90617985, 0.23692688},
                 {0.90617985, 0.23692688}
         };
-
         double length = 0;
         for (int i = 0; i < coefficients.length; i++) {
             double t = (1.0 + coefficients[i][0]) / 2;
-            length += getFirstDerivative(t).distance(new Position(0, 0)) * coefficients[i][1];
+            length += getFirstDerivative(t).distance(new Position()) * coefficients[i][1];
         }
         return length / 2;
     }

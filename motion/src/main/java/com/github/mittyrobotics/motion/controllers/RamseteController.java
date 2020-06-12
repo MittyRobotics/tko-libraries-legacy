@@ -38,24 +38,19 @@ public class RamseteController {
      *
      * @param robotTransform
      * @param desiredTransform
-     * @param robotVelocity
-     * @param drivingCurvature
+     * @param linearVelocity
+     * @param angularVelocity
      * @param aggressiveGain
      * @param dampingGain
      * @param trackWidth
      * @param reversed
      * @return
      */
-    public static DrivetrainSpeeds calculate(Transform robotTransform, Transform desiredTransform, double robotVelocity,
-                                             double drivingCurvature, double aggressiveGain, double dampingGain,
+    public static DrivetrainSpeeds calculate(Transform robotTransform, Transform desiredTransform, double linearVelocity,
+                                             double angularVelocity, double aggressiveGain, double dampingGain,
                                              double trackWidth, boolean reversed) {
         //Get the transform error in meters.
         Transform error = desiredTransform.relativeTo(robotTransform);
-
-        //Calculate linear velocity in meters per second given robot velocity in inches per second
-        double linearVelocity = robotVelocity;
-        //Calculate the angular velocity in radians per second given the turning radius and the robot velocity.
-        double angularVelocity = linearVelocity / (1 / drivingCurvature);
 
         double eX = error.getPosition().getX();
         double eY = error.getPosition().getY();
@@ -67,9 +62,6 @@ public class RamseteController {
 
         //Calculate the adjusted linear velocity from the Ramsete algorithm
         double adjustedLinearVelocity = linearVelocity * error.getRotation().cos() + k * eX;
-
-        //Convert linear velocity back into inches per second
-        adjustedLinearVelocity = adjustedLinearVelocity;
 
         //Calculate the adjusted angular velocity from the Ramsete algorithm (stays in radians per second)
         double adjustedAngularVelocity =

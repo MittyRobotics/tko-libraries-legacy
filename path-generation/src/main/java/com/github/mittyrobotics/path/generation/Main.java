@@ -45,5 +45,8 @@ public class Main {
         QuinticHermiteSpline spline = new QuinticHermiteSpline(p1, p2);
         graph.addSeries(GraphUtil.populateSeries(XYSeriesWithRenderer.withLines("Series"), GraphUtil.parametric(spline,
                 0.01, 2)));
+
+        System.out.println(spline.getGaussianQuadratureLength(.5, .6));
+        System.out.println(spline.getRawLength(1000, .5, .6));
     }
 }

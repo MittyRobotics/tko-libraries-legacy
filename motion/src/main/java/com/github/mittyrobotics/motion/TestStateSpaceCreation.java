@@ -70,12 +70,12 @@ public class TestStateSpaceCreation {
 
         StateSpaceController loop = new StateSpaceController(plant, controller, observer);
 
-        MotorGraph graph = new MotorGraph("State Space Elevator Step Response", "Position, Velocity, Acceleration, " +
+        MotorGraph graph = new MotorGraph("State Space Elevator Motion Profile", "Position (x10), Velocity(x10), " +
                 "Voltage", "Time");
 
         PulleyModel elevatorModel = new PulleyModel(motor, mass, gearReduction, pulleyRadius, 12);
 
-        elevatorModel.setMeasurementNoise(.01);
+        elevatorModel.setMeasurementNoise(.0);
 
         double previousPos = 0;
         double previousVel = 0;
@@ -88,12 +88,12 @@ public class TestStateSpaceCreation {
         elevatorModel.setPosition(previousPos);
         elevatorModel.setVelocity(previousVel);
         for (double t = 0; t < 5; t += dt) {
-            double referencePosition = 1;
-            if (t < 1) {
-                referencePosition = 0;
-            }
+            double referencePosition = motionProfile.calculateState(t).getPosition();
+//            if (t < 1) {
+//                referencePosition = 0;
+//            }
 
-            double referenceVelocity = 0;
+            double referenceVelocity = motionProfile.calculateState(t).getVelocity();
 
             SimpleMatrix voltage = loop.calculate(new SimpleMatrix(new double[][]{{previousPos}}),
                     new SimpleMatrix(new double[][]{{referencePosition}, {referenceVelocity}}), dt);
@@ -106,7 +106,7 @@ public class TestStateSpaceCreation {
             graph.addPosition(previousPos * 10, t);
             graph.addVelocity(previousVel * 10, t);
             graph.addVoltage(voltage.get(0), t);
-            graph.addError(loop.getError() * 10, t);
+//            graph.addError(loop.getError() * 10, t);
             graph.addSetpoint(referencePosition * 10, t);
         }
     }
