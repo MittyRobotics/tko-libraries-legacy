@@ -31,7 +31,7 @@ import com.github.mittyrobotics.datatypes.path.Trajectory;
 import com.github.mittyrobotics.datatypes.positioning.Transform;
 
 public class TrajectoryGenerator {
-    private static TrajectoryGenerator instance = new TrajectoryGenerator();
+    private static final TrajectoryGenerator instance = new TrajectoryGenerator();
 
     public static TrajectoryGenerator getInstance() {
         return instance;
@@ -41,9 +41,10 @@ public class TrajectoryGenerator {
                                          double maxAngularAcceleration, double maxAngularVelocity, double trackWidth) {
         double[] linearVelocities = new double[samples];
         double[] angularVelocities = new double[samples];
+        double[] curvatures = new double[samples];
         double[] times = new double[samples];
 
-        Iteration lastIteration = new Iteration(0, 0, 0, parametric.getTransform(1));
+        Iteration lastIteration = new Iteration(0, 0, 0, 0, parametric.getTransform(1));
 
         //Backward pass
         for (int i = samples - 1; i >= 0; i--) {
@@ -53,11 +54,12 @@ public class TrajectoryGenerator {
                             maxAngularVelocity, trackWidth, parametric, samples);
             linearVelocities[i] = iteration.getLinear();
             angularVelocities[i] = iteration.getAngular();
+            curvatures[i] = iteration.getCurvature();
             times[i] = iteration.getTime();
             lastIteration = iteration;
         }
 
-        lastIteration = new Iteration(0, 0, 0, parametric.getTransform(0));
+        lastIteration = new Iteration(0, 0, 0, 0, parametric.getTransform(0));
         //Forward Pass
         for (int i = 0; i < samples; i++) {
             Iteration iteration =
@@ -66,11 +68,12 @@ public class TrajectoryGenerator {
                             maxAngularVelocity, trackWidth, parametric, samples);
             linearVelocities[i] = iteration.getLinear();
             angularVelocities[i] = iteration.getAngular();
+            curvatures[i] = iteration.getCurvature();
             times[i] = iteration.getTime();
             lastIteration = iteration;
         }
 
-        return new Trajectory(linearVelocities, angularVelocities, times);
+        return new Trajectory(linearVelocities, angularVelocities, curvatures, times);
     }
 
     private Iteration doIteration(int i, Iteration lastIteration, double currentLinearVelocity,
@@ -90,41 +93,57 @@ public class TrajectoryGenerator {
 
         DrivetrainSpeeds maxSpeeds = DifferentialDriveKinematics
                 .calculateMaxStateFromCurvature(Math.abs(curvature), maxVelocity, maxAngularVelocity, trackWidth);
-        double adjustedMaxLinearVelocity = maxSpeeds.getLinear();
-        double adjustedMaxAngularVelocity = maxSpeeds.getAngular() * Math.signum(curvature);
 
         //Linear velocity cap
 
         linear = Math.sqrt(lastIteration.getLinear() * lastIteration.getLinear() + 2 * maxAcceleration * length);
-        linear = Math.min(linear, adjustedMaxLinearVelocity);
+        linear = Math.min(linear, maxSpeeds.getLinear());
         linear = Math.min(linear, currentLinearVelocity);
 
-        //Angular velocity final cap
+        //Angular velocity cap
 
-        angular = DrivetrainSpeeds.fromLinearAndRadius(linear, 1 / curvature, trackWidth).getAngular();
+        double maxAngularFromLinear =
+                DrivetrainSpeeds.fromLinearAndRadius(linear, 1 / curvature, trackWidth).getAngular();
+
+        double angularSqrt =
+                lastIteration.getAngular() * lastIteration.getAngular() * Math.signum(lastIteration.getAngular()) +
+                        2 * maxAngularAcceleration * angle * Math.signum(curvature);
+        angular = Math.sqrt(Math.abs(angularSqrt)) * Math.signum(angularSqrt);
+        angular = Math.min(Math.abs(angular), Math.abs(maxAngularFromLinear)) * Math.signum(angular);
+        angular = Math.min(Math.abs(angular), Math.abs(currentAngularVelocity)) * Math.signum(angular);
+
+        //Linear velocity adjustment
+
+        if (Math.abs(1 / curvature) < 10000) {
+            double adjustLinear = DrivetrainSpeeds.fromAngularAndRadius(angular, 1 / curvature, trackWidth).getLinear();
+            linear = adjustLinear;
+        }
 
         //Time calculation
 
         double linearTime = length / ((linear + lastIteration.getLinear()) / 2);
         double angularTime = angle / ((angular + lastIteration.getAngular()) / 2);
 
+
         time = Math.max(linearTime, angularTime);
         time = (Double.isNaN(time) || Double.isInfinite(time)) ? 0 : time;
         time = time + lastIteration.getTime();
 
-        return new Iteration(linear, angular, time, transform);
+        return new Iteration(linear, angular, time, curvature, transform);
     }
 
     private class Iteration {
         private final double linear;
         private final double angular;
         private final double time;
+        private final double curvature;
         private final Transform transform;
 
-        public Iteration(double linear, double angular, double time, Transform transform) {
+        public Iteration(double linear, double angular, double time, double curvature, Transform transform) {
             this.linear = linear;
             this.angular = angular;
             this.time = time;
+            this.curvature = curvature;
             this.transform = transform;
         }
 
@@ -140,154 +159,13 @@ public class TrajectoryGenerator {
             return time;
         }
 
+        public double getCurvature() {
+            return curvature;
+        }
+
         public Transform getTransform() {
             return transform;
         }
     }
 
 }
-
-
-//        double[] curvatures = new double[samples];
-//
-//        Transform previousTransform = parametric.getTransform(1);
-//        double lastLinearVelocity = 0;
-//        double lastAngularVelocity = 0;
-//        double lastLength = 0;
-//        double lastAngle = 0;
-//        double lastTime = 0;
-//
-//        for (int i = samples-1; i >= 0; i--) {
-//            double t = ((double) i / (double) samples);
-//            Transform transform = parametric.getTransform(t);
-//            double curvature = parametric.getCurvature(t);
-//
-//            double length = transform.getPosition().distance(previousTransform.getPosition());
-//            double angle = transform.getRotation().subtract(previousTransform.getRotation()).abs().getRadians();
-//
-//            DrivetrainSpeeds maxSpeeds = DifferentialDriveKinematics.calculateMaxStateFromCurvature(curvature, maxVelocity, maxAngularVelocity, trackWidth);
-//
-//            double adjustedMaxLinearVelocity = maxSpeeds.getLinear();
-//            double adjustedMaxAngularVelocity = maxSpeeds.getAngular();
-//
-//            double linearVelocity = Math.sqrt(lastLinearVelocity*lastLinearVelocity + 2*maxAcceleration*length);
-//            double angularVelocity = Math.sqrt(lastAngularVelocity*lastAngularVelocity + 2*maxAngularAcceleration*angle);
-//
-//            linearVelocity = Math.min(linearVelocity, adjustedMaxLinearVelocity);
-//            angularVelocity = adjustedMaxAngularVelocity > 0? Math.min(angularVelocity, adjustedMaxAngularVelocity) : Math.min(Math.abs(adjustedMaxAngularVelocity), angularVelocity);
-//
-//            linearVelocities[i] = linearVelocity;
-//            angularVelocities[i] = angularVelocity;
-//
-//            double linearTime = length/((linearVelocity+lastLinearVelocity)/2);
-//            double angularTime = angle/((angularVelocity+lastAngularVelocity)/2);
-//
-//            double time = Math.max(linearTime, angularTime);
-//            if(Double.isNaN(time)){
-//                time = 0;
-//            }
-//
-//            time = time + lastTime;
-//
-//            length = length + lastLength;
-//            angle = angle + lastAngle;
-//
-//            lastLinearVelocity = linearVelocity;
-//            lastAngularVelocity = angularVelocity;
-//            lastLength = length;
-//            lastAngle = angle;
-//            previousTransform = transform;
-//            lastTime = time;
-//        }
-//
-//        previousTransform = parametric.getTransform(0);
-//        lastLinearVelocity = 0;
-//        lastAngularVelocity = 0;
-//        lastLength = 0;
-//        lastAngle = 0;
-//        lastTime = 0;
-//        for (int i = 0; i < samples; i++) {
-//            double t = ((double) i / (double) samples);
-//            Transform transform = parametric.getTransform(t);
-//            double curvature = parametric.getCurvature(t);
-//
-//            curvatures[i] = curvature;
-//
-//            double length = transform.getPosition().distance(previousTransform.getPosition());
-//            double angle = transform.getRotation().subtract(previousTransform.getRotation()).abs().getRadians();
-//
-//            DrivetrainSpeeds maxSpeeds = DifferentialDriveKinematics.calculateMaxStateFromCurvature(curvature, maxVelocity, maxAngularVelocity, trackWidth);
-//
-//            double adjustedMaxLinearVelocity = linearVelocities[i];
-//            double adjustedMaxAngularVelocity = angularVelocities[i];
-//
-//            double linearVelocity = Math.sqrt(lastLinearVelocity*lastLinearVelocity + 2*maxAcceleration*length);
-//            double angularVelocity = Math.sqrt(lastAngularVelocity*lastAngularVelocity + 2*maxAngularAcceleration*angle);
-//
-//            linearVelocity = Math.min(linearVelocity, adjustedMaxLinearVelocity);
-//            angularVelocity = Math.min(angularVelocity, Math.abs(adjustedMaxAngularVelocity));
-//
-//            linearVelocities[i] = linearVelocity;
-//            angularVelocities[i] = angularVelocity;
-//
-//            double linearTime = length/((linearVelocity+lastLinearVelocity)/2);
-//            double angularTime = angle/((angularVelocity+lastAngularVelocity)/2);
-//
-//            double time = Math.max(linearTime, angularTime);
-//            if(Double.isNaN(time)){
-//                time = 0;
-//            }
-//
-//            time = time + lastTime;
-//            times[i] = time;
-//
-//
-//            length = length + lastLength;
-//            angle = angle + lastAngle;
-//
-//            lastLinearVelocity = linearVelocity;
-//            lastAngularVelocity = angularVelocity;
-//            lastLength = length;
-//            lastAngle = angle;
-//            previousTransform = transform;
-//            lastTime = time;
-//        }
-//
-//        lastTime = 0;
-//        lastLinearVelocity = 0;
-//        lastAngularVelocity = 0;
-//        for(int i = 0; i < samples; i++){
-//            double angular = angularVelocities[i];
-//            double linear = DrivetrainSpeeds.fromAngularAndRadius(angular, 1/curvatures[i], trackWidth).getLinear();
-//            linearVelocities[i] = -linear;
-//
-//            double t = ((double) i / (double) samples);
-//            Transform transform = parametric.getTransform(t);
-//            double length = transform.getPosition().distance(previousTransform.getPosition());
-//            double angle = transform.getRotation().subtract(previousTransform.getRotation()).abs().getRadians();
-//
-//            linear = Math.sqrt(lastLinearVelocity*lastLinearVelocity + 2*maxAcceleration*length);
-//            linear = Math.min(linear, linearVelocities[i]);
-//
-//            double linearTime = length/((linear+lastLinearVelocity)/2);
-//            double angularTime = angle/((angular+lastAngularVelocity)/2);
-//
-//            linearVelocities[i] = linear;
-//
-//            angularVelocities[i] = -DrivetrainSpeeds.fromLinearAndRadius(linear, 1/curvatures[i], trackWidth).getAngular();
-//            double time = Math.max(linearTime, angularTime);
-//            if(Double.isNaN(time) || Double.isInfinite(time)){
-//                time = 0;
-//            }
-//
-//
-//            time = time + lastTime;
-//            System.out.println(time);
-//            times[i] = time;
-//
-//            lastTime = time;
-//            lastLinearVelocity = linear;
-//            lastAngularVelocity = angular;
-//            previousTransform = transform;
-//        }
-

@@ -27,11 +27,13 @@ package com.github.mittyrobotics.datatypes.path;
 public class Trajectory {
     private final double[] linearVelocity;
     private final double[] angularVelocity;
+    private final double[] curvature;
     private final double[] time;
 
-    public Trajectory(double[] linearVelocity, double[] angularVelocity, double[] time) {
+    public Trajectory(double[] linearVelocity, double[] angularVelocity, double[] curvature, double[] time) {
         this.linearVelocity = linearVelocity;
         this.angularVelocity = angularVelocity;
+        this.curvature = curvature;
         this.time = time;
     }
 
@@ -45,6 +47,10 @@ public class Trajectory {
 
     public double[] getAngularVelocity() {
         return angularVelocity;
+    }
+
+    public double[] getCurvature() {
+        return curvature;
     }
 
     public double[] getTime() {

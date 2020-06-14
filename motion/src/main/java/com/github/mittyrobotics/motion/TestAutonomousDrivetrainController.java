@@ -30,6 +30,8 @@ import com.github.mittyrobotics.datatypes.path.Trajectory;
 import com.github.mittyrobotics.datatypes.positioning.Rotation;
 import com.github.mittyrobotics.datatypes.positioning.Transform;
 import com.github.mittyrobotics.datatypes.positioning.TransformWithVelocityAndCurvature;
+import com.github.mittyrobotics.datatypes.units.Conversions;
+import com.github.mittyrobotics.motion.controllers.RamseteController;
 import com.github.mittyrobotics.motion.pathfollowing.AutonomousDrivetrainController;
 import com.github.mittyrobotics.path.generation.TrajectoryGenerator;
 import com.github.mittyrobotics.path.generation.splines.QuinticHermiteSpline;
@@ -43,17 +45,20 @@ import javax.swing.*;
 
 public class TestAutonomousDrivetrainController {
     public static void main(String[] args) {
-        double maxAcceleration = 200;
-        double maxVelocity = 100;
-        double maxAngularAcceleration = 10;
-        double maxAngularVelocity = Math.PI;
+        double maxAcceleration = 100;
+        double maxVelocity = 200;
+        double maxAngularAcceleration = 1;
+        double maxAngularVelocity = 2;
         double trackWidth = 20;
 
-        AutonomousDrivetrainController controller = new AutonomousDrivetrainController(maxAcceleration, maxVelocity, maxAngularAcceleration,maxAngularVelocity, trackWidth);
+        AutonomousDrivetrainController controller =
+                new AutonomousDrivetrainController(maxAcceleration, maxVelocity, maxAngularAcceleration,
+                        maxAngularVelocity, trackWidth);
 
         TransformWithVelocityAndCurvature
-                splineP1 = new TransformWithVelocityAndCurvature(new Transform(0, 0, Math.PI), 1, 1/-50.0);
-        TransformWithVelocityAndCurvature splineP2 = new TransformWithVelocityAndCurvature(new Transform(100, 50, Math.PI), 1, 0);
+                splineP1 = new TransformWithVelocityAndCurvature(new Transform(0, 0, Math.PI), 1, 1/-5.0);
+        TransformWithVelocityAndCurvature splineP2 =
+                new TransformWithVelocityAndCurvature(new Transform(100, 50, 0), 0, 0);
 
         QuinticHermiteSpline spline = new QuinticHermiteSpline(splineP1, splineP2);
 
@@ -63,51 +68,74 @@ public class TestAutonomousDrivetrainController {
                 0.01, 2)));
         Graph trajectoryGraph = new Graph();
 
-        Trajectory trajectory = TrajectoryGenerator.getInstance().generateTrajectory(spline,1000, maxAcceleration, maxVelocity, maxAngularAcceleration, maxAngularVelocity, trackWidth);
+        int samples = 1000;
+
+        Trajectory trajectory = TrajectoryGenerator.getInstance()
+                .generateTrajectory(spline, samples, maxAcceleration, maxVelocity, maxAngularAcceleration,
+                        maxAngularVelocity, trackWidth);
 
         RobotGraph robotGraph = new RobotGraph();
 
+
         double dt = 0.002;
         Transform previousTransform = splineP1;
-        for(double t = 0; t < 1; t += dt){
-            DrivetrainSpeeds speeds = DifferentialDriveKinematics.calculateMaxStateFromPoint(previousTransform, spline.getTransform(t), maxVelocity, maxAngularVelocity, trackWidth);
+        for (double t = 0; t < 1; t += dt) {
+            DrivetrainSpeeds speeds = DifferentialDriveKinematics
+                    .calculateMaxStateFromPoint(previousTransform, spline.getTransform(t), maxVelocity,
+                            maxAngularVelocity, trackWidth);
             previousTransform = spline.getTransform(t);
         }
-        for(int i = 0; i < trajectory.getSamples(); i++){
+        for (int i = 0; i < trajectory.getSamples(); i++) {
             double time = trajectory.getTime()[i];
             trajectoryGraph.addToSeries("Linear Velocity", new XYDataItem(time, trajectory.getLinearVelocity()[i]));
-            trajectoryGraph.addToSeries("Angular Velocity", new XYDataItem(time, trajectory.getAngularVelocity()[i]*10));
+            trajectoryGraph
+                    .addToSeries("Angular Velocity", new XYDataItem(time, trajectory.getAngularVelocity()[i] * 10));
+//            trajectoryGraph.addToSeries("Curvature", new XYDataItem(time, trajectory.getCurvature()[i]*1000));
         }
 
         previousTransform = splineP1;
         int step = 0;
-        robotGraph.addSeries(GraphUtil.populateSeries(XYSeriesWithRenderer.withLines("Path"), GraphUtil.parametric(spline,
-                0.01, 2)));
+        robotGraph
+                .addSeries(GraphUtil.populateSeries(XYSeriesWithRenderer.withLines("Path"), GraphUtil.parametric(spline,
+                        0.01, 2)));
         double linearVelocity = 0;
         double angularVelocity = 0;
         dt = 0.001;
-        for(double t = 0; t < 10; t += dt){
-            if(t >= trajectory.getTime()[step] && step < 999) {
+        Transform desiredTransform = splineP1;
+        for (double t = 0; t < 100; t += dt) {
+            if (t >= trajectory.getTime()[step] && step < samples-1) {
                 step++;
                 linearVelocity = trajectory.getLinearVelocity()[step];
                 angularVelocity = trajectory.getAngularVelocity()[step];
-            }
-            else if(step >= 999){
+                desiredTransform = spline.getTransform((double)step / (double)samples);
+            } else if (step >= samples-1) {
                 linearVelocity = 0;
                 angularVelocity = 0;
+                desiredTransform = spline.getTransform(1);
             }
 
-            Transform transform = previousTransform.rotateBy(new Rotation(angularVelocity * dt));
-            transform = transform.add(new Transform(transform.getRotation().cos() * (linearVelocity*dt),transform.getRotation().sin() * (linearVelocity*dt)));
+
+            DrivetrainSpeeds ramseteSpeeds = RamseteController
+                    .calculate(previousTransform.inToM(), desiredTransform.inToM(),
+                            linearVelocity * Conversions.IN_TO_M, angularVelocity * Conversions.IN_TO_M, 0.2, 0.2,
+                            trackWidth * Conversions.IN_TO_M, false);
+
+            Transform transform =
+                    previousTransform.rotateBy(new Rotation(ramseteSpeeds.getAngular() * Conversions.M_TO_IN * dt));
+            transform = transform.add(new Transform(
+                    transform.getRotation().cos() * (ramseteSpeeds.getLinear() * Conversions.M_TO_IN * dt),
+                    transform.getRotation().sin() * (ramseteSpeeds.getLinear() * Conversions.M_TO_IN * dt)));
+
+            robotGraph.scaleGraphToScale(.2, transform.getPosition().getX(), transform.getPosition().getY());
 
             Transform finalTransform = transform;
             SwingUtilities.invokeLater(() -> robotGraph.graphDifferentialDrive(
-                    finalTransform, trackWidth, trackWidth*1.25));
+                    finalTransform, trackWidth, trackWidth * 1.25));
 
             previousTransform = transform;
 
             try {
-                Thread.sleep((long) (dt*1000.0));
+                Thread.sleep((long) (dt * 1000.0));
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
