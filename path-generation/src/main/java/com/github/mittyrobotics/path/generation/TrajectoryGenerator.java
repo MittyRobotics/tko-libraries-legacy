@@ -114,7 +114,7 @@ public class TrajectoryGenerator {
 
         //Linear velocity adjustment
 
-        if (Math.abs(1 / curvature) < 10000) {
+        if (Math.abs(1 / curvature) < 1000) {
             double adjustLinear = DrivetrainSpeeds.fromAngularAndRadius(angular, 1 / curvature, trackWidth).getLinear();
             linear = adjustLinear;
         }

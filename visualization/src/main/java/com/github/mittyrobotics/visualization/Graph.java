@@ -43,7 +43,6 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 
 public class Graph extends JFrame {
-
     private String titleName;
     private String yAxisName;
     private String xAxisName;

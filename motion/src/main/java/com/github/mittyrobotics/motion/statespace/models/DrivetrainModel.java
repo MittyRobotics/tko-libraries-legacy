@@ -25,7 +25,6 @@
 package com.github.mittyrobotics.motion.statespace.models;
 
 import com.github.mittyrobotics.datatypes.motion.DrivetrainWheelSpeeds;
-import com.github.mittyrobotics.datatypes.units.Conversions;
 import com.github.mittyrobotics.motion.statespace.motors.Motor;
 
 public class DrivetrainModel {
@@ -50,24 +49,24 @@ public class DrivetrainModel {
     private double rightPosition;
 
     /**
-     * @param mass            lbs
+     * @param mass
      * @param momentOfInertia kg*m^2
-     * @param trackWidth      in
+     * @param trackWidth
      * @param motor
      * @param gearRatio
-     * @param wheelRadius     in
+     * @param wheelRadius
      */
     public DrivetrainModel(double mass, double momentOfInertia, double trackWidth, double drivetrainLength,
                            Motor motor,
                            double gearRatio, double wheelRadius) {
-        this.mass = mass * Conversions.LBS_TO_KG;
+        this.mass = mass;
         this.momentOfInertia = momentOfInertia;
-        this.trackWidth = trackWidth * Conversions.IN_TO_M;
+        this.trackWidth = trackWidth;
         this.drivetrainLength = drivetrainLength;
         this.motor = motor;
         this.numMotorsPerSide = motor.getNumMotors();
         this.gearRatio = gearRatio;
-        this.wheelRadius = wheelRadius * Conversions.IN_TO_M;
+        this.wheelRadius = wheelRadius;
         computeModelValues();
     }
 
@@ -99,7 +98,7 @@ public class DrivetrainModel {
      * @param leftVoltage
      * @param rightVoltage
      */
-    public DrivetrainWheelSpeeds calculateAccelerations(double leftVoltage, double rightVoltage) {
+    private DrivetrainWheelSpeeds calculateAccelerations(double leftVoltage, double rightVoltage) {
         double Vl = leftVoltage;
         double Vr = rightVoltage;
         double vl = leftVelocity;
@@ -126,7 +125,7 @@ public class DrivetrainModel {
     }
 
     public double getTrackWidth() {
-        return trackWidth * Conversions.M_TO_IN;
+        return trackWidth;
     }
 
     public double getDrivetrainLength() {
@@ -134,26 +133,26 @@ public class DrivetrainModel {
     }
 
     public double getLeftVelocity() {
-        return leftVelocity * Conversions.M_TO_IN;
+        return leftVelocity;
     }
 
     public double getRightVelocity() {
-        return rightVelocity * Conversions.M_TO_IN;
+        return rightVelocity;
     }
 
     public double getLeftAcceleration() {
-        return leftAcceleration * Conversions.M_TO_IN;
+        return leftAcceleration;
     }
 
     public double getRightAcceleration() {
-        return rightAcceleration * Conversions.M_TO_IN;
+        return rightAcceleration;
     }
 
     public double getLeftPosition() {
-        return leftPosition * Conversions.M_TO_IN;
+        return leftPosition;
     }
 
     public double getRightPosition() {
-        return rightPosition * Conversions.M_TO_IN;
+        return rightPosition;
     }
 }
