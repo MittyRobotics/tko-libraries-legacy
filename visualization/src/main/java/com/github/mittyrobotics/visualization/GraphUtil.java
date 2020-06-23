@@ -153,4 +153,17 @@ public class GraphUtil {
         return positions.toArray(new Position[0]);
     }
 
+    public static Position[] parametric(Parametric parametric, double[] parameterization, double arrowWidth) {
+        ArrayList<Position> positions = new ArrayList<>();
+
+        for (int i = 0; i < parameterization.length; i++) {
+            Position[] arrow = arrow(parametric.getTransform(parameterization[i]), 0, arrowWidth);
+            for (Position p : arrow) {
+                positions.add(p);
+            }
+        }
+
+        return positions.toArray(new Position[0]);
+    }
+
 }

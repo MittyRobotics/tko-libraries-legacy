@@ -26,6 +26,7 @@ package com.github.mittyrobotics.motion;
 
 import com.github.mittyrobotics.datatypes.motion.DifferentialDriveKinematics;
 import com.github.mittyrobotics.datatypes.motion.DrivetrainSpeeds;
+import com.github.mittyrobotics.datatypes.path.Parametric;
 import com.github.mittyrobotics.datatypes.path.Trajectory;
 import com.github.mittyrobotics.datatypes.positioning.Rotation;
 import com.github.mittyrobotics.datatypes.positioning.Transform;
@@ -33,6 +34,8 @@ import com.github.mittyrobotics.datatypes.positioning.TransformWithVelocityAndCu
 import com.github.mittyrobotics.datatypes.units.Conversions;
 import com.github.mittyrobotics.motion.controllers.RamseteController;
 import com.github.mittyrobotics.motion.pathfollowing.AutonomousDrivetrainController;
+import com.github.mittyrobotics.path.generation.Path;
+import com.github.mittyrobotics.path.generation.PathGenerator;
 import com.github.mittyrobotics.path.generation.TrajectoryGenerator;
 import com.github.mittyrobotics.path.generation.splines.QuinticHermiteSpline;
 import com.github.mittyrobotics.visualization.Graph;
@@ -47,8 +50,8 @@ public class TestAutonomousDrivetrainController {
     public static void main(String[] args) {
         double maxAcceleration = 100;
         double maxVelocity = 200;
-        double maxAngularAcceleration = 1;
-        double maxAngularVelocity = 2;
+        double maxAngularAcceleration = 5;
+        double maxAngularVelocity = 5;
         double trackWidth = 20;
 
         AutonomousDrivetrainController controller =
@@ -56,35 +59,44 @@ public class TestAutonomousDrivetrainController {
                         maxAngularVelocity, trackWidth);
 
         TransformWithVelocityAndCurvature
-                splineP1 = new TransformWithVelocityAndCurvature(new Transform(0, 0, Math.PI), 1, 0);
+                splineP1 = new TransformWithVelocityAndCurvature(new Transform(0, 0, Math.PI), 1, -1.0/50);
         TransformWithVelocityAndCurvature splineP2 =
-                new TransformWithVelocityAndCurvature(new Transform(100, 50, 0), 0, 0);
+                new TransformWithVelocityAndCurvature(new Transform(100, 50,  Math.PI/2), 50, 0);
+        TransformWithVelocityAndCurvature splineP3 =
+                new TransformWithVelocityAndCurvature(new Transform(100, 50,  0), 1, 0);
+        TransformWithVelocityAndCurvature splineP5 =
+                new TransformWithVelocityAndCurvature(new Transform(200, 50,  0), 0, 0);
 
-        QuinticHermiteSpline spline = new QuinticHermiteSpline(splineP1, splineP2);
+        Path path = new Path(PathGenerator.getInstance().generateQuinticHermiteSplinePath(new TransformWithVelocityAndCurvature[]{splineP1, splineP2}));
 
         Graph graph = new Graph();
         graph.scaleGraphToScale(.15, 50, 25);
-        graph.addSeries(GraphUtil.populateSeries(XYSeriesWithRenderer.withLines("Series"), GraphUtil.parametric(spline,
-                0.01, 2)));
+
         Graph trajectoryGraph = new Graph();
 
-        int samples = 1000;
+
+        double[] parameterization = TrajectoryGenerator.getInstance().parameterizePath(path,1, 1);
+
+        int samples = parameterization.length;
 
         Trajectory trajectory = TrajectoryGenerator.getInstance()
-                .generateTrajectory(spline, samples, maxAcceleration, maxVelocity, maxAngularAcceleration,
+                .generateTrajectory(path, parameterization, maxAcceleration, maxVelocity, maxAngularAcceleration,
                         maxAngularVelocity, trackWidth);
 
         RobotGraph robotGraph = new RobotGraph();
 
 
-        double dt = 0.002;
+        double dt = 1.0/samples;
         Transform previousTransform = splineP1;
         for (double t = 0; t < 1; t += dt) {
             DrivetrainSpeeds speeds = DifferentialDriveKinematics
-                    .calculateMaxStateFromPoint(previousTransform, spline.getTransform(t), maxVelocity,
+                    .calculateMaxStateFromPoint(previousTransform, path.getTransform(t), maxVelocity,
                             maxAngularVelocity, trackWidth);
-            previousTransform = spline.getTransform(t);
+            previousTransform = path.getTransform(t);
         }
+
+        trajectoryGraph.addSeries(new XYSeriesWithRenderer("Linear Velocity", null, true, true, null));
+        trajectoryGraph.addSeries(new XYSeriesWithRenderer("Angular Velocity", null, true, true, null));
         for (int i = 0; i < trajectory.getSamples(); i++) {
             double time = trajectory.getTime()[i];
             trajectoryGraph.addToSeries("Linear Velocity", new XYDataItem(time, trajectory.getLinearVelocity()[i]));
@@ -96,8 +108,11 @@ public class TestAutonomousDrivetrainController {
         previousTransform = splineP1;
         int step = 0;
         robotGraph
-                .addSeries(GraphUtil.populateSeries(XYSeriesWithRenderer.withLines("Path"), GraphUtil.parametric(spline,
-                        0.01, 2)));
+                .addSeries(GraphUtil.populateSeries(XYSeriesWithRenderer.withLines("Path"), GraphUtil.parametric(path,
+                        parameterization, 2)));
+
+        graph.addSeries(GraphUtil.populateSeries(XYSeriesWithRenderer.withLines("Series"), GraphUtil.parametric(path,
+                parameterization, 2)));
         double linearVelocity = 0;
         double angularVelocity = 0;
         dt = 0.001;
@@ -107,11 +122,11 @@ public class TestAutonomousDrivetrainController {
                 step++;
                 linearVelocity = trajectory.getLinearVelocity()[step];
                 angularVelocity = trajectory.getAngularVelocity()[step];
-                desiredTransform = spline.getTransform((double)step / (double)samples);
+                desiredTransform = path.getTransform((double)step / (double)samples);
             } else if (step >= samples-1) {
                 linearVelocity = 0;
                 angularVelocity = 0;
-                desiredTransform = spline.getTransform(1);
+                desiredTransform = path.getTransform(1);
             }
 
 

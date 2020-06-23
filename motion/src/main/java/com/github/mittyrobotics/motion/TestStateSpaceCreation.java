@@ -88,12 +88,12 @@ public class TestStateSpaceCreation {
         elevatorModel.setPosition(previousPos);
         elevatorModel.setVelocity(previousVel);
         for (double t = 0; t < 5; t += dt) {
-            double referencePosition = motionProfile.calculateState(t).getPosition();
-//            if (t < 1) {
-//                referencePosition = 0;
-//            }
+            double referencePosition = 1;
+            if (t < 1) {
+                referencePosition = 0;
+            }
 
-            double referenceVelocity = motionProfile.calculateState(t).getVelocity();
+            double referenceVelocity = 0;
 
             SimpleMatrix voltage = loop.calculate(new SimpleMatrix(new double[][]{{previousPos}}),
                     new SimpleMatrix(new double[][]{{referencePosition}, {referenceVelocity}}), dt);
@@ -108,6 +108,7 @@ public class TestStateSpaceCreation {
             graph.addVoltage(voltage.get(0), t);
 //            graph.addError(loop.getError() * 10, t);
             graph.addSetpoint(referencePosition * 10, t);
+            graph.addAcceleration(elevatorModel.getAcceleration(), t);
         }
     }
 }

@@ -342,6 +342,19 @@ public class QuinticHermiteSpline extends Parametric {
     }
 
     /**
+     * Returns the {@link Rotation} along the {@link Parametric} at <code>t</code> where <code>0 <= t <= 1</code>.
+     *
+     * @param t the parameter
+     * @return the {@link Rotation} at the parameter <code>t</code>.
+     */
+    @Override
+    public Rotation getRotation(double t) {
+        Position firstDerivative = getFirstDerivative(t);
+
+        return new Rotation(Math.atan2(firstDerivative.getY(), firstDerivative.getX()));
+    }
+
+    /**
      * Returns the {@link Transform} along the {@link Parametric} at <code>t</code> where <code>0 <= t <= 1</code>.
      * <p>
      * The {@link Transform} contains the {@link Position} and {@link Rotation}, with the {@link Rotation} being the

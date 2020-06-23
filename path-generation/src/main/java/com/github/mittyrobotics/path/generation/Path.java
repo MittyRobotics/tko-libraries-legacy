@@ -79,6 +79,28 @@ public class Path extends Parametric {
     }
 
     /**
+     * Returns the {@link Rotation} along the {@link Parametric} at <code>t</code> where <code>0 <= t <= 1</code>.
+     *
+     * @param t the parameter
+     * @return the {@link Rotation} at the parameter <code>t</code>.
+     */
+    @Override
+    public Rotation getRotation(double t) {
+        //Convert t from 0 to 1 to 0 to waypoints.length-1 so that the t value represents all parametric equation
+        //segments of the total path.
+        t = t * parametrics.length;
+
+        for (int i = 0; i < parametrics.length; i++) {
+            //Find which parametric equation segment that t falls in
+            if (t >= i && t <= i + 1) {
+                //return the Transform from the segment that it falls in
+                return parametrics[i].getRotation(t - i);
+            }
+        }
+        return new Rotation();
+    }
+
+    /**
      * Returns the {@link Transform} along the {@link Parametric} at <code>t</code> where <code>0 <= t <= 1</code>.
      * <p>
      * The {@link Transform} contains the {@link Position} and {@link Rotation}, with the {@link Rotation} being the
