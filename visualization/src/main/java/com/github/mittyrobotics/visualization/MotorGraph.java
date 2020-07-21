@@ -61,6 +61,13 @@ public class MotorGraph extends Graph {
         this("Graph", "y", "x");
     }
 
+    public void addMotorValues(double position, double velocity, double acceleration, double voltage, double time){
+        addPosition(position, time);
+        addVelocity(velocity, time);
+        addAcceleration(acceleration, time);
+        addVoltage(voltage, time);
+    }
+
     public void addPosition(double position, double time) {
         //convert to inches
         addToSeries(positionKey, new XYDataItem(time, position));

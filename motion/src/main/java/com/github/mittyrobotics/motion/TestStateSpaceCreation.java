@@ -39,7 +39,7 @@ import com.github.mittyrobotics.visualization.MotorGraph;
 import org.ejml.simple.SimpleMatrix;
 
 public class TestStateSpaceCreation {
-    public static void main(String[] args) {
+    public static void main(String[] args) throws InterruptedException {
         double pulleyRadius = 1.5 * Conversions.IN_TO_M;
         double mass = 20 * Conversions.LBS_TO_KG;
         double gearReduction = 10;
@@ -88,7 +88,7 @@ public class TestStateSpaceCreation {
         elevatorModel.setPosition(previousPos);
         elevatorModel.setVelocity(previousVel);
         for (double t = 0; t < 5; t += dt) {
-            double referencePosition = 1;
+            double referencePosition =1;
             if (t < 1) {
                 referencePosition = 0;
             }
@@ -108,7 +108,9 @@ public class TestStateSpaceCreation {
             graph.addVoltage(voltage.get(0), t);
 //            graph.addError(loop.getError() * 10, t);
             graph.addSetpoint(referencePosition * 10, t);
-            graph.addAcceleration(elevatorModel.getAcceleration(), t);
+//            graph.addAcceleration(elevatorModel.getAcceleration(), t);
+
+            Thread.sleep((long) (dt*1000));
         }
     }
 }
