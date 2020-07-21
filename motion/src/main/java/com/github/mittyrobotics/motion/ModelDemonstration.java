@@ -37,20 +37,17 @@ public class ModelDemonstration {
 
         MotorGraph graph = new MotorGraph();
 
-//        PIDFController controller = new PIDFController(.2, 0, 0);
-//        controller.setSetpoint(10);
+        PIDFController controller = new PIDFController(.08, 0, 0);
+        controller.setSetpoint(10);
 
-        double previousPosition = 0;
         double dt = 0.02;
         for(double t = 0; t < 10; t += dt){
-//            double voltage = controller.calculate(previousPosition, dt) * 12;
-            double voltage = 5;
+            double voltage = controller.calculate(model.getPosition(), dt) * 12;
+//            double voltage = 5;
 
             model.updateModel(voltage, dt);
 
             graph.addMotorValues(model.getPosition(), model.getVelocity(), model.getAcceleration(), voltage, t);
-
-            previousPosition = model.getPosition();
 
             Thread.sleep((long) (dt * 1000));
         }
