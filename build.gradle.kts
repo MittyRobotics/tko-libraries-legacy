@@ -29,7 +29,6 @@ plugins {
     id("edu.wpi.first.GradleRIO") version "2020.3.2"
     id("maven")
     id("cpp")
-    id("application")
     id("edu.wpi.first.GradleVsCode") version "0.8.0"
     id("edu.wpi.first.GradleJni") version "0.4.1"
     id("org.openjfx.javafxplugin") version "0.0.8"
