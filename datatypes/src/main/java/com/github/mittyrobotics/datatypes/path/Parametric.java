@@ -28,9 +28,6 @@ import com.github.mittyrobotics.datatypes.positioning.Position;
 import com.github.mittyrobotics.datatypes.positioning.Rotation;
 import com.github.mittyrobotics.datatypes.positioning.Transform;
 import edu.wpi.first.wpiutil.math.MathUtil;
-import org.apache.commons.math3.analysis.integration.IterativeLegendreGaussIntegrator;
-import org.apache.commons.math3.analysis.integration.LegendreGaussIntegrator;
-import org.apache.commons.math3.util.MathUtils;
 
 public abstract class Parametric {
     /**
@@ -108,7 +105,19 @@ public abstract class Parametric {
      *
      * @return the estimated length of the parametric.
      */
-    public double getGaussianQuadratureLength(double startT, double endT) {
+    public double getGaussianQuadratureLength() {
+        return getGaussianQuadratureLength(1);
+    }
+
+    /**
+     * Computes the estimated length of the parametric using 5-point Gaussian quadrature.
+     * <p>
+     * https://en.wikipedia.org/wiki/Gaussian_quadrature
+     *
+     * @param endParam the ending parameter of the parametric.
+     * @return the estimated length of the parametric.
+     */
+    public double getGaussianQuadratureLength(double endParam) {
         //5-point Gaussian quadrature coefficients
         double[][] coefficients = {
                 {0.0, 0.5688889},
@@ -117,11 +126,52 @@ public abstract class Parametric {
                 {-0.90617985, 0.23692688},
                 {0.90617985, 0.23692688}
         };
+
+        double halfParam = endParam / 2.0;
+
         double length = 0;
         for (int i = 0; i < coefficients.length; i++) {
-            double t = (1.0 + coefficients[i][0]) / 2;
-            length += getFirstDerivative(t).distance(new Position()) * coefficients[i][1];
+            double alpha = halfParam * (1.0 + coefficients[i][0]);
+            length += getFirstDerivative(alpha).magnitude() * coefficients[i][1];
         }
-        return length / 2;
+
+        return length * halfParam;
+    }
+
+    /**
+     * Returns the parameter of the parametric at the length along the spline.
+     * <p>
+     * https://en.wikipedia.org/wiki/Newton%27s_method
+     *
+     * @param length length along the spline to get the parameter.
+     * @return the parameter of the parametric at the length along the spline.
+     */
+    public double getParameterFromLength(double length) {
+        return getParameterFromLength(length, getGaussianQuadratureLength());
+    }
+
+    /**
+     * Returns the parameter of the parametric at the length along the spline.
+     * <p>
+     * https://en.wikipedia.org/wiki/Newton%27s_method
+     *
+     * @param length       length along the spline to get the parameter.
+     * @param splineLength total length of the spline.
+     * @return the parameter of the parametric at the length along the spline.
+     */
+    public double getParameterFromLength(double length, double splineLength) {
+        //Initial guess for the t value
+        double t = length / splineLength;
+
+        //Newton-Raphson iterations to make more accurate estimation
+        for (int i = 0; i < 2; i++) {
+            double tangentMagnitude = getFirstDerivative(t).magnitude();
+            if (tangentMagnitude > 0.0) {
+                t -= (getGaussianQuadratureLength(t) - length) / tangentMagnitude;
+                t = MathUtil.clamp(t, 0, 1);
+            }
+        }
+
+        return MathUtil.clamp(t, 0, 1);
     }
 }

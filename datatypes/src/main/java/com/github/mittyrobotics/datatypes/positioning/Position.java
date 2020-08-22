@@ -35,6 +35,10 @@ public class Position {
     private double x;
     private double y;
 
+    public static Position zero(){
+        return new Position();
+    }
+
     public Position() {
         this(0, 0);
     }
@@ -52,6 +56,17 @@ public class Position {
      */
     public double distance(Position other) {
         return Math.sqrt(Math.pow(other.x - x, 2) + Math.pow(other.y - y, 2));
+    }
+
+    /**
+     * Calculates the magnitude of this {@link Position} represented as a vector.
+     *
+     * In otherwords, this is the distance from this {@link Position} to (0,0).
+     *
+     * @return the magnitude of this {@link Position} represented as a vector.
+     */
+    public double magnitude() {
+        return Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2));
     }
 
     /**

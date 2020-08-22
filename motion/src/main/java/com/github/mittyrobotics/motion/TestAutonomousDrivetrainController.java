@@ -59,11 +59,11 @@ public class TestAutonomousDrivetrainController {
                         maxAngularVelocity, trackWidth);
 
         TransformWithVelocityAndCurvature
-                splineP1 = new TransformWithVelocityAndCurvature(new Transform(0, 0, 0), 0, -1.0/50);
+                splineP1 = new TransformWithVelocityAndCurvature(new Transform(0, 0, 0), 0, -1/50.0);
         TransformWithVelocityAndCurvature splineP2 =
                 new TransformWithVelocityAndCurvature(new Transform(100, 50,  0), 0, 0);
         TransformWithVelocityAndCurvature splineP3 =
-                new TransformWithVelocityAndCurvature(new Transform(100, 50,  0), 1, 0);
+                new TransformWithVelocityAndCurvature(new Transform(100, 50,  0), 0, 0);
         TransformWithVelocityAndCurvature splineP5 =
                 new TransformWithVelocityAndCurvature(new Transform(200, 50,  0), 0, 0);
 
@@ -75,7 +75,7 @@ public class TestAutonomousDrivetrainController {
         Graph trajectoryGraph = new Graph();
 
 
-        double[] parameterization = TrajectoryGenerator.getInstance().parameterizePath(path,1, 1);
+        double[] parameterization = TrajectoryGenerator.getInstance().parameterizePath(path,.01, 1);
 
         int samples = parameterization.length;
 

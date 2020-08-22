@@ -39,14 +39,16 @@ public class Main {
 
         graph.getChart().removeLegend();
 
-        TransformWithVelocityAndCurvature p1 = new TransformWithVelocityAndCurvature(new Transform(0, 0, 0), 0, 0);
+        TransformWithVelocityAndCurvature p1 = new TransformWithVelocityAndCurvature(new Transform(0, 0, 0), 1, 0);
         TransformWithVelocityAndCurvature p2 = new TransformWithVelocityAndCurvature(new Transform(100, 50, 0), 0, 0);
 
         QuinticHermiteSpline spline = new QuinticHermiteSpline(p1, p2);
         graph.addSeries(GraphUtil.populateSeries(XYSeriesWithRenderer.withLines("Series"), GraphUtil.parametric(spline,
                 0.01, 2)));
 
-        System.out.println(spline.getGaussianQuadratureLength(.5, .6));
-        System.out.println(spline.getRawLength(1000, .5, .6));
+        System.out.println(spline.getGaussianQuadratureLength());
+        System.out.println(spline.getRawLength(1000, 0, 1));
+        System.out.println(spline.getParameterFromLength(100, spline.getGaussianQuadratureLength()));
+        System.out.println(spline.getRawLength(1000, 0, spline.getParameterFromLength(50, spline.getGaussianQuadratureLength())));
     }
 }
