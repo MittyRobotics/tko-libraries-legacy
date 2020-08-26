@@ -1,4 +1,0 @@
-/usr/bin/cmake -DCMAKE_BUILD_TYPE=Debug -G "CodeBlocks - Unix Makefiles" /mnt/d/GitHub/tko-libraries/cpp-util
--- Configuring done
--- Generating done
--- Build files have been written to: /mnt/d/GitHub/tko-libraries/cpp-util/cmake-build-debug

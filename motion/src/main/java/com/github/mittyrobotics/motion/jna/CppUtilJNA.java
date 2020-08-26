@@ -38,8 +38,8 @@ import java.io.File;
  * Then build the CMakeLists.txt. This will generate a .dll or .so file for your machine that the JNA can access.
  */
 public interface CppUtilJNA extends com.sun.jna.win32.StdCallLibrary {
-    public static File libFile = new File("cpp-util\\library-builds\\" + System.mapLibraryName("libtko-libraries-cpp" +
-            "-util"));
+    public static File libFile = new File("cpp-util\\library-builds\\" + System.mapLibraryName("libtko-libraries-cpp-util"));
+
     CppUtilJNA INSTANCE = (CppUtilJNA) Native.load(libFile.getAbsolutePath(),
             CppUtilJNA.class);
 

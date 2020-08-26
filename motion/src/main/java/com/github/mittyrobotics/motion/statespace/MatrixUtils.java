@@ -33,6 +33,8 @@ import org.ejml.simple.SimpleMatrix;
 import org.jblas.DoubleMatrix;
 import org.jblas.MatrixFunctions;
 
+import java.io.File;
+
 public class MatrixUtils {
     public static SimpleMatrix expm(SimpleMatrix input) {
         DoubleMatrix mat;
@@ -133,10 +135,11 @@ public class MatrixUtils {
 
     public static SimpleMatrix discreteAlgebraicRiccatiEquation(SimpleMatrix A, SimpleMatrix B, SimpleMatrix Q,
                                                                 SimpleMatrix R) {
-        System.load(CppUtilJNA.libFile.getAbsolutePath());
+
         int states = A.numCols();
         int inputs = B.numCols();
-
+        File libFile = new File("cpp-util\\library-builds\\" + System.mapLibraryName("libtko-libraries-cpp-util"));
+        System.load(libFile.getAbsolutePath());
         CppUtilJNA lib = CppUtilJNA.INSTANCE;
 
         final PointerByReference refPtr = new PointerByReference();

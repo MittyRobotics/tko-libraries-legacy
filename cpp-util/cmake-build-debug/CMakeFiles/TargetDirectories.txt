@@ -1,3 +1,0 @@
-/mnt/d/GitHub/tko-libraries/cpp-util/cmake-build-debug/CMakeFiles/rebuild_cache.dir
-/mnt/d/GitHub/tko-libraries/cpp-util/cmake-build-debug/CMakeFiles/edit_cache.dir
-/mnt/d/GitHub/tko-libraries/cpp-util/cmake-build-debug/CMakeFiles/tko-libraries-cpp-util.dir
