@@ -1,97 +1,55 @@
-The system is: Windows - 10.0.18363 - AMD64
+The system is: Linux - 4.4.0-18362-Microsoft - x86_64
 Compiling the C compiler identification source file "CMakeCCompilerId.c" succeeded.
-Compiler: D:/Microsoft Visual Studio/VC/Tools/MSVC/14.25.28610/bin/Hostx64/x64/cl.exe 
+Compiler: /usr/bin/cc 
 Build flags: 
 Id flags:  
 
 The output was:
 0
-Microsoft (R) C/C++ Optimizing Compiler Version 19.25.28612 for x64
-Copyright (C) Microsoft Corporation.  All rights reserved.
-
-CMakeCCompilerId.c
-Microsoft (R) Incremental Linker Version 14.25.28612.0
-Copyright (C) Microsoft Corporation.  All rights reserved.
-
-/out:CMakeCCompilerId.exe 
-CMakeCCompilerId.obj 
 
 
-Compilation of the C compiler identification source "CMakeCCompilerId.c" produced "CMakeCCompilerId.exe"
+Compilation of the C compiler identification source "CMakeCCompilerId.c" produced "a.out"
 
-Compilation of the C compiler identification source "CMakeCCompilerId.c" produced "CMakeCCompilerId.obj"
-
-The C compiler identification is MSVC, found in "D:/GitHub/tko-libraries/cpp-util/cmake-build-debug/CMakeFiles/3.15.3/CompilerIdC/CMakeCCompilerId.exe"
+The C compiler identification is GNU, found in "/mnt/d/GitHub/tko-libraries/cpp-util/cmake-build-debug/CMakeFiles/3.16.3/CompilerIdC/a.out"
 
 Compiling the CXX compiler identification source file "CMakeCXXCompilerId.cpp" succeeded.
-Compiler: D:/Microsoft Visual Studio/VC/Tools/MSVC/14.25.28610/bin/Hostx64/x64/cl.exe 
+Compiler: /usr/bin/c++ 
 Build flags: 
 Id flags:  
 
 The output was:
 0
-Microsoft (R) C/C++ Optimizing Compiler Version 19.25.28612 for x64
-Copyright (C) Microsoft Corporation.  All rights reserved.
-
-CMakeCXXCompilerId.cpp
-Microsoft (R) Incremental Linker Version 14.25.28612.0
-Copyright (C) Microsoft Corporation.  All rights reserved.
-
-/out:CMakeCXXCompilerId.exe 
-CMakeCXXCompilerId.obj 
 
 
-Compilation of the CXX compiler identification source "CMakeCXXCompilerId.cpp" produced "CMakeCXXCompilerId.exe"
+Compilation of the CXX compiler identification source "CMakeCXXCompilerId.cpp" produced "a.out"
 
-Compilation of the CXX compiler identification source "CMakeCXXCompilerId.cpp" produced "CMakeCXXCompilerId.obj"
-
-The CXX compiler identification is MSVC, found in "D:/GitHub/tko-libraries/cpp-util/cmake-build-debug/CMakeFiles/3.15.3/CompilerIdCXX/CMakeCXXCompilerId.exe"
+The CXX compiler identification is GNU, found in "/mnt/d/GitHub/tko-libraries/cpp-util/cmake-build-debug/CMakeFiles/3.16.3/CompilerIdCXX/a.out"
 
 Determining if the C compiler works passed with the following output:
-Change Dir: D:/GitHub/tko-libraries/cpp-util/cmake-build-debug/CMakeFiles/CMakeTmp
+Change Dir: /mnt/d/GitHub/tko-libraries/cpp-util/cmake-build-debug/CMakeFiles/CMakeTmp
 
-Run Build Command(s):nmake /nologo cmTC_5b668\fast && 	"D:\Microsoft Visual Studio\VC\Tools\MSVC\14.25.28610\bin\HostX64\x64\nmake.exe" -f CMakeFiles\cmTC_5b668.dir\build.make /nologo -L                  CMakeFiles\cmTC_5b668.dir\build
-Building C object CMakeFiles/cmTC_5b668.dir/testCCompiler.c.obj
-	"D:\Microsoft Visual Studio\VC\Tools\MSVC\14.25.28610\bin\Hostx64\x64\cl.exe" @C:\Users\owenl\AppData\Local\Temp\nm7FFF.tmp
-testCCompiler.c
-Linking C executable cmTC_5b668.exe
-	"D:\CLion 2019.3.5\bin\cmake\win\bin\cmake.exe" -E vs_link_exe --intdir=CMakeFiles\cmTC_5b668.dir --rc="D:\Windows Kits\10\bin\10.0.18362.0\x64\rc.exe" --mt="D:\Windows Kits\10\bin\10.0.18362.0\x64\mt.exe" --manifests  -- "D:\Microsoft Visual Studio\VC\Tools\MSVC\14.25.28610\bin\Hostx64\x64\link.exe" /nologo @CMakeFiles\cmTC_5b668.dir\objects1.rsp @C:\Users\owenl\AppData\Local\Temp\nm809D.tmp
-
-
-
-Detecting C compiler ABI info compiled with the following output:
-Change Dir: D:/GitHub/tko-libraries/cpp-util/cmake-build-debug/CMakeFiles/CMakeTmp
-
-Run Build Command(s):nmake /nologo cmTC_84a25\fast && 	"D:\Microsoft Visual Studio\VC\Tools\MSVC\14.25.28610\bin\HostX64\x64\nmake.exe" -f CMakeFiles\cmTC_84a25.dir\build.make /nologo -L                  CMakeFiles\cmTC_84a25.dir\build
-Building C object CMakeFiles/cmTC_84a25.dir/CMakeCCompilerABI.c.obj
-	"D:\Microsoft Visual Studio\VC\Tools\MSVC\14.25.28610\bin\Hostx64\x64\cl.exe" @C:\Users\owenl\AppData\Local\Temp\nm8704.tmp
-CMakeCCompilerABI.c
-Linking C executable cmTC_84a25.exe
-	"D:\CLion 2019.3.5\bin\cmake\win\bin\cmake.exe" -E vs_link_exe --intdir=CMakeFiles\cmTC_84a25.dir --rc="D:\Windows Kits\10\bin\10.0.18362.0\x64\rc.exe" --mt="D:\Windows Kits\10\bin\10.0.18362.0\x64\mt.exe" --manifests  -- "D:\Microsoft Visual Studio\VC\Tools\MSVC\14.25.28610\bin\Hostx64\x64\link.exe" /nologo @CMakeFiles\cmTC_84a25.dir\objects1.rsp @C:\Users\owenl\AppData\Local\Temp\nm8763.tmp
+Run Build Command(s):/usr/bin/make cmTC_76d04/fast && /usr/bin/make -f CMakeFiles/cmTC_76d04.dir/build.make CMakeFiles/cmTC_76d04.dir/build
+make[1]: Entering directory '/mnt/d/GitHub/tko-libraries/cpp-util/cmake-build-debug/CMakeFiles/CMakeTmp'
+Building C object CMakeFiles/cmTC_76d04.dir/testCCompiler.c.o
+/usr/bin/cc    -o CMakeFiles/cmTC_76d04.dir/testCCompiler.c.o   -c /mnt/d/GitHub/tko-libraries/cpp-util/cmake-build-debug/CMakeFiles/CMakeTmp/testCCompiler.c
+Linking C executable cmTC_76d04
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_76d04.dir/link.txt --verbose=1
+/usr/bin/cc      CMakeFiles/cmTC_76d04.dir/testCCompiler.c.o  -o cmTC_76d04 
+make[1]: Leaving directory '/mnt/d/GitHub/tko-libraries/cpp-util/cmake-build-debug/CMakeFiles/CMakeTmp'
 
 
 
 Determining if the CXX compiler works passed with the following output:
-Change Dir: D:/GitHub/tko-libraries/cpp-util/cmake-build-debug/CMakeFiles/CMakeTmp
+Change Dir: /mnt/d/GitHub/tko-libraries/cpp-util/cmake-build-debug/CMakeFiles/CMakeTmp
 
-Run Build Command(s):nmake /nologo cmTC_73527\fast && 	"D:\Microsoft Visual Studio\VC\Tools\MSVC\14.25.28610\bin\HostX64\x64\nmake.exe" -f CMakeFiles\cmTC_73527.dir\build.make /nologo -L                  CMakeFiles\cmTC_73527.dir\build
-Building CXX object CMakeFiles/cmTC_73527.dir/testCXXCompiler.cxx.obj
-	"D:\Microsoft Visual Studio\VC\Tools\MSVC\14.25.28610\bin\Hostx64\x64\cl.exe" @C:\Users\owenl\AppData\Local\Temp\nm8A8E.tmp
-testCXXCompiler.cxx
-Linking CXX executable cmTC_73527.exe
-	"D:\CLion 2019.3.5\bin\cmake\win\bin\cmake.exe" -E vs_link_exe --intdir=CMakeFiles\cmTC_73527.dir --rc="D:\Windows Kits\10\bin\10.0.18362.0\x64\rc.exe" --mt="D:\Windows Kits\10\bin\10.0.18362.0\x64\mt.exe" --manifests  -- "D:\Microsoft Visual Studio\VC\Tools\MSVC\14.25.28610\bin\Hostx64\x64\link.exe" /nologo @CMakeFiles\cmTC_73527.dir\objects1.rsp @C:\Users\owenl\AppData\Local\Temp\nm8AFD.tmp
-
-
-
-Detecting CXX compiler ABI info compiled with the following output:
-Change Dir: D:/GitHub/tko-libraries/cpp-util/cmake-build-debug/CMakeFiles/CMakeTmp
-
-Run Build Command(s):nmake /nologo cmTC_ddb6a\fast && 	"D:\Microsoft Visual Studio\VC\Tools\MSVC\14.25.28610\bin\HostX64\x64\nmake.exe" -f CMakeFiles\cmTC_ddb6a.dir\build.make /nologo -L                  CMakeFiles\cmTC_ddb6a.dir\build
-Building CXX object CMakeFiles/cmTC_ddb6a.dir/CMakeCXXCompilerABI.cpp.obj
-	"D:\Microsoft Visual Studio\VC\Tools\MSVC\14.25.28610\bin\Hostx64\x64\cl.exe" @C:\Users\owenl\AppData\Local\Temp\nm9099.tmp
-CMakeCXXCompilerABI.cpp
-Linking CXX executable cmTC_ddb6a.exe
-	"D:\CLion 2019.3.5\bin\cmake\win\bin\cmake.exe" -E vs_link_exe --intdir=CMakeFiles\cmTC_ddb6a.dir --rc="D:\Windows Kits\10\bin\10.0.18362.0\x64\rc.exe" --mt="D:\Windows Kits\10\bin\10.0.18362.0\x64\mt.exe" --manifests  -- "D:\Microsoft Visual Studio\VC\Tools\MSVC\14.25.28610\bin\Hostx64\x64\link.exe" /nologo @CMakeFiles\cmTC_ddb6a.dir\objects1.rsp @C:\Users\owenl\AppData\Local\Temp\nm9146.tmp
+Run Build Command(s):/usr/bin/make cmTC_38b05/fast && /usr/bin/make -f CMakeFiles/cmTC_38b05.dir/build.make CMakeFiles/cmTC_38b05.dir/build
+make[1]: Entering directory '/mnt/d/GitHub/tko-libraries/cpp-util/cmake-build-debug/CMakeFiles/CMakeTmp'
+Building CXX object CMakeFiles/cmTC_38b05.dir/testCXXCompiler.cxx.o
+/usr/bin/c++     -o CMakeFiles/cmTC_38b05.dir/testCXXCompiler.cxx.o -c /mnt/d/GitHub/tko-libraries/cpp-util/cmake-build-debug/CMakeFiles/CMakeTmp/testCXXCompiler.cxx
+Linking CXX executable cmTC_38b05
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_38b05.dir/link.txt --verbose=1
+/usr/bin/c++       CMakeFiles/cmTC_38b05.dir/testCXXCompiler.cxx.o  -o cmTC_38b05 
+make[1]: Leaving directory '/mnt/d/GitHub/tko-libraries/cpp-util/cmake-build-debug/CMakeFiles/CMakeTmp'
 
 
 

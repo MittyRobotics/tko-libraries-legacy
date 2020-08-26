@@ -59,9 +59,9 @@ public class TestAutonomousDrivetrainController {
                         maxAngularVelocity, trackWidth);
 
         TransformWithVelocityAndCurvature
-                splineP1 = new TransformWithVelocityAndCurvature(new Transform(0, 0, 0), 0, -1/50.0);
+                splineP1 = new TransformWithVelocityAndCurvature(new Transform(0, 0, 0), 0, 0);
         TransformWithVelocityAndCurvature splineP2 =
-                new TransformWithVelocityAndCurvature(new Transform(100, 50,  0), 0, 0);
+                new TransformWithVelocityAndCurvature(new Transform(100, 50,  90), 0, 0);
         TransformWithVelocityAndCurvature splineP3 =
                 new TransformWithVelocityAndCurvature(new Transform(100, 50,  0), 0, 0);
         TransformWithVelocityAndCurvature splineP5 =

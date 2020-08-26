@@ -1,11 +1,9 @@
 file(REMOVE_RECURSE
-  "CMakeFiles/tko-libraries-cpp-util.dir/drake/common/drake_assert_and_throw.cpp.obj"
-  "CMakeFiles/tko-libraries-cpp-util.dir/drake/math/discrete_algebraic_riccati_equation.cpp.obj"
-  "CMakeFiles/tko-libraries-cpp-util.dir/library.cpp.obj"
-  "tko-libraries-cpp-util.dll"
-  "tko-libraries-cpp-util.dll.manifest"
-  "tko-libraries-cpp-util.lib"
-  "tko-libraries-cpp-util.pdb"
+  "CMakeFiles/tko-libraries-cpp-util.dir/drake/common/drake_assert_and_throw.cpp.o"
+  "CMakeFiles/tko-libraries-cpp-util.dir/drake/math/discrete_algebraic_riccati_equation.cpp.o"
+  "CMakeFiles/tko-libraries-cpp-util.dir/library.cpp.o"
+  "libtko-libraries-cpp-util.pdb"
+  "libtko-libraries-cpp-util.so"
 )
 
 # Per-language clean rules from dependency scanning.

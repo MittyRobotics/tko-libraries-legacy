@@ -1,4 +1,4 @@
-ToolSet: 16.0 (local)@D:\Microsoft Visual Studio
-Options: msvc.arch=amd64
+ToolSet: Ubuntu 20.04.1 LTS (local)@C:\Users\owenl\AppData\Local\Microsoft\WindowsApps\ubuntu.exe
+Options: 
 
 Options:

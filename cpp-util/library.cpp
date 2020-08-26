@@ -4,8 +4,8 @@
 
 using Eigen::MatrixXd;
 
-extern "C" __declspec(dllexport)
-void discreteAlgebraicRiccatiEquation(double *A, double *B, double *Q, double *R, int states, int inputs, double** ppVals, int* pNumVals)
+//extern "C" __declspec(dllexport)
+extern "C" void discreteAlgebraicRiccatiEquation(double *A, double *B, double *Q, double *R, int states, int inputs, double** ppVals, int* pNumVals)
 {
     Eigen::Map<
     Eigen::Matrix<double, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor>>
@@ -35,8 +35,8 @@ void discreteAlgebraicRiccatiEquation(double *A, double *B, double *Q, double *R
 }
 
 
-extern "C" __declspec(dllexport)
-void cleanup(double* pVals)
+//extern "C" __declspec(dllexport)
+extern "C" void cleanup(double* pVals)
 {
     free(pVals);
 }
