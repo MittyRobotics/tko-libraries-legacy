@@ -24,16 +24,12 @@
 
 package com.github.mittyrobotics.motion;
 
-import com.github.mittyrobotics.datatypes.motion.MotionState;
 import com.github.mittyrobotics.datatypes.units.Conversions;
 import com.github.mittyrobotics.motion.controllers.StateSpaceController;
-import com.github.mittyrobotics.motion.profiles.OverrideMethod;
-import com.github.mittyrobotics.motion.profiles.SCurveMotionProfile;
 import com.github.mittyrobotics.motion.statespace.KalmanFilter;
 import com.github.mittyrobotics.motion.statespace.LinearQuadraticRegulator;
 import com.github.mittyrobotics.motion.statespace.Plant;
 import com.github.mittyrobotics.motion.statespace.models.FlywheelModel;
-import com.github.mittyrobotics.motion.statespace.models.PulleyModel;
 import com.github.mittyrobotics.motion.statespace.motors.Motor;
 import com.github.mittyrobotics.motion.statespace.motors.NEOMotor;
 import com.github.mittyrobotics.visualization.MotorGraph;
@@ -98,7 +94,7 @@ public class TestStateSpaceCreation {
             graph.addSetpoint(referenceVelocity * Conversions.RAD_PER_SECOND_TO_RPM, t);
 //            graph.addAcceleration(elevatorModel.getAcceleration(), t);
 
-            Thread.sleep((long) (dt*1000));
+            Thread.sleep((long) (dt * 1000));
         }
     }
 }

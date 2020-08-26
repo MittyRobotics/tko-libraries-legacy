@@ -24,9 +24,6 @@
 
 package com.github.mittyrobotics.motion.pathfollowing;
 
-import com.github.mittyrobotics.datatypes.geometry.Circle;
-import com.github.mittyrobotics.datatypes.motion.DrivetrainSpeeds;
-import com.github.mittyrobotics.datatypes.positioning.Transform;
 import com.github.mittyrobotics.path.generation.Path;
 
 public class AutonomousDrivetrainController {

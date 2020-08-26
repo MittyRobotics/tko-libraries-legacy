@@ -35,10 +35,6 @@ public class Position {
     private double x;
     private double y;
 
-    public static Position zero(){
-        return new Position();
-    }
-
     public Position() {
         this(0, 0);
     }
@@ -46,6 +42,10 @@ public class Position {
     public Position(double x, double y) {
         this.x = x;
         this.y = y;
+    }
+
+    public static Position zero() {
+        return new Position();
     }
 
     /**
@@ -60,7 +60,7 @@ public class Position {
 
     /**
      * Calculates the magnitude of this {@link Position} represented as a vector.
-     *
+     * <p>
      * In otherwords, this is the distance from this {@link Position} to (0,0).
      *
      * @return the magnitude of this {@link Position} represented as a vector.

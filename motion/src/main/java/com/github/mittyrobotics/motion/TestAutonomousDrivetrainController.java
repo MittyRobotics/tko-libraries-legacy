@@ -26,7 +26,6 @@ package com.github.mittyrobotics.motion;
 
 import com.github.mittyrobotics.datatypes.motion.DifferentialDriveKinematics;
 import com.github.mittyrobotics.datatypes.motion.DrivetrainSpeeds;
-import com.github.mittyrobotics.datatypes.path.Parametric;
 import com.github.mittyrobotics.datatypes.path.Trajectory;
 import com.github.mittyrobotics.datatypes.positioning.Rotation;
 import com.github.mittyrobotics.datatypes.positioning.Transform;
@@ -37,7 +36,6 @@ import com.github.mittyrobotics.motion.pathfollowing.AutonomousDrivetrainControl
 import com.github.mittyrobotics.path.generation.Path;
 import com.github.mittyrobotics.path.generation.PathGenerator;
 import com.github.mittyrobotics.path.generation.TrajectoryGenerator;
-import com.github.mittyrobotics.path.generation.splines.QuinticHermiteSpline;
 import com.github.mittyrobotics.visualization.Graph;
 import com.github.mittyrobotics.visualization.GraphUtil;
 import com.github.mittyrobotics.visualization.RobotGraph;
@@ -61,13 +59,14 @@ public class TestAutonomousDrivetrainController {
         TransformWithVelocityAndCurvature
                 splineP1 = new TransformWithVelocityAndCurvature(new Transform(0, 0, 0), 0, 0);
         TransformWithVelocityAndCurvature splineP2 =
-                new TransformWithVelocityAndCurvature(new Transform(100, 50,  90), 0, 0);
+                new TransformWithVelocityAndCurvature(new Transform(100, 50, 90), 0, 0);
         TransformWithVelocityAndCurvature splineP3 =
-                new TransformWithVelocityAndCurvature(new Transform(100, 50,  0), 0, 0);
+                new TransformWithVelocityAndCurvature(new Transform(100, 50, 0), 0, 0);
         TransformWithVelocityAndCurvature splineP5 =
-                new TransformWithVelocityAndCurvature(new Transform(200, 50,  0), 0, 0);
+                new TransformWithVelocityAndCurvature(new Transform(200, 50, 0), 0, 0);
 
-        Path path = new Path(PathGenerator.getInstance().generateQuinticHermiteSplinePath(new TransformWithVelocityAndCurvature[]{splineP1, splineP2}));
+        Path path = new Path(PathGenerator.getInstance()
+                .generateQuinticHermiteSplinePath(new TransformWithVelocityAndCurvature[]{splineP1, splineP2}));
 
         Graph graph = new Graph();
         graph.scaleGraphToScale(.15, 50, 25);
@@ -75,7 +74,7 @@ public class TestAutonomousDrivetrainController {
         Graph trajectoryGraph = new Graph();
 
 
-        double[] parameterization = TrajectoryGenerator.getInstance().parameterizePath(path,.01, 1);
+        double[] parameterization = TrajectoryGenerator.getInstance().parameterizePath(path, .01, 1);
 
         int samples = parameterization.length;
 
@@ -86,7 +85,7 @@ public class TestAutonomousDrivetrainController {
         RobotGraph robotGraph = new RobotGraph();
 
 
-        double dt = 1.0/samples;
+        double dt = 1.0 / samples;
         Transform previousTransform = splineP1;
         for (double t = 0; t < 1; t += dt) {
             DrivetrainSpeeds speeds = DifferentialDriveKinematics
@@ -118,12 +117,12 @@ public class TestAutonomousDrivetrainController {
         dt = 0.001;
         Transform desiredTransform = splineP1;
         for (double t = 0; t < 100; t += dt) {
-            if (t >= trajectory.getTime()[step] && step < samples-1) {
+            if (t >= trajectory.getTime()[step] && step < samples - 1) {
                 step++;
                 linearVelocity = trajectory.getLinearVelocity()[step];
                 angularVelocity = trajectory.getAngularVelocity()[step];
-                desiredTransform = path.getTransform((double)step / (double)samples);
-            } else if (step >= samples-1) {
+                desiredTransform = path.getTransform((double) step / (double) samples);
+            } else if (step >= samples - 1) {
                 linearVelocity = 0;
                 angularVelocity = 0;
                 desiredTransform = path.getTransform(1);

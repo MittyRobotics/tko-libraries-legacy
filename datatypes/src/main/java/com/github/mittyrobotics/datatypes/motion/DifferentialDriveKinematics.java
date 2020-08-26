@@ -127,16 +127,17 @@ public class DifferentialDriveKinematics {
         }
     }
 
-    public static DrivetrainSpeeds calculateMaxStateFromCurvature(double curvature, double maxVelocity, double maxAngularVelocity, double trackWidth) {
+    public static DrivetrainSpeeds calculateMaxStateFromCurvature(double curvature, double maxVelocity,
+                                                                  double maxAngularVelocity, double trackWidth) {
         if (Double.isInfinite(curvature) || Double.isNaN(curvature)) {
             return DrivetrainSpeeds.fromLinearAndAngular(maxVelocity, 0, trackWidth);
         }
         DrivetrainSpeeds theoreticalAngularSpeeds =
-                DrivetrainSpeeds.fromLinearAndRadius(maxVelocity, 1/curvature, trackWidth);
+                DrivetrainSpeeds.fromLinearAndRadius(maxVelocity, 1 / curvature, trackWidth);
         if (theoreticalAngularSpeeds.getAngular() < maxAngularVelocity) {
             return theoreticalAngularSpeeds;
         } else {
-            return DrivetrainSpeeds.fromAngularAndRadius(maxAngularVelocity, 1/curvature, trackWidth);
+            return DrivetrainSpeeds.fromAngularAndRadius(maxAngularVelocity, 1 / curvature, trackWidth);
         }
     }
 }

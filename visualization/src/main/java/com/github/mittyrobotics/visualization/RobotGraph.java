@@ -26,7 +26,6 @@ package com.github.mittyrobotics.visualization;
 
 import com.github.mittyrobotics.datatypes.motion.SwerveDriveState;
 import com.github.mittyrobotics.datatypes.positioning.Transform;
-import org.jfree.data.xy.XYSeries;
 
 import javax.swing.*;
 

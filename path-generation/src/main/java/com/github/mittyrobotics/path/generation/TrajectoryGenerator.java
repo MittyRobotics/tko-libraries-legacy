@@ -150,7 +150,6 @@ public class TrajectoryGenerator {
 //        }
 
 
-
         //Compute time values
         for (int i = 0; i < arrayLength; i++) {
             double t = parameterization[i];
@@ -167,8 +166,8 @@ public class TrajectoryGenerator {
             lastAngular = angularVelocities[Math.max(i - 1, 0)];
             double lastTime = times[Math.max(i - 1, 0)];
 
-            double linearTime = (2*length)/(lastLinear+linear);
-            double angularTime =(2*Math.abs(angle))/(Math.abs(lastAngular)+Math.abs(angular));
+            double linearTime = (2 * length) / (lastLinear + linear);
+            double angularTime = (2 * Math.abs(angle)) / (Math.abs(lastAngular) + Math.abs(angular));
 
             double time = Math.max(0, angularTime);
             time = (Double.isNaN(time) || Double.isInfinite(time)) ? 0 : time;

@@ -25,15 +25,14 @@
 package com.github.mittyrobotics.motion;
 
 import com.github.mittyrobotics.datatypes.units.Conversions;
-import com.github.mittyrobotics.motion.controllers.PIDFController;
 import com.github.mittyrobotics.motion.statespace.models.PulleyModel;
-import com.github.mittyrobotics.motion.statespace.motors.Falcon500Motor;
 import com.github.mittyrobotics.motion.statespace.motors.Pro775Motor;
 import com.github.mittyrobotics.visualization.MotorGraph;
 
 public class ModelDemonstration {
     public static void main(String[] args) throws InterruptedException {
-        PulleyModel model = new PulleyModel(new Pro775Motor(2), 10 * Conversions.LBS_TO_KG, 7, 2 * Conversions.IN_TO_M, 12);
+        PulleyModel model =
+                new PulleyModel(new Pro775Motor(2), 10 * Conversions.LBS_TO_KG, 7, 2 * Conversions.IN_TO_M, 12);
 
         MotorGraph graph = new MotorGraph();
 
@@ -41,7 +40,7 @@ public class ModelDemonstration {
 //        controller.setSetpoint(10);
 
         double dt = 0.02;
-        for(double t = 0; t < 10; t += dt){
+        for (double t = 0; t < 10; t += dt) {
 //            double voltage = controller.calculate(model.getPosition(), dt) * 12;
             double voltage = 5;
 

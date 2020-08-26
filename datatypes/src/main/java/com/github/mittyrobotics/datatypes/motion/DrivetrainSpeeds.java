@@ -54,7 +54,7 @@ public class DrivetrainSpeeds {
     }
 
     public static DrivetrainSpeeds fromAngularAndRadius(double angular, double radius,
-                                                       double trackWidth) {
+                                                        double trackWidth) {
         DrivetrainWheelSpeeds drivetrainWheelVelocities =
                 DifferentialDriveKinematics.calculateFromAngularAndRadius(angular, radius, trackWidth);
         return fromWheelSpeeds(drivetrainWheelVelocities, trackWidth);

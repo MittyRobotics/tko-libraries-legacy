@@ -46,7 +46,8 @@ public class RamseteController {
      * @param reversed
      * @return
      */
-    public static DrivetrainSpeeds calculate(Transform robotTransform, Transform desiredTransform, double linearVelocity,
+    public static DrivetrainSpeeds calculate(Transform robotTransform, Transform desiredTransform,
+                                             double linearVelocity,
                                              double angularVelocity, double aggressiveGain, double dampingGain,
                                              double trackWidth, boolean reversed) {
         //Get the transform error in meters.

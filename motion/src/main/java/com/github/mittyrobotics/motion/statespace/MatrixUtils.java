@@ -33,8 +33,6 @@ import org.ejml.simple.SimpleMatrix;
 import org.jblas.DoubleMatrix;
 import org.jblas.MatrixFunctions;
 
-import java.io.File;
-
 public class MatrixUtils {
     public static SimpleMatrix expm(SimpleMatrix input) {
         DoubleMatrix mat;

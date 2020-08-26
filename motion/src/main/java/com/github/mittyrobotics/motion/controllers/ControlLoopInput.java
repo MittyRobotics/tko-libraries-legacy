@@ -26,16 +26,14 @@ package com.github.mittyrobotics.motion.controllers;
 
 import org.ejml.simple.SimpleMatrix;
 
-import javax.sound.sampled.Control;
-
 public class ControlLoopInput {
     private SimpleMatrix values;
 
-    public ControlLoopInput(){
+    public ControlLoopInput() {
 
     }
 
-    public ControlLoopInput(double... values){
+    public ControlLoopInput(double... values) {
         this.values = new SimpleMatrix(values.length, 1, true, values);
     }
 
@@ -43,20 +41,20 @@ public class ControlLoopInput {
         return values;
     }
 
-    public double getValue(int index) {
-        return getValues().get(index);
-    }
-
     public void setValues(SimpleMatrix values) {
         this.values = values;
     }
 
-    public static class VoltageOutput extends ControlLoopInput{
-        public VoltageOutput(double voltage){
+    public double getValue(int index) {
+        return getValues().get(index);
+    }
+
+    public static class VoltageOutput extends ControlLoopInput {
+        public VoltageOutput(double voltage) {
             super(voltage);
         }
 
-        public double getVoltage(){
+        public double getVoltage() {
             return getValue(0);
         }
     }

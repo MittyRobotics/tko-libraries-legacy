@@ -28,15 +28,16 @@ import com.github.mittyrobotics.datatypes.positioning.Transform;
 import com.github.mittyrobotics.visualization.Graph;
 import com.github.mittyrobotics.visualization.GraphUtil;
 import com.github.mittyrobotics.visualization.XYSeriesWithRenderer;
-import org.jfree.data.xy.XYSeries;
 
 public class TestGraph {
     public static void main(String[] args) {
         Graph graph = new Graph();
         graph.setSize(400, 800);
 
-        graph.addToSeries("Elevator", GraphUtil.populateSeries(new XYSeriesWithRenderer("Elevator"), GraphUtil.rectangle(new Transform(0, 0, 0), 20, 20)));
-        graph.addToSeries("Elevator Bounds", GraphUtil.populateSeries(new XYSeriesWithRenderer("Elevator Bounds"), GraphUtil.rectangle(new Transform(0, 0, 0), 70, 15)));
+        graph.addToSeries("Elevator", GraphUtil.populateSeries(new XYSeriesWithRenderer("Elevator"),
+                GraphUtil.rectangle(new Transform(0, 0, 0), 20, 20)));
+        graph.addToSeries("Elevator Bounds", GraphUtil.populateSeries(new XYSeriesWithRenderer("Elevator Bounds"),
+                GraphUtil.rectangle(new Transform(0, 0, 0), 70, 15)));
         graph.scaleGraphToScale(0.1, 0, 0);
     }
 }

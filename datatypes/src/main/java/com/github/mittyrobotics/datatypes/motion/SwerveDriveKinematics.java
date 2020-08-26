@@ -24,7 +24,6 @@
 
 package com.github.mittyrobotics.datatypes.motion;
 
-import edu.wpi.first.wpilibj.kinematics.SwerveDriveOdometry;
 import org.ejml.simple.SimpleMatrix;
 
 public class SwerveDriveKinematics {

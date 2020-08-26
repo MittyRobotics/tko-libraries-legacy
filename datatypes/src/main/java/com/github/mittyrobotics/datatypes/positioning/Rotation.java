@@ -233,7 +233,7 @@ public class Rotation {
         return rotateBy(Rotation.fromDegrees(degrees));
     }
 
-    public Rotation abs(){
+    public Rotation abs() {
         return Rotation.fromRadians(Math.abs(radians));
     }
 

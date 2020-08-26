@@ -49,6 +49,7 @@ public class Main {
         System.out.println(spline.getGaussianQuadratureLength());
         System.out.println(spline.getRawLength(1000, 0, 1));
         System.out.println(spline.getParameterFromLength(100, spline.getGaussianQuadratureLength()));
-        System.out.println(spline.getRawLength(1000, 0, spline.getParameterFromLength(50, spline.getGaussianQuadratureLength())));
+        System.out.println(
+                spline.getRawLength(1000, 0, spline.getParameterFromLength(50, spline.getGaussianQuadratureLength())));
     }
 }

@@ -179,7 +179,7 @@ public class Graph extends JFrame {
 
     public int getSeriesIndexFromKey(String key) {
         int index = defaultDataset.getSeriesIndex(key);
-        if(index == -1){
+        if (index == -1) {
             addSeries(XYSeriesWithRenderer.withLines(key));
             return defaultDataset.getSeriesIndex(key);
         }
