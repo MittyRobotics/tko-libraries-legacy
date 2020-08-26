@@ -29,4 +29,6 @@ public class Conversions {
     public static double M_TO_IN = 39.37007874015748031496062992126;
     public static double LBS_TO_KG = 0.45359237000000013;
     public static double KG_TO_LBS = 2.204622621848775;
+    public static double RAD_PER_SECOND_TO_RPM = 9.549296596;
+    public static double RPM_TO_RAD_PER_SECOND = 0.104719755;
 }

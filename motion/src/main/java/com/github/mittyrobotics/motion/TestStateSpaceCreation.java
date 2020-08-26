@@ -32,6 +32,7 @@ import com.github.mittyrobotics.motion.profiles.SCurveMotionProfile;
 import com.github.mittyrobotics.motion.statespace.KalmanFilter;
 import com.github.mittyrobotics.motion.statespace.LinearQuadraticRegulator;
 import com.github.mittyrobotics.motion.statespace.Plant;
+import com.github.mittyrobotics.motion.statespace.models.FlywheelModel;
 import com.github.mittyrobotics.motion.statespace.models.PulleyModel;
 import com.github.mittyrobotics.motion.statespace.motors.Motor;
 import com.github.mittyrobotics.motion.statespace.motors.NEOMotor;
@@ -40,32 +41,28 @@ import org.ejml.simple.SimpleMatrix;
 
 public class TestStateSpaceCreation {
     public static void main(String[] args) throws InterruptedException {
-        double pulleyRadius = 1.5 * Conversions.IN_TO_M;
-        double mass = 20 * Conversions.LBS_TO_KG;
-        double gearReduction = 10;
-        double maxVoltage = 12;
+        double momentOfInertia = 0.002634;
+        double gearReduction = 1;
+        double maxVoltage = 3;
         double dt = 0.001;
         Motor motor = new NEOMotor(2);
 
-        double modelPositionAccuracyGain = 0.05; //Model position accuracy
         double modelVelocityAccuracyGain = 1.0; //Model velocity accuracy
         double measurementAccuracyGain = 0.01; //Accuracy of measurement, encoder accuracy
-        double positionTolerance = 0.02;
         double velocityTolerance = 0.4;
         double voltageTolerance = 12;
         //Weights the Q matrix in the LQR for different response according to Bryson's Rule. Lower Q results in a more
         //gradual response, higher Q results in a more aggressive response. Default of 1.
-        double qWeight = 0.01;
+        double qWeight = 0.0000001;
 
-        Plant plant = Plant.createElevatorPlant(motor, mass, pulleyRadius, gearReduction,
-                maxVoltage, dt);
+        Plant plant = Plant.createFlywheelPlant(motor, momentOfInertia, gearReduction, maxVoltage, dt);
 
         KalmanFilter observer = new KalmanFilter(plant,
-                new SimpleMatrix(new double[][]{{modelPositionAccuracyGain, modelVelocityAccuracyGain}}),
+                new SimpleMatrix(new double[][]{{modelVelocityAccuracyGain}}),
                 new SimpleMatrix(new double[][]{{measurementAccuracyGain}}));
 
         LinearQuadraticRegulator controller = new LinearQuadraticRegulator(plant,
-                new SimpleMatrix(new double[][]{{positionTolerance, velocityTolerance}}),
+                new SimpleMatrix(new double[][]{{velocityTolerance}}),
                 new SimpleMatrix(new double[][]{{voltageTolerance}}), qWeight);
 
         StateSpaceController loop = new StateSpaceController(plant, controller, observer);
@@ -73,41 +70,32 @@ public class TestStateSpaceCreation {
         MotorGraph graph = new MotorGraph("State Space Elevator Motion Profile", "Position (x10), Velocity(x10), " +
                 "Voltage", "Time");
 
-        PulleyModel elevatorModel = new PulleyModel(motor, mass, gearReduction, pulleyRadius, 12);
+        FlywheelModel model = new FlywheelModel(motor, momentOfInertia, gearReduction, maxVoltage);
 
-        elevatorModel.setMeasurementNoise(.0);
+        model.setMeasurementNoise(.0);
 
-        double previousPos = 0;
         double previousVel = 0;
 
-        SCurveMotionProfile motionProfile = new SCurveMotionProfile(new MotionState(previousPos, previousVel, 0),
-                new MotionState(previousPos + 1, 0, 0),
-                50, 50, 100, 2, OverrideMethod.END_AFTER_SETPOINT);
-
-        plant.setX(new SimpleMatrix(new double[][]{{previousPos}, {previousVel}}));
-        elevatorModel.setPosition(previousPos);
-        elevatorModel.setVelocity(previousVel);
-        for (double t = 0; t < 5; t += dt) {
-            double referencePosition =1;
+        plant.setX(new SimpleMatrix(new double[][]{{previousVel}}));
+        model.setAngularVelocity(previousVel);
+        for (double t = 0; t < 10; t += dt) {
+            double referenceVelocity = 1000 * Conversions.RPM_TO_RAD_PER_SECOND;
             if (t < 1) {
-                referencePosition = 0;
+                referenceVelocity = 0;
             }
 
-            double referenceVelocity = 0;
 
-            SimpleMatrix voltage = loop.calculate(new SimpleMatrix(new double[][]{{previousPos}}),
-                    new SimpleMatrix(new double[][]{{referencePosition}, {referenceVelocity}}), dt);
+            SimpleMatrix voltage = loop.calculate(new SimpleMatrix(new double[][]{{previousVel}}),
+                    new SimpleMatrix(new double[][]{{referenceVelocity}}), dt);
 
-            elevatorModel.updateModel(voltage.get(0), dt);
+            model.updateModel(voltage.get(0), dt);
 
-            previousPos = elevatorModel.getPosition();
-            previousVel = elevatorModel.getVelocity();
+            previousVel = model.getAngularVelocity();
 
-            graph.addPosition(previousPos * 10, t);
-            graph.addVelocity(previousVel * 10, t);
+            graph.addVelocity(previousVel * Conversions.RAD_PER_SECOND_TO_RPM, t);
             graph.addVoltage(voltage.get(0), t);
 //            graph.addError(loop.getError() * 10, t);
-            graph.addSetpoint(referencePosition * 10, t);
+            graph.addSetpoint(referenceVelocity * Conversions.RAD_PER_SECOND_TO_RPM, t);
 //            graph.addAcceleration(elevatorModel.getAcceleration(), t);
 
             Thread.sleep((long) (dt*1000));
