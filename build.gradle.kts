@@ -24,6 +24,19 @@
 
 import edu.wpi.first.toolchain.NativePlatforms
 
+
+tasks {
+    val sourcesJar by creating(Jar::class) {
+        archiveClassifier.set("sources")
+        from(sourceSets.main.get().allSource)
+    }
+
+    artifacts {
+        archives(sourcesJar)
+        archives(jar)
+    }
+}
+
 plugins {
     id("java")
     id("edu.wpi.first.GradleRIO") version "2020.3.2"
