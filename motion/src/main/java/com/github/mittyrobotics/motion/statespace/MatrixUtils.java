@@ -133,7 +133,7 @@ public class MatrixUtils {
 
     public static SimpleMatrix discreteAlgebraicRiccatiEquation(SimpleMatrix A, SimpleMatrix B, SimpleMatrix Q,
                                                                 SimpleMatrix R) {
-        System.load("D:\\GitHub\\tko-libraries\\cpp-util\\library-builds\\libtko-libraries-cpp-util.so");
+        System.loadLibrary("cpp-util/library-builds/libtko-libraries-cpp-util");
         int states = A.numCols();
         int inputs = B.numCols();
 
