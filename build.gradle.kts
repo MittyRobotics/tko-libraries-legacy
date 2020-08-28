@@ -39,17 +39,21 @@ tasks {
 
 plugins {
     id("java")
-    id("edu.wpi.first.GradleRIO") version "2020.3.2"
-    id("maven")
     id("cpp")
-    id("edu.wpi.first.GradleVsCode") version "0.8.0"
-    id("edu.wpi.first.GradleJni") version "0.4.1"
+    id("edu.wpi.first.wpilib.repositories.WPILibRepositoriesPlugin") version "2020.2"
+    id("edu.wpi.first.NativeUtils") version "2020.7.4"
+    id("edu.wpi.first.GradleJni") version "0.11.0"
+    id("edu.wpi.first.GradleVsCode") version "0.12.0"
+    id("edu.wpi.first.GradleRIO") version "2020.3.2"
     id("org.openjfx.javafxplugin") version "0.0.8"
-    `maven-publish`
+    id("maven")
+    id("maven-publish")
 }
 
 group = "com.github.MittyRobotics"
 version = "0.1.0"
+
+apply(from = "jni.gradle")
 
 allprojects {
     apply(plugin = "java")
@@ -84,6 +88,8 @@ allprojects {
         wpi.deps.vendor.java().forEach { compile(it) }
         wpi.deps.vendor.jni(NativePlatforms.roborio).forEach { nativeZip(it) }
         wpi.deps.vendor.jni(NativePlatforms.desktop).forEach { nativeDesktopZip(it) }
+
+
 
         compile(group = "com.ctre.phoenix", name = "wpiapi-java", version = "5.18.3")
         compile(group = "com.ctre.phoenix", name = "api-java", version = "5.18.3")

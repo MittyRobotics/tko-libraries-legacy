@@ -23,7 +23,7 @@ cmake-build-windows-x64-build
 # MacOSX
 .DS_Store
 tko-libraries.iml
-cpp-util/cmake-build-debug/tko-libraries-cpp-util.pdb
-cpp-util/cmake-build-debug/tko-libraries-cpp-util.ilk
-cpp-util/cmake-build-debug/tko-libraries-cpp-util.ilk
-cpp-util/cmake-build-debug/tko-libraries-cpp-util.exp
+cpp-util-old/cmake-build-debug/tko-libraries-cpp-util.pdb
+cpp-util-old/cmake-build-debug/tko-libraries-cpp-util.ilk
+cpp-util-old/cmake-build-debug/tko-libraries-cpp-util.ilk
+cpp-util-old/cmake-build-debug/tko-libraries-cpp-util.exp
