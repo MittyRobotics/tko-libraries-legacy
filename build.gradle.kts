@@ -24,19 +24,6 @@
 
 import edu.wpi.first.toolchain.NativePlatforms
 
-
-tasks {
-    val sourcesJar by creating(Jar::class) {
-        archiveClassifier.set("sources")
-        from(sourceSets.main.get().allSource)
-    }
-
-    artifacts {
-        archives(sourcesJar)
-        archives(jar)
-    }
-}
-
 plugins {
     id("java")
     id("cpp")
@@ -57,8 +44,8 @@ apply(from = "jni.gradle")
 
 allprojects {
     apply(plugin = "java")
-    apply(plugin = "edu.wpi.first.GradleRIO")
     apply(plugin = "maven")
+    apply(plugin = "edu.wpi.first.GradleRIO")
     apply(plugin = "org.openjfx.javafxplugin")
 
     java {
@@ -102,7 +89,6 @@ allprojects {
         compile(group = "org.la4j", name = "la4j", version = "0.6.0")
         compile(group = "net.java.dev.jna", name = "jna", version = "5.5.0")
         compile(group = "org.apache.commons", name = "commons-math3", version = "3.6.1")
-
     }
 }
 

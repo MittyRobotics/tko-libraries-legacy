@@ -33,12 +33,11 @@ group = "com.github.MittyRobotics"
 version = "0.1.0"
 
 repositories {
+    flatDir {
+        dirs("libs")
+    }
     jcenter()
     mavenLocal()
-}
-javafx {
-    version = "14"
-    modules("javafx.controls")
 }
 
 dependencies {
@@ -46,6 +45,7 @@ dependencies {
     compile(project(":visualization"))
     compile(project(":data-collection"))
     compile(project(":path-generation"))
+    compile(project(":cpp-util-module"))
 }
 
 publishing {

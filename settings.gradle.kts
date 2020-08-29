@@ -24,7 +24,6 @@
 
 rootProject.name = "tko-libraries"
 include("motion")
-include("path-following")
 include("path-generation")
 include("simulation")
 include("visualization")
@@ -32,3 +31,4 @@ include("datatypes")
 include("controls")
 include("vision")
 include("data-collection")
+include("cpp-util-module")
