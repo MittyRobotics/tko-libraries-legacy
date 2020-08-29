@@ -91,9 +91,9 @@ allprojects {
         compile(group = "org.apache.commons", name = "commons-math3", version = "3.6.1")
     }
 }
-//
-//publishing {
-//    repositories {
-//        mavenLocal()
-//    }
-//}
+
+publishing {
+    repositories {
+        mavenLocal()
+    }
+}
