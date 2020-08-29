@@ -59,9 +59,9 @@ allprojects {
     }
 
     repositories {
+        maven(url = "https://jitpack.io")
         mavenLocal()
         jcenter()
-        maven(url = "https://jitpack.io")
         maven(url = "http://www.revrobotics.com/content/sw/max/sdk/maven/")
         maven(url = "http://devsite.ctr-electronics.com/maven/release/")
     }
@@ -91,9 +91,9 @@ allprojects {
         compile(group = "org.apache.commons", name = "commons-math3", version = "3.6.1")
     }
 }
-
-publishing {
-    repositories {
-        mavenLocal()
-    }
-}
+//
+//publishing {
+//    repositories {
+//        mavenLocal()
+//    }
+//}
