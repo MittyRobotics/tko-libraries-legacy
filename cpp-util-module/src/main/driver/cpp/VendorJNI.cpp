@@ -18,6 +18,7 @@ JNIEXPORT jint JNICALL JNI_OnLoad(JavaVM* vm, void* reserved) {
 JNIEXPORT void JNICALL JNI_OnUnload(JavaVM* vm, void* reserved) {}
 
 JNIEXPORT jdouble JNICALL Java_com_vendor_jni_VendorJNI_initialize
-  (JNIEnv *, jclass) {
-  return example_function()[0];
+  (JNIEnv * env, jclass) {
+//    jdouble *arr = env->GetDoubleArrayElements(A, NULL);
+    return 5;
 }

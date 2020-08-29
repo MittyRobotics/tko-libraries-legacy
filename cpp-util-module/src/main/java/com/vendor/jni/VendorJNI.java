@@ -50,7 +50,9 @@ import java.io.File;
 import java.io.IOException;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+import com.revrobotics.jni.RevJNIWrapper;
 import edu.wpi.first.wpiutil.RuntimeLoader;
+import edu.wpi.first.wpiutil.WPIUtilJNI;
 
 public class VendorJNI {
   static boolean libraryLoaded = false;
@@ -69,15 +71,13 @@ public class VendorJNI {
   }
 
   static {
-    if (Helper.getExtractOnStaticLoad()) {
+    if (!libraryLoaded) {
       try {
-        loader = new RuntimeLoader<>("Vendor", RuntimeLoader.getDefaultExtractionRoot(), VendorJNI.class);
+        loader = new RuntimeLoader<>("VendorDriver", RuntimeLoader.getDefaultExtractionRoot(), VendorJNI.class);
         loader.loadLibrary();
       } catch (IOException ex) {
-//        ex.printStackTrace();
-        loadFromFilepath(new File("build\\libs\\vendorDriver\\shared\\windowsx86-64\\release\\VendorDriver.dll").getAbsolutePath());
-        loadFromFilepath(new File("build\\libs\\vendor\\shared\\windowsx86-64\\release\\Vendor.dll").getAbsolutePath());
-
+        ex.printStackTrace();
+        System.exit(1);
       }
       libraryLoaded = true;
     }
@@ -100,7 +100,7 @@ public class VendorJNI {
     System.load(filePath);
   }
 
-  public static native double initialize();
+  public static native double initialize( );
 
   public static void main(String[] args) {
     System.out.println(initialize());
