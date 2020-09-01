@@ -27,12 +27,12 @@ dependencies {
 nativeUtils {
     exportsConfigs {
         // Main library is just default empty. This will export everything
-        Vendor {
+        TkoLibrariesCpp {
         }
     }
     privateExportsConfigs {
         // Only export explicit symbols from driver library
-        VendorDriver {
+        TkoLibrariesCppDriver {
             exportsFile = project.file("cpp-util-module/src/main/driver/symbols.txt")
         }
     }
@@ -40,7 +40,7 @@ nativeUtils {
 
 model {
     components {
-        Vendor(NativeLibrarySpec) {
+        TkoLibrariesCpp(NativeLibrarySpec) {
             sources {
                 cpp {
                     source {
@@ -53,13 +53,13 @@ model {
                 }
             }
             binaries.all {
-                lib library: 'VendorDriver', linkage: 'shared'
+                lib library: 'TkoLibrariesCppDriver', linkage: 'shared'
             }
             appendDebugPathToBinaries(binaries)
             nativeUtils.useRequiredLibrary(it, 'wpilib_shared')
         }
 
-        VendorDriver(JniNativeLibrarySpec) {
+        TkoLibrariesCppDriver(JniNativeLibrarySpec) {
             enableCheckTask true
             javaCompileTasks << compileJava
             jniCrossCompileOptions << JniCrossCompileOptions(nativeUtils.wpi.platforms.windowsx64)

@@ -1,5 +1,5 @@
 #include "jni.h"
-#include "com_vendor_jni_VendorJNI.h"
+#include "com_github_mittyrobotics_jni_DrakeJNI.h"
 #include "../../native/include/Eigen/Core"
 #include "../../native/include/Eigen/Dense"
 #include "../include/drake/math/discrete_algebraic_riccati_equation.h"
@@ -21,12 +21,12 @@ JNIEXPORT jint JNICALL JNI_OnLoad(JavaVM* vm, void* reserved) {
 
 JNIEXPORT void JNICALL JNI_OnUnload(JavaVM* vm, void* reserved) {}
 
-JNIEXPORT jdouble JNICALL Java_com_vendor_jni_VendorJNI_initialize
+JNIEXPORT jdouble JNICALL Java_com_github_mittyrobotics_jni_DrakeJNI_initialize
   (JNIEnv * env, jclass cls) {
     return 5;
 }
 
-JNIEXPORT jdoubleArray JNICALL Java_com_vendor_jni_VendorJNI_discreteAlgebraicRiccatiEquationJNI
+JNIEXPORT jdoubleArray JNICALL Java_com_github_mittyrobotics_jni_DrakeJNI_discreteAlgebraicRiccatiEquationJNI
   (JNIEnv * env, jclass cls, jdoubleArray A, jdoubleArray B, jdoubleArray Q, jdoubleArray R, jint states, jint inputs) {
     jdouble* nativeA = env->GetDoubleArrayElements(A, nullptr);
     jdouble* nativeB = env->GetDoubleArrayElements(B, nullptr);

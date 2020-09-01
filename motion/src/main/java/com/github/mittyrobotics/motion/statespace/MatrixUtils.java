@@ -24,16 +24,10 @@
 
 package com.github.mittyrobotics.motion.statespace;
 
-import com.sun.jna.Native;
-import com.sun.jna.Pointer;
-import com.sun.jna.ptr.IntByReference;
-import com.sun.jna.ptr.PointerByReference;
-import com.vendor.jni.VendorJNI;
+import com.github.mittyrobotics.jni.DrakeJNI;
 import org.ejml.simple.SimpleMatrix;
 import org.jblas.DoubleMatrix;
 import org.jblas.MatrixFunctions;
-
-import java.io.File;
 
 public class MatrixUtils {
     public static SimpleMatrix expm(SimpleMatrix input) {
@@ -139,7 +133,8 @@ public class MatrixUtils {
         int states = A.numCols();
         int inputs = B.numCols();
 
-        double[] resultsArray = VendorJNI.discreteAlgebraicRiccatiEquationJNI(A.getDDRM().getData(), B.getDDRM().getData(), Q.getDDRM().getData(), R.getDDRM().getData(), states, inputs);
+        double[] resultsArray = DrakeJNI
+                .discreteAlgebraicRiccatiEquationJNI(A.getDDRM().getData(), B.getDDRM().getData(), Q.getDDRM().getData(), R.getDDRM().getData(), states, inputs);
 
         return new SimpleMatrix(states, states, true, resultsArray);
     }

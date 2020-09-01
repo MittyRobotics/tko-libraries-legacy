@@ -22,7 +22,7 @@
  *  SOFTWARE.
  */
 
-package com.vendor.jni;/*
+package com.github.mittyrobotics.jni;/*
  *  MIT License
  *
  *  Copyright (c) 2020 Mitty Robotics (Team 1351)
@@ -50,13 +50,11 @@ import java.io.File;
 import java.io.IOException;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import com.revrobotics.jni.RevJNIWrapper;
 import edu.wpi.first.wpiutil.RuntimeLoader;
-import edu.wpi.first.wpiutil.WPIUtilJNI;
 
-public class VendorJNI {
+public class DrakeJNI {
   static boolean libraryLoaded = false;
-  static RuntimeLoader<VendorJNI> loader = null;
+  static RuntimeLoader<DrakeJNI> loader = null;
 
   public static class Helper {
     private static AtomicBoolean extractOnStaticLoad = new AtomicBoolean(true);
@@ -71,8 +69,8 @@ public class VendorJNI {
   }
 
   static {
-    loadFromFilepath(new File("build\\libs\\vendorDriver\\shared\\windowsx86-64\\release\\VendorDriver.dll").getAbsolutePath());
-    loadFromFilepath(new File("build\\libs\\vendor\\shared\\windowsx86-64\\release\\Vendor.dll").getAbsolutePath());
+    loadFromFilepath(new File("build\\libs\\tkoLibrariesCppDriver\\shared\\windowsx86-64\\release\\TkoLibrariesCppDriver.dll").getAbsolutePath());
+    loadFromFilepath(new File("build\\libs\\tkoLibrariesCpp\\shared\\windowsx86-64\\release\\TkoLibrariesCpp.dll").getAbsolutePath());
     //    if (!libraryLoaded) {
 //      try {
 //        loader = new RuntimeLoader<>("VendorDriver", RuntimeLoader.getDefaultExtractionRoot(), VendorJNI.class);
@@ -93,7 +91,7 @@ public class VendorJNI {
     if (libraryLoaded) {
       return;
     }
-    loader = new RuntimeLoader<>("com.vendor.jni.VendorJNI", RuntimeLoader.getDefaultExtractionRoot(), VendorJNI.class);
+    loader = new RuntimeLoader<>("com.vendor.jni.VendorJNI", RuntimeLoader.getDefaultExtractionRoot(), DrakeJNI.class);
     loader.loadLibrary();
     libraryLoaded = true;
   }
