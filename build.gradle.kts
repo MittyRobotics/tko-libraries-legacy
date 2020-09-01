@@ -28,7 +28,7 @@ plugins {
     id("java")
     id("cpp")
     id("edu.wpi.first.wpilib.repositories.WPILibRepositoriesPlugin") version "2020.2"
-    id("edu.wpi.first.NativeUtils") version "2020.7.4"
+    id("edu.wpi.first.NativeUtils") version "2020.10.1"
     id("edu.wpi.first.GradleJni") version "0.11.0"
     id("edu.wpi.first.GradleVsCode") version "0.12.0"
     id("edu.wpi.first.GradleRIO") version "2020.3.2"
@@ -45,7 +45,7 @@ apply(from = "jni.gradle")
 allprojects {
     apply(plugin = "java")
     apply(plugin = "maven")
-    apply(plugin = "edu.wpi.first.GradleRIO")
+    apply(plugin ="edu.wpi.first.GradleRIO")
     apply(plugin = "org.openjfx.javafxplugin")
 
     java {
@@ -88,7 +88,7 @@ allprojects {
         compile(group = "org.jblas", name = "jblas", version = "1.2.4")
         compile(group = "org.la4j", name = "la4j", version = "0.6.0")
         compile(group = "net.java.dev.jna", name = "jna", version = "5.5.0")
-        compile(group = "org.apache.commons", name = "commons-math3", version = "3.6.1")
+        compile(group = "org.apache.commons", name = "commons-math3", version = "+")
     }
 }
 

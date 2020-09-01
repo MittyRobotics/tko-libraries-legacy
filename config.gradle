@@ -27,6 +27,10 @@ import org.gradle.internal.os.OperatingSystem
 nativeUtils.addWpiNativeUtils()
 nativeUtils.withRoboRIO()
 
+
+
+
+
 nativeUtils {
     wpi {
         configureDependencies {
@@ -35,6 +39,7 @@ nativeUtils {
             opencvVersion = "3.4.7-3"
             googleTestVersion = "1.9.0-4-437e100-1"
             imguiVersion = "1.76-2"
+            wpimathVersion = "2020.+"
         }
     }
 }
@@ -43,6 +48,7 @@ nativeUtils.wpi.addWarnings()
 nativeUtils.wpi.addWarningsAsErrors()
 
 nativeUtils.setSinglePrintPerPlatform()
+nativeUtils.enableSourceLink()
 
 model {
     components {

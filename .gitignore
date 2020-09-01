@@ -27,3 +27,10 @@ cpp-util-old/cmake-build-debug/tko-libraries-cpp-util.pdb
 cpp-util-old/cmake-build-debug/tko-libraries-cpp-util.ilk
 cpp-util-old/cmake-build-debug/tko-libraries-cpp-util.ilk
 cpp-util-old/cmake-build-debug/tko-libraries-cpp-util.exp
+src/main/native/include/header.h
+src/main/native/cpp/source.cpp
+src/main/java/com/vendor/jni/VendorJNI.java
+src/main/driver/symbols.txt
+src/main/driver/include/driverheader.h
+src/main/driver/cpp/VendorJNI.cpp
+src/main/driver/cpp/driversource.cpp

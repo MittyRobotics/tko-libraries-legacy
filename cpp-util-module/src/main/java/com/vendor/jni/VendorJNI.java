@@ -71,16 +71,18 @@ public class VendorJNI {
   }
 
   static {
-    if (!libraryLoaded) {
-      try {
-        loader = new RuntimeLoader<>("VendorDriver", RuntimeLoader.getDefaultExtractionRoot(), VendorJNI.class);
-        loader.loadLibrary();
-      } catch (IOException ex) {
-        ex.printStackTrace();
-        System.exit(1);
-      }
-      libraryLoaded = true;
-    }
+    loadFromFilepath(new File("build\\libs\\vendorDriver\\shared\\windowsx86-64\\release\\VendorDriver.dll").getAbsolutePath());
+    loadFromFilepath(new File("build\\libs\\vendor\\shared\\windowsx86-64\\release\\Vendor.dll").getAbsolutePath());
+    //    if (!libraryLoaded) {
+//      try {
+//        loader = new RuntimeLoader<>("VendorDriver", RuntimeLoader.getDefaultExtractionRoot(), VendorJNI.class);
+//        loader.loadLibrary();
+//      } catch (IOException ex) {
+//        ex.printStackTrace();
+//        System.exit(1);
+//      }
+//      libraryLoaded = true;
+//    }
   }
 
   /**
@@ -100,9 +102,12 @@ public class VendorJNI {
     System.load(filePath);
   }
 
-  public static native double initialize( );
+  public static native double initialize();
+
+  public static native double[] discreteAlgebraicRiccatiEquationJNI(double[] A, double[] B, double[] Q, double[] R, int states, int inputs);
+
 
   public static void main(String[] args) {
-    System.out.println(initialize());
+    System.out.println(discreteAlgebraicRiccatiEquationJNI(new double[]{1},new double[]{1},new double[]{1},new double[]{1}, 1, 1));
   }
 }

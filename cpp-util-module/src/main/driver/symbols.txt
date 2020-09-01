@@ -1,4 +1,5 @@
 JNI_OnLoad
 JNI_OnUnload
 Java_com_vendor_jni_VendorJNI_initialize
+Java_com_vendor_jni_VendorJNI_discreteAlgebraicRiccatiEquationJNI
 c_doThing

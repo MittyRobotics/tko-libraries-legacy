@@ -18,6 +18,7 @@ dependencies {
     implementation 'edu.wpi.first.ntcore:ntcore-java:2020.+'
     implementation 'edu.wpi.first.wpilibj:wpilibj-java:2020.+'
     implementation 'edu.wpi.first.wpiutil:wpiutil-java:2020.+'
+    implementation 'edu.wpi.first.wpimath:wpimath-java:2020.+'
     implementation 'edu.wpi.first.hal:hal-java:2020.+'
     implementation 'edu.wpi.first.thirdparty.frc2020.opencv:opencv-java:3.4.7-3'
 }
@@ -40,7 +41,6 @@ nativeUtils {
 model {
     components {
         Vendor(NativeLibrarySpec) {
-
             sources {
                 cpp {
                     source {
@@ -48,13 +48,14 @@ model {
                         include '**/*.cpp'
                     }
                     exportedHeaders {
-                        srcDirs 'cpp-util-module/src/main/native/include'
+                        srcDirs 'cpp-util-module/src/main/native/include, cpp-util-module/src/main/native/cpp/drake'
                     }
                 }
             }
             binaries.all {
                 lib library: 'VendorDriver', linkage: 'shared'
             }
+            appendDebugPathToBinaries(binaries)
             nativeUtils.useRequiredLibrary(it, 'wpilib_shared')
         }
 

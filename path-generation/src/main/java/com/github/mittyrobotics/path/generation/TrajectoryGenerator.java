@@ -88,7 +88,7 @@ public class TrajectoryGenerator {
         //Initial velocities cap from curvature
         for (int i = 0; i < arrayLength; i++) {
             double t = parameterization[i];
-            double curvature = parametric.getCurvature(t);
+            double curvature = parametric.getCurvature(t); //TODO: Try replacing this with a circle
             curvatures[i] = curvature;
 
             DrivetrainSpeeds maxSpeeds = DifferentialDriveKinematics

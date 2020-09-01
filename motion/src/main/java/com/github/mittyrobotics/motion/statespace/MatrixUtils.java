@@ -24,11 +24,11 @@
 
 package com.github.mittyrobotics.motion.statespace;
 
-import com.github.mittyrobotics.motion.jna.CppUtilJNA;
 import com.sun.jna.Native;
 import com.sun.jna.Pointer;
 import com.sun.jna.ptr.IntByReference;
 import com.sun.jna.ptr.PointerByReference;
+import com.vendor.jni.VendorJNI;
 import org.ejml.simple.SimpleMatrix;
 import org.jblas.DoubleMatrix;
 import org.jblas.MatrixFunctions;
@@ -138,30 +138,9 @@ public class MatrixUtils {
 
         int states = A.numCols();
         int inputs = B.numCols();
-        File libFile = new File("cpp-util\\library-builds\\" + System.mapLibraryName("libtko-libraries-cpp-util"));
-        System.load(libFile.getAbsolutePath());
-        CppUtilJNA lib = CppUtilJNA.INSTANCE;
 
-        final PointerByReference refPtr = new PointerByReference();
-        final IntByReference numValsRef = new IntByReference();
+        double[] resultsArray = VendorJNI.discreteAlgebraicRiccatiEquationJNI(A.getDDRM().getData(), B.getDDRM().getData(), Q.getDDRM().getData(), R.getDDRM().getData(), states, inputs);
 
-        lib.discreteAlgebraicRiccatiEquation(A.getDDRM().getData(), B.getDDRM().getData(), Q.getDDRM().getData(),
-                R.getDDRM().getData(), states, inputs, refPtr, numValsRef);
-        int numVals = numValsRef.getValue();
-
-        double[] resultArray = new double[numVals];
-
-        if (0 < numVals) {
-            final Pointer vals = refPtr.getValue();
-
-            for (int i = 0; i < numVals; i++) {
-                double val = vals.getDouble(i * Native.getNativeSize(Double.TYPE));
-                resultArray[i] = val;
-            }
-
-            lib.cleanup(vals);
-        }
-
-        return new SimpleMatrix(states, states, true, resultArray);
+        return new SimpleMatrix(states, states, true, resultsArray);
     }
 }
