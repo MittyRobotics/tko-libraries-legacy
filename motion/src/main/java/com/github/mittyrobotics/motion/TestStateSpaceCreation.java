@@ -37,7 +37,7 @@ import org.ejml.simple.SimpleMatrix;
 
 public class TestStateSpaceCreation {
     public static void main(String[] args) throws InterruptedException {
-        double momentOfInertia = 0.002634;
+        double momentOfInertia = 0.04482798121311679;
         double gearReduction = 1;
         double maxVoltage = 3;
         double dt = 0.001;

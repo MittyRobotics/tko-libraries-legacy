@@ -25,6 +25,9 @@
 package com.github.mittyrobotics.motion;
 
 import com.github.mittyrobotics.datatypes.positioning.Transform;
+import com.github.mittyrobotics.motion.statespace.models.FlywheelModel;
+import com.github.mittyrobotics.motion.statespace.motors.Motor;
+import com.github.mittyrobotics.motion.statespace.motors.NEOMotor;
 import com.github.mittyrobotics.visualization.Graph;
 import com.github.mittyrobotics.visualization.GraphUtil;
 import com.github.mittyrobotics.visualization.XYSeriesWithRenderer;
@@ -39,5 +42,7 @@ public class TestGraph {
         graph.addToSeries("Elevator Bounds", GraphUtil.populateSeries(new XYSeriesWithRenderer("Elevator Bounds"),
                 GraphUtil.rectangle(new Transform(0, 0, 0), 70, 15)));
         graph.scaleGraphToScale(0.1, 0, 0);
+
+        System.out.println(FlywheelModel.estimateMomentOfInertia(4.14, 1, new NEOMotor(2)));
     }
 }

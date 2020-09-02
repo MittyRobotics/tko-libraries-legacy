@@ -71,9 +71,8 @@ public class DrakeJNI {
   static {
     loadFromFilepath(new File("build\\libs\\tkoLibrariesCppDriver\\shared\\windowsx86-64\\release\\TkoLibrariesCppDriver.dll").getAbsolutePath());
     loadFromFilepath(new File("build\\libs\\tkoLibrariesCpp\\shared\\windowsx86-64\\release\\TkoLibrariesCpp.dll").getAbsolutePath());
-    //    if (!libraryLoaded) {
 //      try {
-//        loader = new RuntimeLoader<>("VendorDriver", RuntimeLoader.getDefaultExtractionRoot(), VendorJNI.class);
+//        loader = new RuntimeLoader<>("TkoLibrariesCppDriver", RuntimeLoader.getDefaultExtractionRoot(), DrakeJNI.class);
 //        loader.loadLibrary();
 //      } catch (IOException ex) {
 //        ex.printStackTrace();
@@ -81,6 +80,7 @@ public class DrakeJNI {
 //      }
 //      libraryLoaded = true;
 //    }
+    //    if (!libraryLoaded) {
   }
 
   /**
@@ -91,7 +91,8 @@ public class DrakeJNI {
     if (libraryLoaded) {
       return;
     }
-    loader = new RuntimeLoader<>("com.vendor.jni.VendorJNI", RuntimeLoader.getDefaultExtractionRoot(), DrakeJNI.class);
+    loader = new RuntimeLoader<>("com.github.mittyrobotics.jni.DrakeJNI", RuntimeLoader.getDefaultExtractionRoot(),
+            DrakeJNI.class);
     loader.loadLibrary();
     libraryLoaded = true;
   }

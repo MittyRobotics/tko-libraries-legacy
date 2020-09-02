@@ -56,6 +56,10 @@ public class FlywheelModel {
         return (measurementNoise != 0 ? ((new Random().nextDouble() - 0.5) * measurementNoise) : 0);
     }
 
+    public static double estimateMomentOfInertia(double slope, double gearReduction, Motor motor){
+        return slope * -((gearReduction*gearReduction*motor.getKt())/(motor.getKv()*motor.getResistance()));
+    }
+
     public Plant getPlant() {
         return plant;
     }
