@@ -25,9 +25,17 @@
 package com.github.mittyrobotics.motion.statespace;
 
 import com.github.mittyrobotics.jni.DrakeJNI;
+import edu.wpi.first.wpiutil.math.SimpleMatrixUtils;
+import org.ejml.data.Complex_F64;
 import org.ejml.simple.SimpleMatrix;
 
+import java.util.List;
+
 public class MatrixUtils {
+    public static List<Complex_F64> eigenValues(SimpleMatrix input) {
+        return input.eig().getEigenvalues();
+    }
+
     public static double normmax(SimpleMatrix input) {
         double max = 0.0;
         for (int i = 0; i < input.getNumElements(); i++) {
@@ -41,55 +49,13 @@ public class MatrixUtils {
 
     /**
      * Port of jblas "expm" Matrix Function to use EJML Simple Matrix
+     * https://github.com/jblas-project/jblas/blob/89fde54b386a0f440d7caa1801472ff24820348f/src/main/java/org/jblas/MatrixFunctions.java#L406
+     *
      * @param input
      * @return
      */
     public static SimpleMatrix expm(SimpleMatrix input) {
-        final double c0 = 1.0;
-        final double c1 = 0.5;
-        final double c2 = 0.12;
-        final double c3 = 0.01833333333333333;
-        final double c4 = 0.0019927536231884053;
-        final double c5 = 1.630434782608695E-4;
-        final double c6 = 1.0351966873706E-5;
-        final double c7 = 5.175983436853E-7;
-        final double c8 = 2.0431513566525E-8;
-        final double c9 = 6.306022705717593E-10;
-        final double c10 = 1.4837700484041396E-11;
-        final double c11 = 2.5291534915979653E-13;
-        final double c12 = 2.8101705462199615E-15;
-        final double c13 = 1.5440497506703084E-17;
-
-        int j = Math.max(0, 1 + (int) Math.floor(Math.log(normmax(input)) / Math.log(2)));
-        SimpleMatrix As = input.divide((double) Math.pow(2, j)); // scaled version of A
-        int n = input.numRows();
-
-        // calculate D and N using special Horner techniques
-        SimpleMatrix As_2 = As.mult(As);
-        SimpleMatrix As_4 = As_2.mult(As_2);
-        SimpleMatrix As_6 = As_4.mult(As_2);
-        // U = c0*I + c2*A^2 + c4*A^4 + (c6*I + c8*A^2 + c10*A^4 + c12*A^6)*A^6
-        SimpleMatrix U = multByDouble(SimpleMatrix.identity(n),c0).plus(multByDouble(As_2,c2)).plus(multByDouble(As_4
-                ,c4)).plus(
-                multByDouble(SimpleMatrix.identity(n),c6).plus(multByDouble(As_2,c8)).plus(multByDouble(As_4,c10)).plus(multByDouble(As_6,c12)).mult(As_6));
-        // V = c1*I + c3*A^2 + c5*A^4 + (c7*I + c9*A^2 + c11*A^4 + c13*A^6)*A^6
-        SimpleMatrix V =
-                multByDouble(SimpleMatrix.identity(n),c1).plus(multByDouble(As_2,c3)).plus(multByDouble(As_4,c5)).plus(
-                multByDouble(SimpleMatrix.identity(n),c7).plus(multByDouble(As_2,c9)).plus(multByDouble(As_4,c11)).plus(multByDouble(As_6,c13)).mult(As_6));
-
-        SimpleMatrix AV = As.mult(V);
-        SimpleMatrix N = U.plus(AV);
-        SimpleMatrix D = U.minus(AV);
-
-        // solve DF = N for F
-        SimpleMatrix F = D.solve(N);
-
-        // now square j times
-        for (int k = 0; k < j; k++) {
-            F.mult(F);
-        }
-
-        return F;
+        return SimpleMatrixUtils.expm(input);
     }
 
     public static SimpleMatrix multByDouble(SimpleMatrix matrix, double scalar) {
@@ -177,7 +143,8 @@ public class MatrixUtils {
         int inputs = B.numCols();
 
         double[] resultsArray = DrakeJNI
-                .discreteAlgebraicRiccatiEquationJNI(A.getDDRM().getData(), B.getDDRM().getData(), Q.getDDRM().getData(), R.getDDRM().getData(), states, inputs);
+                .discreteAlgebraicRiccatiEquationJNI(A.getDDRM().getData(), B.getDDRM().getData(),
+                        Q.getDDRM().getData(), R.getDDRM().getData(), states, inputs);
 
         return new SimpleMatrix(states, states, true, resultsArray);
     }

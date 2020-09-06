@@ -24,7 +24,7 @@
 
 package com.github.mittyrobotics.motion.statespace.models;
 
-import com.github.mittyrobotics.motion.statespace.Plant;
+import com.github.mittyrobotics.motion.statespace.old.Plant;
 import com.github.mittyrobotics.motion.statespace.motors.Motor;
 import org.ejml.simple.SimpleMatrix;
 

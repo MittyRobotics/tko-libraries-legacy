@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-package com.github.mittyrobotics.motion.statespace;
+package com.github.mittyrobotics.motion.statespace.old;
 
 import org.ejml.simple.SimpleMatrix;
 

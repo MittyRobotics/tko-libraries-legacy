@@ -89,6 +89,7 @@ allprojects {
         compile(group = "org.la4j", name = "la4j", version = "0.6.0")
         compile(group = "net.java.dev.jna", name = "jna", version = "5.5.0")
         compile(group = "org.apache.commons", name = "commons-math3", version = "+")
+        compile(group = "org.hipparchus", name = "hipparchus-core", version = "+")
     }
 }
 

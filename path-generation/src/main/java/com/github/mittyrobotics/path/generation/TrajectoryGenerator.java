@@ -98,33 +98,31 @@ public class TrajectoryGenerator {
             angularVelocities[i] = maxSpeeds.getAngular() * Math.signum(curvature);
         }
 
-        lastAngular = 0;
-        //Angular forward acceleration cap
-        for (int i = 0; i < arrayLength; i++) {
-            angularVelocities[i] =
-                    angularPass(i, parametric, parameterization, angularVelocities, linearVelocities, curvatures,
-                            maxAngularAcceleration, lastAngular, trackWidth);
-            lastAngular = angularVelocities[i];
-        }
-
-        lastAngular = 0;
-        //Angular backward acceleration cap
-        for (int i = arrayLength - 1; i >= 0; i--) {
-            angularVelocities[i] =
-                    angularPass(i, parametric, parameterization, angularVelocities, linearVelocities, curvatures,
-                            maxAngularAcceleration, lastAngular, trackWidth);
-            lastAngular = angularVelocities[i];
-        }
-
-        //Linear cap from angular
-        for (int i = 0; i < arrayLength; i++) {
-            double angular = angularVelocities[i];
-            double curvature = curvatures[i];
-            linearVelocities[i] = DrivetrainSpeeds.fromAngularAndRadius(angular, 1 / curvature, trackWidth).getLinear();
-        }
-
-
+//        lastAngular = 0;
+//        //Angular forward acceleration cap
+//        for (int i = 0; i < arrayLength; i++) {
+//            angularVelocities[i] =
+//                    angularPass(i, parametric, parameterization, angularVelocities, linearVelocities, curvatures,
+//                            maxAngularAcceleration, lastAngular, trackWidth);
+//            lastAngular = angularVelocities[i];
+//        }
 //
+//        lastAngular = 0;
+//        //Angular backward acceleration cap
+//        for (int i = arrayLength - 1; i >= 0; i--) {
+//            angularVelocities[i] =
+//                    angularPass(i, parametric, parameterization, angularVelocities, linearVelocities, curvatures,
+//                            maxAngularAcceleration, lastAngular, trackWidth);
+//            lastAngular = angularVelocities[i];
+//        }
+//
+//        //Linear cap from angular
+//        for (int i = 0; i < arrayLength; i++) {
+//            double angular = angularVelocities[i];
+//            double curvature = curvatures[i];
+//            linearVelocities[i] = DrivetrainSpeeds.fromAngularAndRadius(angular, 1 / curvature, trackWidth).getLinear();
+//        }
+
 //        lastLinear = 0;
 //        //Linear forward acceleration cap
 //        for (int i = 0; i < arrayLength; i++) {

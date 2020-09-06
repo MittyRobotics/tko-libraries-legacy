@@ -22,9 +22,9 @@
  * SOFTWARE.
  */
 
-package com.github.mittyrobotics.motion.statespace;
+package com.github.mittyrobotics.motion.statespace.old;
 
-import com.github.mittyrobotics.motion.controllers.StateSpaceController;
+import com.github.mittyrobotics.motion.statespace.MatrixUtils;
 import com.github.mittyrobotics.motion.statespace.motors.Motor;
 import org.ejml.simple.SimpleMatrix;
 
@@ -56,8 +56,7 @@ public class Plant {
      */
     private final SimpleMatrix uMax;
     /**
-     * Predicted change in time between plant update calls. This value is the initial predicted delta time, but each
-     * call to the {@link StateSpaceController} is updated with the true delta time.
+     * Predicted change in time between plant update calls.
      */
     private double deltaTime;
 
@@ -69,7 +68,7 @@ public class Plant {
     /**
      * {@link Plant} outputs matrix. This is the value that can actually be measured in the plant, such as position
      * using an encoder. This is a theoretical estimate of the measurement, and can be used to either simulate the
-     * plant's motion or stabilize the actual measured value with a theoretically calcualted one.
+     * plant's motion or stabilize the actual measured value with a theoretically calculated one.
      */
     private SimpleMatrix y;
 
