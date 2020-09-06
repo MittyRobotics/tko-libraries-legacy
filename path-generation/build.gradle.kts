@@ -41,3 +41,11 @@ dependencies {
     compile(project(":visualization"))
     compile(project(":data-collection"))
 }
+
+publishing {
+    publications {
+        create<MavenPublication>("maven") {
+            from(components["java"])
+        }
+    }
+}
