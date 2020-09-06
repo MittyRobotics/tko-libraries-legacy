@@ -27,11 +27,13 @@ package com.github.mittyrobotics.motion.statespace;
 import org.ejml.simple.SimpleMatrix;
 
 public class LinearQuadraticRegulator {
-    public static SimpleMatrix linearQuadraticRegulator(StateSpaceSystem system, SimpleMatrix qElms, SimpleMatrix rElms, double qWeight){
+    public static SimpleMatrix linearQuadraticRegulator(StateSpaceSystem system, SimpleMatrix qElms, SimpleMatrix rElms,
+                                                        double qWeight) {
         return linearQuadraticRegulator(system.getA(), system.getB(), qElms, rElms, qWeight);
     }
 
-    public static SimpleMatrix linearQuadraticRegulator(SimpleMatrix A, SimpleMatrix B, SimpleMatrix qElms, SimpleMatrix rElms, double qWeight){
+    public static SimpleMatrix linearQuadraticRegulator(SimpleMatrix A, SimpleMatrix B, SimpleMatrix qElms,
+                                                        SimpleMatrix rElms, double qWeight) {
         //Create cost matrices of q and r elements
         SimpleMatrix Q = MatrixUtils.makeCostMatrix(qElms, qWeight);
         SimpleMatrix R = MatrixUtils.makeCostMatrix(rElms, 1);

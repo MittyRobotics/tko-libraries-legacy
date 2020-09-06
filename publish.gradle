@@ -158,7 +158,7 @@ task cleanReleaseRepo(type: Delete) {
     delete releasesRepoUrl
 }
 
-tasks.matching {it != cleanReleaseRepo}.all {it.dependsOn cleanReleaseRepo}
+tasks.matching { it != cleanReleaseRepo }.all { it.dependsOn cleanReleaseRepo }
 
 model {
     publishing {

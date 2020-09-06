@@ -31,14 +31,15 @@ public class LuenbergerObserver {
      * Calculates the estimation of the state space x dot matrix.
      *
      * @param system discretized state space system.
-     * @param xHat previous estimation of x matrix.
-     * @param u input matrix.
-     * @param L Luenberger observer gain matrix.
-     * @param y measurement matrix.
-     * @param yHat previous measurement estimation matrix.
+     * @param xHat   previous estimation of x matrix.
+     * @param u      input matrix.
+     * @param L      Luenberger observer gain matrix.
+     * @param y      measurement matrix.
+     * @param yHat   previous measurement estimation matrix.
      * @return estimation of state matrix, xDotHat.
      */
-    public static SimpleMatrix calculateXDotHat(StateSpaceSystem system, SimpleMatrix xHat, SimpleMatrix u, SimpleMatrix L, SimpleMatrix y, SimpleMatrix yHat){
+    public static SimpleMatrix calculateXDotHat(StateSpaceSystem system, SimpleMatrix xHat, SimpleMatrix u,
+                                                SimpleMatrix L, SimpleMatrix y, SimpleMatrix yHat) {
         return system.getA().mult(xHat).plus(system.getB().mult(u)).plus(L.mult(y.minus(yHat)));
     }
 
@@ -46,11 +47,11 @@ public class LuenbergerObserver {
      * Calculates the estimation of the state space y matrix.
      *
      * @param system discretized state space system.
-     * @param xHat previous estimation of x matrix.
-     * @param u input matrix.
+     * @param xHat   previous estimation of x matrix.
+     * @param u      input matrix.
      * @return estimation of measurement matrix, yHat.
      */
-    public static SimpleMatrix calculateYHat(StateSpaceSystem system, SimpleMatrix xHat, SimpleMatrix u){
+    public static SimpleMatrix calculateYHat(StateSpaceSystem system, SimpleMatrix xHat, SimpleMatrix u) {
         return system.getC().mult(xHat).plus(system.getD().mult(u));
     }
 
@@ -58,11 +59,11 @@ public class LuenbergerObserver {
      * Predicts next output estimation, xHat.
      *
      * @param system discretized state space system.
-     * @param xHat previous estimation of x matrix.
-     * @param u input matrix.
+     * @param xHat   previous estimation of x matrix.
+     * @param u      input matrix.
      * @return estimation of next output matrix, xHat.
      */
-    public static SimpleMatrix predict(StateSpaceSystem system, SimpleMatrix xHat, SimpleMatrix u){
+    public static SimpleMatrix predict(StateSpaceSystem system, SimpleMatrix xHat, SimpleMatrix u) {
         return system.getA().mult(xHat).plus(system.getB().mult(u));
     }
 
@@ -70,13 +71,14 @@ public class LuenbergerObserver {
      * Corrects the xHat estimation matrix using the measured states from the physical system.
      *
      * @param system discretized state space system.
-     * @param xHat previous estimation of x matrix.
-     * @param L Luenberger observer gain matrix.
-     * @param y input matrix.
-     * @param yHat previous measurement estimation.
+     * @param xHat   previous estimation of x matrix.
+     * @param L      Luenberger observer gain matrix.
+     * @param y      input matrix.
+     * @param yHat   previous measurement estimation.
      * @return corrected xHat matrix.
      */
-    public static SimpleMatrix correctX(StateSpaceSystem system, SimpleMatrix xHat, SimpleMatrix L, SimpleMatrix y, SimpleMatrix yHat){
+    public static SimpleMatrix correctX(StateSpaceSystem system, SimpleMatrix xHat, SimpleMatrix L, SimpleMatrix y,
+                                        SimpleMatrix yHat) {
         return xHat.plus(system.getA().pseudoInverse().mult(L).mult(y.minus(yHat)));
     }
 
@@ -84,10 +86,10 @@ public class LuenbergerObserver {
      * Corrects the yHat estimation matrix using the measured states from the physical system.
      *
      * @param system discretized state space system.
-     * @param xHat current x matrix estimation.
+     * @param xHat   current x matrix estimation.
      * @return corrected yHat matrix.
      */
-    public static SimpleMatrix correctY(StateSpaceSystem system, SimpleMatrix xHat){
+    public static SimpleMatrix correctY(StateSpaceSystem system, SimpleMatrix xHat) {
         return system.getC().mult(xHat);
     }
 }

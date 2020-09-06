@@ -25,8 +25,9 @@
 package com.github.mittyrobotics.jni;
 
 public class DrakeJNI {
-  public static native double initialize();
+    public static native double initialize();
 
-  public static native double[] discreteAlgebraicRiccatiEquationJNI(double[] A, double[] B, double[] Q, double[] R, int states, int inputs);
+    public static native double[] discreteAlgebraicRiccatiEquationJNI(double[] A, double[] B, double[] Q, double[] R,
+                                                                      int states, int inputs);
 
 }

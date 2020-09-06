@@ -45,7 +45,7 @@ apply(from = "jni.gradle")
 allprojects {
     apply(plugin = "java")
     apply(plugin = "maven")
-    apply(plugin ="edu.wpi.first.GradleRIO")
+    apply(plugin = "edu.wpi.first.GradleRIO")
     apply(plugin = "org.openjfx.javafxplugin")
 
     java {

@@ -24,8 +24,8 @@
 
 package com.github.mittyrobotics.motion.statespace.models;
 
-import com.github.mittyrobotics.motion.statespace.old.Plant;
 import com.github.mittyrobotics.motion.statespace.motors.Motor;
+import com.github.mittyrobotics.motion.statespace.old.Plant;
 import org.ejml.simple.SimpleMatrix;
 
 import java.util.Random;
