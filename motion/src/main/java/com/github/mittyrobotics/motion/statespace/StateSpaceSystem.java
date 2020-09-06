@@ -65,7 +65,7 @@ public class StateSpaceSystem {
         discretizeSystem(dt);
     }
 
-    public static StateSpaceSystem sample(StateSpaceSystem continuousSystem, double dt) {
+    public static StateSpaceSystem sample(StateSpaceSystem continuousSystem, double dt){
         return new StateSpaceSystem(continuousSystem).sample(dt);
     }
 
@@ -109,23 +109,21 @@ public class StateSpaceSystem {
 
     /**
      * X dot is the change in states matrix
-     *
      * @param x
      * @param u
      * @return
      */
-    public SimpleMatrix calculateXDot(SimpleMatrix x, SimpleMatrix u) {
+    public SimpleMatrix calculateXDot(SimpleMatrix x, SimpleMatrix u){
         return A.mult(x).plus(B.mult(u));
     }
 
     /**
      * Y dot is the outputs matrix (i.e. Calculated measurement from sensors)
-     *
      * @param x
      * @param u
      * @return
      */
-    public SimpleMatrix calculateY(SimpleMatrix x, SimpleMatrix u) {
+    public SimpleMatrix calculateY(SimpleMatrix x, SimpleMatrix u){
         return C.mult(x).plus(D.mult(u));
     }
 

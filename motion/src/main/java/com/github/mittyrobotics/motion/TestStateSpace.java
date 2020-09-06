@@ -24,6 +24,7 @@
 
 package com.github.mittyrobotics.motion;
 
+import com.github.mittyrobotics.datatypes.units.Conversions;
 import com.github.mittyrobotics.motion.statespace.LinearQuadraticRegulator;
 import com.github.mittyrobotics.motion.statespace.LuenbergerObserver;
 import com.github.mittyrobotics.motion.statespace.StateSpace;
@@ -31,8 +32,10 @@ import com.github.mittyrobotics.motion.statespace.StateSpaceSystem;
 import com.github.mittyrobotics.motion.statespace.models.FlywheelModel;
 import com.github.mittyrobotics.motion.statespace.motors.Motor;
 import com.github.mittyrobotics.motion.statespace.motors.NEOMotor;
+import com.github.mittyrobotics.motion.statespace.motors.Pro775Motor;
 import com.github.mittyrobotics.visualization.MotorGraph;
 import org.ejml.simple.SimpleMatrix;
+import org.jblas.util.Random;
 
 public class TestStateSpace {
     public static void main(String[] args) throws InterruptedException {

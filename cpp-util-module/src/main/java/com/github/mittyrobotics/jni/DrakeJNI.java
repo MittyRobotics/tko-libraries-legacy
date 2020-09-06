@@ -46,22 +46,31 @@ package com.github.mittyrobotics.jni;/*
  *  SOFTWARE.
  */
 
-import edu.wpi.first.wpiutil.RuntimeLoader;
-
 import java.io.File;
 import java.io.IOException;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-public class DrakeJNI {
-    static boolean libraryLoaded = false;
-    static RuntimeLoader<DrakeJNI> loader = null;
+import edu.wpi.first.wpiutil.RuntimeLoader;
 
-    static {
-        loadFromFilepath(new File(
-                "build\\libs\\tkoLibrariesCppDriver\\shared\\windowsx86-64\\release\\TkoLibrariesCppDriver.dll")
-                .getAbsolutePath());
-        loadFromFilepath(new File("build\\libs\\tkoLibrariesCpp\\shared\\windowsx86-64\\release\\TkoLibrariesCpp.dll")
-                .getAbsolutePath());
+public class DrakeJNI {
+  static boolean libraryLoaded = false;
+  static RuntimeLoader<DrakeJNI> loader = null;
+
+  public static class Helper {
+    private static AtomicBoolean extractOnStaticLoad = new AtomicBoolean(true);
+
+    public static boolean getExtractOnStaticLoad() {
+      return extractOnStaticLoad.get();
+    }
+
+    public static void setExtractOnStaticLoad(boolean load) {
+      extractOnStaticLoad.set(load);
+    }
+  }
+
+  static {
+    loadFromFilepath(new File("build\\libs\\tkoLibrariesCppDriver\\shared\\windowsx86-64\\release\\TkoLibrariesCppDriver.dll").getAbsolutePath());
+    loadFromFilepath(new File("build\\libs\\tkoLibrariesCpp\\shared\\windowsx86-64\\release\\TkoLibrariesCpp.dll").getAbsolutePath());
 //      try {
 //        loader = new RuntimeLoader<>("TkoLibrariesCppDriver", RuntimeLoader.getDefaultExtractionRoot(), DrakeJNI.class);
 //        loader.loadLibrary();
@@ -71,48 +80,33 @@ public class DrakeJNI {
 //      }
 //      libraryLoaded = true;
 //    }
-        //    if (!libraryLoaded) {
+    //    if (!libraryLoaded) {
+  }
+
+  /**
+   * Force load the library.
+   * @throws IOException thrown if the native library cannot be found
+   */
+  public static synchronized void forceLoad() throws IOException {
+    if (libraryLoaded) {
+      return;
     }
+    loader = new RuntimeLoader<>("com.github.mittyrobotics.jni.DrakeJNI", RuntimeLoader.getDefaultExtractionRoot(),
+            DrakeJNI.class);
+    loader.loadLibrary();
+    libraryLoaded = true;
+  }
 
-    /**
-     * Force load the library.
-     *
-     * @throws IOException thrown if the native library cannot be found
-     */
-    public static synchronized void forceLoad() throws IOException {
-        if (libraryLoaded) {
-            return;
-        }
-        loader = new RuntimeLoader<>("com.github.mittyrobotics.jni.DrakeJNI", RuntimeLoader.getDefaultExtractionRoot(),
-                DrakeJNI.class);
-        loader.loadLibrary();
-        libraryLoaded = true;
-    }
+  public static void loadFromFilepath(String filePath){
+    System.load(filePath);
+  }
 
-    public static void loadFromFilepath(String filePath) {
-        System.load(filePath);
-    }
+  public static native double initialize();
 
-    public static native double initialize();
+  public static native double[] discreteAlgebraicRiccatiEquationJNI(double[] A, double[] B, double[] Q, double[] R, int states, int inputs);
 
-    public static native double[] discreteAlgebraicRiccatiEquationJNI(double[] A, double[] B, double[] Q, double[] R,
-                                                                      int states, int inputs);
 
-    public static void main(String[] args) {
-        System.out.println(
-                discreteAlgebraicRiccatiEquationJNI(new double[]{1}, new double[]{1}, new double[]{1}, new double[]{1},
-                        1, 1));
-    }
-
-    public static class Helper {
-        private static AtomicBoolean extractOnStaticLoad = new AtomicBoolean(true);
-
-        public static boolean getExtractOnStaticLoad() {
-            return extractOnStaticLoad.get();
-        }
-
-        public static void setExtractOnStaticLoad(boolean load) {
-            extractOnStaticLoad.set(load);
-        }
-    }
+  public static void main(String[] args) {
+    System.out.println(discreteAlgebraicRiccatiEquationJNI(new double[]{1},new double[]{1},new double[]{1},new double[]{1}, 1, 1));
+  }
 }

@@ -26,6 +26,7 @@ package com.github.mittyrobotics.motion;
 
 import com.github.mittyrobotics.datatypes.positioning.Transform;
 import com.github.mittyrobotics.motion.statespace.models.FlywheelModel;
+import com.github.mittyrobotics.motion.statespace.motors.Motor;
 import com.github.mittyrobotics.motion.statespace.motors.NEOMotor;
 import com.github.mittyrobotics.visualization.Graph;
 import com.github.mittyrobotics.visualization.GraphUtil;

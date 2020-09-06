@@ -39,50 +39,48 @@ public class StateSpace {
      * @param K controller gain matrix
      * @return input matrix u
      */
-    public static SimpleMatrix closedLoopControlLaw(SimpleMatrix x, SimpleMatrix r, SimpleMatrix K,
-                                                    ControlInputRange range) {
+    public static SimpleMatrix closedLoopControlLaw(SimpleMatrix x, SimpleMatrix r, SimpleMatrix K, ControlInputRange range) {
         SimpleMatrix u = K.mult(r.minus(x));
         return MatrixUtils.clamp(u, range.min, range.max);
     }
 
-    public static SimpleMatrix closedLoopFeedforwardControlLaw(StateSpaceSystem system, SimpleMatrix r,
-                                                               SimpleMatrix Kff, ControlInputRange range) {
+    public static SimpleMatrix closedLoopFeedforwardControlLaw(StateSpaceSystem system, SimpleMatrix r, SimpleMatrix Kff, ControlInputRange range){
         SimpleMatrix uff = Kff.mult(r.minus(system.getA().mult(r)));
         return MatrixUtils.clamp(uff, range.min, range.max);
     }
 
-    public static SimpleMatrix calculateFeedforwardGains(StateSpaceSystem system) {
+    public static SimpleMatrix calculateFeedforwardGains(StateSpaceSystem system){
         return calculateFeedforwardGains(system.getB());
     }
 
-    public static SimpleMatrix calculateFeedforwardGains(SimpleMatrix B) {
+    public static SimpleMatrix calculateFeedforwardGains(SimpleMatrix B){
         return B.pseudoInverse();
     }
 
-    public static SimpleMatrix applyFeedforward(SimpleMatrix u, ControlInputRange range, SimpleMatrix... uffs) {
-        for (SimpleMatrix uff : uffs) {
+    public static SimpleMatrix applyFeedforward(SimpleMatrix u, ControlInputRange range, SimpleMatrix... uffs){
+        for(SimpleMatrix uff : uffs){
             u = u.plus(uff);
         }
-        return MatrixUtils.clamp(u, range.getMin(), range.getMax());
+        return  MatrixUtils.clamp(u, range.getMin(), range.getMax());
     }
 
-    public static double gaussianDistribution(double mean, double standardDeviation) {
-        return (Random.nextGaussian() * standardDeviation) + mean;
+    public static double gaussianDistribution(double mean, double standardDeviation){
+        return (Random.nextGaussian()*standardDeviation)+mean;
     }
 
-    public static SimpleMatrix gaussianDistribution(SimpleMatrix input, double standardDeviation) {
+    public static SimpleMatrix gaussianDistribution(SimpleMatrix input, double standardDeviation){
         SimpleMatrix output = input;
-        for (int i = 0; i < input.getNumElements(); i++) {
+        for(int i = 0; i < input.getNumElements(); i++){
             output.set(i, gaussianDistribution(input.get(0), standardDeviation));
         }
         return output;
     }
 
-    public static class ControlInputRange {
+    public static class ControlInputRange{
         private double min;
         private double max;
 
-        public ControlInputRange(double min, double max) {
+        public ControlInputRange(double min, double max){
             this.min = min;
             this.max = max;
         }
