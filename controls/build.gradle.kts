@@ -39,14 +39,6 @@ repositories {
 
 dependencies {
     compile(project(":datatypes"))
-    wpi.deps.wpilib().forEach { compile(it) }
-    wpi.deps.wpilibJni(edu.wpi.first.toolchain.NativePlatforms.roborio).forEach { nativeZip(it) }
-    wpi.deps.wpilibJni(edu.wpi.first.toolchain.NativePlatforms.desktop).forEach { nativeDesktopZip(it) }
-
-    wpi.deps.vendor.java().forEach { compile(it) }
-    wpi.deps.vendor.jni(edu.wpi.first.toolchain.NativePlatforms.roborio).forEach { nativeZip(it) }
-    wpi.deps.vendor.jni(edu.wpi.first.toolchain.NativePlatforms.desktop).forEach { nativeDesktopZip(it) }
-
 
 }
 
