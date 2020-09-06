@@ -24,7 +24,6 @@
 
 plugins {
     id("java")
-    id("edu.wpi.first.GradleRIO")
     id("maven")
     `maven-publish`
 }
