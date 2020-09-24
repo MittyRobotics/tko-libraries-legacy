@@ -50,11 +50,11 @@ import java.io.File;
 import java.io.IOException;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import edu.wpi.first.wpiutil.RuntimeLoader;
+//import edu.wpi.first.wpiutil.RuntimeLoader;
 
 public class DrakeJNI {
   static boolean libraryLoaded = false;
-  static RuntimeLoader<DrakeJNI> loader = null;
+//  static RuntimeLoader<DrakeJNI> loader = null;
 
   public static class Helper {
     private static AtomicBoolean extractOnStaticLoad = new AtomicBoolean(true);
@@ -91,9 +91,9 @@ public class DrakeJNI {
     if (libraryLoaded) {
       return;
     }
-    loader = new RuntimeLoader<>("com.github.mittyrobotics.jni.DrakeJNI", RuntimeLoader.getDefaultExtractionRoot(),
-            DrakeJNI.class);
-    loader.loadLibrary();
+//    loader = new RuntimeLoader<>("com.github.mittyrobotics.jni.DrakeJNI", RuntimeLoader.getDefaultExtractionRoot(),
+//            DrakeJNI.class);
+//    loader.loadLibrary();
     libraryLoaded = true;
   }
 

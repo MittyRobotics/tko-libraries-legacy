@@ -31,7 +31,6 @@ plugins {
     id("edu.wpi.first.NativeUtils") version "2020.10.1"
     id("edu.wpi.first.GradleJni") version "0.11.0"
     id("edu.wpi.first.GradleVsCode") version "0.12.0"
-    id("edu.wpi.first.GradleRIO") version "2020.3.1"
     id("org.openjfx.javafxplugin") version "0.0.8"
     id("maven")
     id("maven-publish")
@@ -45,7 +44,6 @@ apply(from = "jni.gradle")
 allprojects {
     apply(plugin = "java")
     apply(plugin = "maven")
-    apply(plugin ="edu.wpi.first.GradleRIO")
     apply(plugin = "org.openjfx.javafxplugin")
 
     java {
@@ -68,19 +66,18 @@ allprojects {
 
     dependencies {
         // WPILib
-        wpi.deps.wpilib().forEach { compile(it) }
-        wpi.deps.wpilibJni(NativePlatforms.roborio).forEach { nativeZip(it) }
-        wpi.deps.wpilibJni(NativePlatforms.desktop).forEach { nativeDesktopZip(it) }
-
-        wpi.deps.vendor.java().forEach { compile(it) }
-        wpi.deps.vendor.jni(NativePlatforms.roborio).forEach { nativeZip(it) }
-        wpi.deps.vendor.jni(NativePlatforms.desktop).forEach { nativeDesktopZip(it) }
-
+//        wpi.deps.wpilib().forEach { compile(it) }
+//        wpi.deps.wpilibJni(NativePlatforms.roborio).forEach { nativeZip(it) }
+//        wpi.deps.wpilibJni(NativePlatforms.desktop).forEach { nativeDesktopZip(it) }
+//
+//        wpi.deps.vendor.java().forEach { compile(it) }
+//        wpi.deps.vendor.jni(NativePlatforms.roborio).forEach { nativeZip(it) }
+//        wpi.deps.vendor.jni(NativePlatforms.desktop).forEach { nativeDesktopZip(it) }
+//
 
 
         compile(group = "com.ctre.phoenix", name = "wpiapi-java", version = "5.18.3")
         compile(group = "com.ctre.phoenix", name = "api-java", version = "5.18.3")
-        compile(group = "edu.wpi.first.wpilibNewCommands", name = "wpilibNewCommands-java", version = "2020.3.2")
         compile(group = "com.revrobotics.frc", name = "SparkMax-java", version = "1.5.2")
         compile(group = "org.jfree", name = "jfreechart", version = "1.5.0")
         compile(group = "org.apache.commons", name = "commons-collections4", version = "4.1")

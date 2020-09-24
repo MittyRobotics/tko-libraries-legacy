@@ -27,8 +27,6 @@ package com.github.mittyrobotics.datatypes.path;
 import com.github.mittyrobotics.datatypes.positioning.Position;
 import com.github.mittyrobotics.datatypes.positioning.Rotation;
 import com.github.mittyrobotics.datatypes.positioning.Transform;
-import edu.wpi.first.wpiutil.math.MathUtil;
-
 public abstract class Parametric {
     /**
      * Returns the {@link Position} along the {@link Parametric} at <code>t</code> where <code>0 <= t <= 1</code>.
@@ -168,10 +166,15 @@ public abstract class Parametric {
             double tangentMagnitude = getFirstDerivative(t).magnitude();
             if (tangentMagnitude > 0.0) {
                 t -= (getGaussianQuadratureLength(t) - length) / tangentMagnitude;
-                t = MathUtil.clamp(t, 0, 1);
+                t = clamp(t, 0, 1);
             }
         }
 
-        return MathUtil.clamp(t, 0, 1);
+        return clamp(t, 0, 1);
+    }
+
+    public static double clamp(double value, double min, double max){
+        return Math.min(max, Math.max(min, value));
     }
 }
+
