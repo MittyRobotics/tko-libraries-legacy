@@ -51,7 +51,7 @@ model {
         TkoLibrariesCppDriver(JniNativeLibrarySpec) {
             enableCheckTask true
             javaCompileTasks << compileJava
-            jniCrossCompileOptions << JniCrossCompileOptions(nativeUtils.wpi.platforms.windowsx64)
+//            jniCrossCompileOptions << JniCrossCompileOptions(nativeUtils.wpi.platforms.windowsx64)
 
             jniCrossCompileOptions << JniCrossCompileOptions(nativeUtils.wpi.platforms.roborio)
             // Leave these for future proofing

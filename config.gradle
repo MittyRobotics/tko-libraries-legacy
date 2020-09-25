@@ -50,7 +50,7 @@ model {
     components {
         all {
             targetPlatform nativeUtils.wpi.platforms.roborio
-            targetPlatform nativeUtils.wpi.platforms.windowsx64
+//            targetPlatform nativeUtils.wpi.platforms.windowsx64
         }
     }
     // Uncomment this, and remove above lines to enable builds for all platforms
