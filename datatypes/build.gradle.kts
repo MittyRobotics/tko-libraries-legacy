@@ -38,7 +38,7 @@ repositories {
 }
 
 dependencies {
-
+    compile(group = "org.ejml", name = "ejml-all", version = "0.38")
 }
 
 publishing {
