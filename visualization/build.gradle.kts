@@ -39,6 +39,7 @@ repositories {
 
 dependencies {
     compile(project(":datatypes"))
+    compile(group = "org.jfree", name = "jfreechart", version = "1.5.0")
 }
 
 publishing {
