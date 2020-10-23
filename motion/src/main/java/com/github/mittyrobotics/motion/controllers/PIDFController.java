@@ -25,7 +25,7 @@
 package com.github.mittyrobotics.motion.controllers;
 
 import com.github.mittyrobotics.datatypes.motion.ContinuousManager;
-import com.github.mittyrobotics.datatypes.path.Parametric;
+import edu.wpi.first.wpiutil.math.MathUtil;
 
 public class PIDFController {
     private double kP;
@@ -101,7 +101,7 @@ public class PIDFController {
         }
 
         //Output feedback plus feed forward
-        return Parametric.clamp(feedback + feedForward, minOutput, maxOutput);
+        return MathUtil.clamp(feedback + feedForward, minOutput, maxOutput);
     }
 
     /**
@@ -117,7 +117,7 @@ public class PIDFController {
         double feedback = calculateFeedback(measurement, deltaTime);
 
         //Output feedback plus feed forward
-        return Parametric.clamp(feedback + feedForward, minOutput, maxOutput);
+        return MathUtil.clamp(feedback + feedForward, minOutput, maxOutput);
     }
 
     private double calculateFeedback(double measurement, double deltaTime) {

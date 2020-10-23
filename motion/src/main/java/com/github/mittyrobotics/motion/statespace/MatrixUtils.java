@@ -25,7 +25,7 @@
 package com.github.mittyrobotics.motion.statespace;
 
 import com.github.mittyrobotics.jni.DrakeJNI;
-//import edu.wpi.first.wpiutil.math.SimpleMatrixUtils;
+import edu.wpi.first.wpiutil.math.SimpleMatrixUtils;
 import org.ejml.data.Complex_F64;
 import org.ejml.simple.SimpleMatrix;
 
@@ -55,8 +55,7 @@ public class MatrixUtils {
      * @return
      */
     public static SimpleMatrix expm(SimpleMatrix input) {
-//        return SimpleMatrixUtils.expm(input);
-        return new SimpleMatrix(new double[][]{});
+        return SimpleMatrixUtils.expm(input);
     }
 
     public static SimpleMatrix multByDouble(SimpleMatrix matrix, double scalar) {
