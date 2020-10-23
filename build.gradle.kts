@@ -26,23 +26,21 @@ import edu.wpi.first.toolchain.NativePlatforms
 
 plugins {
     id("java")
-    id("cpp")
-    id("edu.wpi.first.wpilib.repositories.WPILibRepositoriesPlugin") version "2020.2"
-    id("edu.wpi.first.NativeUtils") version "2020.10.1"
-    id("edu.wpi.first.GradleJni") version "0.11.0"
-    id("edu.wpi.first.GradleVsCode") version "0.12.0"
-    id("org.openjfx.javafxplugin") version "0.0.8"
+    id("edu.wpi.first.GradleRIO") version "2020.3.2"
     id("maven")
-    id("maven-publish")
+    id("cpp")
+    id("edu.wpi.first.GradleVsCode") version "0.8.0"
+    id("edu.wpi.first.GradleJni") version "0.4.1"
+    id("org.openjfx.javafxplugin") version "0.0.8"
+    `maven-publish`
 }
 
 group = "com.github.MittyRobotics"
 version = "0.1.0"
 
-apply(from = "jni.gradle")
-
 allprojects {
     apply(plugin = "java")
+    apply(plugin = "edu.wpi.first.GradleRIO")
     apply(plugin = "maven")
     apply(plugin = "org.openjfx.javafxplugin")
 
@@ -57,27 +55,26 @@ allprojects {
     }
 
     repositories {
-        maven(url = "https://jitpack.io")
         mavenLocal()
         jcenter()
+        maven(url = "https://jitpack.io")
         maven(url = "http://www.revrobotics.com/content/sw/max/sdk/maven/")
         maven(url = "http://devsite.ctr-electronics.com/maven/release/")
     }
 
     dependencies {
         // WPILib
-//        wpi.deps.wpilib().forEach { compile(it) }
-//        wpi.deps.wpilibJni(NativePlatforms.roborio).forEach { nativeZip(it) }
-//        wpi.deps.wpilibJni(NativePlatforms.desktop).forEach { nativeDesktopZip(it) }
-//
-//        wpi.deps.vendor.java().forEach { compile(it) }
-//        wpi.deps.vendor.jni(NativePlatforms.roborio).forEach { nativeZip(it) }
-//        wpi.deps.vendor.jni(NativePlatforms.desktop).forEach { nativeDesktopZip(it) }
-//
+        wpi.deps.wpilib().forEach { compile(it) }
+        wpi.deps.wpilibJni(NativePlatforms.roborio).forEach { nativeZip(it) }
+        wpi.deps.wpilibJni(NativePlatforms.desktop).forEach { nativeDesktopZip(it) }
 
+        wpi.deps.vendor.java().forEach { compile(it) }
+        wpi.deps.vendor.jni(NativePlatforms.roborio).forEach { nativeZip(it) }
+        wpi.deps.vendor.jni(NativePlatforms.desktop).forEach { nativeDesktopZip(it) }
 
         compile(group = "com.ctre.phoenix", name = "wpiapi-java", version = "5.18.3")
         compile(group = "com.ctre.phoenix", name = "api-java", version = "5.18.3")
+        compile(group = "edu.wpi.first.wpilibNewCommands", name = "wpilibNewCommands-java", version = "2020.3.2")
         compile(group = "com.revrobotics.frc", name = "SparkMax-java", version = "1.5.2")
         compile(group = "org.jfree", name = "jfreechart", version = "1.5.0")
         compile(group = "org.apache.commons", name = "commons-collections4", version = "4.1")
@@ -85,8 +82,8 @@ allprojects {
         compile(group = "org.jblas", name = "jblas", version = "1.2.4")
         compile(group = "org.la4j", name = "la4j", version = "0.6.0")
         compile(group = "net.java.dev.jna", name = "jna", version = "5.5.0")
-        compile(group = "org.apache.commons", name = "commons-math3", version = "+")
-        compile(group = "org.hipparchus", name = "hipparchus-core", version = "+")
+        compile(group = "org.apache.commons", name = "commons-math3", version = "3.6.1")
+
     }
 }
 
