@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-package com.github.mittyrobotics.motion.statespace.motors;
+package com.github.mittyrobotics.motion.modeling.motors;
 
 /**
  * Motor class.

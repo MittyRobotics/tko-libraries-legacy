@@ -22,11 +22,55 @@
  * SOFTWARE.
  */
 
-package com.github.mittyrobotics.motion.statespace.motors;
+package com.github.mittyrobotics.motion.modeling;
 
-public class CIMMotor extends Motor {
-    public CIMMotor(double numMotors) {
-        super(2.42, 133.0, 5310.0, 2.7, numMotors);
+import org.ejml.simple.SimpleMatrix;
+
+public class StateSpaceSystemGains {
+    private SimpleMatrix a;
+    private SimpleMatrix b;
+    private SimpleMatrix c;
+    private SimpleMatrix d;
+
+    public StateSpaceSystemGains() {
     }
 
+    public StateSpaceSystemGains(SimpleMatrix a, SimpleMatrix b, SimpleMatrix c, SimpleMatrix d) {
+        this.a = a;
+        this.b = b;
+        this.c = c;
+        this.d = d;
+    }
+
+    public SimpleMatrix getA() {
+        return a;
+    }
+
+    public void setA(SimpleMatrix a) {
+        this.a = a;
+    }
+
+    public SimpleMatrix getB() {
+        return b;
+    }
+
+    public void setB(SimpleMatrix b) {
+        this.b = b;
+    }
+
+    public SimpleMatrix getC() {
+        return c;
+    }
+
+    public void setC(SimpleMatrix c) {
+        this.c = c;
+    }
+
+    public SimpleMatrix getD() {
+        return d;
+    }
+
+    public void setD(SimpleMatrix d) {
+        this.d = d;
+    }
 }

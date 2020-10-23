@@ -22,70 +22,66 @@
  * SOFTWARE.
  */
 
-package com.github.mittyrobotics.motion.statespace.models;
+package com.github.mittyrobotics.motion.modeling.models;
 
-import com.github.mittyrobotics.motion.statespace.old.Plant;
-import com.github.mittyrobotics.motion.statespace.motors.Motor;
+import com.github.mittyrobotics.motion.modeling.motors.Motor;
+import com.github.mittyrobotics.motion.modeling.Plant;
 import org.ejml.simple.SimpleMatrix;
 
 import java.util.Random;
 
-public class PulleyModel {
-    private double acceleration;
-    private double velocity;
+public class FlywheelModel {
+    private double angularAcceleration;
+    private double angularVelocity;
     private double position;
-
-    private Plant plant;
-    private double mass;
-
     private double measurementNoise;
 
-    public PulleyModel(Motor motor, double mass, double gearReduction, double pulleyRadius, double maxVoltage) {
-        this.plant = Plant.createElevatorPlant(motor, mass, pulleyRadius, gearReduction, maxVoltage, 1);
-        this.mass = mass;
+    private Plant plant;
+
+    public FlywheelModel(Motor motor, double momentOfInertia, double gearReduction, double maxVoltage) {
+        this.plant = Plant.createFlywheelPlant(motor, momentOfInertia, gearReduction, maxVoltage, 1);
         this.measurementNoise = 0;
     }
 
     public void updateModel(double voltage, double deltaTime) {
-        plant.update(new SimpleMatrix(new double[][]{{position}, {velocity}}),
+        plant.update(new SimpleMatrix(new double[][]{{angularVelocity}}),
                 new SimpleMatrix(new double[][]{{voltage}}), deltaTime);
         SimpleMatrix states = plant.getX();
-
-        this.acceleration = (states.get(1) - velocity) / deltaTime;
-        this.velocity = states.get(1);
-        this.position = states.get(0);
+        this.angularAcceleration = (states.get(0) - angularVelocity) / deltaTime;
+        this.angularVelocity = states.get(0);
+        this.position += angularVelocity * deltaTime;
     }
 
     private double calculateMeasurementNoise(double measurementNoise) {
         return (measurementNoise != 0 ? ((new Random().nextDouble() - 0.5) * measurementNoise) : 0);
     }
 
+    public static double estimateMomentOfInertia(double slope, double gearReduction, Motor motor){
+        return slope * -((gearReduction*gearReduction*motor.getKt())/(motor.getKv()*motor.getResistance()));
+    }
+
     public Plant getPlant() {
         return plant;
     }
 
+    public double getAngularVelocity() {
+        return angularVelocity + calculateMeasurementNoise(measurementNoise);
+    }
+
+    public void setAngularVelocity(double angularVelocity) {
+        this.angularVelocity = angularVelocity;
+    }
+
+    public double getAngularAcceleration() {
+        return angularAcceleration + calculateMeasurementNoise(measurementNoise);
+    }
+
+    public void setAngularAcceleration(double angularAcceleration) {
+        this.angularAcceleration = angularAcceleration;
+    }
+
     public double getPosition() {
-        return position + calculateMeasurementNoise(measurementNoise);
-    }
-
-    public void setPosition(double position) {
-        this.position = position;
-    }
-
-    public double getVelocity() {
-        return velocity + calculateMeasurementNoise(measurementNoise);
-    }
-
-    public void setVelocity(double velocity) {
-        this.velocity = velocity;
-    }
-
-    public double getAcceleration() {
-        return acceleration + calculateMeasurementNoise(measurementNoise);
-    }
-
-    public void setAcceleration(double acceleration) {
-        this.acceleration = acceleration;
+        return position;
     }
 
     public double getMeasurementNoise() {
@@ -95,4 +91,5 @@ public class PulleyModel {
     public void setMeasurementNoise(double measurementNoise) {
         this.measurementNoise = measurementNoise;
     }
+
 }

@@ -27,7 +27,7 @@ package com.github.mittyrobotics.simulation.sim;
 import com.github.mittyrobotics.datatypes.positioning.Position;
 import com.github.mittyrobotics.datatypes.positioning.Rotation;
 import com.github.mittyrobotics.datatypes.positioning.Transform;
-import com.github.mittyrobotics.motion.statespace.models.DrivetrainModel;
+import com.github.mittyrobotics.motion.modeling.models.DrivetrainModel;
 
 import java.util.Timer;
 import java.util.TimerTask;

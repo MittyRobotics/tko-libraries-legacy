@@ -22,55 +22,10 @@
  * SOFTWARE.
  */
 
-package com.github.mittyrobotics.motion.statespace.old;
+package com.github.mittyrobotics.motion.modeling.motors;
 
-import org.ejml.simple.SimpleMatrix;
-
-public class StateSpaceSystemGains {
-    private SimpleMatrix a;
-    private SimpleMatrix b;
-    private SimpleMatrix c;
-    private SimpleMatrix d;
-
-    public StateSpaceSystemGains() {
-    }
-
-    public StateSpaceSystemGains(SimpleMatrix a, SimpleMatrix b, SimpleMatrix c, SimpleMatrix d) {
-        this.a = a;
-        this.b = b;
-        this.c = c;
-        this.d = d;
-    }
-
-    public SimpleMatrix getA() {
-        return a;
-    }
-
-    public void setA(SimpleMatrix a) {
-        this.a = a;
-    }
-
-    public SimpleMatrix getB() {
-        return b;
-    }
-
-    public void setB(SimpleMatrix b) {
-        this.b = b;
-    }
-
-    public SimpleMatrix getC() {
-        return c;
-    }
-
-    public void setC(SimpleMatrix c) {
-        this.c = c;
-    }
-
-    public SimpleMatrix getD() {
-        return d;
-    }
-
-    public void setD(SimpleMatrix d) {
-        this.d = d;
+public class Pro775Motor extends Motor {
+    public Pro775Motor(double numMotors) {
+        super(.71, 134, 18730, 0.7, numMotors);
     }
 }

@@ -22,27 +22,22 @@
  *  SOFTWARE.
  */
 
-package com.github.mittyrobotics.motion.statespace;
+package com.github.mittyrobotics.motion.modeling.models;
 
-import org.ejml.simple.SimpleMatrix;
+public class DoubleJointedArmModel {
+    private SingleJointedArmModel arm1;
+    private SingleJointedArmModel arm2;
 
-public class LinearQuadraticRegulator {
-    public static SimpleMatrix linearQuadraticRegulator(StateSpaceSystem system, SimpleMatrix qElms, SimpleMatrix rElms, double qWeight){
-        return linearQuadraticRegulator(system.getA(), system.getB(), qElms, rElms, qWeight);
+    public DoubleJointedArmModel(SingleJointedArmModel arm1, SingleJointedArmModel arm2){
+        this.arm1 = arm1;
+        this.arm2 = arm2;
     }
 
-    public static SimpleMatrix linearQuadraticRegulator(SimpleMatrix A, SimpleMatrix B, SimpleMatrix qElms, SimpleMatrix rElms, double qWeight){
-        //Create cost matrices of q and r elements
-        SimpleMatrix Q = MatrixUtils.makeCostMatrix(qElms, qWeight);
-        SimpleMatrix R = MatrixUtils.makeCostMatrix(rElms, 1);
+    public SingleJointedArmModel getArm1() {
+        return arm1;
+    }
 
-        //Solve discrete algrbraic riccati equation
-        SimpleMatrix S = MatrixUtils.discreteAlgebraicRiccatiEquation(A, B, Q, R);
-
-        //Calculate LQR gain and LQR feedforward gain
-        SimpleMatrix temp = B.transpose().mult(S).mult(B).plus(R);
-        SimpleMatrix K = temp.solve(B.transpose().mult(S).mult(A));
-
-        return K;
+    public SingleJointedArmModel getArm2() {
+        return arm2;
     }
 }

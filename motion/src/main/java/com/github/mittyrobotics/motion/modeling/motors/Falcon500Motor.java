@@ -22,10 +22,10 @@
  * SOFTWARE.
  */
 
-package com.github.mittyrobotics.motion.statespace.motors;
+package com.github.mittyrobotics.motion.modeling.motors;
 
-public class MiniCIMMotor extends Motor {
-    public MiniCIMMotor(double numMotors) {
-        super(1.41, 89, 5840, 3, numMotors);
+public class Falcon500Motor extends Motor {
+    public Falcon500Motor(double numMotors) {
+        super(4.69, 257, 6380, 1.5, numMotors);
     }
 }

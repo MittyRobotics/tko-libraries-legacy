@@ -22,10 +22,9 @@
  * SOFTWARE.
  */
 
-package com.github.mittyrobotics.motion.statespace.old;
+package com.github.mittyrobotics.motion.modeling;
 
-import com.github.mittyrobotics.motion.statespace.MatrixUtils;
-import com.github.mittyrobotics.motion.statespace.motors.Motor;
+import com.github.mittyrobotics.motion.modeling.motors.Motor;
 import org.ejml.simple.SimpleMatrix;
 
 public class Plant {

@@ -44,7 +44,6 @@ dependencies {
     compile(project(":visualization"))
     compile(project(":data-collection"))
     compile(project(":path-generation"))
-    compile(project(":cpp-util-module"))
 }
 
 publishing {

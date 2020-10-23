@@ -22,10 +22,10 @@
  * SOFTWARE.
  */
 
-package com.github.mittyrobotics.motion.statespace.models;
+package com.github.mittyrobotics.motion.modeling.models;
 
 import com.github.mittyrobotics.datatypes.motion.DrivetrainWheelSpeeds;
-import com.github.mittyrobotics.motion.statespace.motors.Motor;
+import com.github.mittyrobotics.motion.modeling.motors.Motor;
 
 public class DrivetrainModel {
     private final double mass;

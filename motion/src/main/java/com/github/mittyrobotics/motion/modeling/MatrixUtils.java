@@ -22,9 +22,8 @@
  * SOFTWARE.
  */
 
-package com.github.mittyrobotics.motion.statespace;
+package com.github.mittyrobotics.motion.modeling;
 
-import com.github.mittyrobotics.jni.DrakeJNI;
 import edu.wpi.first.wpiutil.math.SimpleMatrixUtils;
 import org.ejml.data.Complex_F64;
 import org.ejml.simple.SimpleMatrix;
@@ -134,18 +133,5 @@ public class MatrixUtils {
             output.set(i, Math.max(min, Math.min(max, matrix.get(i))));
         }
         return output;
-    }
-
-    public static SimpleMatrix discreteAlgebraicRiccatiEquation(SimpleMatrix A, SimpleMatrix B, SimpleMatrix Q,
-                                                                SimpleMatrix R) {
-
-        int states = A.numCols();
-        int inputs = B.numCols();
-
-        double[] resultsArray = DrakeJNI
-                .discreteAlgebraicRiccatiEquationJNI(A.getDDRM().getData(), B.getDDRM().getData(),
-                        Q.getDDRM().getData(), R.getDDRM().getData(), states, inputs);
-
-        return new SimpleMatrix(states, states, true, resultsArray);
     }
 }

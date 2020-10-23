@@ -22,10 +22,11 @@
  * SOFTWARE.
  */
 
-package com.github.mittyrobotics.motion.statespace.motors;
+package com.github.mittyrobotics.motion.modeling.motors;
 
-public class Pro775Motor extends Motor {
-    public Pro775Motor(double numMotors) {
-        super(.71, 134, 18730, 0.7, numMotors);
+public class CIMMotor extends Motor {
+    public CIMMotor(double numMotors) {
+        super(2.42, 133.0, 5310.0, 2.7, numMotors);
     }
+
 }

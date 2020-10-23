@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-package com.github.mittyrobotics.motion.statespace.motors;
+package com.github.mittyrobotics.motion.modeling.motors;
 
 public class NEOMotor extends Motor {
     public NEOMotor(double numMotors) {

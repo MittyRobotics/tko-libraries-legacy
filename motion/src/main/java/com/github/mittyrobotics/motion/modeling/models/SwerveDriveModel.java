@@ -22,12 +22,12 @@
  *  SOFTWARE.
  */
 
-package com.github.mittyrobotics.motion.statespace.models;
+package com.github.mittyrobotics.motion.modeling.models;
 
 import com.github.mittyrobotics.datatypes.motion.SwerveDriveKinematics;
 import com.github.mittyrobotics.datatypes.motion.SwerveDriveState;
 import com.github.mittyrobotics.datatypes.motion.SwerveModuleState;
-import com.github.mittyrobotics.motion.statespace.motors.Motor;
+import com.github.mittyrobotics.motion.modeling.motors.Motor;
 
 public class SwerveDriveModel {
     private final Motor wheelMotor;
