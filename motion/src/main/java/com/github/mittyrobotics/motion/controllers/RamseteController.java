@@ -38,18 +38,15 @@ public class RamseteController {
      *
      * @param robotTransform
      * @param desiredTransform
-     * @param linearVelocity
-     * @param angularVelocity
+     * @param velocity
      * @param aggressiveGain
      * @param dampingGain
-     * @param trackWidth
      * @param reversed
      * @return
      */
     public static DrivetrainSpeeds calculate(Transform robotTransform, Transform desiredTransform,
-                                             double linearVelocity,
-                                             double angularVelocity, double aggressiveGain, double dampingGain,
-                                             double trackWidth, boolean reversed) {
+                                             DrivetrainSpeeds velocity, double aggressiveGain, double dampingGain,
+                                             boolean reversed) {
         //Get the transform error in meters.
         Transform error = desiredTransform.relativeTo(robotTransform);
 
@@ -59,19 +56,19 @@ public class RamseteController {
 
         //Calculate the Ramsete k value
         double k = 2.0 * dampingGain *
-                Math.sqrt(Math.pow(angularVelocity, 2) + aggressiveGain * Math.pow(linearVelocity, 2));
+                Math.sqrt(Math.pow(velocity.getAngular(), 2) + aggressiveGain * Math.pow(velocity.getLinear(), 2));
 
         //Calculate the adjusted linear velocity from the Ramsete algorithm
-        double adjustedLinearVelocity = linearVelocity * error.getRotation().cos() + k * eX;
+        double adjustedLinearVelocity = velocity.getLinear() * error.getRotation().cos() + k * eX;
 
         //Calculate the adjusted angular velocity from the Ramsete algorithm (stays in radians per second)
         double adjustedAngularVelocity =
-                angularVelocity + k * eTheta + aggressiveGain * linearVelocity * error.getRotation().sinc() * eY;
+                velocity.getAngular() + k * eTheta + aggressiveGain * velocity.getLinear() * error.getRotation().sinc() * eY;
 
         //Calculate drivetrain state from linear and angular velocity
         DrivetrainSpeeds state = DrivetrainSpeeds
                 .fromLinearAndAngular(adjustedLinearVelocity, adjustedAngularVelocity * (reversed ? -1 : 1),
-                        trackWidth);
+                        velocity.getTrackWidth());
 
         //Reversed controller
         if (reversed) {
