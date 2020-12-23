@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-package com.github.mittyrobotics.motion.profiles;
+package com.github.mittyrobotics.motion.controllers;
 
 
 public class PathVelocityController {

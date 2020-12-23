@@ -32,6 +32,8 @@ import com.github.mittyrobotics.datatypes.positioning.Transform;
 
 public class PurePursuitController {
     public static double DEFAULT_LOOKAHEAD_DISTANCE = 25.0;
+    public static double DEFAULT_CURVATURE_SLOWDOWN_GAIN = 0.0;
+    public static double DEFAULT_MIN_SLOWDOWN_VELOCITY = 0.0;
 
     /**
      * Calculates the {@link DrivetrainSpeeds} using the Pure Pursuit path following algorithm.
@@ -44,6 +46,25 @@ public class PurePursuitController {
      * @return
      */
     public static DrivetrainSpeeds calculate(Transform robotTransform, Position targetPosition, double robotVelocity,
+                                             double trackWidth, boolean reversed) {
+        return calculate(robotTransform, targetPosition, robotVelocity, DEFAULT_CURVATURE_SLOWDOWN_GAIN,
+                DEFAULT_MIN_SLOWDOWN_VELOCITY, trackWidth, reversed);
+    }
+
+    /**
+     * Calculates the {@link DrivetrainSpeeds} using the Pure Pursuit path following algorithm.
+     *
+     * @param robotTransform
+     * @param targetPosition
+     * @param robotVelocity
+     * @param curvatureSlowdownGain
+     * @param minSlowdownVelocity
+     * @param trackWidth
+     * @param reversed
+     * @return
+     */
+    public static DrivetrainSpeeds calculate(Transform robotTransform, Position targetPosition, double robotVelocity,
+                                             double curvatureSlowdownGain, double minSlowdownVelocity,
                                              double trackWidth, boolean reversed) {
         //Calculate the pursuit circle to follow, calculated by finding the circle tangent to the robot transform that
         //intersects the target position.
@@ -59,6 +80,9 @@ public class PurePursuitController {
 
         double radius = pursuitCircle.getRadius() * side;
 
+        robotVelocity = calculateSlowdownVelocity(1 / (pursuitCircle.getRadius()), curvatureSlowdownGain, robotVelocity,
+                minSlowdownVelocity);
+
         //Use differential drive kinematics to calculate the left and right wheel velocity given the base robot
         //velocity and the radius of the pursuit circle
         DrivetrainSpeeds state = DrivetrainSpeeds.fromLinearAndRadius(robotVelocity, radius, trackWidth);
@@ -69,4 +93,27 @@ public class PurePursuitController {
 
         return state;
     }
+
+    /**
+     * Calculates the velocity of the robot after applying the <code>curvatureSlowdownGain</code> to the
+     * <code>curvature</code>.
+     *
+     * @param curvature           the curvature (1/radius) of the arc the robot is following.
+     * @param currentVelocity     the current velocity that the robot is or should be moving at.
+     * @param minSlowdownVelocity the minimum allowed velocity to slow down to.
+     * @return the velocity of the robot after applying the <code>curvatureSlowdownGain</code> to the
+     * <code>curvature</code>.
+     */
+    private static double calculateSlowdownVelocity(double curvature, double curvatureSlowdownGain,
+                                                    double currentVelocity,
+                                                    double minSlowdownVelocity) {
+        if (curvatureSlowdownGain == 0) {
+            return currentVelocity;
+        }
+        double absVelocity = Math.abs(currentVelocity);
+        double velSign = Math.signum(currentVelocity);
+        double vel = Math.min(absVelocity, Math.max(minSlowdownVelocity, curvatureSlowdownGain / curvature));
+        return vel * velSign;
+    }
+
 }

@@ -32,7 +32,6 @@ import com.github.mittyrobotics.datatypes.positioning.TransformWithParameter;
 import com.github.mittyrobotics.motion.controllers.PurePursuitController;
 import com.github.mittyrobotics.motion.controllers.RamseteController;
 import com.github.mittyrobotics.motion.pathfollowing.enums.PathFollowingType;
-import com.github.mittyrobotics.motion.pathfollowing.util.PathFollowerProperties;
 import com.github.mittyrobotics.path.generation.Path;
 import com.github.mittyrobotics.path.generation.PathGenerator;
 
@@ -87,13 +86,6 @@ public class PathFollower {
         this.purePursuitProperties = purePursuitProperties;
         this.ramseteProperties = null;
 
-//        if (purePursuitProperties.curvatureSlowdownGain != -1) {
-//            PurePursuitController.getInstance().setCurvatureSlowdownGain(purePursuitProperties.curvatureSlowdownGain);
-//        }
-//        if (purePursuitProperties.minSlowdownVelocity != -1) {
-//            PurePursuitController.getInstance().setMinSlowdownVelocity(purePursuitProperties.minSlowdownVelocity);
-//        }
-
     }
 
     /**
@@ -110,12 +102,6 @@ public class PathFollower {
         this.ramseteProperties = ramseteProperties;
         this.purePursuitProperties = null;
 
-//        if (ramseteProperties.aggressiveGain != -1) {
-//            RamseteController.getInstance().setAggressiveGain(ramseteProperties.aggressiveGain);
-//        }
-//        if (ramseteProperties.dampingGain != -1) {
-//            RamseteController.getInstance().setDampingGain(ramseteProperties.dampingGain);
-//        }
     }
 
     /**
@@ -241,10 +227,13 @@ public class PathFollower {
         double robotVelocity = properties.velocityController.getVelocity(previousCalculatedVelocity, distanceToEnd,
                 deltaTime);
 
+
         this.previousCalculatedVelocity = robotVelocity;
         //Calculate the pure pursuit controller
-        return PurePursuitController.calculate(robotTransform, targetPosition, robotVelocity,
-                properties.trackWidth, properties.reversed);
+        return PurePursuitController
+                .calculate(robotTransform, targetPosition, robotVelocity, purePursuitProperties.curvatureSlowdownGain,
+                        purePursuitProperties.minSlowdownVelocity,
+                        properties.trackWidth, properties.reversed);
     }
 
     /**
@@ -260,8 +249,9 @@ public class PathFollower {
         TransformWithParameter desiredTransform = currentPath.getClosestTransform(robotTransform.getPosition());
 
         //If reversed, reverse the desired transform's rotation
-        desiredTransform.setRotation(desiredTransform.getRotation().rotateBy(Rotation.fromDegrees((properties.reversed ? 180 :
-                0))));
+        desiredTransform
+                .setRotation(desiredTransform.getRotation().rotateBy(Rotation.fromDegrees((properties.reversed ? 180 :
+                        0))));
 
         //Find the rough distance to the end of the path
         double distanceToEnd = getRoughDistanceToEnd(robotTransform);

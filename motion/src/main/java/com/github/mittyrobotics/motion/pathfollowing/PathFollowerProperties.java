@@ -22,10 +22,9 @@
  * SOFTWARE.
  */
 
-package com.github.mittyrobotics.motion.pathfollowing.util;
+package com.github.mittyrobotics.motion.pathfollowing;
 
-import com.github.mittyrobotics.motion.profiles.PathVelocityController;
-import com.github.mittyrobotics.path.generation.Path;
+import com.github.mittyrobotics.motion.controllers.PathVelocityController;
 
 public class PathFollowerProperties {
     public final PathVelocityController velocityController;

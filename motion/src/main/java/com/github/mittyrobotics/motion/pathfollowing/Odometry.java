@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-package com.github.mittyrobotics.motion.pathfollowing.util;
+package com.github.mittyrobotics.motion.pathfollowing;
 
 import com.github.mittyrobotics.datatypes.CircularTimestampedList;
 import com.github.mittyrobotics.datatypes.TimestampedElement;
