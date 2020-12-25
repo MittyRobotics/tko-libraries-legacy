@@ -24,44 +24,20 @@
 
 package com.github.mittyrobotics.datatypes.motion;
 
-public class DrivetrainWheelSpeeds {
-    private final double left;
-    private final double right;
+public class DrivetrainStates {
+    private final DrivetrainState velocity;
+    private final DrivetrainState acceleration;
 
-    /**
-     * Represents a left and right drivetrain wheel speed. Speed can be represented in any unit, most commonly used
-     * as velocity or voltage.
-     *
-     * @param left  the left wheel speed
-     * @param right the right wheel speed
-     */
-    public DrivetrainWheelSpeeds(double left, double right) {
-        if (Double.isNaN(left) || Double.isInfinite(left)) {
-            this.left = 0;
-        } else {
-            this.left = left;
-        }
-        if (Double.isNaN(right) || Double.isInfinite(right)) {
-            this.right = 0;
-        } else {
-            this.right = right;
-        }
+    public DrivetrainStates(DrivetrainState velocity, DrivetrainState acceleration) {
+        this.velocity = velocity;
+        this.acceleration = acceleration;
     }
 
-    public double getLeft() {
-        return left;
+    public DrivetrainState getVelocity() {
+        return velocity;
     }
 
-    public double getRight() {
-        return right;
-    }
-
-    public double getAvg() {
-        return (right + left) / 2;
-    }
-
-    @Override
-    public String toString() {
-        return String.format("DrivetrainWheelSpeeds(left: %s, right: %s)", left, right);
+    public DrivetrainState getAcceleration() {
+        return acceleration;
     }
 }

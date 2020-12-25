@@ -25,19 +25,151 @@
 package com.github.mittyrobotics.datatypes.motion;
 
 public class DrivetrainState {
-    private final DrivetrainSpeeds velocity;
-    private final DrivetrainSpeeds acceleration;
+    private double linear;
+    private double angular;
+    private double left;
+    private double right;
+    private double curvature;
+    private double trackWidth;
 
-    public DrivetrainState(DrivetrainSpeeds velocity, DrivetrainSpeeds acceleration) {
-        this.velocity = velocity;
-        this.acceleration = acceleration;
+    public DrivetrainState(double linear, double angular, double left, double right, double curvature,
+                           double trackWidth) {
+        this.linear = linear;
+        this.angular = angular;
+        this.left = left;
+        this.right = right;
+        this.curvature = curvature;
+        this.trackWidth = trackWidth;
     }
 
-    public DrivetrainSpeeds getVelocity() {
-        return velocity;
+    public static DrivetrainState empty() {
+        return new DrivetrainState(0, 0, 0, 0, 0, 0);
     }
 
-    public DrivetrainSpeeds getAcceleration() {
-        return acceleration;
+    public static DrivetrainState fromLinearAndRadius(double linear, double radius,
+                                                      double trackWidth) {
+        DrivetrainWheelState drivetrainWheelVelocities =
+                DifferentialDriveKinematics.calculateFromLinearAndRadius(linear, radius, trackWidth);
+        return fromWheelSpeeds(drivetrainWheelVelocities, trackWidth);
+    }
+
+    public static DrivetrainState fromAngularAndRadius(double angular, double radius,
+                                                       double trackWidth) {
+        DrivetrainWheelState drivetrainWheelVelocities =
+                DifferentialDriveKinematics.calculateFromAngularAndRadius(angular, radius, trackWidth);
+        return fromWheelSpeeds(drivetrainWheelVelocities, trackWidth);
+    }
+
+    public static DrivetrainState fromWheelSpeeds(double left, double right, double trackWidth) {
+        return fromWheelSpeeds(new DrivetrainWheelState(left, right), trackWidth);
+    }
+
+    public static DrivetrainState fromWheelSpeeds(
+            DrivetrainWheelState drivetrainWheelState, double trackWidth) {
+        //Get linear and angular speed from drivetrain speed
+        double linear = drivetrainWheelState.getAvg();
+        double angular =
+                DifferentialDriveKinematics.getAngularVelocityFromWheelSpeeds(drivetrainWheelState, trackWidth);
+
+        //Get driving curvature from linear and angular speed
+        double curvature = 1 / (linear / angular);
+
+        if (Double.isNaN(curvature)) {
+            curvature = 0;
+        }
+
+        return new DrivetrainState(linear, angular, drivetrainWheelState.getLeft(),
+                drivetrainWheelState.getRight(), curvature, trackWidth);
+    }
+
+    public static DrivetrainState fromLinearAndAngular(double linear, double angular,
+                                                       double trackWidth) {
+        //Calculate drivetrain velocities from linear and angular velocities
+        DrivetrainWheelState drivetrainWheelVelocities =
+                DifferentialDriveKinematics.calculateFromLinearAndAngular(linear, angular, trackWidth);
+
+        //Get left and right velocity from drivetrain velocities
+        double left = drivetrainWheelVelocities.getLeft();
+        double right = drivetrainWheelVelocities.getRight();
+
+        //Get driving curvature from linear velocity and angular velocity
+        double curvature = 1 / (linear / angular);
+
+        return new DrivetrainState(linear, angular, left, right, curvature,
+                trackWidth);
+    }
+
+    public DrivetrainState reverse() {
+        return new DrivetrainState(-linear, angular, -left, -right,
+                curvature, trackWidth);
+    }
+
+    private void setValues(DrivetrainState data) {
+        this.linear = data.getLinear();
+        this.angular = data.getAngular();
+        this.left = data.getLeft();
+        this.right = data.getRight();
+        this.curvature = data.getCurvature();
+        this.trackWidth = data.getTrackWidth();
+    }
+
+    public double getLinear() {
+        return linear;
+    }
+
+    public void setLinear(double linear) {
+        this.linear = linear;
+        setValues(fromLinearAndAngular(linear, angular, trackWidth));
+    }
+
+    public double getAngular() {
+        return angular;
+    }
+
+    public void setAngular(double angular) {
+        this.angular = angular;
+        setValues(fromLinearAndAngular(linear, angular, trackWidth));
+    }
+
+    public double getLeft() {
+        return left;
+    }
+
+    public void setLeft(double left) {
+        this.left = left;
+        setValues(fromWheelSpeeds(left, right, trackWidth));
+    }
+
+    public double getRight() {
+        return right;
+    }
+
+    public void setRight(double right) {
+        this.right = right;
+        setValues(fromWheelSpeeds(left, right, trackWidth));
+    }
+
+    public double getCurvature() {
+        return curvature;
+    }
+
+    public double getDrivingRadius() {
+        return 1 / curvature;
+    }
+
+    public double getTrackWidth() {
+        return trackWidth;
+    }
+
+    @Override
+    public String toString() {
+        return "DrivetrainSpeeds{" +
+                "linear=" + linear +
+                ", angular=" + angular +
+                ", left=" + left +
+                ", right=" + right +
+                ", curvature=" + curvature +
+                ", trackWidth=" + trackWidth +
+                '}';
     }
 }

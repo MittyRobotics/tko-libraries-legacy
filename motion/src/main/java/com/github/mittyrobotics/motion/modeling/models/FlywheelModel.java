@@ -24,8 +24,8 @@
 
 package com.github.mittyrobotics.motion.modeling.models;
 
-import com.github.mittyrobotics.motion.modeling.motors.Motor;
 import com.github.mittyrobotics.motion.modeling.Plant;
+import com.github.mittyrobotics.motion.modeling.motors.Motor;
 import org.ejml.simple.SimpleMatrix;
 
 import java.util.Random;
@@ -43,6 +43,10 @@ public class FlywheelModel {
         this.measurementNoise = 0;
     }
 
+    public static double estimateMomentOfInertia(double slope, double gearReduction, Motor motor) {
+        return slope * -((gearReduction * gearReduction * motor.getKt()) / (motor.getKv() * motor.getResistance()));
+    }
+
     public void updateModel(double voltage, double deltaTime) {
         plant.update(new SimpleMatrix(new double[][]{{angularVelocity}}),
                 new SimpleMatrix(new double[][]{{voltage}}), deltaTime);
@@ -54,10 +58,6 @@ public class FlywheelModel {
 
     private double calculateMeasurementNoise(double measurementNoise) {
         return (measurementNoise != 0 ? ((new Random().nextDouble() - 0.5) * measurementNoise) : 0);
-    }
-
-    public static double estimateMomentOfInertia(double slope, double gearReduction, Motor motor){
-        return slope * -((gearReduction*gearReduction*motor.getKt())/(motor.getKv()*motor.getResistance()));
     }
 
     public Plant getPlant() {

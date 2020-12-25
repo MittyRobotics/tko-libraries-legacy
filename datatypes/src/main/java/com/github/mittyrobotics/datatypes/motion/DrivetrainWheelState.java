@@ -22,23 +22,46 @@
  * SOFTWARE.
  */
 
-package com.github.mittyrobotics.simulation;
+package com.github.mittyrobotics.datatypes.motion;
 
-import com.github.mittyrobotics.datatypes.units.Conversions;
-import com.github.mittyrobotics.motion.modeling.models.DrivetrainModel;
-import com.github.mittyrobotics.motion.modeling.motors.CIMMotor;
-import com.github.mittyrobotics.simulation.sim.PathFollowerSimRobot;
-import com.github.mittyrobotics.simulation.sim.RobotSimulator;
-import com.github.mittyrobotics.simulation.sim.SimDrivetrain;
-import com.github.mittyrobotics.visualization.RobotGraph;
+public class DrivetrainWheelState {
+    private final double left;
+    private final double right;
 
-public class Main {
-    public static void main(String[] args) {
-        DrivetrainModel drivetrainModel =
-                new DrivetrainModel(125 * Conversions.LBS_TO_KG, 1.585, 20 * Conversions.IN_TO_M,
-                        30 * Conversions.IN_TO_M, new CIMMotor(2), 7.0, 2 * Conversions.IN_TO_M);
-        PathFollowerSimRobot robot = new PathFollowerSimRobot(new SimDrivetrain(drivetrainModel));
+    /**
+     * Represents a left and right drivetrain wheel speed. Speed can be represented in any unit, most commonly used
+     * as velocity or voltage.
+     *
+     * @param left  the left wheel speed
+     * @param right the right wheel speed
+     */
+    public DrivetrainWheelState(double left, double right) {
+        if (Double.isNaN(left) || Double.isInfinite(left)) {
+            this.left = 0;
+        } else {
+            this.left = left;
+        }
+        if (Double.isNaN(right) || Double.isInfinite(right)) {
+            this.right = 0;
+        } else {
+            this.right = right;
+        }
+    }
 
-        RobotSimulator simulator = new RobotSimulator(robot, 0.02, new RobotGraph());
+    public double getLeft() {
+        return left;
+    }
+
+    public double getRight() {
+        return right;
+    }
+
+    public double getAvg() {
+        return (right + left) / 2;
+    }
+
+    @Override
+    public String toString() {
+        return String.format("DrivetrainWheelSpeeds(left: %s, right: %s)", left, right);
     }
 }

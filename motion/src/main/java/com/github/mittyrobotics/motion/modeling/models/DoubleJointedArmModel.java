@@ -28,7 +28,7 @@ public class DoubleJointedArmModel {
     private SingleJointedArmModel arm1;
     private SingleJointedArmModel arm2;
 
-    public DoubleJointedArmModel(SingleJointedArmModel arm1, SingleJointedArmModel arm2){
+    public DoubleJointedArmModel(SingleJointedArmModel arm1, SingleJointedArmModel arm2) {
         this.arm1 = arm1;
         this.arm2 = arm2;
     }

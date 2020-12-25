@@ -152,6 +152,51 @@ public class Plant {
         return new Plant(states, outputs, continuousSystem, uMin, uMax, deltaTime);
     }
 
+    public static Plant createDifferentialDrivePlant(Motor motor, double mass, double momentOfInertia,
+                                                     double trackWidth, double gearReduction, double wheelRadius,
+                                                     double maxVoltage, double deltaTime) {
+        SimpleMatrix states, outputs, a, b, c, d, uMin, uMax;
+        states = new SimpleMatrix(new double[2][1]); //[[right velocity], [left velocity]]
+        states.zero();
+        outputs = new SimpleMatrix(new double[2][1]); //[[right velocity], [left velocity]]
+        outputs.zero();
+
+        double G = gearReduction;
+        double Kt = motor.getKt();
+        double Kv = motor.getKv();
+        double R = motor.getResistance();
+        double J = momentOfInertia;
+        double rb = trackWidth;
+        double r = wheelRadius;
+        double m = mass;
+
+        double C1 = -G * G * Kt / (Kv * R * (r * r));
+        double C2 = G * Kt / (R * r);
+        double C3 = C1;
+        double C4 = C2;
+
+        a = new SimpleMatrix(new double[][]{
+                {(1 / m + (rb * rb / J)) * C1, (1 / m - (rb * rb / J)) * C1},
+                {(1 / m - (rb * rb / J)) * C1, (1 / m + (rb * rb / J)) * C1}
+        });
+
+        b = new SimpleMatrix(new double[][]{
+                {(1 / m + (rb * rb / J)) * C2, (1 / m - (rb * rb / J)) * C2},
+                {(1 / m - (rb * rb / J)) * C2, (1 / m + (rb * rb / J)) * C2}
+        });
+
+        c = SimpleMatrix.identity(2);
+
+        d = new SimpleMatrix(new double[2][2]);
+        d.zero();
+
+        uMin = new SimpleMatrix(new double[][]{{-maxVoltage}});
+        uMax = new SimpleMatrix(new double[][]{{maxVoltage}});
+
+        StateSpaceSystemGains continuousSystem = new StateSpaceSystemGains(a, b, c, d);
+        return new Plant(states, outputs, continuousSystem, uMin, uMax, deltaTime);
+    }
+
     public static Plant createInvertedPendulumPlant(Motor motor, double cartMass, double pendulumMass,
                                                     double cartFrictionCoeff, double pendulumInertia, double gravity,
                                                     double pendulumLengthToCenterMass, double deltaTime) {

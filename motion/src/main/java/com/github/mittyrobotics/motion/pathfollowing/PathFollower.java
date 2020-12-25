@@ -24,96 +24,30 @@
 
 package com.github.mittyrobotics.motion.pathfollowing;
 
-import com.github.mittyrobotics.datatypes.motion.DrivetrainSpeeds;
-import com.github.mittyrobotics.datatypes.positioning.Position;
-import com.github.mittyrobotics.datatypes.positioning.Rotation;
+import com.github.mittyrobotics.datatypes.motion.DrivetrainState;
 import com.github.mittyrobotics.datatypes.positioning.Transform;
 import com.github.mittyrobotics.datatypes.positioning.TransformWithParameter;
-import com.github.mittyrobotics.motion.controllers.PurePursuitController;
-import com.github.mittyrobotics.motion.controllers.RamseteController;
 import com.github.mittyrobotics.motion.pathfollowing.enums.PathFollowingType;
 import com.github.mittyrobotics.path.generation.Path;
 import com.github.mittyrobotics.path.generation.PathGenerator;
 
-public class PathFollower {
+public abstract class PathFollower {
     private PathFollowingType pathFollowingType;
 
     private PathFollowerProperties properties;
-    private PathFollowerProperties.PurePursuitProperties purePursuitProperties;
-    private PathFollowerProperties.RamseteProperties ramseteProperties;
 
-    private double previousCalculatedVelocity;
-
+    private double previousCalculatedVelocity = 0;
     private Path currentPath;
     private boolean unAdaptedPath;
-
-    private double currentDistanceToEnd;
-
-    /**
-     * Constructs a {@link PathFollower} and sets it up for use with the {@link PurePursuitController}.
-     *
-     * @param properties            the {@link PathFollowerProperties} for the {@link PathFollower}.
-     * @param purePursuitProperties the {@link PathFollowerProperties.PurePursuitProperties} for the
-     *                              {@link PathFollower}.
-     */
-    public PathFollower(PathFollowerProperties properties,
-                        PathFollowerProperties.PurePursuitProperties purePursuitProperties) {
-        setupPurePursuit(properties, purePursuitProperties);
-    }
+    private double currentDistanceToEnd = Double.POSITIVE_INFINITY;
 
     /**
-     * Constructs a {@link PathFollower} and sets it up for use with the {@link RamseteController}.
+     * Constructs a {@link PathFollower}.
      *
-     * @param properties        the {@link PathFollowerProperties} for the {@link PathFollower}.
-     * @param ramseteProperties the {@link PathFollowerProperties.RamseteProperties} for the {@link PathFollower}.
+     * @param properties the {@link PathFollowerProperties} for the {@link PathFollower}.
      */
-    public PathFollower(PathFollowerProperties properties, PathFollowerProperties.RamseteProperties ramseteProperties) {
-        setupRamseteController(properties, ramseteProperties);
-    }
-
-    /**
-     * Sets up the {@link PurePursuitController} with the {@link PathFollowerProperties.PurePursuitProperties}.
-     *
-     * @param properties            the {@link PathFollowerProperties} for the {@link PathFollower}.
-     * @param purePursuitProperties the {@link PathFollowerProperties.PurePursuitProperties} for the
-     *                              {@link PathFollower}.
-     */
-    private void setupPurePursuit(PathFollowerProperties properties,
-                                  PathFollowerProperties.PurePursuitProperties purePursuitProperties) {
-        pathFollowingType = PathFollowingType.PURE_PURSUIT_CONTROLLER;
-
-        setupPathFollower(properties);
-        this.purePursuitProperties = purePursuitProperties;
-        this.ramseteProperties = null;
-
-    }
-
-    /**
-     * Sets up the {@link RamseteController} with the {@link PathFollowerProperties.RamseteProperties}.
-     *
-     * @param properties        the {@link PathFollowerProperties} for the {@link PathFollower}.
-     * @param ramseteProperties the {@link PathFollowerProperties.RamseteProperties} for the {@link PathFollower}.
-     */
-    private void setupRamseteController(PathFollowerProperties properties,
-                                        PathFollowerProperties.RamseteProperties ramseteProperties) {
-        this.pathFollowingType = PathFollowingType.RAMSETE_CONTROLLER;
-
-        setupPathFollower(properties);
-        this.ramseteProperties = ramseteProperties;
-        this.purePursuitProperties = null;
-
-    }
-
-    /**
-     * Universal setup function for all paths. Sets up the {@link PathFollower} with the {@link
-     * PathFollowerProperties}.
-     *
-     * @param properties
-     */
-    private void setupPathFollower(PathFollowerProperties properties) {
+    public PathFollower(PathFollowerProperties properties) {
         this.properties = properties;
-        this.previousCalculatedVelocity = 0;
-        this.currentDistanceToEnd = 9999;
     }
 
     /**
@@ -175,13 +109,13 @@ public class PathFollower {
      * input.
      *
      * @param robotTransform              the robot's current {@link Transform}.
-     * @param currentDrivetrainVelocities the robot's current {@link DrivetrainSpeeds}
+     * @param currentDrivetrainVelocities the robot's current {@link DrivetrainState}
      * @param deltaTime                   the change in time since the last update call in seconds.
-     * @return the {@link DrivetrainSpeeds} to follow based on the path following algorithm.
+     * @return the {@link DrivetrainState} to follow based on the path following algorithm.
      */
-    public DrivetrainSpeeds updatePathFollower(Transform robotTransform,
-                                               DrivetrainSpeeds currentDrivetrainVelocities,
-                                               double deltaTime) {
+    public DrivetrainState updatePathFollower(Transform robotTransform,
+                                              DrivetrainState currentDrivetrainVelocities,
+                                              double deltaTime) {
         if (unAdaptedPath) {
             calculateAdaptivePath(robotTransform, currentDrivetrainVelocities.getCurvature());
             unAdaptedPath = false;
@@ -189,93 +123,18 @@ public class PathFollower {
 
         if (currentPath == null) {
             System.out.println("WARNING: The current path follower path is null!");
-            return DrivetrainSpeeds.empty();
+            return DrivetrainState.empty();
         }
-        if (pathFollowingType == PathFollowingType.PURE_PURSUIT_CONTROLLER) {
-            return updatePurePursuit(robotTransform, currentDrivetrainVelocities.getLinear(), deltaTime);
-        } else if (pathFollowingType == PathFollowingType.RAMSETE_CONTROLLER) {
-            return updateRamsete(robotTransform, currentDrivetrainVelocities.getLinear(), deltaTime);
-        } else {
-            System.out.println("WARNING: Unspecified path follower type");
-            return DrivetrainSpeeds.empty();
-        }
-    }
-
-    /**
-     * Updates the {@link PurePursuitController} path following algorithm.
-     *
-     * @param robotTransform  the robot's current {@link Transform}.
-     * @param currentVelocity the robot's current velocity in inches/s.
-     * @param deltaTime       the change in time since the last update call in seconds.
-     * @return the {@link DrivetrainSpeeds} to follow based on the {@link PurePursuitController} algorithm.
-     */
-    private DrivetrainSpeeds updatePurePursuit(Transform robotTransform, double currentVelocity,
-                                               double deltaTime) {
-        double lookaheadDistance = purePursuitProperties.lookaheadDistance;
-
-        TransformWithParameter closestTransformWithParameter =
-                currentPath.getClosestTransform(robotTransform.getPosition());
-
-        Position targetPosition = currentPath.getClosestTransform(closestTransformWithParameter.getPosition(),
-                lookaheadDistance).getPosition();
 
         //Find the rough distance to the end of the path
         double distanceToEnd = getRoughDistanceToEnd(robotTransform);
         this.currentDistanceToEnd = distanceToEnd;
 
-        //Calculate the robot velocity using the path velocity controller
-        double robotVelocity = properties.velocityController.getVelocity(previousCalculatedVelocity, distanceToEnd,
-                deltaTime);
-
-
-        this.previousCalculatedVelocity = robotVelocity;
-        //Calculate the pure pursuit controller
-        return PurePursuitController
-                .calculate(robotTransform, targetPosition, robotVelocity, purePursuitProperties.curvatureSlowdownGain,
-                        purePursuitProperties.minSlowdownVelocity,
-                        properties.trackWidth, properties.reversed);
+        return calculate(robotTransform, currentDrivetrainVelocities, deltaTime);
     }
 
-    /**
-     * Updates the {@link RamseteController} path following algorithm.
-     *
-     * @param robotTransform  the robot's current {@link Transform}.
-     * @param currentVelocity the robot's current velocity in inches/s.
-     * @param deltaTime       the change in time since the last update call in seconds.
-     * @return the {@link DrivetrainSpeeds} to follow based on the {@link RamseteController} algorithm.
-     */
-    private DrivetrainSpeeds updateRamsete(Transform robotTransform, double currentVelocity, double deltaTime) {
-        //Get the desired transform to follow, which is the closest point on the path
-        TransformWithParameter desiredTransform = currentPath.getClosestTransform(robotTransform.getPosition());
-
-        //If reversed, reverse the desired transform's rotation
-        desiredTransform
-                .setRotation(desiredTransform.getRotation().rotateBy(Rotation.fromDegrees((properties.reversed ? 180 :
-                        0))));
-
-        //Find the rough distance to the end of the path
-        double distanceToEnd = getRoughDistanceToEnd(robotTransform);
-        this.currentDistanceToEnd = distanceToEnd;
-
-        //Calculate the robot velocity using the path velocity controller. If reversed, reverse the robot velocity
-        double robotVelocity = properties.velocityController.getVelocity(previousCalculatedVelocity, distanceToEnd,
-                deltaTime);
-
-        this.previousCalculatedVelocity = robotVelocity;
-
-        //Get radius from curvature is 1/curvature
-        double turningRadius = 1 / currentPath.getCurvature(desiredTransform.getParameter());
-
-        if (Double.isNaN(turningRadius) || Double.isInfinite(turningRadius)) {
-            turningRadius = 2e16;
-        }
-
-        DrivetrainSpeeds velocity =
-                DrivetrainSpeeds.fromLinearAndRadius(robotVelocity, turningRadius, properties.trackWidth);
-
-        return RamseteController.calculate(robotTransform, desiredTransform, velocity, ramseteProperties.aggressiveGain,
-                ramseteProperties.dampingGain, properties.reversed);
-    }
+    public abstract DrivetrainState calculate(Transform robotTransform, DrivetrainState currentDrivetrainVelocities,
+                                              double deltaTime);
 
     /**
      * Calculates an adapted {@link Path} from the robot's location to the current {@link Path}.
@@ -346,11 +205,11 @@ public class PathFollower {
         return properties;
     }
 
-    public PathFollowerProperties.PurePursuitProperties getPurePursuitProperties() {
-        return purePursuitProperties;
+    public double getPreviousCalculatedVelocity() {
+        return previousCalculatedVelocity;
     }
 
-    public PathFollowerProperties.RamseteProperties getRamseteProperties() {
-        return ramseteProperties;
+    public void setPreviousCalculatedVelocity(double previousCalculatedVelocity) {
+        this.previousCalculatedVelocity = previousCalculatedVelocity;
     }
 }

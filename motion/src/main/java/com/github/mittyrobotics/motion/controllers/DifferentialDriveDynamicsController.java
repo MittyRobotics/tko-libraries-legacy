@@ -24,12 +24,12 @@
 
 package com.github.mittyrobotics.motion.controllers;
 
-import com.github.mittyrobotics.datatypes.motion.DrivetrainSpeeds;
 import com.github.mittyrobotics.datatypes.motion.DrivetrainState;
-import com.github.mittyrobotics.datatypes.motion.DrivetrainWheelSpeeds;
+import com.github.mittyrobotics.datatypes.motion.DrivetrainStates;
+import com.github.mittyrobotics.datatypes.motion.DrivetrainWheelState;
 
 /**
- * Controller that calculates feedforward voltages to achieve a {@link DrivetrainState} from the dynamics of a
+ * Controller that calculates feedforward voltages to achieve a {@link DrivetrainStates} from the dynamics of a
  * differential drive.
  * <p>
  * Dynamics equations from Team 254's DifferentialDrive physics class:
@@ -69,24 +69,24 @@ public class DifferentialDriveDynamicsController {
     }
 
     /**
-     * Calculates feedforward voltages to achieve the desired {@link DrivetrainState} <code>state</code>.
+     * Calculates feedforward voltages to achieve the desired {@link DrivetrainStates} <code>state</code>.
      *
      * @param state Desired state to achieve
-     * @return feedforward voltages in {@link DrivetrainWheelSpeeds}
+     * @return feedforward voltages in {@link DrivetrainWheelState}
      */
-    public DrivetrainWheelSpeeds calculate(DrivetrainState state) {
+    public DrivetrainWheelState calculate(DrivetrainStates state) {
         return solveInverseDynamics(state.getVelocity().getLeft(), state.getVelocity().getRight(),
                 state.getVelocity().getAngular(), state.getAcceleration().getLinear(),
                 state.getAcceleration().getAngular());
     }
 
-    public DrivetrainState solveForwardDynamics(DrivetrainState currentState, DrivetrainWheelSpeeds voltages) {
+    public DrivetrainStates solveForwardDynamics(DrivetrainStates currentState, DrivetrainWheelState voltages) {
         if (Math.abs(currentState.getVelocity().getLeft()) < 1e-12 &&
                 Math.abs(currentState.getVelocity().getRight()) < 1e-12 &&
                 Math.abs(voltages.getLeft()) < leftTransmission.getVIntercept() &&
                 Math.abs(voltages.getRight()) < rightTransmission.getVIntercept()) {
-            return new DrivetrainState(DrivetrainSpeeds.fromLinearAndAngular(0, 0,
-                    wheelbaseRadius * 2), DrivetrainSpeeds.fromLinearAndAngular(0, 0,
+            return new DrivetrainStates(DrivetrainState.fromLinearAndAngular(0, 0,
+                    wheelbaseRadius * 2), DrivetrainState.fromLinearAndAngular(0, 0,
                     wheelbaseRadius * 2));
         }
         double leftTorque =
@@ -99,13 +99,13 @@ public class DifferentialDriveDynamicsController {
                 wheelbaseRadius * (rightTorque - leftTorque) / (wheelRadius * momentOfInertia) -
                         currentState.getVelocity().getAngular() * angularDrag / momentOfInertia;
 
-        return new DrivetrainState(currentState.getVelocity(),
-                DrivetrainSpeeds.fromLinearAndAngular(linearAcceleration, angularAcceleration,
+        return new DrivetrainStates(currentState.getVelocity(),
+                DrivetrainState.fromLinearAndAngular(linearAcceleration, angularAcceleration,
                         wheelbaseRadius * 2));
     }
 
-    public DrivetrainWheelSpeeds solveInverseDynamics(double leftVelocity, double rightVelocity, double angularVelocity,
-                                                      double linearAcceleration, double angularAcceleration) {
+    public DrivetrainWheelState solveInverseDynamics(double leftVelocity, double rightVelocity, double angularVelocity,
+                                                     double linearAcceleration, double angularAcceleration) {
         double leftWheelTorque = wheelRadius / 2.0 *
                 (linearAcceleration * mass + angularAcceleration * momentOfInertia / wheelbaseRadius -
                         angularVelocity * angularDrag / wheelbaseRadius);
@@ -119,7 +119,7 @@ public class DifferentialDriveDynamicsController {
         double rightVoltage = rightTransmission.getVoltageForTorque(
                 rightVelocity, rightWheelTorque);
 
-        return new DrivetrainWheelSpeeds(leftVoltage, rightVoltage);
+        return new DrivetrainWheelState(leftVoltage, rightVoltage);
     }
 
     public double getAngularDrag() {
@@ -153,7 +153,7 @@ public class DifferentialDriveDynamicsController {
     /**
      * Represents a DC motor transmission on a drivetrain. This can be thought of as a model of the dynamics of a
      * side of the drivetrain, in which torque can be solved for voltage or voltage solved for torque. Used in the
-     * {@link DifferentialDriveDynamicsController} to compute the voltage for a desired {@link DrivetrainState}.
+     * {@link DifferentialDriveDynamicsController} to compute the voltage for a desired {@link DrivetrainStates}.
      * <p>
      * Equations from Team 254's DCMotorTransmission physics class:
      * https://github.com/Team254/FRC-2018-Public/blob/master/src/main/java/com/team254/lib/physics/DCMotorTransmission.java

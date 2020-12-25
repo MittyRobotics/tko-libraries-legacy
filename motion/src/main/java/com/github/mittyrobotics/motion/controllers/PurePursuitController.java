@@ -26,72 +26,26 @@ package com.github.mittyrobotics.motion.controllers;
 
 import com.github.mittyrobotics.datatypes.geometry.Circle;
 import com.github.mittyrobotics.datatypes.geometry.Line;
-import com.github.mittyrobotics.datatypes.motion.DrivetrainSpeeds;
+import com.github.mittyrobotics.datatypes.motion.DrivetrainState;
 import com.github.mittyrobotics.datatypes.positioning.Position;
 import com.github.mittyrobotics.datatypes.positioning.Transform;
+import com.github.mittyrobotics.datatypes.positioning.TransformWithParameter;
+import com.github.mittyrobotics.motion.pathfollowing.PathFollower;
+import com.github.mittyrobotics.motion.pathfollowing.PathFollowerProperties;
 
-public class PurePursuitController {
+public class PurePursuitController extends PathFollower {
     public static double DEFAULT_LOOKAHEAD_DISTANCE = 25.0;
     public static double DEFAULT_CURVATURE_SLOWDOWN_GAIN = 0.0;
     public static double DEFAULT_MIN_SLOWDOWN_VELOCITY = 0.0;
 
-    /**
-     * Calculates the {@link DrivetrainSpeeds} using the Pure Pursuit path following algorithm.
-     *
-     * @param robotTransform
-     * @param targetPosition
-     * @param robotVelocity
-     * @param trackWidth
-     * @param reversed
-     * @return
-     */
-    public static DrivetrainSpeeds calculate(Transform robotTransform, Position targetPosition, double robotVelocity,
-                                             double trackWidth, boolean reversed) {
-        return calculate(robotTransform, targetPosition, robotVelocity, DEFAULT_CURVATURE_SLOWDOWN_GAIN,
-                DEFAULT_MIN_SLOWDOWN_VELOCITY, trackWidth, reversed);
-    }
+    private PathFollowerProperties.PurePursuitProperties purePursuitProperties;
 
-    /**
-     * Calculates the {@link DrivetrainSpeeds} using the Pure Pursuit path following algorithm.
-     *
-     * @param robotTransform
-     * @param targetPosition
-     * @param robotVelocity
-     * @param curvatureSlowdownGain
-     * @param minSlowdownVelocity
-     * @param trackWidth
-     * @param reversed
-     * @return
-     */
-    public static DrivetrainSpeeds calculate(Transform robotTransform, Position targetPosition, double robotVelocity,
-                                             double curvatureSlowdownGain, double minSlowdownVelocity,
-                                             double trackWidth, boolean reversed) {
-        //Calculate the pursuit circle to follow, calculated by finding the circle tangent to the robot transform that
-        //intersects the target position.
-        Circle pursuitCircle = new Circle(robotTransform, targetPosition);
+    private Circle pursuitCircle;
 
-        //Determine which side the robot transform is on the circle
-        double side = new Line(robotTransform.getPosition(),
-                robotTransform.getPosition().add(
-                        new Position(
-                                robotTransform.getRotation().cos() * 5,
-                                robotTransform.getRotation().sin() * 5)
-                )).findSide(pursuitCircle.getCenter());
-
-        double radius = pursuitCircle.getRadius() * side;
-
-        robotVelocity = calculateSlowdownVelocity(1 / (pursuitCircle.getRadius()), curvatureSlowdownGain, robotVelocity,
-                minSlowdownVelocity);
-
-        //Use differential drive kinematics to calculate the left and right wheel velocity given the base robot
-        //velocity and the radius of the pursuit circle
-        DrivetrainSpeeds state = DrivetrainSpeeds.fromLinearAndRadius(robotVelocity, radius, trackWidth);
-
-        if (reversed) {
-            state = state.reverse();
-        }
-
-        return state;
+    public PurePursuitController(PathFollowerProperties properties,
+                                 PathFollowerProperties.PurePursuitProperties purePursuitProperties) {
+        super(properties);
+        this.purePursuitProperties = purePursuitProperties;
     }
 
     /**
@@ -116,4 +70,58 @@ public class PurePursuitController {
         return vel * velSign;
     }
 
+    @Override
+    public DrivetrainState calculate(Transform robotTransform, DrivetrainState currentDrivetrainVelocities,
+                                     double deltaTime) {
+        double lookaheadDistance = purePursuitProperties.lookaheadDistance;
+
+        TransformWithParameter closestTransformWithParameter =
+                getCurrentPath().getClosestTransform(robotTransform.getPosition());
+
+        Position targetPosition = getCurrentPath().getClosestTransform(closestTransformWithParameter.getPosition(),
+                lookaheadDistance).getPosition();
+
+        System.out.println(targetPosition);
+
+        //Calculate the robot velocity using the path velocity controller
+        double robotVelocity = getProperties().velocityController
+                .getVelocity(getPreviousCalculatedVelocity(), getCurrentDistanceToEnd(),
+                        deltaTime);
+
+        setPreviousCalculatedVelocity(robotVelocity);
+
+        //Calculate the pursuit circle to follow, calculated by finding the circle tangent to the robot transform that
+        //intersects the target position.
+        this.pursuitCircle = new Circle(robotTransform, targetPosition);
+
+        //Determine which side the robot transform is on the circle
+        double side = new Line(robotTransform.getPosition(),
+                robotTransform.getPosition().add(
+                        new Position(
+                                robotTransform.getRotation().cos() * 5,
+                                robotTransform.getRotation().sin() * 5)
+                )).findSide(pursuitCircle.getCenter());
+
+        double radius = pursuitCircle.getRadius() * side;
+
+        robotVelocity =
+                calculateSlowdownVelocity(1 / (pursuitCircle.getRadius()), purePursuitProperties.curvatureSlowdownGain,
+                        robotVelocity,
+                        purePursuitProperties.minSlowdownVelocity);
+
+        //Use differential drive kinematics to calculate the left and right wheel velocity given the base robot
+        //velocity and the radius of the pursuit circle
+        DrivetrainState state =
+                DrivetrainState.fromLinearAndRadius(robotVelocity, radius, getProperties().trackWidth);
+
+        if (getProperties().reversed) {
+            state = state.reverse();
+        }
+
+        return state;
+    }
+
+    public Circle getPursuitCircle() {
+        return pursuitCircle;
+    }
 }

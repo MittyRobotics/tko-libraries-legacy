@@ -24,29 +24,54 @@
 
 package com.github.mittyrobotics.motion.controllers;
 
-import com.github.mittyrobotics.datatypes.motion.DrivetrainSpeeds;
+import com.github.mittyrobotics.datatypes.motion.DrivetrainState;
+import com.github.mittyrobotics.datatypes.positioning.Rotation;
 import com.github.mittyrobotics.datatypes.positioning.Transform;
+import com.github.mittyrobotics.datatypes.positioning.TransformWithParameter;
+import com.github.mittyrobotics.motion.pathfollowing.PathFollower;
+import com.github.mittyrobotics.motion.pathfollowing.PathFollowerProperties;
 
-public class RamseteController {
+public class RamseteController extends PathFollower {
     public static double DEFAULT_AGGRESSIVE_GAIN = 2.0;
     public static double DEFAULT_DAMPING_GAIN = 0.2;
 
-    /**
-     * Calculates the {@link DrivetrainSpeeds} using on the RAMSETE path following algorithm.
-     * <p>
-     * Make sure all inputs are in SI units (m, m/s).
-     *
-     * @param robotTransform
-     * @param desiredTransform
-     * @param velocity
-     * @param aggressiveGain
-     * @param dampingGain
-     * @param reversed
-     * @return
-     */
-    public static DrivetrainSpeeds calculate(Transform robotTransform, Transform desiredTransform,
-                                             DrivetrainSpeeds velocity, double aggressiveGain, double dampingGain,
-                                             boolean reversed) {
+    private PathFollowerProperties.RamseteProperties ramseteProperties;
+
+    public RamseteController(PathFollowerProperties properties,
+                             PathFollowerProperties.RamseteProperties ramseteProperties) {
+        super(properties);
+        this.ramseteProperties = ramseteProperties;
+    }
+
+    @Override
+    public DrivetrainState calculate(Transform robotTransform, DrivetrainState currentDrivetrainVelocities,
+                                     double deltaTime) {
+        //Get the desired transform to follow, which is the closest point on the path
+        TransformWithParameter desiredTransform = getCurrentPath().getClosestTransform(robotTransform.getPosition());
+
+        //If reversed, reverse the desired transform's rotation
+        desiredTransform
+                .setRotation(
+                        desiredTransform.getRotation().rotateBy(Rotation.fromDegrees((getProperties().reversed ? 180 :
+                                0))));
+
+        //Calculate the robot velocity using the path velocity controller. If reversed, reverse the robot velocity
+        double robotVelocity = getProperties().velocityController
+                .getVelocity(getPreviousCalculatedVelocity(), getCurrentDistanceToEnd(),
+                        deltaTime);
+
+        setPreviousCalculatedVelocity(robotVelocity);
+
+        //Get radius from curvature is 1/curvature
+        double turningRadius = 1 / getCurrentPath().getCurvature(desiredTransform.getParameter());
+
+        if (Double.isNaN(turningRadius) || Double.isInfinite(turningRadius)) {
+            turningRadius = 2e16;
+        }
+
+        DrivetrainState velocity =
+                DrivetrainState.fromLinearAndRadius(robotVelocity, turningRadius, getProperties().trackWidth);
+
         //Get the transform error in meters.
         Transform error = desiredTransform.relativeTo(robotTransform);
 
@@ -55,23 +80,26 @@ public class RamseteController {
         double eTheta = error.getRotation().getRadians();
 
         //Calculate the Ramsete k value
-        double k = 2.0 * dampingGain *
-                Math.sqrt(Math.pow(velocity.getAngular(), 2) + aggressiveGain * Math.pow(velocity.getLinear(), 2));
+        double k = 2.0 * ramseteProperties.dampingGain *
+                Math.sqrt(Math.pow(velocity.getAngular(), 2) +
+                        ramseteProperties.aggressiveGain * Math.pow(velocity.getLinear(), 2));
 
         //Calculate the adjusted linear velocity from the Ramsete algorithm
         double adjustedLinearVelocity = velocity.getLinear() * error.getRotation().cos() + k * eX;
 
         //Calculate the adjusted angular velocity from the Ramsete algorithm (stays in radians per second)
         double adjustedAngularVelocity =
-                velocity.getAngular() + k * eTheta + aggressiveGain * velocity.getLinear() * error.getRotation().sinc() * eY;
+                velocity.getAngular() + k * eTheta +
+                        ramseteProperties.aggressiveGain * velocity.getLinear() * error.getRotation().sinc() * eY;
 
         //Calculate drivetrain state from linear and angular velocity
-        DrivetrainSpeeds state = DrivetrainSpeeds
-                .fromLinearAndAngular(adjustedLinearVelocity, adjustedAngularVelocity * (reversed ? -1 : 1),
+        DrivetrainState state = DrivetrainState
+                .fromLinearAndAngular(adjustedLinearVelocity,
+                        adjustedAngularVelocity * (getProperties().reversed ? -1 : 1),
                         velocity.getTrackWidth());
 
         //Reversed controller
-        if (reversed) {
+        if (getProperties().reversed) {
             state = state.reverse();
         }
 

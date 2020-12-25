@@ -25,6 +25,7 @@
 package com.github.mittyrobotics.simulation.sim;
 
 
+import com.github.mittyrobotics.datatypes.units.Conversions;
 import com.github.mittyrobotics.visualization.RobotGraph;
 
 import java.util.Timer;
@@ -50,9 +51,9 @@ public class RobotSimulator extends TimerTask {
 
     private void periodic() {
         robot.robotPeriodic();
-        graph.graphDifferentialDrive(robot.getDrivetrain().getRobotTransform(),
-                robot.getDrivetrain().getDrivetrainModel().getTrackWidth(),
-                robot.getDrivetrain().getDrivetrainModel().getDrivetrainLength());
+        graph.graphDifferentialDrive(robot.getDrivetrain().getRobotTransform().mToIn(),
+                robot.getDrivetrain().getDrivetrainModel().getTrackWidth() * Conversions.M_TO_IN,
+                robot.getDrivetrain().getDrivetrainModel().getDrivetrainLength() * Conversions.M_TO_IN);
     }
 
     @Override
@@ -67,5 +68,9 @@ public class RobotSimulator extends TimerTask {
 
     public SimRobot getRobot() {
         return robot;
+    }
+
+    public RobotGraph getGraph() {
+        return graph;
     }
 }

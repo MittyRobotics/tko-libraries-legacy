@@ -42,21 +42,21 @@ public class Odometry {
     private double lastRightEncoderPos = 0;
     private double calibrateGyroVal = 0;
 
-    public static Odometry getInstance() {
-        return instance;
-    }
-
-    private Odometry(){
+    private Odometry() {
         //Init latest calibration position
         latestCalibrationPosition = new Position();
 
         //Init circular timestamped lists
-        robotTransformList =  new CircularTimestampedList<>(100);
+        robotTransformList = new CircularTimestampedList<>(100);
         robotVelocityList = new CircularTimestampedList<>(100);
 
         //Add first element to list to avoid null errors with update()
-        robotTransformList.addFront(new TimestampedElement<>(new Transform(),0));
-        robotVelocityList.addFront(new TimestampedElement<>(new Transform(),0));
+        robotTransformList.addFront(new TimestampedElement<>(new Transform(), 0));
+        robotVelocityList.addFront(new TimestampedElement<>(new Transform(), 0));
+    }
+
+    public static Odometry getInstance() {
+        return instance;
     }
 
     /**
@@ -140,38 +140,38 @@ public class Odometry {
      *
      * @param transform the {@link Transform} to set {@link Odometry} to.
      */
-    public void setTransform(Transform transform, double gyro){
+    public void setTransform(Transform transform, double gyro) {
         setHeading(transform.getRotation().getDegrees(), gyro);
         setPosition(transform.getPosition());
     }
 
-    public void calibrateEncodersToZero(double leftEncoder, double rightEncoder){
+    public void calibrateEncodersToZero(double leftEncoder, double rightEncoder) {
         this.lastLeftEncoderPos = leftEncoder;
         this.lastRightEncoderPos = rightEncoder;
     }
 
-    public void calibrateTransformToZero(double leftEncoder, double rightEncoder, double gyro){
-        calibrateEncodersToZero(leftEncoder,rightEncoder);
-        setTransform(new Transform(0,0, 0),gyro);
+    public void calibrateTransformToZero(double leftEncoder, double rightEncoder, double gyro) {
+        calibrateEncodersToZero(leftEncoder, rightEncoder);
+        setTransform(new Transform(0, 0, 0), gyro);
     }
 
-    public Transform getLatestRobotTransform(){
+    public Transform getLatestRobotTransform() {
         return robotTransformList.getLatest().getObject();
     }
 
-    public Transform getLatestRobotVelocity(){
+    public Transform getLatestRobotVelocity() {
         return robotVelocityList.getLatest().getObject();
     }
 
-    public double getLatestTimestamp(){
+    public double getLatestTimestamp() {
         return robotTransformList.getLatest().getTimestamp();
     }
 
-    public Transform getRobotTransformAtTimestamp(double timestamp){
+    public Transform getRobotTransformAtTimestamp(double timestamp) {
         return robotTransformList.getElementFromTimestamp(timestamp);
     }
 
-    public Transform getRobotVelocityAtTimestamp(double timestamp){
+    public Transform getRobotVelocityAtTimestamp(double timestamp) {
         return robotVelocityList.getElementFromTimestamp(timestamp);
     }
 

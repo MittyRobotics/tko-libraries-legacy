@@ -24,7 +24,7 @@
 
 package com.github.mittyrobotics.motion.modeling.models;
 
-import com.github.mittyrobotics.datatypes.motion.DrivetrainWheelSpeeds;
+import com.github.mittyrobotics.datatypes.motion.DrivetrainWheelState;
 import com.github.mittyrobotics.motion.modeling.motors.Motor;
 
 public class DrivetrainModel {
@@ -33,13 +33,8 @@ public class DrivetrainModel {
     private final double trackWidth;
     private final double drivetrainLength;
     private final Motor motor;
-    private final double numMotorsPerSide;
     private final double gearRatio;
     private final double wheelRadius;
-
-    private double resistance;
-    private double Kv;
-    private double Kt;
 
     private double leftVelocity;
     private double rightVelocity;
@@ -64,25 +59,13 @@ public class DrivetrainModel {
         this.trackWidth = trackWidth;
         this.drivetrainLength = drivetrainLength;
         this.motor = motor;
-        this.numMotorsPerSide = motor.getNumMotors();
         this.gearRatio = gearRatio;
         this.wheelRadius = wheelRadius;
-        computeModelValues();
-    }
-
-    private void computeModelValues() {
-        double stallTorque = motor.getStallTorque();
-        double stallCurrent = motor.getStallCurrent();
-        double freeSpeed = motor.getFreeSpeed();
-        double freeCurrent = motor.getFreeCurrent();
-
-        this.resistance = 12.0 / stallCurrent;
-        this.Kv = ((freeSpeed / 60.0 * 2.0 * Math.PI) / (12.0 - resistance * freeCurrent));
-        this.Kt = (numMotorsPerSide * stallTorque) / stallCurrent;
     }
 
     public void updateModel(double leftVoltage, double rightVoltage, double deltaTime) {
-        DrivetrainWheelSpeeds accelerations = calculateAccelerations(leftVoltage, rightVoltage);
+        DrivetrainWheelState accelerations = calculateAccelerations(leftVoltage, rightVoltage);
+
         this.leftAcceleration = accelerations.getLeft();
         this.leftVelocity += leftAcceleration * deltaTime;
         this.leftPosition += leftVelocity * deltaTime;
@@ -98,7 +81,7 @@ public class DrivetrainModel {
      * @param leftVoltage
      * @param rightVoltage
      */
-    private DrivetrainWheelSpeeds calculateAccelerations(double leftVoltage, double rightVoltage) {
+    private DrivetrainWheelState calculateAccelerations(double leftVoltage, double rightVoltage) {
         double Vl = leftVoltage;
         double Vr = rightVoltage;
         double vl = leftVelocity;
@@ -107,8 +90,11 @@ public class DrivetrainModel {
         double rb = trackWidth;
         double J = momentOfInertia;
         double G = gearRatio;
-        double R = resistance;
+        double R = motor.getResistance();
         double r = wheelRadius;
+        double Kt = motor.getKt();
+        double Kv = motor.getKv();
+
         double c1 = -(G * G * Kt) / (Kv * R * (r * r));
         double c2 = (G * Kt) / (R * r);
 
@@ -121,7 +107,7 @@ public class DrivetrainModel {
         double leftAcceleration = eqn0 * Fl + eqn1 * Fr;
         double rightAcceleration = eqn1 * Fl + eqn0 * Fr;
 
-        return new DrivetrainWheelSpeeds(leftAcceleration, rightAcceleration);
+        return new DrivetrainWheelState(leftAcceleration, rightAcceleration);
     }
 
     public double getTrackWidth() {

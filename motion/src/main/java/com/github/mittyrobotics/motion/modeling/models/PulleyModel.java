@@ -24,8 +24,8 @@
 
 package com.github.mittyrobotics.motion.modeling.models;
 
-import com.github.mittyrobotics.motion.modeling.motors.Motor;
 import com.github.mittyrobotics.motion.modeling.Plant;
+import com.github.mittyrobotics.motion.modeling.motors.Motor;
 import org.ejml.simple.SimpleMatrix;
 
 import java.util.Random;
