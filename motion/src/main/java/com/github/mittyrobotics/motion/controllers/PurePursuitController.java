@@ -81,7 +81,6 @@ public class PurePursuitController extends PathFollower {
         Position targetPosition = getCurrentPath().getClosestTransform(closestTransformWithParameter.getPosition(),
                 lookaheadDistance).getPosition();
 
-        System.out.println(targetPosition);
 
         //Calculate the robot velocity using the path velocity controller
         double robotVelocity = getProperties().velocityController

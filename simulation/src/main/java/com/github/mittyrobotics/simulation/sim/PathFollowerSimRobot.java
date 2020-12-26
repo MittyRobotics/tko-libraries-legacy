@@ -46,7 +46,7 @@ public class PathFollowerSimRobot extends SimRobot {
 
     @Override
     public void robotInit() {
-        PathVelocityController velocityController = new PathVelocityController(1, 1, 50, 0, 0);
+        PathVelocityController velocityController = new PathVelocityController(1, 0.1, 50, 0, 0);
         double trackWidth = 20;
         boolean reversed = false;
         getDrivetrain().setupPIDFValues(0, 0, 0, 12.0 / 162.0);
@@ -64,7 +64,7 @@ public class PathFollowerSimRobot extends SimRobot {
                 .fromWheelSpeeds(getDrivetrain().getDrivetrainModel().getLeftVelocity() * Conversions.M_TO_IN,
                         getDrivetrain().getDrivetrainModel().getRightVelocity() * Conversions.M_TO_IN,
                         follower.getProperties().trackWidth);
-        DrivetrainState newVelocity = follower.updatePathFollower(getDrivetrain().getRobotTransform(), velocity,
+        DrivetrainState newVelocity = follower.updatePathFollower(getDrivetrain().getRobotTransform().mToIn(), velocity,
                 getRobotSimulator().getPeriodTime());
         if (!updatedPath) {
             getRobotSimulator().getGraph().addToSeries("Path", GraphUtil

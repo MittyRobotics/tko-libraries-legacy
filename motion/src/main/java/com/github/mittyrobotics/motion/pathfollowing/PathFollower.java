@@ -167,25 +167,8 @@ public abstract class PathFollower {
      * @return the rough distance of the robot along the current {@link Path}.
      */
     private double getRoughDistanceToEnd(Transform robotTransform) {
-        TransformWithParameter closestTransform = currentPath.getClosestTransform(robotTransform.getPosition());
-        return getRoughDistanceToEnd(closestTransform);
-    }
-
-    /**
-     * Returns the rough distance of the robot along the current {@link Path}.
-     *
-     * @param closestTransform the closest {@link TransformWithParameter} on the current {@link Path} to the
-     *                         robot.
-     * @return the rough distance of the robot along the current {@link Path}.
-     */
-    private double getRoughDistanceToEnd(TransformWithParameter closestTransform) {
-        double distance = closestTransform.getPosition().distance(currentPath.getEndWaypoint().getPosition());
-
-        if (closestTransform.getParameter() >= 0.99) {
-            return 0;
-        }
-
-        return distance;
+        double closestParameter = currentPath.getClosestT(robotTransform.getPosition(), 10, 3);
+        return currentPath.getGaussianQuadratureLength() - currentPath.getGaussianQuadratureLength(closestParameter);
     }
 
     /**
