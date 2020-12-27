@@ -54,7 +54,6 @@ public class PathFollowerSimRobot extends SimRobot {
                 new PurePursuitController(new PathFollowerProperties(velocityController, trackWidth, reversed, false),
                         new PathFollowerProperties.PurePursuitProperties(25, 0, 0));
         follower.setDrivingGoal(new Transform(100, 100));
-
     }
 
     @Override
@@ -72,17 +71,8 @@ public class PathFollowerSimRobot extends SimRobot {
                             GraphUtil.parametric(follower.getCurrentPath(), 0.01, 1)));
             updatedPath = true;
         }
-
         getRobotSimulator().getGraph().changeSeries("Circle", GraphUtil
                 .populateSeries(new XYSeriesWithRenderer("Circle"), GraphUtil.circle(follower.getPursuitCircle())));
-
-//        System.out.println(newVelocity.getLeft() + " " + newVelocity.getRight());
-
-//        getDrivetrain().setPercentOutput(1, 1);
-        System.out.println(getDrivetrain().getDrivetrainModel().getLeftVelocity() * Conversions.M_TO_IN + " " +
-                getDrivetrain().getDrivetrainModel().getRightVelocity() * Conversions.M_TO_IN);
-//        graph.addToSeries("Velocity", new XYDataItem(time, getDrivetrain().getDrivetrainModel().getLeftVelocity()));
         getDrivetrain().setVelocityControl(newVelocity.getLeft(), newVelocity.getRight());
-//        System.out.println((newVelocity.getLeft()+ " " + newVelocity.getLeft()));
     }
 }
