@@ -31,60 +31,26 @@ public class PathVelocityController {
     private final double maxVelocity;
     private final double startVelocity;
     private final double endVelocity;
-    private final boolean extremeTakeoff;
-    private final double extremeTakeoffMultiplier;
-    private SafeVelocityController safeVelocityController;
-    private boolean inTakeoffMode = true;
-    private int previousSign = 0;
+    private final SafeVelocityController safeVelocityController;
 
     public PathVelocityController(double maxAcceleration, double maxDeceleration, double maxVelocity,
                                   double startVelocity, double endVelocity) {
-        this(maxAcceleration, maxDeceleration, maxVelocity, startVelocity, endVelocity, false, 0);
-    }
-
-    public PathVelocityController(double maxAcceleration, double maxDeceleration, double maxVelocity,
-                                  double startVelocity, double endVelocity,
-                                  boolean extremeTakeoff) {
-        this(maxAcceleration, maxDeceleration, maxVelocity, startVelocity, endVelocity, extremeTakeoff, 2);
-    }
-
-    public PathVelocityController(double maxAcceleration, double maxDeceleration, double maxVelocity,
-                                  double startVelocity, double endVelocity,
-                                  boolean extremeTakeoff, double extremeTakeoffMultiplier) {
         this.maxAcceleration = maxAcceleration;
         this.maxDeceleration = maxDeceleration;
         this.maxVelocity = maxVelocity;
         this.startVelocity = startVelocity;
         this.endVelocity = endVelocity;
         this.safeVelocityController = new SafeVelocityController(maxAcceleration, maxDeceleration, maxVelocity);
-        this.extremeTakeoff = extremeTakeoff;
-        this.extremeTakeoffMultiplier = extremeTakeoffMultiplier;
     }
 
     public double getVelocity(double currentVelocity, double distanceToEnd, double deltaTime) {
         double maxDistanceVelocity = Math.sqrt(2 * maxDeceleration * distanceToEnd);
         double desiredVelocity = Math.min(maxVelocity, maxDistanceVelocity);
 
+        System.out.println(distanceToEnd + " " + maxDistanceVelocity + " " + desiredVelocity );
+
         double deltaVelocity = currentVelocity - desiredVelocity;
-
-        //Calculate if still in takeoff mode
-        if (inTakeoffMode) {
-            int sign = (int) Math.signum(deltaVelocity);
-            inTakeoffMode = (sign == previousSign ||
-                    previousSign == 0) && Math.abs(currentVelocity - maxVelocity) >= 5;
-            previousSign = sign;
-        }
-
-        //If in takeoff mode and extreme takeoff is true, multiple acceleration and deceleration by extremeTakeoffMultiplier
-        if (inTakeoffMode && extremeTakeoff) {
-            return safeVelocityController.getVelocity(currentVelocity, desiredVelocity, deltaTime,
-                    maxAcceleration * extremeTakeoffMultiplier,
-                    maxDeceleration * extremeTakeoffMultiplier);
-        }
-        //Otherwise use the default velocity constraints
-        else {
-            return safeVelocityController.getVelocity(currentVelocity, desiredVelocity, deltaTime);
-        }
+        return safeVelocityController.getVelocity(currentVelocity, desiredVelocity, deltaTime);
     }
 
     public double getMaxAcceleration() {
@@ -105,13 +71,5 @@ public class PathVelocityController {
 
     public double getEndVelocity() {
         return endVelocity;
-    }
-
-    public boolean isExtremeTakeoff() {
-        return extremeTakeoff;
-    }
-
-    public double getExtremeTakeoffMultiplier() {
-        return extremeTakeoffMultiplier;
     }
 }

@@ -51,9 +51,9 @@ public class RobotSimulator extends TimerTask {
 
     private void periodic() {
         robot.robotPeriodic();
-        graph.graphDifferentialDrive(robot.getDrivetrain().getRobotTransform().mToIn(),
-                robot.getDrivetrain().getDrivetrainModel().getTrackWidth() * Conversions.M_TO_IN,
-                robot.getDrivetrain().getDrivetrainModel().getDrivetrainLength() * Conversions.M_TO_IN);
+        graph.graphDifferentialDrive(robot.getDrivetrain().getRobotTransform(),
+                robot.getDrivetrain().getDrivetrainModel().getTrackWidth(),
+                robot.getDrivetrain().getDrivetrainModel().getDrivetrainLength());
     }
 
     @Override

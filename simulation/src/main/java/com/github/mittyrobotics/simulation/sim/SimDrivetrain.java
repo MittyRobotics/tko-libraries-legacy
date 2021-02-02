@@ -27,7 +27,6 @@ package com.github.mittyrobotics.simulation.sim;
 import com.github.mittyrobotics.datatypes.positioning.Position;
 import com.github.mittyrobotics.datatypes.positioning.Rotation;
 import com.github.mittyrobotics.datatypes.positioning.Transform;
-import com.github.mittyrobotics.datatypes.units.Conversions;
 import com.github.mittyrobotics.motion.modeling.models.DrivetrainModel;
 
 import java.util.Timer;
@@ -71,8 +70,8 @@ public class SimDrivetrain extends TimerTask {
     }
 
     private void odometry() {
-        double deltaLeftPos = (drivetrainModel.getLeftPosition() - prevLeftPos) * Conversions.M_TO_IN;
-        double deltaRightPos = (drivetrainModel.getRightPosition() - prevRightPos) * Conversions.M_TO_IN;
+        double deltaLeftPos = (drivetrainModel.getLeftPosition() - prevLeftPos);
+        double deltaRightPos = (drivetrainModel.getRightPosition() - prevRightPos) ;
 
         double deltaPos = (deltaLeftPos + deltaRightPos) / 2;
 

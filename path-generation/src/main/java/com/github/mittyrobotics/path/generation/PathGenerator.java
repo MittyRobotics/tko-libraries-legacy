@@ -32,13 +32,8 @@ import com.github.mittyrobotics.path.generation.splines.CubicHermiteSpline;
 import com.github.mittyrobotics.path.generation.splines.QuinticHermiteSpline;
 
 public class PathGenerator {
-    private static PathGenerator instance = new PathGenerator();
 
-    public static PathGenerator getInstance() {
-        return instance;
-    }
-
-    public Parametric[] generateCubicHermiteSplinePath(TransformWithVelocity[] waypoints) {
+    public static Parametric[] generateCubicHermiteSplinePath(TransformWithVelocity[] waypoints) {
         Parametric[] parametrics = new Parametric[waypoints.length - 1];
         for (int i = 0; i < parametrics.length; i++) {
             parametrics[i] = new CubicHermiteSpline(waypoints[i], waypoints[i + 1]);
@@ -46,7 +41,7 @@ public class PathGenerator {
         return parametrics;
     }
 
-    public Parametric[] generateQuinticHermiteSplinePath(TransformWithVelocityAndCurvature[] waypoints) {
+    public static Parametric[] generateQuinticHermiteSplinePath(TransformWithVelocityAndCurvature[] waypoints) {
         Parametric[] parametrics = new Parametric[waypoints.length - 1];
 
         for (int i = 0; i < parametrics.length; i++) {
@@ -55,7 +50,7 @@ public class PathGenerator {
         return parametrics;
     }
 
-    public Parametric[] generateQuinticHermiteSplinePath(Transform[] waypoints) {
+    public static Parametric[] generateQuinticHermiteSplinePath(Transform[] waypoints) {
         Parametric[] parametrics = new Parametric[waypoints.length - 1];
 
         for (int i = 0; i < parametrics.length; i++) {

@@ -26,10 +26,11 @@ package com.github.mittyrobotics.simulation.sim;
 
 import com.github.mittyrobotics.datatypes.motion.DrivetrainState;
 import com.github.mittyrobotics.datatypes.positioning.Transform;
-import com.github.mittyrobotics.datatypes.units.Conversions;
 import com.github.mittyrobotics.motion.controllers.PathVelocityController;
 import com.github.mittyrobotics.motion.controllers.PurePursuitController;
 import com.github.mittyrobotics.motion.pathfollowing.PathFollowerProperties;
+import com.github.mittyrobotics.path.generation.Path;
+import com.github.mittyrobotics.path.generation.PathGenerator;
 import com.github.mittyrobotics.visualization.Graph;
 import com.github.mittyrobotics.visualization.GraphUtil;
 import com.github.mittyrobotics.visualization.XYSeriesWithRenderer;
@@ -46,33 +47,36 @@ public class PathFollowerSimRobot extends SimRobot {
 
     @Override
     public void robotInit() {
-        PathVelocityController velocityController = new PathVelocityController(1, 0.1, 50, 0, 0);
-        double trackWidth = 20;
+        PathVelocityController velocityController = new PathVelocityController(1, 1, 50, 0, 0);
+        double trackWidth = .5;
         boolean reversed = false;
-        getDrivetrain().setupPIDFValues(0, 0, 0, 12.0 / 162.0);
+        getDrivetrain().setupPIDFValues(0, 0, 0, 12.0 / 4.1190227085647875);
         follower =
                 new PurePursuitController(new PathFollowerProperties(velocityController, trackWidth, reversed, false),
-                        new PathFollowerProperties.PurePursuitProperties(25, 0, 0));
-        follower.setDrivingGoal(new Transform(100, 100));
+                        new PathFollowerProperties.PurePursuitProperties(.5, 0, 0));
+        follower.setPath(new Path(PathGenerator.generateQuinticHermiteSplinePath(new Transform[]{new Transform(0, 0, 0), new Transform(4, 4, 0)})));
     }
 
     @Override
     public void robotPeriodic() {
         time += getRobotSimulator().getPeriodTime();
         DrivetrainState velocity = DrivetrainState
-                .fromWheelSpeeds(getDrivetrain().getDrivetrainModel().getLeftVelocity() * Conversions.M_TO_IN,
-                        getDrivetrain().getDrivetrainModel().getRightVelocity() * Conversions.M_TO_IN,
+                .fromWheelSpeeds(getDrivetrain().getDrivetrainModel().getLeftVelocity(),
+                        getDrivetrain().getDrivetrainModel().getRightVelocity(),
                         follower.getProperties().trackWidth);
-        DrivetrainState newVelocity = follower.updatePathFollower(getDrivetrain().getRobotTransform().mToIn(), velocity,
+        DrivetrainState newVelocity = follower.updatePathFollower(getDrivetrain().getRobotTransform(), velocity,
                 getRobotSimulator().getPeriodTime());
         if (!updatedPath) {
             getRobotSimulator().getGraph().addToSeries("Path", GraphUtil
                     .populateSeries(new XYSeriesWithRenderer("Path"),
-                            GraphUtil.parametric(follower.getCurrentPath(), 0.01, 1)));
+                            GraphUtil.parametric(follower.getCurrentPath(), 0.01, .1)));
             updatedPath = true;
         }
         getRobotSimulator().getGraph().changeSeries("Circle", GraphUtil
                 .populateSeries(new XYSeriesWithRenderer("Circle"), GraphUtil.circle(follower.getPursuitCircle())));
+//        Transform closestTransform = follower.getCurrentPath().getTransform(follower.getCurrentPath().getClosestT(getDrivetrain().getRobotTransform().getPosition(), 10, 10));
+//        getRobotSimulator().getGraph().changeSeries("Point", GraphUtil.populateSeries(new XYSeriesWithRenderer("Point"), GraphUtil.arrow(closestTransform, .1, .1)));
+//        follower.setPreviousTransformOnPath(closestTransform);
         getDrivetrain().setVelocityControl(newVelocity.getLeft(), newVelocity.getRight());
     }
 }

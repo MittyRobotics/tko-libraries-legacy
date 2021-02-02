@@ -41,6 +41,11 @@ public abstract class PathFollower {
     private boolean unAdaptedPath;
     private double currentDistanceToEnd = Double.POSITIVE_INFINITY;
 
+
+
+
+    private Transform previousTransformOnPath;
+
     /**
      * Constructs a {@link PathFollower}.
      *
@@ -81,12 +86,15 @@ public abstract class PathFollower {
         if (adaptPathToRobot) {
             unAdaptedPath = true;
         }
+        else{
+            previousTransformOnPath = newPath.getStartWaypoint();
+        }
         this.currentDistanceToEnd = 9999;
     }
 
     public void setDrivingGoal(Transform goal) {
         Path path =
-                new Path(PathGenerator.getInstance().generateQuinticHermiteSplinePath(new Transform[]{
+                new Path(PathGenerator.generateQuinticHermiteSplinePath(new Transform[]{
                         goal,
                         goal}));
         setPath(path, true);
@@ -98,7 +106,7 @@ public abstract class PathFollower {
             waypoints[i] = intermediatePoints[i];
         }
         waypoints[waypoints.length - 1] = goal;
-        Path path = new Path(PathGenerator.getInstance().generateQuinticHermiteSplinePath(waypoints));
+        Path path = new Path(PathGenerator.generateQuinticHermiteSplinePath(waypoints));
         setPath(path, true);
     }
 
@@ -119,6 +127,7 @@ public abstract class PathFollower {
         if (unAdaptedPath) {
             calculateAdaptivePath(robotTransform, currentDrivetrainVelocities.getCurvature());
             unAdaptedPath = false;
+            previousTransformOnPath = robotTransform;
         }
 
         if (currentPath == null) {
@@ -127,8 +136,8 @@ public abstract class PathFollower {
         }
 
         //Find the rough distance to the end of the path
-        double distanceToEnd = getRoughDistanceToEnd(robotTransform);
-        this.currentDistanceToEnd = distanceToEnd;
+        this.currentDistanceToEnd = getRoughDistanceToEnd(robotTransform);
+
 
         return calculate(robotTransform, currentDrivetrainVelocities, deltaTime);
     }
@@ -143,7 +152,7 @@ public abstract class PathFollower {
      */
     private void calculateAdaptivePath(Transform robotTransform, double curvature) {
         Path path =
-                new Path(PathGenerator.getInstance().generateQuinticHermiteSplinePath(
+                new Path(PathGenerator.generateQuinticHermiteSplinePath(
                         currentPath.generateAdaptivePathWaypoints(robotTransform, true)));
         setPath(path);
     }
@@ -195,4 +204,13 @@ public abstract class PathFollower {
     public void setPreviousCalculatedVelocity(double previousCalculatedVelocity) {
         this.previousCalculatedVelocity = previousCalculatedVelocity;
     }
+
+    public Transform getPreviousTransformOnPath() {
+        return previousTransformOnPath;
+    }
+
+    public void setPreviousTransformOnPath(Transform previousTransformOnPath) {
+        this.previousTransformOnPath = previousTransformOnPath;
+    }
+
 }

@@ -388,7 +388,7 @@ public class Path extends Parametric {
             for (double t = finalMinSearchT; t < finalMaxSearchT; t += currentIncrement) {
                 Transform transform = getTransform(t);
                 double distance = Math.abs(transform.getPosition().distance(referencePosition));
-                if (distance < closestDistance) {
+                if (distance < closestDistance ) {
                     closestDistance = distance;
                     minSearchT = t - currentIncrement;
                     maxSearchT = t + currentIncrement;

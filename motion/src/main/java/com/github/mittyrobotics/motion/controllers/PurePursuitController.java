@@ -34,7 +34,7 @@ import com.github.mittyrobotics.motion.pathfollowing.PathFollower;
 import com.github.mittyrobotics.motion.pathfollowing.PathFollowerProperties;
 
 public class PurePursuitController extends PathFollower {
-    public static double DEFAULT_LOOKAHEAD_DISTANCE = 25.0;
+    public static double DEFAULT_LOOKAHEAD_DISTANCE = .5;
     public static double DEFAULT_CURVATURE_SLOWDOWN_GAIN = 0.0;
     public static double DEFAULT_MIN_SLOWDOWN_VELOCITY = 0.0;
 
@@ -85,6 +85,7 @@ public class PurePursuitController extends PathFollower {
         double robotVelocity = getProperties().velocityController
                 .getVelocity(getPreviousCalculatedVelocity(), getCurrentDistanceToEnd(),
                         deltaTime);
+
 
         setPreviousCalculatedVelocity(robotVelocity);
 

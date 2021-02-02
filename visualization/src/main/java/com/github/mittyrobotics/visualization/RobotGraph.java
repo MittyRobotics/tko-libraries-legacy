@@ -39,7 +39,7 @@ public class RobotGraph extends Graph {
 
     public RobotGraph() {
         super();
-        scaleGraphToScale(1, 0, 0);
+        scaleGraphToScale(.02, 0, 0);
     }
 
     public void graphDifferentialDrive(Transform robotTransform, double robotWidth, double robotHeight) {
