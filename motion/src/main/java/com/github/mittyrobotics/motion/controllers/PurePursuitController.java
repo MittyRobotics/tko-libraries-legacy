@@ -75,11 +75,7 @@ public class PurePursuitController extends PathFollower {
                                      double deltaTime) {
         double lookaheadDistance = purePursuitProperties.lookaheadDistance;
 
-        TransformWithParameter closestTransformWithParameter =
-                getCurrentPath().getClosestTransform(robotTransform.getPosition());
-
-        Position targetPosition = getCurrentPath().getClosestTransform(closestTransformWithParameter.getPosition(),
-                lookaheadDistance).getPosition();
+        Position targetPosition = getCurrentPath().getTransform(getCurrentPath().getParameterFromLength(getCurrentPath().getGaussianQuadratureLength(getExpectedPathTransform().getParameter()) + lookaheadDistance)).getPosition();
 
         //Calculate the robot velocity using the path velocity controller
         double robotVelocity = getProperties().velocityController
@@ -103,10 +99,14 @@ public class PurePursuitController extends PathFollower {
 
         double radius = pursuitCircle.getRadius() * side;
 
-        robotVelocity =
+        double slowdownVelocity =
                 calculateSlowdownVelocity(1 / (pursuitCircle.getRadius()), purePursuitProperties.curvatureSlowdownGain,
                         robotVelocity,
                         purePursuitProperties.minSlowdownVelocity);
+
+        robotVelocity = getProperties().velocityController.getSafeVelocityController().getVelocity(getPreviousCalculatedVelocity(), slowdownVelocity, deltaTime);
+
+        System.out.println(robotVelocity + " robot");
 
         //Use differential drive kinematics to calculate the left and right wheel velocity given the base robot
         //velocity and the radius of the pursuit circle

@@ -64,18 +64,8 @@ public class Path extends Parametric {
      */
     @Override
     public Position getPosition(double t) {
-        //Convert t from 0 to 1 to 0 to waypoints.length-1 so that the t value represents all parametric equation
-        //segments of the total path.
-        t = t * parametrics.length;
-
-        for (int i = 0; i < parametrics.length; i++) {
-            //Find which parametric equation segment that t falls in
-            if (t >= i && t <= i + 1) {
-                //return the Transform from the segment that it falls in
-                return parametrics[i].getPosition(t - i);
-            }
-        }
-        return new Position();
+        ParametricWithParameter parametricWithParameter = getParametricFromParameter(t);
+        return parametricWithParameter.parametric.getPosition(parametricWithParameter.t);
     }
 
     /**
@@ -86,18 +76,8 @@ public class Path extends Parametric {
      */
     @Override
     public Rotation getRotation(double t) {
-        //Convert t from 0 to 1 to 0 to waypoints.length-1 so that the t value represents all parametric equation
-        //segments of the total path.
-        t = t * parametrics.length;
-
-        for (int i = 0; i < parametrics.length; i++) {
-            //Find which parametric equation segment that t falls in
-            if (t >= i && t <= i + 1) {
-                //return the Transform from the segment that it falls in
-                return parametrics[i].getRotation(t - i);
-            }
-        }
-        return new Rotation();
+        ParametricWithParameter parametricWithParameter = getParametricFromParameter(t);
+        return parametricWithParameter.parametric.getRotation(parametricWithParameter.t);
     }
 
     /**
@@ -111,18 +91,8 @@ public class Path extends Parametric {
      */
     @Override
     public Transform getTransform(double t) {
-        //Convert t from 0 to 1 to 0 to waypoints.length-1 so that the t value represents all parametric equation
-        //segments of the total path.
-        t = t * parametrics.length;
-
-        for (int i = 0; i < parametrics.length; i++) {
-            //Find which parametric equation segment that t falls in
-            if (t >= i && t <= i + 1) {
-                //return the Transform from the segment that it falls in
-                return parametrics[i].getTransform(t - i);
-            }
-        }
-        return new Transform();
+        ParametricWithParameter parametricWithParameter = getParametricFromParameter(t);
+        return parametricWithParameter.parametric.getTransform(parametricWithParameter.t);
     }
 
     /**
@@ -133,53 +103,90 @@ public class Path extends Parametric {
      */
     @Override
     public double getCurvature(double t) {
-        //Convert t from 0 to 1 to 0 to waypoints.length-1 so that the t value represents all parametric equation
-        //segments of the total path.
-        t = t * parametrics.length;
-
-        for (int i = 0; i < parametrics.length; i++) {
-            //Find which parametric equation segment that t falls in
-            if (t >= i && t <= i + 1) {
-                //return the Transform from the segment that it falls in
-                return parametrics[i].getCurvature(t - i);
-            }
-        }
-
-        return 1 / 2e16;
+        ParametricWithParameter parametricWithParameter = getParametricFromParameter(t);
+        return parametricWithParameter.parametric.getCurvature(parametricWithParameter.t);
     }
 
     @Override
     public Position getFirstDerivative(double t) {
-        //Convert t from 0 to 1 to 0 to waypoints.length-1 so that the t value represents all parametric equation
-        //segments of the total path.
-        t = t * parametrics.length;
-
-        for (int i = 0; i < parametrics.length; i++) {
-            //Find which parametric equation segment that t falls in
-            if (t >= i && t <= i + 1) {
-                //return the Transform from the segment that it falls in
-                return parametrics[i].getFirstDerivative(t - i);
-            }
-        }
-
-        return new Position();
+        ParametricWithParameter parametricWithParameter = getParametricFromParameter(t);
+        return parametricWithParameter.parametric.getFirstDerivative(parametricWithParameter.t);
     }
 
     @Override
     public Position getSecondDerivative(double t) {
-        //Convert t from 0 to 1 to 0 to waypoints.length-1 so that the t value represents all parametric equation
-        //segments of the total path.
-        t = t * parametrics.length;
+       ParametricWithParameter parametricWithParameter = getParametricFromParameter(t);
+       return parametricWithParameter.parametric.getSecondDerivative(parametricWithParameter.t);
+    }
 
+    @Override
+    public double getGaussianQuadratureLength() {
+        return getGaussianQuadratureLength(1);
+    }
+
+    @Override
+    public double getGaussianQuadratureLength(double endParam) {
+        ParametricWithParameter parametricWithParameter = getParametricFromParameter(endParam);
+        double previousLength = 0.0;
+        for(int i = 0; i < parametricWithParameter.index; i++){
+            previousLength += parametrics[i].getGaussianQuadratureLength();
+        }
+        return previousLength + parametricWithParameter.parametric.getGaussianQuadratureLength(parametricWithParameter.t);
+    }
+
+    @Override
+    public double getParameterFromLength(double length) {
+        ParametricWithParameter parametricWithParameter = getParametricFromLength(length);
+        return convertRelativeParameterToAbsolute(parametricWithParameter.t, parametricWithParameter.index);
+    }
+
+    public ParametricWithParameter getParametricFromParameter(double t){
+        if(t < 0){
+            return new ParametricWithParameter(parametrics[0], t, 0);
+        }
+        if(t > 1){
+            return new ParametricWithParameter(parametrics[parametrics.length-1], t, parametrics.length-1);
+        }
+        t = t * parametrics.length;
         for (int i = 0; i < parametrics.length; i++) {
             //Find which parametric equation segment that t falls in
             if (t >= i && t <= i + 1) {
-                //return the Transform from the segment that it falls in
-                return parametrics[i].getSecondDerivative(t - i);
+                //return the parametric and the parameter within that parametric
+                return new ParametricWithParameter(parametrics[i], t - i, i);
             }
         }
 
-        return new Position();
+        return new ParametricWithParameter(null, 0.0, 0);
+    }
+
+    public ParametricWithParameter getParametricFromLength(double length){
+        if(length < 0){
+            return new ParametricWithParameter(parametrics[0], 0, 0);
+        }
+        double totalLength = 0.0;
+        for(int i = 0; i < parametrics.length; i++){
+            double thisLength =  parametrics[i].getGaussianQuadratureLength();
+            totalLength += thisLength;
+            if(totalLength > length){
+                return new ParametricWithParameter(parametrics[i], parametrics[i].getParameterFromLength(length - (totalLength-thisLength)), i);
+            }
+        }
+        return new ParametricWithParameter(null, 0.0, 0);
+    }
+
+    public double convertRelativeParameterToAbsolute(double t, double i){
+        return (t + i) / parametrics.length;
+    }
+
+    public static class ParametricWithParameter{
+        public Parametric parametric;
+        public double t;
+        public int index;
+        public ParametricWithParameter(Parametric parametric, double t, int index){
+            this.parametric = parametric;
+            this.t = t;
+            this.index = index;
+        }
     }
 
     /**

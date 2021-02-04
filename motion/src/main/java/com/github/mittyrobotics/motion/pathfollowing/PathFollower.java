@@ -44,7 +44,7 @@ public abstract class PathFollower {
 
 
 
-    private Transform previousTransformOnPath;
+    private TransformWithParameter expectedPathTransform;
 
     /**
      * Constructs a {@link PathFollower}.
@@ -87,7 +87,7 @@ public abstract class PathFollower {
             unAdaptedPath = true;
         }
         else{
-            previousTransformOnPath = newPath.getStartWaypoint();
+            expectedPathTransform =new TransformWithParameter(newPath.getStartWaypoint(), 0);
         }
         this.currentDistanceToEnd = 9999;
     }
@@ -127,7 +127,7 @@ public abstract class PathFollower {
         if (unAdaptedPath) {
             calculateAdaptivePath(robotTransform, currentDrivetrainVelocities.getCurvature());
             unAdaptedPath = false;
-            previousTransformOnPath = robotTransform;
+            expectedPathTransform = currentPath.getClosestTransform(robotTransform.getPosition());
         }
 
         if (currentPath == null) {
@@ -138,8 +138,12 @@ public abstract class PathFollower {
         //Find the rough distance to the end of the path
         this.currentDistanceToEnd = getRoughDistanceToEnd(robotTransform);
 
+        DrivetrainState state = calculate(robotTransform, currentDrivetrainVelocities, deltaTime);
 
-        return calculate(robotTransform, currentDrivetrainVelocities, deltaTime);
+        double t = currentPath.getParameterFromLength(currentPath.getGaussianQuadratureLength(expectedPathTransform.getParameter()) + state.getLinear() * deltaTime);
+        Transform oldTransform = expectedPathTransform;
+        expectedPathTransform = new TransformWithParameter(new Transform(currentPath.getTransform(t)), t);
+        return state;
     }
 
     public abstract DrivetrainState calculate(Transform robotTransform, DrivetrainState currentDrivetrainVelocities,
@@ -205,12 +209,12 @@ public abstract class PathFollower {
         this.previousCalculatedVelocity = previousCalculatedVelocity;
     }
 
-    public Transform getPreviousTransformOnPath() {
-        return previousTransformOnPath;
+    public TransformWithParameter getExpectedPathTransform() {
+        return expectedPathTransform;
     }
 
-    public void setPreviousTransformOnPath(Transform previousTransformOnPath) {
-        this.previousTransformOnPath = previousTransformOnPath;
+    public void setExpectedPathTransform(TransformWithParameter expectedPathTransform) {
+        this.expectedPathTransform = expectedPathTransform;
     }
 
 }

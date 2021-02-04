@@ -34,6 +34,7 @@ import com.github.mittyrobotics.path.generation.PathGenerator;
 import com.github.mittyrobotics.visualization.Graph;
 import com.github.mittyrobotics.visualization.GraphUtil;
 import com.github.mittyrobotics.visualization.XYSeriesWithRenderer;
+import org.jfree.data.xy.XYDataItem;
 
 public class PathFollowerSimRobot extends SimRobot {
     private PurePursuitController follower;
@@ -47,14 +48,15 @@ public class PathFollowerSimRobot extends SimRobot {
 
     @Override
     public void robotInit() {
-        PathVelocityController velocityController = new PathVelocityController(1, 1, 50, 0, 0);
+        PathVelocityController velocityController = new PathVelocityController(.5, .5, 50, 0, 0);
         double trackWidth = .5;
         boolean reversed = false;
         getDrivetrain().setupPIDFValues(0, 0, 0, 12.0 / 4.1190227085647875);
         follower =
                 new PurePursuitController(new PathFollowerProperties(velocityController, trackWidth, reversed, false),
-                        new PathFollowerProperties.PurePursuitProperties(.5, 0, 0));
-        follower.setPath(new Path(PathGenerator.generateQuinticHermiteSplinePath(new Transform[]{new Transform(0, 0, 0), new Transform(4, 4, 0)})));
+                        new PathFollowerProperties.PurePursuitProperties(.5, 1, 1));
+        follower.setPath(new Path(PathGenerator.generateQuinticHermiteSplinePath(new Transform[]{new Transform(0, 0, 0), new Transform(4, 4, 0), new Transform(0, 0, Math.PI)})));
+        graph = new Graph();
     }
 
     @Override
@@ -74,9 +76,10 @@ public class PathFollowerSimRobot extends SimRobot {
         }
         getRobotSimulator().getGraph().changeSeries("Circle", GraphUtil
                 .populateSeries(new XYSeriesWithRenderer("Circle"), GraphUtil.circle(follower.getPursuitCircle())));
-//        Transform closestTransform = follower.getCurrentPath().getTransform(follower.getCurrentPath().getClosestT(getDrivetrain().getRobotTransform().getPosition(), 10, 10));
-//        getRobotSimulator().getGraph().changeSeries("Point", GraphUtil.populateSeries(new XYSeriesWithRenderer("Point"), GraphUtil.arrow(closestTransform, .1, .1)));
+        Transform closestTransform = follower.getExpectedPathTransform();
+        getRobotSimulator().getGraph().changeSeries("Point", GraphUtil.populateSeries(new XYSeriesWithRenderer("Point"), GraphUtil.arrow(closestTransform, .1, .1)));
 //        follower.setPreviousTransformOnPath(closestTransform);
         getDrivetrain().setVelocityControl(newVelocity.getLeft(), newVelocity.getRight());
+        graph.addToSeries("Velocity", new XYDataItem(time, newVelocity.getLinear()));
     }
 }

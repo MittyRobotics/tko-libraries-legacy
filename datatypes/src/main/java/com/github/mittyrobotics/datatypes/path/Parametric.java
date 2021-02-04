@@ -108,7 +108,6 @@ public abstract class Parametric {
     public double getGaussianQuadratureLength() {
         return getGaussianQuadratureLength(1);
     }
-
     /**
      * Computes the estimated length of the parametric using 5-point Gaussian quadrature.
      * <p>
@@ -118,20 +117,26 @@ public abstract class Parametric {
      * @return the estimated length of the parametric.
      */
     public double getGaussianQuadratureLength(double endParam) {
-        //5-point Gaussian quadrature coefficients
+        //11-point Gaussian quadrature coefficients
         double[][] coefficients = {
-                {0.0, 0.5688889},
-                {-0.5384693, 0.47862867},
-                {0.5384693, 0.47862867},
-                {-0.90617985, 0.23692688},
-                {0.90617985, 0.23692688}
+                {0.0000000000000000, 0.2729250867779006},
+                {-0.2695431559523450, 0.2628045445102467},
+                {0.2695431559523450, 0.2628045445102467},
+                {-0.5190961292068118, 0.2331937645919905},
+                {0.5190961292068118, 0.2331937645919905},
+                {-0.7301520055740494, 0.1862902109277343},
+                {0.7301520055740494, 0.1862902109277343},
+                {-0.8870625997680953, 0.1255803694649046},
+                {0.8870625997680953, 0.1255803694649046},
+                {-0.9782286581460570, 0.0556685671161737},
+                {0.9782286581460570, 0.0556685671161737},
         };
 
-        double halfParam = endParam / 2.0;
+        double halfParam = endParam/2.0;
 
         double length = 0;
         for (int i = 0; i < coefficients.length; i++) {
-            double alpha = halfParam * (1.0 + coefficients[i][0]);
+            double alpha = halfParam * ((1.0 + coefficients[i][0]));
             length += getFirstDerivative(alpha).magnitude() * coefficients[i][1];
         }
 
@@ -156,19 +161,19 @@ public abstract class Parametric {
      * https://en.wikipedia.org/wiki/Newton%27s_method
      *
      * @param length       length along the spline to get the parameter.
-     * @param splineLength total length of the spline.
      * @return the parameter of the parametric at the length along the spline.
      */
     public double getParameterFromLength(double length, double splineLength) {
         //Initial guess for the t value
-        double t = length / splineLength;
+        double t = length/splineLength;
 
         //Newton-Raphson iterations to make more accurate estimation
-        for (int i = 0; i < 2; i++) {
+        for (int i = 0; i < 5; i++) {
             double tangentMagnitude = getFirstDerivative(t).magnitude();
             if (tangentMagnitude > 0.0) {
                 t -= (getGaussianQuadratureLength(t) - length) / tangentMagnitude;
                 t = MathUtil.clamp(t, 0, 1);
+
             }
         }
 

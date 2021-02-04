@@ -47,8 +47,6 @@ public class PathVelocityController {
         double maxDistanceVelocity = Math.sqrt(2 * maxDeceleration * distanceToEnd);
         double desiredVelocity = Math.min(maxVelocity, maxDistanceVelocity);
 
-        System.out.println(distanceToEnd + " " + maxDistanceVelocity + " " + desiredVelocity );
-
         double deltaVelocity = currentVelocity - desiredVelocity;
         return safeVelocityController.getVelocity(currentVelocity, desiredVelocity, deltaTime);
     }
@@ -72,4 +70,9 @@ public class PathVelocityController {
     public double getEndVelocity() {
         return endVelocity;
     }
+
+    public SafeVelocityController getSafeVelocityController() {
+        return safeVelocityController;
+    }
+
 }
