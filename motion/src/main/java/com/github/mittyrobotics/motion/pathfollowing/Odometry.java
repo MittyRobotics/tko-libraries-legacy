@@ -36,7 +36,7 @@ public class Odometry {
     private double calibrateGyroVal = 0;
 
     private static Odometry instance;
-    public Odometry getInstance(){
+    public static Odometry getInstance(){
         if(instance == null){
             instance = new Odometry();
         }
