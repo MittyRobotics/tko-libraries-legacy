@@ -132,9 +132,8 @@ public abstract class PathFollower {
 
         DrivetrainState state = calculate(robotTransform, currentDrivetrainVelocities, deltaTime);
         //Find the rough distance to the end of the path
-        this.traveledDistance += state.getLinear()*deltaTime;
+        this.traveledDistance += getPreviousCalculatedVelocity()*deltaTime;
         expectedPathTransform = currentPath.getTransformFromLength(traveledDistance);
-        previousCalculatedVelocity = state.getLinear();
 
         return state;
     }
