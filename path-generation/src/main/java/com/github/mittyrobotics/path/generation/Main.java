@@ -26,7 +26,6 @@ package com.github.mittyrobotics.path.generation;
 
 import com.github.mittyrobotics.datatypes.positioning.Transform;
 import com.github.mittyrobotics.datatypes.positioning.TransformWithParameter;
-import com.github.mittyrobotics.datatypes.positioning.TransformWithVelocityAndCurvature;
 import com.github.mittyrobotics.visualization.Graph;
 import com.github.mittyrobotics.visualization.GraphUtil;
 import com.github.mittyrobotics.visualization.XYSeriesWithRenderer;
@@ -42,14 +41,14 @@ public class Main {
         TransformWithParameter expectedPathTransform = new TransformWithParameter(path.getStartWaypoint(), 0);
 
         double length = 0;
-        while(true){
+        while (true) {
             Transform oldTransform = expectedPathTransform;
             expectedPathTransform = path.getTransformFromLength(length);
-            length += 1*dt;
+            length += 1 * dt;
             graph.changeSeries("Point", GraphUtil.populateSeries(new XYSeriesWithRenderer("Point"), GraphUtil.arrow(expectedPathTransform, .1, .1)));
             System.out.println(expectedPathTransform.getParameter());
             try {
-                Thread.sleep((long) (1000.0*dt));
+                Thread.sleep((long) (1000.0 * dt));
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }

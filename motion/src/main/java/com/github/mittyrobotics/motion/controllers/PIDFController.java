@@ -24,7 +24,6 @@
 
 package com.github.mittyrobotics.motion.controllers;
 
-import com.github.mittyrobotics.datatypes.motion.ContinuousManager;
 import edu.wpi.first.wpiutil.math.MathUtil;
 
 public class PIDFController {
@@ -88,7 +87,7 @@ public class PIDFController {
      * @return next voltage for PIDF controller.
      */
     public double calculate(double measurement, double feedForward, double deltaTime) {
-        return calculate(measurement, feedForward, setpoint-measurement, deltaTime);
+        return calculate(measurement, feedForward, setpoint - measurement, deltaTime);
     }
 
     public double calculate(double measurement, double feedForward, double error, double deltaTime) {

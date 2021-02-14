@@ -92,8 +92,8 @@ public abstract class Parametric {
      */
     public double getRawLength(double steps, double startT, double endT) {
         double length = 0;
-        for (double t = startT; t < endT; t += (endT-startT) / steps) {
-            length += getPosition(t).distance(getPosition(t - (endT-startT) / steps));
+        for (double t = startT; t < endT; t += (endT - startT) / steps) {
+            length += getPosition(t).distance(getPosition(t - (endT - startT) / steps));
         }
         return length;
     }
@@ -108,6 +108,7 @@ public abstract class Parametric {
     public double getGaussianQuadratureLength() {
         return getGaussianQuadratureLength(1);
     }
+
     /**
      * Computes the estimated length of the parametric using 5-point Gaussian quadrature.
      * <p>
@@ -137,7 +138,7 @@ public abstract class Parametric {
                 {0.9782286581460570, 0.0556685671161737},
         };
 
-        double halfParam = (endParam-startParam) / 2.0;
+        double halfParam = (endParam - startParam) / 2.0;
 
         double length = 0;
         for (int i = 0; i < coefficients.length; i++) {
@@ -166,12 +167,12 @@ public abstract class Parametric {
      * <p>
      * https://en.wikipedia.org/wiki/Newton%27s_method
      *
-     * @param length       length along the spline to get the parameter.
+     * @param length length along the spline to get the parameter.
      * @return the parameter of the parametric at the length along the spline.
      */
     public double getParameterFromLength(double length, double splineLength) {
         //Initial guess for the t value
-        double t = length/splineLength;
+        double t = length / splineLength;
 
         //Newton-Raphson iterations to make more accurate estimation
         for (int i = 0; i < 5; i++) {

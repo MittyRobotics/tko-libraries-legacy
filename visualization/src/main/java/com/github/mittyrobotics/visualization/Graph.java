@@ -155,7 +155,7 @@ public class Graph extends JFrame {
     }
 
     public void changeSeries(int seriesIndex, XYSeries newSeries) {
-        SwingUtilities.invokeLater(()->{
+        SwingUtilities.invokeLater(() -> {
             int itemCount = defaultDataset.getSeries(seriesIndex).getItemCount();
             for (int i = 0; i < itemCount; i++) {
                 defaultDataset.getSeries(seriesIndex).remove(0);

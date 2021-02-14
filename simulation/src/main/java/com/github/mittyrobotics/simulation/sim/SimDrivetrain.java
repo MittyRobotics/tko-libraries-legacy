@@ -71,7 +71,7 @@ public class SimDrivetrain extends TimerTask {
 
     private void odometry() {
         double deltaLeftPos = (drivetrainModel.getLeftPosition() - prevLeftPos);
-        double deltaRightPos = (drivetrainModel.getRightPosition() - prevRightPos) ;
+        double deltaRightPos = (drivetrainModel.getRightPosition() - prevRightPos);
 
         double deltaPos = (deltaLeftPos + deltaRightPos) / 2;
 
@@ -117,7 +117,7 @@ public class SimDrivetrain extends TimerTask {
         double FF = f * target;
 
         double error = target - measured;
-        double FB = p * error + d*((error-lastError)/deltaTime);
+        double FB = p * error + d * ((error - lastError) / deltaTime);
 
         voltage = FF + FB;
 

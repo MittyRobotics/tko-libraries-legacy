@@ -117,8 +117,8 @@ public class Path extends Parametric {
 
     @Override
     public Position getSecondDerivative(double t) {
-       ParametricWithParameter parametricWithParameter = getParametricFromParameter(t);
-       return parametricWithParameter.parametric.getSecondDerivative(parametricWithParameter.t);
+        ParametricWithParameter parametricWithParameter = getParametricFromParameter(t);
+        return parametricWithParameter.parametric.getSecondDerivative(parametricWithParameter.t);
     }
 
     @Override
@@ -130,7 +130,7 @@ public class Path extends Parametric {
     public double getGaussianQuadratureLength(double endParam) {
         ParametricWithParameter parametricWithParameter = getParametricFromParameter(endParam);
         double previousLength = 0.0;
-        for(int i = 0; i < parametricWithParameter.index; i++){
+        for (int i = 0; i < parametricWithParameter.index; i++) {
             previousLength += parametrics[i].getGaussianQuadratureLength();
         }
         return previousLength + parametricWithParameter.parametric.getGaussianQuadratureLength(parametricWithParameter.t);
@@ -142,14 +142,13 @@ public class Path extends Parametric {
         ParametricWithParameter endParametric = getParametricFromParameter(endParam);
 
         double previousLength = 0.0;
-        for(int i = startParametric.index+1; i < endParametric.index; i++){
+        for (int i = startParametric.index + 1; i < endParametric.index; i++) {
             previousLength += parametrics[i].getGaussianQuadratureLength();
         }
 
-        if(startParametric.index == endParametric.index){
+        if (startParametric.index == endParametric.index) {
             return previousLength + endParametric.parametric.getGaussianQuadratureLength(startParametric.t, endParametric.t);
-        }
-        else{
+        } else {
             return startParametric.parametric.getGaussianQuadratureLength(startParametric.t, 1) + endParametric.parametric.getGaussianQuadratureLength(0, endParametric.t);
         }
     }
@@ -161,22 +160,22 @@ public class Path extends Parametric {
         return convertRelativeParameterToAbsolute(parametricWithParameter.t, parametricWithParameter.index);
     }
 
-    public TransformWithParameter getTransformFromLength(double length){
-        if(length < 0.0){
+    public TransformWithParameter getTransformFromLength(double length) {
+        if (length < 0.0) {
             return new TransformWithParameter(new Transform(getStartWaypoint().getRotation().cos() * length, getStartWaypoint().getRotation().sin() * length, getStartWaypoint().getRotation()).add(getStartWaypoint()), 0.0);
         }
-        if(length > getGaussianQuadratureLength()){
-            return new TransformWithParameter(new Transform(getEndWaypoint().getRotation().cos() * (length-getGaussianQuadratureLength()), getEndWaypoint().getRotation().sin() * (length-getGaussianQuadratureLength()), getEndWaypoint().getRotation()).add(getEndWaypoint()), 1.0);
+        if (length > getGaussianQuadratureLength()) {
+            return new TransformWithParameter(new Transform(getEndWaypoint().getRotation().cos() * (length - getGaussianQuadratureLength()), getEndWaypoint().getRotation().sin() * (length - getGaussianQuadratureLength()), getEndWaypoint().getRotation()).add(getEndWaypoint()), 1.0);
         }
         return getTransform(getParameterFromLength(length));
     }
 
-    public ParametricWithParameter getParametricFromParameter(double t){
-        if(t < 0){
+    public ParametricWithParameter getParametricFromParameter(double t) {
+        if (t < 0) {
             return new ParametricWithParameter(parametrics[0], t, 0);
         }
-        if(t > 1){
-            return new ParametricWithParameter(parametrics[parametrics.length-1], t, parametrics.length-1);
+        if (t > 1) {
+            return new ParametricWithParameter(parametrics[parametrics.length - 1], t, parametrics.length - 1);
         }
         t = t * parametrics.length;
         for (int i = 0; i < parametrics.length; i++) {
@@ -190,39 +189,27 @@ public class Path extends Parametric {
         return new ParametricWithParameter(null, 0.0, 0);
     }
 
-    public ParametricWithParameter getParametricFromLength(double length){
-        if(length < 0){
+    public ParametricWithParameter getParametricFromLength(double length) {
+        if (length < 0) {
             return new ParametricWithParameter(parametrics[0], 0, 0);
         }
         double totalLength = 0.0;
-        for(int i = 0; i < parametrics.length; i++){
-            double thisLength =  parametrics[i].getGaussianQuadratureLength();
+        for (int i = 0; i < parametrics.length; i++) {
+            double thisLength = parametrics[i].getGaussianQuadratureLength();
             totalLength += thisLength;
-            if(totalLength > length || i == parametrics.length-1){
-                return new ParametricWithParameter(parametrics[i], parametrics[i].getParameterFromLength(length - (totalLength-thisLength)), i);
+            if (totalLength > length || i == parametrics.length - 1) {
+                return new ParametricWithParameter(parametrics[i], parametrics[i].getParameterFromLength(length - (totalLength - thisLength)), i);
             }
         }
         return new ParametricWithParameter(null, 0.0, 0);
     }
 
-    public double convertRelativeParameterToAbsolute(double t, double i){
+    public double convertRelativeParameterToAbsolute(double t, double i) {
         return (t + i) / parametrics.length;
     }
 
-    public double convertAbsoluteParameterToRelative(double t, double i){
-        return  t * parametrics.length - i;
-    }
-
-
-    public static class ParametricWithParameter{
-        public Parametric parametric;
-        public double t;
-        public int index;
-        public ParametricWithParameter(Parametric parametric, double t, int index){
-            this.parametric = parametric;
-            this.t = t;
-            this.index = index;
-        }
+    public double convertAbsoluteParameterToRelative(double t, double i) {
+        return t * parametrics.length - i;
     }
 
     /**
@@ -431,7 +418,7 @@ public class Path extends Parametric {
             for (double t = finalMinSearchT; t < finalMaxSearchT; t += currentIncrement) {
                 Transform transform = getTransform(t);
                 double distance = Math.abs(transform.getPosition().distance(referencePosition));
-                if (distance < closestDistance ) {
+                if (distance < closestDistance) {
                     closestDistance = distance;
                     minSearchT = t - currentIncrement;
                     maxSearchT = t + currentIncrement;
@@ -673,5 +660,17 @@ public class Path extends Parametric {
      */
     public void setParametrics(Parametric[] parametrics) {
         this.parametrics = parametrics;
+    }
+
+    public static class ParametricWithParameter {
+        public Parametric parametric;
+        public double t;
+        public int index;
+
+        public ParametricWithParameter(Parametric parametric, double t, int index) {
+            this.parametric = parametric;
+            this.t = t;
+            this.index = index;
+        }
     }
 }

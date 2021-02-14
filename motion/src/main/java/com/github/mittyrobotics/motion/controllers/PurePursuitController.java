@@ -31,10 +31,6 @@ import com.github.mittyrobotics.datatypes.positioning.Position;
 import com.github.mittyrobotics.datatypes.positioning.Transform;
 import com.github.mittyrobotics.motion.pathfollowing.PathFollower;
 import com.github.mittyrobotics.motion.pathfollowing.PathFollowerProperties;
-import com.github.mittyrobotics.visualization.Graph;
-import org.jfree.data.xy.XYDataItem;
-
-import java.util.ArrayList;
 
 public class PurePursuitController extends PathFollower {
     public static double DEFAULT_LOOKAHEAD_DISTANCE = .5;
@@ -47,17 +43,16 @@ public class PurePursuitController extends PathFollower {
     private Position lookaheadPoint;
 
     private double t;
-
-    public double getCurvatureSlowdownVelocity() {
-        return curvatureSlowdownVelocity;
-    }
-
     private double curvatureSlowdownVelocity;
 
     public PurePursuitController(PathFollowerProperties properties,
                                  PathFollowerProperties.PurePursuitProperties purePursuitProperties) {
         super(properties);
         this.purePursuitProperties = purePursuitProperties;
+    }
+
+    public double getCurvatureSlowdownVelocity() {
+        return curvatureSlowdownVelocity;
     }
 
     @Override
@@ -102,14 +97,15 @@ public class PurePursuitController extends PathFollower {
         return pursuitCircle;
     }
 
-    public Position getLookaheadPoint(){
+    public Position getLookaheadPoint() {
         return lookaheadPoint;
     }
 
-    public static class VelocityAndDistance{
+    public static class VelocityAndDistance {
         public double velocity;
         public double distance;
-        public VelocityAndDistance(double velocity, double distance){
+
+        public VelocityAndDistance(double velocity, double distance) {
             this.velocity = velocity;
             this.distance = distance;
         }

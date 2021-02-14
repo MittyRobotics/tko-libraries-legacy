@@ -25,7 +25,6 @@
 package com.github.mittyrobotics.simulation.sim;
 
 
-import com.github.mittyrobotics.datatypes.units.Conversions;
 import com.github.mittyrobotics.visualization.RobotGraph;
 
 import java.util.Timer;

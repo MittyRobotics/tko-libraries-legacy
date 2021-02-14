@@ -80,9 +80,8 @@ public abstract class PathFollower {
         this.currentPath = newPath;
         if (adaptPathToRobot) {
             unAdaptedPath = true;
-        }
-        else{
-            expectedPathTransform =new TransformWithParameter(newPath.getStartWaypoint(), 0);
+        } else {
+            expectedPathTransform = new TransformWithParameter(newPath.getStartWaypoint(), 0);
         }
         this.traveledDistance = 0;
     }
@@ -132,7 +131,7 @@ public abstract class PathFollower {
 
         DrivetrainState state = calculate(robotTransform, currentDrivetrainVelocities, deltaTime);
         //Find the rough distance to the end of the path
-        this.traveledDistance += getPreviousCalculatedVelocity()*deltaTime;
+        this.traveledDistance += getPreviousCalculatedVelocity() * deltaTime;
         expectedPathTransform = currentPath.getTransformFromLength(traveledDistance);
 
         return state;
@@ -171,7 +170,7 @@ public abstract class PathFollower {
      * @return the rough distance of the robot along the current {@link Path}.
      */
     public double getDistanceToEnd() {
-        return currentPath.getGaussianQuadratureLength()-traveledDistance;
+        return currentPath.getGaussianQuadratureLength() - traveledDistance;
     }
 
     /**

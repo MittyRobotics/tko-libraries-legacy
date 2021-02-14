@@ -35,9 +35,9 @@ public class PathVelocityController {
     private final double maxVelocity;
     private final double startVelocity;
     private final double endVelocity;
+    private final SafeVelocityController safeVelocityController;
     private double curvatureSlowdownGain;
     private double minSlowdownVelocity;
-    private final SafeVelocityController safeVelocityController;
     private ArrayList<VelocityAndDistance> velocityAndDistances;
 
     public PathVelocityController(double maxAcceleration, double maxDeceleration, double maxVelocity,
@@ -51,42 +51,6 @@ public class PathVelocityController {
         this.minSlowdownVelocity = minSlowdownVelocity;
         this.safeVelocityController = new SafeVelocityController(maxAcceleration, maxDeceleration, maxVelocity);
         velocityAndDistances = new ArrayList<>();
-    }
-
-    public double getVelocity(Path path, double previousVelocity, double traveledDistance, double deltaTime) {
-        //Calculate max velocity to end
-        double distanceToEnd = Math.max(0, path.getGaussianQuadratureLength() - traveledDistance);
-        double maxVelocityToEnd = calculateMaxVelocityFromDistance(0.0, distanceToEnd, maxDeceleration);
-        //Calculate initial trapezoidal velocity from safe velocity controller
-        double velocity = safeVelocityController.getVelocity(previousVelocity, Math.min(maxVelocity, maxVelocityToEnd), deltaTime);
-
-        //Calculate preview distance to slowdown from current velocity to zero velocity
-        double previewDistance = calculateDistanceToSlowdown(previousVelocity, 0.0, maxDeceleration);
-        //Get curvature at current point and preview point
-        double curvature = path.getCurvature(path.getParameterFromLength(traveledDistance));
-        double curvatureAtPreview = path.getCurvature(path.getParameterFromLength(traveledDistance + previewDistance));
-        //Calculate slowdown velocity at current point and preview point
-        double slowdownVelocity = calculateSlowdownVelocity(curvature, curvatureSlowdownGain, previousVelocity, minSlowdownVelocity);
-        double slowdownVelocityAtPreview = calculateSlowdownVelocity(curvatureAtPreview, curvatureSlowdownGain, previousVelocity, minSlowdownVelocity);
-
-        //Remove old array values that we have traveled past
-        removeOldArrayValues(traveledDistance);
-        //Add new preview velocity to array
-        velocityAndDistances.add(new VelocityAndDistance(slowdownVelocityAtPreview,traveledDistance + previewDistance));
-
-        //Get minimum velocity from the array required to slowdown to a future velocity
-        double minVelocityToSlowdown = getMinVelFromArray(traveledDistance);
-
-        //If min velocity to slowdown is less than the previous velocity, we want to slowdown
-        if (minVelocityToSlowdown < previousVelocity) {
-            velocity = Math.min(velocity, minVelocityToSlowdown);
-        }
-        //If new velocity minus slowdown velocity is less than max deceleration, we want to use slowdown velocity instead. This avoids stepping glitches with the minVelocityToSlowdown.
-        if (Math.abs(velocity - slowdownVelocity) < maxDeceleration) {
-            velocity = Math.min(velocity, slowdownVelocity);
-        }
-
-        return velocity;
     }
 
     private static double calculateSlowdownVelocity(double curvature, double curvatureSlowdownGain,
@@ -109,6 +73,42 @@ public class PathVelocityController {
 
     public static double calculateMaxVelocityFromDistance(double endVelocity, double distance, double maxDeceleration) {
         return Math.sqrt(endVelocity * endVelocity + 2 * maxDeceleration * distance);
+    }
+
+    public double getVelocity(Path path, double previousVelocity, double traveledDistance, double deltaTime) {
+        //Calculate max velocity to end
+        double distanceToEnd = Math.max(0, path.getGaussianQuadratureLength() - traveledDistance);
+        double maxVelocityToEnd = calculateMaxVelocityFromDistance(0.0, distanceToEnd, maxDeceleration);
+        //Calculate initial trapezoidal velocity from safe velocity controller
+        double velocity = safeVelocityController.getVelocity(previousVelocity, Math.min(maxVelocity, maxVelocityToEnd), deltaTime);
+
+        //Calculate preview distance to slowdown from current velocity to zero velocity
+        double previewDistance = calculateDistanceToSlowdown(previousVelocity, 0.0, maxDeceleration);
+        //Get curvature at current point and preview point
+        double curvature = path.getCurvature(path.getParameterFromLength(traveledDistance));
+        double curvatureAtPreview = path.getCurvature(path.getParameterFromLength(traveledDistance + previewDistance));
+        //Calculate slowdown velocity at current point and preview point
+        double slowdownVelocity = calculateSlowdownVelocity(curvature, curvatureSlowdownGain, previousVelocity, minSlowdownVelocity);
+        double slowdownVelocityAtPreview = calculateSlowdownVelocity(curvatureAtPreview, curvatureSlowdownGain, previousVelocity, minSlowdownVelocity);
+
+        //Remove old array values that we have traveled past
+        removeOldArrayValues(traveledDistance);
+        //Add new preview velocity to array
+        velocityAndDistances.add(new VelocityAndDistance(slowdownVelocityAtPreview, traveledDistance + previewDistance));
+
+        //Get minimum velocity from the array required to slowdown to a future velocity
+        double minVelocityToSlowdown = getMinVelFromArray(traveledDistance);
+
+        //If min velocity to slowdown is less than the previous velocity, we want to slowdown
+        if (minVelocityToSlowdown < previousVelocity) {
+            velocity = Math.min(velocity, minVelocityToSlowdown);
+        }
+        //If new velocity minus slowdown velocity is less than max deceleration, we want to use slowdown velocity instead. This avoids stepping glitches with the minVelocityToSlowdown.
+        if (Math.abs(velocity - slowdownVelocity) < maxDeceleration) {
+            velocity = Math.min(velocity, slowdownVelocity);
+        }
+
+        return velocity;
     }
 
     private double getMinVelFromArray(double currentDistance) {
