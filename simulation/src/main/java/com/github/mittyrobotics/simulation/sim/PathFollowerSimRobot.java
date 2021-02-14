@@ -48,15 +48,16 @@ public class PathFollowerSimRobot extends SimRobot {
 
     @Override
     public void robotInit() {
-        PathVelocityController velocityController = new PathVelocityController(.5, .5, 50, 0, 0);
+        graph = new Graph();
+        PathVelocityController velocityController = new PathVelocityController(.5, .5, 2, 0, 0, .4, .2);
         double trackWidth = .5;
         boolean reversed = false;
-        getDrivetrain().setupPIDFValues(0, 0, 0, 12.0 / 4.1190227085647875);
+        getDrivetrain().setupPIDFValues(1, 0, .001, 12.0 / 4.1190227085647875);
         follower =
                 new PurePursuitController(new PathFollowerProperties(velocityController, trackWidth, reversed, false),
-                        new PathFollowerProperties.PurePursuitProperties(.5, 1, 1));
-        follower.setPath(new Path(PathGenerator.generateQuinticHermiteSplinePath(new Transform[]{new Transform(0, 0, 0), new Transform(4, 4, 0), new Transform(0, 0, Math.PI)})));
-        graph = new Graph();
+                        new PathFollowerProperties.PurePursuitProperties(.5));
+        follower.setPath(new Path(PathGenerator.generateQuinticHermiteSplinePath(new Transform[]{new Transform(0, 0, 0), new Transform(4, 2, 0)})));
+
     }
 
     @Override
@@ -74,12 +75,20 @@ public class PathFollowerSimRobot extends SimRobot {
                             GraphUtil.parametric(follower.getCurrentPath(), 0.01, .1)));
             updatedPath = true;
         }
+
         getRobotSimulator().getGraph().changeSeries("Circle", GraphUtil
                 .populateSeries(new XYSeriesWithRenderer("Circle"), GraphUtil.circle(follower.getPursuitCircle())));
         Transform closestTransform = follower.getExpectedPathTransform();
         getRobotSimulator().getGraph().changeSeries("Point", GraphUtil.populateSeries(new XYSeriesWithRenderer("Point"), GraphUtil.arrow(closestTransform, .1, .1)));
+        getRobotSimulator().getGraph().changeSeries("Point1", GraphUtil.populateSeries(new XYSeriesWithRenderer("Point"), GraphUtil.arrow(follower.getCurrentPath().getTransformFromLength(follower.getTraveledDistance()+0), .1, .1)));
 //        follower.setPreviousTransformOnPath(closestTransform);
         getDrivetrain().setVelocityControl(newVelocity.getLeft(), newVelocity.getRight());
+//        getDrivetrain().setPercentOutput(1, 1);
         graph.addToSeries("Velocity", new XYDataItem(time, newVelocity.getLinear()));
+        graph.addToSeries("Curvature Slowdown", new XYDataItem(time, follower.getCurvatureSlowdownVelocity()));
+        graph.addToSeries("slowdown", new XYDataItem(time, follower.getCurvatureSlowdownVelocity()));
+        graph.addToSeries("Velocity1", new XYDataItem(time, (getRobotSimulator().getRobot().getDrivetrain().getDrivetrainModel().getRightVelocity() + getRobotSimulator().getRobot().getDrivetrain().getDrivetrainModel().getLeftVelocity())/2));
+        graph.addToSeries("Position", new XYDataItem(time, follower.getTraveledDistance()));
+        graph.addToSeries("Position Setpoint", new XYDataItem(time, follower.getCurrentPath().getGaussianQuadratureLength()));
     }
 }

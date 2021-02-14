@@ -25,10 +25,7 @@
 package com.github.mittyrobotics.path.generation;
 
 import com.github.mittyrobotics.datatypes.path.Parametric;
-import com.github.mittyrobotics.datatypes.positioning.Position;
-import com.github.mittyrobotics.datatypes.positioning.Rotation;
-import com.github.mittyrobotics.datatypes.positioning.Transform;
-import com.github.mittyrobotics.datatypes.positioning.TransformWithParameter;
+import com.github.mittyrobotics.datatypes.positioning.*;
 
 import java.util.ArrayList;
 
@@ -90,9 +87,14 @@ public class Path extends Parametric {
      * @return the {@link Transform} at the parameter <code>t</code>.
      */
     @Override
-    public Transform getTransform(double t) {
+    public TransformWithParameter getTransform(double t) {
         ParametricWithParameter parametricWithParameter = getParametricFromParameter(t);
-        return parametricWithParameter.parametric.getTransform(parametricWithParameter.t);
+        return new TransformWithParameter(parametricWithParameter.parametric.getTransform(parametricWithParameter.t), t);
+    }
+
+    public TransformWithVelocityAndCurvature getTransformWithVelocityAndCurvature(double t) {
+        ParametricWithParameter parametricWithParameter = getParametricFromParameter(t);
+        return new TransformWithVelocityAndCurvature(parametricWithParameter.parametric.getTransform(parametricWithParameter.t), getFirstDerivative(t).magnitude(), getCurvature(t));
     }
 
     /**
@@ -135,9 +137,38 @@ public class Path extends Parametric {
     }
 
     @Override
+    public double getGaussianQuadratureLength(double startParam, double endParam) {
+        ParametricWithParameter startParametric = getParametricFromParameter(startParam);
+        ParametricWithParameter endParametric = getParametricFromParameter(endParam);
+
+        double previousLength = 0.0;
+        for(int i = startParametric.index+1; i < endParametric.index; i++){
+            previousLength += parametrics[i].getGaussianQuadratureLength();
+        }
+
+        if(startParametric.index == endParametric.index){
+            return previousLength + endParametric.parametric.getGaussianQuadratureLength(startParametric.t, endParametric.t);
+        }
+        else{
+            return startParametric.parametric.getGaussianQuadratureLength(startParametric.t, 1) + endParametric.parametric.getGaussianQuadratureLength(0, endParametric.t);
+        }
+    }
+
+
+    @Override
     public double getParameterFromLength(double length) {
         ParametricWithParameter parametricWithParameter = getParametricFromLength(length);
         return convertRelativeParameterToAbsolute(parametricWithParameter.t, parametricWithParameter.index);
+    }
+
+    public TransformWithParameter getTransformFromLength(double length){
+        if(length < 0.0){
+            return new TransformWithParameter(new Transform(getStartWaypoint().getRotation().cos() * length, getStartWaypoint().getRotation().sin() * length, getStartWaypoint().getRotation()).add(getStartWaypoint()), 0.0);
+        }
+        if(length > getGaussianQuadratureLength()){
+            return new TransformWithParameter(new Transform(getEndWaypoint().getRotation().cos() * (length-getGaussianQuadratureLength()), getEndWaypoint().getRotation().sin() * (length-getGaussianQuadratureLength()), getEndWaypoint().getRotation()).add(getEndWaypoint()), 1.0);
+        }
+        return getTransform(getParameterFromLength(length));
     }
 
     public ParametricWithParameter getParametricFromParameter(double t){
@@ -167,7 +198,7 @@ public class Path extends Parametric {
         for(int i = 0; i < parametrics.length; i++){
             double thisLength =  parametrics[i].getGaussianQuadratureLength();
             totalLength += thisLength;
-            if(totalLength > length){
+            if(totalLength > length || i == parametrics.length-1){
                 return new ParametricWithParameter(parametrics[i], parametrics[i].getParameterFromLength(length - (totalLength-thisLength)), i);
             }
         }
@@ -177,6 +208,11 @@ public class Path extends Parametric {
     public double convertRelativeParameterToAbsolute(double t, double i){
         return (t + i) / parametrics.length;
     }
+
+    public double convertAbsoluteParameterToRelative(double t, double i){
+        return  t * parametrics.length - i;
+    }
+
 
     public static class ParametricWithParameter{
         public Parametric parametric;

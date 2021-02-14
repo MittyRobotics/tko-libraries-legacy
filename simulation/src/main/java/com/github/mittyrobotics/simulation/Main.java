@@ -35,7 +35,7 @@ import com.github.mittyrobotics.visualization.RobotGraph;
 public class Main {
     public static void main(String[] args) {
         DrivetrainModel drivetrainModel =
-                new DrivetrainModel(125 * Conversions.LBS_TO_KG, 1.585, 20 * Conversions.IN_TO_M,
+                new DrivetrainModel(50 * Conversions.LBS_TO_KG, 1.585, 20 * Conversions.IN_TO_M,
                         30 * Conversions.IN_TO_M, new CIMMotor(2), 7.0, 2 * Conversions.IN_TO_M);
         PathFollowerSimRobot robot = new PathFollowerSimRobot(new SimDrivetrain(drivetrainModel));
 

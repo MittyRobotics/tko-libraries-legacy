@@ -155,13 +155,15 @@ public class Graph extends JFrame {
     }
 
     public void changeSeries(int seriesIndex, XYSeries newSeries) {
-        int itemCount = defaultDataset.getSeries(seriesIndex).getItemCount();
-        for (int i = 0; i < itemCount; i++) {
-            defaultDataset.getSeries(seriesIndex).remove(0);
-        }
-        for (int i = 0; i < newSeries.getItemCount(); i++) {
-            defaultDataset.getSeries(seriesIndex).add(newSeries.getDataItem(i));
-        }
+        SwingUtilities.invokeLater(()->{
+            int itemCount = defaultDataset.getSeries(seriesIndex).getItemCount();
+            for (int i = 0; i < itemCount; i++) {
+                defaultDataset.getSeries(seriesIndex).remove(0);
+            }
+            for (int i = 0; i < newSeries.getItemCount(); i++) {
+                defaultDataset.getSeries(seriesIndex).add(newSeries.getDataItem(i));
+            }
+        });
     }
 
     public void changeSeries(String key, XYSeries newSeries) {

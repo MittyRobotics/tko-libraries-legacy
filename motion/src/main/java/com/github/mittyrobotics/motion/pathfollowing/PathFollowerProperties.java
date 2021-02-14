@@ -42,14 +42,9 @@ public class PathFollowerProperties {
 
     public static class PurePursuitProperties {
         public final double lookaheadDistance;
-        public final double curvatureSlowdownGain;
-        public final double minSlowdownVelocity;
 
-        public PurePursuitProperties(double lookaheadDistance, double curvatureSlowdownGain,
-                                     double minSlowdownVelocity) {
+        public PurePursuitProperties(double lookaheadDistance) {
             this.lookaheadDistance = lookaheadDistance;
-            this.curvatureSlowdownGain = curvatureSlowdownGain;
-            this.minSlowdownVelocity = minSlowdownVelocity;
         }
     }
 

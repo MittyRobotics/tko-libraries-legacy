@@ -92,8 +92,8 @@ public abstract class Parametric {
      */
     public double getRawLength(double steps, double startT, double endT) {
         double length = 0;
-        for (double t = startT; t < endT; t += 1 / steps) {
-            length += getPosition(t).distance(getPosition(t - 1 / steps));
+        for (double t = startT; t < endT; t += (endT-startT) / steps) {
+            length += getPosition(t).distance(getPosition(t - (endT-startT) / steps));
         }
         return length;
     }
@@ -117,6 +117,11 @@ public abstract class Parametric {
      * @return the estimated length of the parametric.
      */
     public double getGaussianQuadratureLength(double endParam) {
+        return getGaussianQuadratureLength(0, endParam);
+    }
+
+
+    public double getGaussianQuadratureLength(double startParam, double endParam) {
         //11-point Gaussian quadrature coefficients
         double[][] coefficients = {
                 {0.0000000000000000, 0.2729250867779006},
@@ -132,16 +137,17 @@ public abstract class Parametric {
                 {0.9782286581460570, 0.0556685671161737},
         };
 
-        double halfParam = endParam/2.0;
+        double halfParam = (endParam-startParam) / 2.0;
 
         double length = 0;
         for (int i = 0; i < coefficients.length; i++) {
-            double alpha = halfParam * ((1.0 + coefficients[i][0]));
+            double alpha = startParam + halfParam * (1 + coefficients[i][0]);
             length += getFirstDerivative(alpha).magnitude() * coefficients[i][1];
         }
 
         return length * halfParam;
     }
+
 
     /**
      * Returns the parameter of the parametric at the length along the spline.
@@ -177,6 +183,6 @@ public abstract class Parametric {
             }
         }
 
-        return MathUtil.clamp(t, 0, 1);
+        return t;
     }
 }

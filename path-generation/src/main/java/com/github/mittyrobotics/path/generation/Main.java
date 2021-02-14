@@ -26,6 +26,7 @@ package com.github.mittyrobotics.path.generation;
 
 import com.github.mittyrobotics.datatypes.positioning.Transform;
 import com.github.mittyrobotics.datatypes.positioning.TransformWithParameter;
+import com.github.mittyrobotics.datatypes.positioning.TransformWithVelocityAndCurvature;
 import com.github.mittyrobotics.visualization.Graph;
 import com.github.mittyrobotics.visualization.GraphUtil;
 import com.github.mittyrobotics.visualization.XYSeriesWithRenderer;
@@ -34,19 +35,19 @@ import java.awt.*;
 
 public class Main {
     public static void main(String[] args) {
-        Path path = new Path(PathGenerator.generateQuinticHermiteSplinePath(new Transform[]{new Transform(0, 0, 0), new Transform(4, 4, 0), new Transform(0, 0, Math.PI)}));
+        Path path = new Path(PathGenerator.generateQuinticHermiteSplinePath(new Transform[]{new Transform(0, 0, 0), new Transform(2, 2, 0), new Transform(4, 4, 0)}));
         Graph graph = new Graph();
         double dt = 0.02;
         graph.addSeries(GraphUtil.populateSeries(new XYSeriesWithRenderer("Path", Color.gray, true, false, null), GraphUtil.parametric(path, .01, .1)));
         TransformWithParameter expectedPathTransform = new TransformWithParameter(path.getStartWaypoint(), 0);
-        double t = 0;
+
+        double length = 0;
         while(true){
-            t = path.getParameterFromLength(path.getGaussianQuadratureLength(t) + 1*dt);
             Transform oldTransform = expectedPathTransform;
-            expectedPathTransform = new TransformWithParameter(new Transform(path.getTransform(t)), t);
+            expectedPathTransform = path.getTransformFromLength(length);
+            length += 1*dt;
             graph.changeSeries("Point", GraphUtil.populateSeries(new XYSeriesWithRenderer("Point"), GraphUtil.arrow(expectedPathTransform, .1, .1)));
-            System.out.println(oldTransform.getPosition().distance(expectedPathTransform.getPosition()) / dt);
-//            System.out.println(path.getParameterFromLength(path.getGaussianQuadratureLength(t)) + " " + t + " " + (t-path.getParameterFromLength(path.getGaussianQuadratureLength(t))));
+            System.out.println(expectedPathTransform.getParameter());
             try {
                 Thread.sleep((long) (1000.0*dt));
             } catch (InterruptedException e) {

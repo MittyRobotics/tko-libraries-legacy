@@ -33,7 +33,6 @@ public class PIDFController {
     private double kD;
     private double kF;
     private double period;
-    private ControlType controlType;
 
     private double previousError;
     private double error;
@@ -49,33 +48,22 @@ public class PIDFController {
     private double setpoint;
     private double positionTolerance;
     private double derivativeTolerance;
-    private ContinuousManager continousManager;
 
-    public PIDFController(double kP, double kI, double kD, double kF, double period, ControlType controlType) {
+    public PIDFController(double kP, double kI, double kD, double kF, double period) {
         setGains(kP, kI, kD, kF);
         setPeriod(period);
-        setControlType(controlType);
         setPositionTolerance(Double.POSITIVE_INFINITY);
         setDerivativeTolerance(Double.POSITIVE_INFINITY);
         setOutputRange(-1, 1);
         setIntegralRange(-1, 1);
-        continousManager = new ContinuousManager();
     }
 
-    public PIDFController(double kP, double kI, double kD, double kF, ControlType controlType) {
-        this(kP, kI, kD, kF, 0.02, controlType);
+    public PIDFController(double kP, double kI, double kD, double kF) {
+        this(kP, kI, kD, kF, 0.02);
     }
 
     public PIDFController(double kP, double kI, double kD) {
-        this(kP, kI, kD, 0, ControlType.Position);
-    }
-
-    public ControlType getControlType() {
-        return controlType;
-    }
-
-    public void setControlType(ControlType controlType) {
-        this.controlType = controlType;
+        this(kP, kI, kD, 0);
     }
 
     /**
@@ -87,21 +75,7 @@ public class PIDFController {
      * @return next voltage for PIDF controller.
      */
     public double calculate(double measurement, double deltaTime) {
-        double feedback = calculateFeedback(measurement, deltaTime);
-
-        //Calculate feed forward
-        double feedForward = 0;
-        switch (controlType) {
-            case Position:
-                feedForward = kF;
-                break;
-            case Velocity:
-                feedForward = getSetpoint() * kF;
-                break;
-        }
-
-        //Output feedback plus feed forward
-        return MathUtil.clamp(feedback + feedForward, minOutput, maxOutput);
+        return calculate(measurement, 0, deltaTime);
     }
 
     /**
@@ -114,20 +88,21 @@ public class PIDFController {
      * @return next voltage for PIDF controller.
      */
     public double calculate(double measurement, double feedForward, double deltaTime) {
-        double feedback = calculateFeedback(measurement, deltaTime);
+        return calculate(measurement, feedForward, setpoint-measurement, deltaTime);
+    }
+
+    public double calculate(double measurement, double feedForward, double error, double deltaTime) {
+        double feedback = calculateFeedback(measurement, error, deltaTime);
 
         //Output feedback plus feed forward
         return MathUtil.clamp(feedback + feedForward, minOutput, maxOutput);
     }
 
-    private double calculateFeedback(double measurement, double deltaTime) {
+    private double calculateFeedback(double measurement, double error, double deltaTime) {
         //Set the current period to the delta time
         setPeriod(deltaTime);
         //Keep track of previous error
         previousError = error;
-        //Set current error
-        measurement = continousManager.mapValue(measurement);
-        error = continousManager.getContinousError(setpoint, measurement);
         //Set derivative error
         derivativeError = (error - previousError) / period;
 
@@ -185,10 +160,6 @@ public class PIDFController {
     public void setOutputRange(double minOutput, double maxOutput) {
         this.minOutput = minOutput;
         this.maxOutput = maxOutput;
-    }
-
-    public void setInputRange(double minInput, double maxInput) {
-        continousManager.setInputRange(minInput, maxInput);
     }
 
     public void setP(double kP) {
@@ -267,24 +238,12 @@ public class PIDFController {
         return maxOutput;
     }
 
-    public double getMinInput() {
-        return continousManager.getMinInput();
-    }
-
-    public double getMaxInput() {
-        return continousManager.getMaxInput();
-    }
-
-    public void disableContinuousInput() {
-        setInputRange(0, 0);
-    }
-
     public double getSetpoint() {
         return setpoint;
     }
 
     public void setSetpoint(double setpoint) {
-        this.setpoint = continousManager.mapValue(setpoint);
+        this.setpoint = setpoint;
     }
 
     public double getPositionTolerance() {
@@ -301,11 +260,6 @@ public class PIDFController {
 
     public void setDerivativeTolerance(double tolerance) {
         derivativeTolerance = tolerance;
-    }
-
-
-    public enum ControlType {
-        Position, Velocity
     }
 
 }

@@ -114,10 +114,10 @@ public class SimDrivetrain extends TimerTask {
     private double calculatePID(double target, double measured, double deltaTime) {
         double voltage;
 
-        double FF = f * target + d * ((measured - lastMeasured) / deltaTime);
+        double FF = f * target;
 
         double error = target - measured;
-        double FB = p * error;
+        double FB = p * error + d*((error-lastError)/deltaTime);
 
         voltage = FF + FB;
 

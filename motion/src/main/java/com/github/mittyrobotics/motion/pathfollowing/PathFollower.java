@@ -33,16 +33,11 @@ import com.github.mittyrobotics.path.generation.PathGenerator;
 
 public abstract class PathFollower {
     private PathFollowingType pathFollowingType;
-
     private PathFollowerProperties properties;
-
     private double previousCalculatedVelocity = 0;
     private Path currentPath;
     private boolean unAdaptedPath;
-    private double currentDistanceToEnd = Double.POSITIVE_INFINITY;
-
-
-
+    private double traveledDistance = 0;
 
     private TransformWithParameter expectedPathTransform;
 
@@ -89,7 +84,7 @@ public abstract class PathFollower {
         else{
             expectedPathTransform =new TransformWithParameter(newPath.getStartWaypoint(), 0);
         }
-        this.currentDistanceToEnd = 9999;
+        this.traveledDistance = 0;
     }
 
     public void setDrivingGoal(Transform goal) {
@@ -135,14 +130,12 @@ public abstract class PathFollower {
             return DrivetrainState.empty();
         }
 
-        //Find the rough distance to the end of the path
-        this.currentDistanceToEnd = getRoughDistanceToEnd(robotTransform);
-
         DrivetrainState state = calculate(robotTransform, currentDrivetrainVelocities, deltaTime);
+        //Find the rough distance to the end of the path
+        this.traveledDistance += state.getLinear()*deltaTime;
+        expectedPathTransform = currentPath.getTransformFromLength(traveledDistance);
+        previousCalculatedVelocity = state.getLinear();
 
-        double t = currentPath.getParameterFromLength(currentPath.getGaussianQuadratureLength(expectedPathTransform.getParameter()) + state.getLinear() * deltaTime);
-        Transform oldTransform = expectedPathTransform;
-        expectedPathTransform = new TransformWithParameter(new Transform(currentPath.getTransform(t)), t);
         return state;
     }
 
@@ -170,18 +163,16 @@ public abstract class PathFollower {
      * Path}.
      */
     public boolean isFinished(double distanceTolerance) {
-        return getCurrentDistanceToEnd() < distanceTolerance;
+        return getTraveledDistance() < distanceTolerance;
     }
 
     /**
      * Returns the rough distance of the robot along the current {@link Path}.
      *
-     * @param robotTransform the robot's {@link Transform}.
      * @return the rough distance of the robot along the current {@link Path}.
      */
-    private double getRoughDistanceToEnd(Transform robotTransform) {
-        double closestParameter = currentPath.getClosestT(robotTransform.getPosition(), 10, 3);
-        return currentPath.getGaussianQuadratureLength() - currentPath.getGaussianQuadratureLength(closestParameter);
+    public double getDistanceToEnd() {
+        return currentPath.getGaussianQuadratureLength()-traveledDistance;
     }
 
     /**
@@ -193,8 +184,8 @@ public abstract class PathFollower {
         return currentPath;
     }
 
-    public double getCurrentDistanceToEnd() {
-        return currentDistanceToEnd;
+    public double getTraveledDistance() {
+        return traveledDistance;
     }
 
     public PathFollowerProperties getProperties() {

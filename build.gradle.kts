@@ -56,7 +56,7 @@ allprojects {
 
     repositories {
         mavenLocal()
-        jcenter()
+        mavenCentral()
         maven(url = "https://jitpack.io")
         maven(url = "http://www.revrobotics.com/content/sw/max/sdk/maven/")
         maven(url = "http://devsite.ctr-electronics.com/maven/release/")

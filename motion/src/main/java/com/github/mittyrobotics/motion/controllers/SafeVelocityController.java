@@ -42,13 +42,19 @@ public class SafeVelocityController {
 
     public double getVelocity(double currentVelocity, double desiredVelocity, double deltaTime,
                               double maxAcceleration, double maxDeceleration) {
-        double finalVelocity = 0;
-        if (currentVelocity >= desiredVelocity) {
-            finalVelocity = currentVelocity - maxDeceleration * deltaTime;
-            return Math.max(finalVelocity, desiredVelocity);
-        } else {
-            finalVelocity = currentVelocity + maxAcceleration * deltaTime;
-            return Math.min(finalVelocity, desiredVelocity);
+        double finalVelocity;
+        double acceleration = Math.abs(currentVelocity-desiredVelocity)/deltaTime;
+        if(currentVelocity > desiredVelocity){
+            if(acceleration < maxDeceleration){
+                return desiredVelocity;
+            }
+            return currentVelocity - maxDeceleration * deltaTime;
+        }
+        else{
+            if(acceleration < maxAcceleration){
+                return desiredVelocity;
+            }
+            return currentVelocity + maxAcceleration * deltaTime;
         }
     }
 

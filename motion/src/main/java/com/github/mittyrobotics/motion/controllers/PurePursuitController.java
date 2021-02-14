@@ -29,9 +29,12 @@ import com.github.mittyrobotics.datatypes.geometry.Line;
 import com.github.mittyrobotics.datatypes.motion.DrivetrainState;
 import com.github.mittyrobotics.datatypes.positioning.Position;
 import com.github.mittyrobotics.datatypes.positioning.Transform;
-import com.github.mittyrobotics.datatypes.positioning.TransformWithParameter;
 import com.github.mittyrobotics.motion.pathfollowing.PathFollower;
 import com.github.mittyrobotics.motion.pathfollowing.PathFollowerProperties;
+import com.github.mittyrobotics.visualization.Graph;
+import org.jfree.data.xy.XYDataItem;
+
+import java.util.ArrayList;
 
 public class PurePursuitController extends PathFollower {
     public static double DEFAULT_LOOKAHEAD_DISTANCE = .5;
@@ -41,11 +44,26 @@ public class PurePursuitController extends PathFollower {
     private PathFollowerProperties.PurePursuitProperties purePursuitProperties;
 
     private Circle pursuitCircle;
+    private Position lookaheadPoint;
+
+    private Graph graph;
+    private double t;
+
+    private ArrayList<VelocityAndDistance> velocityAndDistances;
+
+
+    public double getCurvatureSlowdownVelocity() {
+        return curvatureSlowdownVelocity;
+    }
+
+    private double curvatureSlowdownVelocity;
 
     public PurePursuitController(PathFollowerProperties properties,
                                  PathFollowerProperties.PurePursuitProperties purePursuitProperties) {
         super(properties);
         this.purePursuitProperties = purePursuitProperties;
+//        graph = new Graph();
+        this.velocityAndDistances = new ArrayList<>();
     }
 
     /**
@@ -61,29 +79,75 @@ public class PurePursuitController extends PathFollower {
     private static double calculateSlowdownVelocity(double curvature, double curvatureSlowdownGain,
                                                     double currentVelocity,
                                                     double minSlowdownVelocity) {
-        if (curvatureSlowdownGain == 0) {
+        if (curvatureSlowdownGain <= 2e-9) {
             return currentVelocity;
         }
-        double absVelocity = Math.abs(currentVelocity);
-        double velSign = Math.signum(currentVelocity);
-        double vel = Math.min(absVelocity, Math.max(minSlowdownVelocity, curvatureSlowdownGain / curvature));
-        return vel * velSign;
+        double vel = Math.min(Math.max(minSlowdownVelocity, Math.abs(curvatureSlowdownGain / curvature)), 5);
+        if(vel >= 2e9){
+            return currentVelocity;
+        }
+        return vel;
     }
 
     @Override
     public DrivetrainState calculate(Transform robotTransform, DrivetrainState currentDrivetrainVelocities,
                                      double deltaTime) {
+        double currentVelocity = getPreviousCalculatedVelocity();
+        double currentDistance = getTraveledDistance();
         double lookaheadDistance = purePursuitProperties.lookaheadDistance;
 
-        Position targetPosition = getCurrentPath().getTransform(getCurrentPath().getParameterFromLength(getCurrentPath().getGaussianQuadratureLength(getExpectedPathTransform().getParameter()) + lookaheadDistance)).getPosition();
+        double minSlowdownVelocity = 0.2;
+        double curvatureSlowdownGain = .4;
 
-        //Calculate the robot velocity using the path velocity controller
-        double robotVelocity = getProperties().velocityController
-                .getVelocity(getPreviousCalculatedVelocity(), getCurrentDistanceToEnd(),
-                        deltaTime);
+        Position targetPosition = getCurrentPath().getTransformFromLength(getTraveledDistance() + lookaheadDistance).getPosition();
+//
+//        double distanceToSlowdown = getProperties().velocityController.calculateDistanceToSlowdown(getPreviousCalculatedVelocity(), 0, getProperties().velocityController.getMaxDeceleration());
+//
+//        double curvature = getCurrentPath().getCurvature(getCurrentPath().getParameterFromLength(getTraveledDistance()));
+//        double curvatureAtLookahead = getCurrentPath().getCurvature(getCurrentPath().getParameterFromLength(getTraveledDistance()+distanceToSlowdown));
+//        double slowdownVelocityAtLookahead = calculateSlowdownVelocity(curvatureAtLookahead, curvatureSlowdownGain, getPreviousCalculatedVelocity(), minSlowdownVelocity);
+//        double slowdownVelocityAtCurvature = calculateSlowdownVelocity(curvature, curvatureSlowdownGain, getPreviousCalculatedVelocity(), minSlowdownVelocity);
+//        curvatureSlowdownVelocity = slowdownVelocityAtCurvature;
+//
+//        removeOldValues(velocityAndDistances, getTraveledDistance());
+//
+//        velocityAndDistances.add(new VelocityAndDistance(slowdownVelocityAtLookahead,getTraveledDistance() + distanceToSlowdown));
+//
+//        double maxVelFromArray = getMaxVelFromArray(velocityAndDistances, getTraveledDistance());
+//
+////        if((curvatureSlowdownVelocity-getPreviousCalculatedVelocity())/deltaTime < getProperties().velocityController.getMaxDeceleration()){
+////            maxVelFromArray = curvatureSlowdownVelocity;
+////        }
+//
+//        t = getTraveledDistance();
+//        //Calculate the robot velocity using the path velocity controller
+//        double robotVelocity = getProperties().velocityController
+//                .getVelocity(getCurrentPath(), getPreviousCalculatedVelocity(),  getTraveledDistance(),
+//                        deltaTime);
+//
+//        if(maxVelFromArray < getPreviousCalculatedVelocity()){
+//            robotVelocity = Math.min(robotVelocity, maxVelFromArray);
+//        }
+//
+//
+//        if(Math.abs(robotVelocity-curvatureSlowdownVelocity) < getProperties().velocityController.getMaxDeceleration()){
+//            robotVelocity = Math.min(curvatureSlowdownVelocity, robotVelocity);
+//        }
+
+        double robotVelocity = getProperties().velocityController.getVelocity(getCurrentPath(), getPreviousCalculatedVelocity(), getTraveledDistance(), deltaTime);
+
+//        graph.addToSeries("theoretical vel", new XYDataItem(t, robotVelocity));
+//        graph.addToSeries("slowdown vel", new XYDataItem(t, slowdownVelocityAtLookahead));
+//        graph.addToSeries("distance to slowdown", new XYDataItem(t, distanceToSlowdown));
+////        graph.addToSeries("dynamic vel", new XYDataItem(t, dynamicMaxVelocity));
+//        graph.addToSeries("distance to end", new XYDataItem(t, getDistanceToEnd()));
+//        graph.addToSeries("curvature", new XYDataItem(t, curvatureAtLookahead));
+//        graph.addToSeries("curvature slowdown", new XYDataItem(t, slowdownVelocityAtCurvature));
+//        graph.addToSeries("vel + dist", new XYDataItem(velocityAndDistances.get(velocityAndDistances.size()-1).distance, velocityAndDistances.get(velocityAndDistances.size()-1).velocity));
+//        graph.addToSeries("max vel from array", new XYDataItem(t, maxVelFromArray));
 
 
-        setPreviousCalculatedVelocity(robotVelocity);
+//        robotVelocity = Math.min(robotVelocity, slowdownVelocityAtCurvature);
 
         //Calculate the pursuit circle to follow, calculated by finding the circle tangent to the robot transform that
         //intersects the target position.
@@ -99,14 +163,14 @@ public class PurePursuitController extends PathFollower {
 
         double radius = pursuitCircle.getRadius() * side;
 
-        double slowdownVelocity =
-                calculateSlowdownVelocity(1 / (pursuitCircle.getRadius()), purePursuitProperties.curvatureSlowdownGain,
-                        robotVelocity,
-                        purePursuitProperties.minSlowdownVelocity);
+//        double slowdownVelocity =
+//                calculateSlowdownVelocity(1 / (pursuitCircle.getRadius()), purePursuitProperties.curvatureSlowdownGain,
+//                        robotVelocity,
+//                        purePursuitProperties.minSlowdownVelocity);
 
-        robotVelocity = getProperties().velocityController.getSafeVelocityController().getVelocity(getPreviousCalculatedVelocity(), slowdownVelocity, deltaTime);
+//        robotVelocity = getProperties().velocityController.getSafeVelocityController().getVelocity(getPreviousCalculatedVelocity(), slowdownVelocity, deltaTime);
 
-        System.out.println(robotVelocity + " robot");
+
 
         //Use differential drive kinematics to calculate the left and right wheel velocity given the base robot
         //velocity and the radius of the pursuit circle
@@ -116,11 +180,38 @@ public class PurePursuitController extends PathFollower {
         if (getProperties().reversed) {
             state = state.reverse();
         }
-
+        t += deltaTime;
         return state;
+    }
+
+    public double getMaxVelFromArray(ArrayList<VelocityAndDistance> velocityAndDistances, double currentDistance){
+        double maxVel = 9999;
+        for(VelocityAndDistance velocityAndDistance : velocityAndDistances){
+            double vel = getProperties().velocityController.calculateMaxVelocityFromDistance(velocityAndDistance.velocity, velocityAndDistance.distance-currentDistance, getProperties().velocityController.getMaxDeceleration());
+            maxVel = Math.min(vel, maxVel);
+        }
+        return maxVel;
+    }
+
+    public void removeOldValues(ArrayList<VelocityAndDistance> velocityAndDistances, double currentDistance){
+        velocityAndDistances.removeIf(velocityAndDistance -> velocityAndDistance.distance < currentDistance);
     }
 
     public Circle getPursuitCircle() {
         return pursuitCircle;
     }
+
+    public Position getLookaheadPoint(){
+        return lookaheadPoint;
+    }
+
+    public static class VelocityAndDistance{
+        public double velocity;
+        public double distance;
+        public VelocityAndDistance(double velocity, double distance){
+            this.velocity = velocity;
+            this.distance = distance;
+        }
+    }
+
 }
