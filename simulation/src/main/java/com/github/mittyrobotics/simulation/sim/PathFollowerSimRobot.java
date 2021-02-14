@@ -24,6 +24,7 @@
 
 package com.github.mittyrobotics.simulation.sim;
 
+import com.github.mittyrobotics.datacollection.performance.TimeMonitor;
 import com.github.mittyrobotics.datatypes.motion.DrivetrainState;
 import com.github.mittyrobotics.datatypes.positioning.Transform;
 import com.github.mittyrobotics.motion.controllers.PathVelocityController;
@@ -67,8 +68,15 @@ public class PathFollowerSimRobot extends SimRobot {
                 .fromWheelSpeeds(getDrivetrain().getDrivetrainModel().getLeftVelocity(),
                         getDrivetrain().getDrivetrainModel().getRightVelocity(),
                         follower.getProperties().trackWidth);
+
+        TimeMonitor monitor = new TimeMonitor();
+        monitor.start();
+
         DrivetrainState newVelocity = follower.updatePathFollower(getDrivetrain().getRobotTransform(), velocity,
                 getRobotSimulator().getPeriodTime());
+
+        monitor.end();
+        monitor.printMillis();
         if (!updatedPath) {
             getRobotSimulator().getGraph().addToSeries("Path", GraphUtil
                     .populateSeries(new XYSeriesWithRenderer("Path"),

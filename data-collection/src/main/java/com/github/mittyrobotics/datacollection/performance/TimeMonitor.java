@@ -58,7 +58,14 @@ public class TimeMonitor {
         if (timeNanos == 0) {
             System.out.println("Time has not been measured because it has either not started or stopped");
         }
-        return timeNanos / 1000000.0;
+        return timeNanos / 1E6;
+    }
+
+    public double getSeconds() {
+        if (timeNanos == 0) {
+            System.out.println("Time has not been measured because it has either not started or stopped");
+        }
+        return timeNanos / 1E9;
     }
 
     public void printNanos() {
@@ -72,8 +79,16 @@ public class TimeMonitor {
         if (timeNanos == 0) {
             System.out.println("Time has not been measured because it has either not started or stopped");
         }
-        System.out.println("Ellapsed time in milliseconds to perform task " + name + ": " + timeNanos / 1000000.0 +
+        System.out.println("Ellapsed time in milliseconds to perform task " + name + ": " + getMillis() +
                 " milliseconds.");
+    }
+
+    public void printSeconds() {
+        if (timeNanos == 0) {
+            System.out.println("Time has not been measured because it has either not started or stopped");
+        }
+        System.out.println("Ellapsed time in seconds to perform task " + name + ": " + getSeconds() +
+                " seconds.");
     }
 
 }
