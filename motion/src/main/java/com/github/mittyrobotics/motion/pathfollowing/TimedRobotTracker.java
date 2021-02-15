@@ -31,16 +31,12 @@ import com.github.mittyrobotics.datatypes.positioning.Rotation;
 import com.github.mittyrobotics.datatypes.positioning.Transform;
 
 public class TimedRobotTracker {
-    private static TimedRobotTracker instance = new TimedRobotTracker();
-
     private final CircularTimestampedList<Transform> robotTransformList;
     private final CircularTimestampedList<Transform> robotVelocityList;
-
     private Position latestCalibrationPosition;
-
     private final Odometry odometry;
 
-    private TimedRobotTracker() {
+    public TimedRobotTracker() {
         //Init latest calibration position
         latestCalibrationPosition = new Position();
 
@@ -53,10 +49,6 @@ public class TimedRobotTracker {
         robotVelocityList.addFront(new TimestampedElement<>(new Transform(), 0));
 
         odometry = new Odometry();
-    }
-
-    public static TimedRobotTracker getInstance() {
-        return instance;
     }
 
     /**

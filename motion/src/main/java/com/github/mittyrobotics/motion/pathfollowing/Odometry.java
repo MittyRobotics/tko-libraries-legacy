@@ -35,12 +35,8 @@ public class Odometry {
     private double lastRightEncoder = 0;
     private double calibrateGyroVal = 0;
 
-    private static Odometry instance;
-    public static Odometry getInstance(){
-        if(instance == null){
-            instance = new Odometry();
-        }
-        return instance;
+    public Odometry(){
+
     }
 
     public void update(double leftEncoder, double rightEncoder, double gyro){
@@ -69,6 +65,10 @@ public class Odometry {
     public void zeroEncoders(double leftEncoder, double rightEncoder){
         lastLeftEncoder = leftEncoder;
         lastRightEncoder = rightEncoder;
+    }
+
+    public void zeroHeading(double gyro){
+        setHeading(0, gyro);
     }
 
     public void setHeading(double heading, double gyro) {
