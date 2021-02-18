@@ -24,6 +24,8 @@
 
 package com.github.mittyrobotics.datatypes.motion;
 
+import com.github.mittyrobotics.datatypes.positioning.Transform;
+
 public class DrivetrainState {
     private double linear;
     private double angular;
@@ -159,6 +161,10 @@ public class DrivetrainState {
 
     public double getTrackWidth() {
         return trackWidth;
+    }
+
+    public Transform getDeltaTransform(double dt){
+        return DifferentialDriveKinematics.calculateDeltaTransform(this, dt);
     }
 
     @Override

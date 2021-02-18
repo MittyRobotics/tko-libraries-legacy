@@ -25,6 +25,8 @@
 package com.github.mittyrobotics.datatypes.motion;
 
 import com.github.mittyrobotics.datatypes.geometry.Circle;
+import com.github.mittyrobotics.datatypes.positioning.Position;
+import com.github.mittyrobotics.datatypes.positioning.Rotation;
 import com.github.mittyrobotics.datatypes.positioning.Transform;
 
 /**
@@ -139,5 +141,15 @@ public class DifferentialDriveKinematics {
         } else {
             return DrivetrainState.fromAngularAndRadius(maxAngularVelocity, 1 / curvature, trackWidth);
         }
+    }
+
+    public static Transform calculateDeltaTransform(DrivetrainState state, double dt){
+        double r = state.getDrivingRadius();
+        double c = r*2*Math.PI;
+        double drivenDist = state.getLinear()*dt;
+        double theta = (drivenDist/c) * 2*Math.PI;
+        Position deltaPos = new Position(r*Math.cos(theta), r*Math.sin(theta));
+        Rotation deltaTheta = new Rotation(theta);
+        return new Transform(deltaPos, deltaTheta);
     }
 }
