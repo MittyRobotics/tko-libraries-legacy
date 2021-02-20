@@ -96,8 +96,7 @@ public class Position {
     public Rotation angleTo(Position other) {
         double x = getX() - other.getX();
         double y = getY() - other.getY();
-        double angleToPoint = 180 + Math.toDegrees(Math.atan2(y, x));
-        return Rotation.fromDegrees(angleToPoint);
+        return new Rotation(Math.atan2(y, x));
     }
 
     /**
