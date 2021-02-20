@@ -281,6 +281,6 @@ public class Rotation {
 
     @Override
     public String toString() {
-        return String.format("Rotation(%s)", radians);
+        return String.format("Rotation(%s)", getDegrees());
     }
 }
