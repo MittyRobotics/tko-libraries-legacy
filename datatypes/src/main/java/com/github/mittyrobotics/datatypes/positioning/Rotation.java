@@ -255,7 +255,7 @@ public class Rotation {
      * @return a new {@link Rotation} with the degree mapped between -180 and 180;
      */
     public Rotation mapDegrees180() {
-        double angle = getRadians();
+        double angle = getDegrees();
         double sign = Math.signum(angle);
         angle = Math.abs(angle % 360);
         if (angle <= 180 && angle >= 0) {
@@ -271,7 +271,7 @@ public class Rotation {
      * @return a new {@link Rotation} with the degree mapped between 0 and 360;
      */
     public Rotation mapDegrees360() {
-        double angle = mapDegrees180().getRadians();
+        double angle = mapDegrees180().getDegrees();
         if (angle < 0) {
             return Rotation.fromDegrees(angle + 360);
         } else {
