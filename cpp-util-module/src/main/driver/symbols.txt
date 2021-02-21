@@ -1,5 +1,0 @@
-JNI_OnLoad
-JNI_OnUnload
-Java_com_github_mittyrobotics_jni_DrakeJNI_initialize
-Java_com_github_mittyrobotics_jni_DrakeJNI_discreteAlgebraicRiccatiEquationJNI
-c_doThing

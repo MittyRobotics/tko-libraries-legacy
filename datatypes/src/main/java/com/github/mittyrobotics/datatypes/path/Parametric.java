@@ -27,7 +27,6 @@ package com.github.mittyrobotics.datatypes.path;
 import com.github.mittyrobotics.datatypes.positioning.Position;
 import com.github.mittyrobotics.datatypes.positioning.Rotation;
 import com.github.mittyrobotics.datatypes.positioning.Transform;
-import edu.wpi.first.wpiutil.math.MathUtil;
 
 public abstract class Parametric {
     /**
@@ -179,8 +178,7 @@ public abstract class Parametric {
             double tangentMagnitude = getFirstDerivative(t).magnitude();
             if (tangentMagnitude > 0.0) {
                 t -= (getGaussianQuadratureLength(t) - length) / tangentMagnitude;
-                t = MathUtil.clamp(t, 0, 1);
-
+                t = Math.min(1, Math.max(t, -1));
             }
         }
 

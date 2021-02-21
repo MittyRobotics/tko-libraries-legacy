@@ -24,7 +24,6 @@
 
 package com.github.mittyrobotics.motion.modeling;
 
-import edu.wpi.first.wpiutil.math.SimpleMatrixUtils;
 import org.ejml.data.Complex_F64;
 import org.ejml.simple.SimpleMatrix;
 
@@ -54,7 +53,8 @@ public class MatrixUtils {
      * @return
      */
     public static SimpleMatrix expm(SimpleMatrix input) {
-        return SimpleMatrixUtils.expm(input);
+        //TODO:
+        return input;
     }
 
     public static SimpleMatrix multByDouble(SimpleMatrix matrix, double scalar) {

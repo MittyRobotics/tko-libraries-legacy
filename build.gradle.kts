@@ -63,19 +63,7 @@ allprojects {
     }
 
     dependencies {
-        // WPILib
-        wpi.deps.wpilib().forEach { compile(it) }
-        wpi.deps.wpilibJni(NativePlatforms.roborio).forEach { nativeZip(it) }
-        wpi.deps.wpilibJni(NativePlatforms.desktop).forEach { nativeDesktopZip(it) }
 
-        wpi.deps.vendor.java().forEach { compile(it) }
-        wpi.deps.vendor.jni(NativePlatforms.roborio).forEach { nativeZip(it) }
-        wpi.deps.vendor.jni(NativePlatforms.desktop).forEach { nativeDesktopZip(it) }
-
-        compile(group = "com.ctre.phoenix", name = "wpiapi-java", version = "5.18.3")
-        compile(group = "com.ctre.phoenix", name = "api-java", version = "5.18.3")
-        compile(group = "edu.wpi.first.wpilibNewCommands", name = "wpilibNewCommands-java", version = "2020.3.2")
-        compile(group = "com.revrobotics.frc", name = "SparkMax-java", version = "1.5.2")
         compile(group = "org.jfree", name = "jfreechart", version = "1.5.0")
         compile(group = "org.apache.commons", name = "commons-collections4", version = "4.1")
         compile(group = "org.ejml", name = "ejml-all", version = "0.38")
