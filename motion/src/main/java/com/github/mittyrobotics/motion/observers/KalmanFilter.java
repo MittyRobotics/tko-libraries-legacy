@@ -98,6 +98,10 @@ public class KalmanFilter {
         P = SimpleMatrix.identity(K.numRows()).minus(K.mult(H)).mult(P);
     }
 
+    public void setxHat(SimpleMatrix xHat){
+        this.xHat = xHat;
+    }
+
     public KalmanFilter copyOf(){
         return new KalmanFilter(A, B, H, xHat, Q, R, P);
     }
