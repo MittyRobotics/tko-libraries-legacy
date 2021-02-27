@@ -145,11 +145,20 @@ public class DifferentialDriveKinematics {
 
     public static Transform calculateDeltaTransform(DrivetrainState state, double dt){
         double r = state.getDrivingRadius();
-        double c = r*2*Math.PI;
         double drivenDist = state.getLinear()*dt;
-        double theta = (drivenDist/c) * 2*Math.PI;
-        Position deltaPos = new Position(r*Math.cos(theta), r*Math.sin(theta));
-        Rotation deltaTheta = new Rotation(theta);
+        Position deltaPos;
+        Rotation deltaTheta;
+        if(Double.isInfinite(r) || Double.isNaN(r) || r < 2e9){
+            deltaPos = new Position(drivenDist, 0);
+            deltaTheta = new Rotation();
+        }
+        else{
+            double c = r*2*Math.PI;
+            double theta = (drivenDist/c) * 2*Math.PI;
+            deltaPos = new Position(r*Math.cos(theta), r*Math.sin(theta));
+            deltaTheta = new Rotation(theta);
+        }
+
         return new Transform(deltaPos, deltaTheta);
     }
 }
