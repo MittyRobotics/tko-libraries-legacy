@@ -148,7 +148,7 @@ public class DifferentialDriveKinematics {
         double drivenDist = state.getLinear()*dt;
         Position deltaPos;
         Rotation deltaTheta;
-        if(Double.isInfinite(r) || Double.isNaN(r) || Math.abs(r) < 2e-10){
+        if(Double.isInfinite(r) || Double.isNaN(r) || Math.abs(r) > 1e3){
             deltaPos = new Position(drivenDist, 0);
             deltaTheta = new Rotation();
         }
