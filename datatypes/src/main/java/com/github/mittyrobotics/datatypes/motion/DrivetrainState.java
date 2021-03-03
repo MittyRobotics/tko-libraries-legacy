@@ -24,6 +24,7 @@
 
 package com.github.mittyrobotics.datatypes.motion;
 
+import com.github.mittyrobotics.datatypes.positioning.Rotation;
 import com.github.mittyrobotics.datatypes.positioning.Transform;
 
 public class DrivetrainState {
@@ -165,6 +166,10 @@ public class DrivetrainState {
 
     public Transform getDeltaTransform(double dt){
         return DifferentialDriveKinematics.calculateDeltaTransform(this, dt);
+    }
+
+    public Transform getRotatedDeltaTransform(Rotation robotRotation, double dt){
+        return DifferentialDriveKinematics.calculateRotatedDeltaTransform(this, robotRotation, dt);
     }
 
     @Override

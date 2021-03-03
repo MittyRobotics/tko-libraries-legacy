@@ -161,4 +161,9 @@ public class DifferentialDriveKinematics {
 
         return new Transform(deltaPos, deltaTheta);
     }
+
+    public static Transform calculateRotatedDeltaTransform(DrivetrainState state, Rotation robotRotation, double dt){
+        Transform relativeDeltaTransform = state.getDeltaTransform(dt);
+        return relativeDeltaTransform.rotateBy(robotRotation);
+    }
 }
