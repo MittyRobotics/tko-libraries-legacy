@@ -143,27 +143,18 @@ public class DifferentialDriveKinematics {
         }
     }
 
-    public static Transform calculateDeltaTransform(DrivetrainState state, double dt){
-        double r = state.getDrivingRadius();
-        double drivenDist = state.getLinear()*dt;
-        Position deltaPos;
-        Rotation deltaTheta;
-        if(Double.isInfinite(r) || Double.isNaN(r) || Math.abs(r) > 1e5){
-            deltaPos = new Position(drivenDist, 0);
-            deltaTheta = new Rotation();
-        }
-        else{
-            double c = r*2*Math.PI;
-            double theta = (drivenDist/c) * 2*Math.PI;
-            deltaPos = new Position(drivenDist, 0);
-            deltaTheta = new Rotation(theta);
-        }
-
-        return new Transform(deltaPos, deltaTheta);
+    public static Transform calculateVelocityTransform(DrivetrainState state){
+        double deltaPos = (state.getLeft() + state.getRight()) / 2;
+        Rotation rotation =
+                Rotation.fromRadians(Math.atan2((state.getLeft() - state.getRight()),
+                                state.getTrackWidth()));
+        Position position = new Position(rotation.cos() * deltaPos, rotation.sin() * deltaPos);
+        return new Transform(position, rotation);
     }
 
-    public static Transform calculateRotatedDeltaTransform(DrivetrainState state, Rotation robotRotation, double dt){
-        Transform relativeDeltaTransform = state.getDeltaTransform(dt);
-        return relativeDeltaTransform.rotateBy(robotRotation);
+    public static Transform calculateRotatedVelocityTransform(DrivetrainState state, Rotation robotRotation){
+        Transform relativeDeltaTransform = state.getVelocityTransform();
+        relativeDeltaTransform.setPosition(relativeDeltaTransform.getPosition().rotateBy(robotRotation));
+        return relativeDeltaTransform;
     }
 }
