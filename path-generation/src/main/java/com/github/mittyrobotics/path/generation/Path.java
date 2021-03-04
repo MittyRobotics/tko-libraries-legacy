@@ -162,10 +162,10 @@ public class Path extends Parametric {
 
     public TransformWithParameter getTransformFromLength(double length) {
         if (length < 0.0) {
-            return new TransformWithParameter(new Transform(getStartWaypoint().getRotation().cos() * length, getStartWaypoint().getRotation().sin() * length, getStartWaypoint().getRotation()).add(getStartWaypoint()), 0.0);
+            return new TransformWithParameter(new Transform(getStartWaypoint().getRotation().cos() * length, getStartWaypoint().getRotation().sin() * length, getStartWaypoint().getRotation()).add(new Transform(getStartWaypoint().getPosition(), 0)), 0.0);
         }
         if (length > getGaussianQuadratureLength()) {
-            return new TransformWithParameter(new Transform(getEndWaypoint().getRotation().cos() * (length - getGaussianQuadratureLength()), getEndWaypoint().getRotation().sin() * (length - getGaussianQuadratureLength()), getEndWaypoint().getRotation()).add(getEndWaypoint()), 1.0);
+            return new TransformWithParameter(new Transform(getEndWaypoint().getRotation().cos() * (length - getGaussianQuadratureLength()), getEndWaypoint().getRotation().sin() * (length - getGaussianQuadratureLength()), getEndWaypoint().getRotation()).add(new Transform(getEndWaypoint().getPosition(), 0)), 1.0);
         }
         return getTransform(getParameterFromLength(length));
     }

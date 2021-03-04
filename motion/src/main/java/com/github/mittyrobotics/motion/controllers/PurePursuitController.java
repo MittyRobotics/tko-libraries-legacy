@@ -62,7 +62,6 @@ public class PurePursuitController extends PathFollower {
         double lookaheadDistance = purePursuitProperties.lookaheadDistance;
         Position targetPosition = getCurrentPath().getTransformFromLength(getTraveledDistance() + lookaheadDistance).getPosition();
 
-
         double robotVelocity = getProperties().velocityController.getVelocity(getCurrentPath(), getPreviousCalculatedVelocity(), getTraveledDistance(), deltaTime);
 
         setPreviousCalculatedVelocity(robotVelocity);

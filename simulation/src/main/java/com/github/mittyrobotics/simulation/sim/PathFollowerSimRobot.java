@@ -49,15 +49,15 @@ public class PathFollowerSimRobot extends SimRobot {
 
     @Override
     public void robotInit() {
-        graph = new Graph();
+//        graph = new Graph();
         PathVelocityController velocityController = new PathVelocityController(.5, .5, 2, 0, 0, .4, .2);
         double trackWidth = .5;
-        boolean reversed = false;
+        boolean reversed = true;
         getDrivetrain().setupPIDFValues(1, 0, .001, 12.0 / 4.1190227085647875);
         follower =
                 new PurePursuitController(new PathFollowerProperties(velocityController, trackWidth, reversed, false),
                         new PathFollowerProperties.PurePursuitProperties(.5));
-        follower.setPath(new Path(PathGenerator.generateQuinticHermiteSplinePath(new Transform[]{new Transform(0, 0, 0), new Transform(4, 2, 0)})));
+        follower.setPath(new Path(PathGenerator.generateQuinticHermiteSplinePath(new Transform[]{new Transform(0, 0, Math.PI), new Transform(-4, 0, Math.PI)})));
 
     }
 
@@ -92,11 +92,11 @@ public class PathFollowerSimRobot extends SimRobot {
 //        follower.setPreviousTransformOnPath(closestTransform);
         getDrivetrain().setVelocityControl(newVelocity.getLeft(), newVelocity.getRight());
 //        getDrivetrain().setPercentOutput(1, 1);
-        graph.addToSeries("Velocity", new XYDataItem(time, newVelocity.getLinear()));
-        graph.addToSeries("Curvature Slowdown", new XYDataItem(time, follower.getCurvatureSlowdownVelocity()));
-        graph.addToSeries("slowdown", new XYDataItem(time, follower.getCurvatureSlowdownVelocity()));
-        graph.addToSeries("Velocity1", new XYDataItem(time, (getRobotSimulator().getRobot().getDrivetrain().getDrivetrainModel().getRightVelocity() + getRobotSimulator().getRobot().getDrivetrain().getDrivetrainModel().getLeftVelocity()) / 2));
-        graph.addToSeries("Position", new XYDataItem(time, follower.getTraveledDistance()));
-        graph.addToSeries("Position Setpoint", new XYDataItem(time, follower.getCurrentPath().getGaussianQuadratureLength()));
+//        graph.addToSeries("Velocity", new XYDataItem(time, newVelocity.getLinear()));
+//        graph.addToSeries("Curvature Slowdown", new XYDataItem(time, follower.getCurvatureSlowdownVelocity()));
+//        graph.addToSeries("slowdown", new XYDataItem(time, follower.getCurvatureSlowdownVelocity()));
+//        graph.addToSeries("Velocity1", new XYDataItem(time, (getRobotSimulator().getRobot().getDrivetrain().getDrivetrainModel().getRightVelocity() + getRobotSimulator().getRobot().getDrivetrain().getDrivetrainModel().getLeftVelocity()) / 2));
+//        graph.addToSeries("Position", new XYDataItem(time, follower.getTraveledDistance()));
+//        graph.addToSeries("Position Setpoint", new XYDataItem(time, follower.getCurrentPath().getGaussianQuadratureLength()));
     }
 }
