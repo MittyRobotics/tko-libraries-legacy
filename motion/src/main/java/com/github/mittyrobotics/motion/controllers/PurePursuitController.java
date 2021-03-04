@@ -60,7 +60,7 @@ public class PurePursuitController extends PathFollower {
                                      double deltaTime) {
 
         double lookaheadDistance = purePursuitProperties.lookaheadDistance;
-        Position targetPosition = getCurrentPath().getTransformFromLength(getTraveledDistance() + lookaheadDistance).getPosition();
+        lookaheadPoint = getCurrentPath().getTransformFromLength(getTraveledDistance() + lookaheadDistance).getPosition();
 
         double robotVelocity = getProperties().velocityController.getVelocity(getCurrentPath(), getPreviousCalculatedVelocity(), getTraveledDistance(), deltaTime);
 
@@ -68,7 +68,7 @@ public class PurePursuitController extends PathFollower {
 
         //Calculate the pursuit circle to follow, calculated by finding the circle tangent to the robot transform that
         //intersects the target position.
-        this.pursuitCircle = new Circle(robotTransform, targetPosition);
+        this.pursuitCircle = new Circle(robotTransform, lookaheadPoint);
 
         //Determine which side the robot transform is on the circle
         double side = new Line(robotTransform.getPosition(),
