@@ -164,12 +164,12 @@ public class DrivetrainState {
         return trackWidth;
     }
 
-    public Transform getDeltaTransform(double dt){
-        return DifferentialDriveKinematics.calculateDeltaTransform(this, dt);
+    public Transform getVelocityTransform(){
+        return DifferentialDriveKinematics.calculateVelocityTransform(this);
     }
 
-    public Transform getRotatedDeltaTransform(Rotation robotRotation, double dt){
-        return DifferentialDriveKinematics.calculateRotatedDeltaTransform(this, robotRotation, dt);
+    public Transform getRotatedVelocityTransform(Rotation robotRotation){
+        return DifferentialDriveKinematics.calculateRotatedVelocityTransform(this, robotRotation);
     }
 
     @Override
