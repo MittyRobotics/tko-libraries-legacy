@@ -40,8 +40,6 @@ repositories {
 }
 
 dependencies {
-    compile(project(":core"))
-    compile(project(":visualization"))
 }
 
 publishing {

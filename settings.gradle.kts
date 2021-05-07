@@ -24,8 +24,6 @@
 
 rootProject.name = "tko-libraries"
 include("motion")
-include("path-generation")
-include("simulation")
 include("visualization")
-include("datatypes")
-include("data-collection")
+include("core")
+include("simulation")

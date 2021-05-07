@@ -32,18 +32,17 @@ group = "com.github.MittyRobotics"
 version = "0.1.0"
 
 repositories {
+    flatDir {
+        dirs("libs")
+    }
     jcenter()
     mavenLocal()
 }
 
 dependencies {
-    compile(project(":datatypes"))
+    compile(project(":core"))
     compile(project(":visualization"))
-    compile(project(":data-collection"))
-    compile(project(":motion"))
-
 }
-
 
 publishing {
     publications {
