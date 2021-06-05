@@ -5,7 +5,7 @@ import com.github.mittyrobotics.core.math.units.M_TO_IN
 import kotlin.math.pow
 import kotlin.math.sqrt
 
-class Point (var x: Double = 0.0, var y: Double = 0.0) {
+data class Point (var x: Double = 0.0, var y: Double = 0.0) {
 
     /**
      * Calculates the distance from this [Point] to `other`.
@@ -29,18 +29,18 @@ class Point (var x: Double = 0.0, var y: Double = 0.0) {
     }
 
     /**
-     * Converts this [Position] from inches to meters.
+     * Converts this [Point] from inches to meters.
      *
-     * @return this [Position] from inches to meters.
+     * @return this [Point] from inches to meters.
      */
     fun inToM(): Point {
         return this * IN_TO_M
     }
 
     /**
-     * Converts this [Position] from meters to inches.
+     * Converts this [Point] from meters to inches.
      *
-     * @return this [Position] from meters to inches.
+     * @return this [Point] from meters to inches.
      */
     fun mToIn(): Point {
         return this * M_TO_IN
@@ -125,5 +125,4 @@ class Point (var x: Double = 0.0, var y: Double = 0.0) {
         x /= scalar
         y /= scalar
     }
-
 }
