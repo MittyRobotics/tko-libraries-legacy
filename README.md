@@ -42,6 +42,14 @@ Main code libraries for FRC Team 1351, TKO.
       as  [```path-following```](https://github.com/MittyRobotics/tko-libraries-legacy/tree/master/motion/src/main/java/com/github/mittyrobotics/motion/pathfollowing)
       or [```motion-profiling```](https://github.com/MittyRobotics/tko-libraries-legacy/tree/master/motion/src/main/java/com/github/mittyrobotics/motion/profiles)
       on a simulated robot.
+    - Example Simulation: 
+        ```java        
+        DrivetrainModel drivetrainModel =
+                new DrivetrainModel(50 * Conversions.LBS_TO_KG, 1.585, 20 * Conversions.IN_TO_M,
+                        30 * Conversions.IN_TO_M, new CIMMotor(2), 7.0, 2 * Conversions.IN_TO_M);
+        PathFollowerSimRobot robot = new PathFollowerSimRobot(new SimDrivetrain(drivetrainModel));
+
+        RobotSimulator simulator = new RobotSimulator(robot, 0.02, new RobotGraph());
 -  ### [```visualization```](https://github.com/MittyRobotics/tko-libraries-legacy/tree/master/visualization/src/main/java/com/github/mittyrobotics/visualization)
     - Contains graphing and visualization utilities
     - Holds a
