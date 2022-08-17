@@ -11,21 +11,23 @@ Main code libraries for FRC Team 1351, TKO.
 -  ### [```datatypes```](https://github.com/MittyRobotics/tko-libraries-legacy/tree/master/datatypes/src/main/java/com/github/mittyrobotics/datatypes)
     - Contains all of the standardized datatypes, math, and classes for all libraries
     -
-    Contains [positioning](https://github.com/MittyRobotics/tko-libraries-legacy/tree/master/datatypes/src/main/java/com/github/mittyrobotics/datatypes/positioning)
-    , [geometry](https://github.com/MittyRobotics/tko-libraries-legacy/tree/master/datatypes/src/main/java/com/github/mittyrobotics/datatypes/geometry)
-    , [motion](https://github.com/MittyRobotics/tko-libraries-legacy/tree/master/motion/src/main/java/com/github/mittyrobotics/motion)
-    , and more
--  ### [```motion-profiling```](https://github.com/MittyRobotics/tko-libraries-legacy/tree/master/motion/src/main/java/com/github/mittyrobotics/motion/profiles)
+    Contains [positioning](https://github.com/MittyRobotics/tko-libraries-legacy/tree/master/datatypes/src/main/java/com/github/mittyrobotics/datatypes/positioning), [geometry](https://github.com/MittyRobotics/tko-libraries-legacy/tree/master/datatypes/src/main/java/com/github/mittyrobotics/datatypes/geometry), [motion](https://github.com/MittyRobotics/tko-libraries-legacy/tree/master/datatypes/src/main/java/com/github/mittyrobotics/datatypes/motion),
+   and more
+-  ### [```motion```](https://github.com/MittyRobotics/tko-libraries-legacy/tree/master/motion/src/main/java/com/github/mittyrobotics/motion)
+    - Contains motion control code, from [path followers](https://github.com/MittyRobotics/tko-libraries-legacy/tree/master/motion/src/main/java/com/github/mittyrobotics/motion/pathfollowing) to [models](https://github.com/MittyRobotics/tko-libraries-legacy/tree/master/motion/src/main/java/com/github/mittyrobotics/motion/modeling/models) and [controllers](https://github.com/MittyRobotics/tko-libraries-legacy/tree/master/motion/src/main/java/com/github/mittyrobotics/motion/controllers).
     - Contains motion profile generation and velocity controlling features, such as
       the [DynamicTrapezoidalMotionProfile](https://github.com/MittyRobotics/tko-libraries-legacy/blob/master/motion/src/main/java/com/github/mittyrobotics/motion/profiles/DynamicTrapezoidalMotionProfile.java)
       and [SCurveMotionProfile](https://github.com/MittyRobotics/tko-libraries-legacy/blob/master/motion/src/main/java/com/github/mittyrobotics/motion/profiles/SCurveMotionProfile.java)
--  ### [```path-following```](https://github.com/MittyRobotics/tko-libraries-legacy/tree/master/motion/src/main/java/com/github/mittyrobotics/motion/pathfollowing)
-    - Contains the autonomous path following code
-    - Has different path following controllers, such as
+    -  #### [Modeling](https://github.com/MittyRobotics/tko-libraries-legacy/tree/master/motion/src/main/java/com/github/mittyrobotics/motion/modeling)
+        - Contains code for state-space control and model simulations. Has pre-derived models for common mechanisms such as [flywheels](https://github.com/MittyRobotics/tko-libraries-legacy/blob/master/motion/src/main/java/com/github/mittyrobotics/motion/modeling/models/FlywheelModel.java), [arms](https://github.com/MittyRobotics/tko-libraries-legacy/blob/master/motion/src/main/java/com/github/mittyrobotics/motion/modeling/models/SingleJointedArmModel.java), and [drivetrains](https://github.com/MittyRobotics/tko-libraries-legacy/blob/master/motion/src/main/java/com/github/mittyrobotics/motion/modeling/models/DrivetrainModel.java).
+        - Contains the main [Plant](https://github.com/MittyRobotics/tko-libraries-legacy/blob/master/motion/src/main/java/com/github/mittyrobotics/motion/modeling/Plant.java) class for model-based control.
+    -  #### [Autonomous Navigation](https://github.com/MittyRobotics/tko-libraries-legacy/tree/master/motion/src/main/java/com/github/mittyrobotics/motion/pathfollowing)
+        - Contains the autonomous path following code
+        - Has different path following controllers, such as
       the [PurePursuitController](https://github.com/MittyRobotics/tko-libraries-legacy/blob/master/motion/src/main/java/com/github/mittyrobotics/motion/controllers/PurePursuitController.java)
       and
       the [RamseteController](https://github.com/MittyRobotics/tko-libraries-legacy/blob/master/motion/src/main/java/com/github/mittyrobotics/motion/controllers/RamseteController.java)
-    - Holds main path following
+        - Holds main path following
       class, [PathFollower](https://github.com/MittyRobotics/tko-libraries-legacy/blob/master/motion/src/main/java/com/github/mittyrobotics/motion/pathfollowing/PathFollower.java)
 -  ### [```path-generation```](https://github.com/MittyRobotics/tko-libraries-legacy/tree/master/path-generation/src/main/java/com/github/mittyrobotics/path/generation)
     - Contains the Path generation code and the
