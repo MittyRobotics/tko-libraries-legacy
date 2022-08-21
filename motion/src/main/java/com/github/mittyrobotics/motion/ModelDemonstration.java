@@ -25,8 +25,8 @@
 package com.github.mittyrobotics.motion;
 
 import com.github.mittyrobotics.datatypes.units.Conversions;
-import com.github.mittyrobotics.motion.modeling.models.PulleyModel;
-import com.github.mittyrobotics.motion.modeling.motors.Pro775Motor;
+import com.github.mittyrobotics.motion.statespace.models.PulleyModel;
+import com.github.mittyrobotics.motion.statespace.motors.Pro775Motor;
 import com.github.mittyrobotics.visualization.MotorGraph;
 
 public class ModelDemonstration {

@@ -27,9 +27,9 @@ package com.github.mittyrobotics.motion;
 import com.github.mittyrobotics.datatypes.motion.SwerveModuleState;
 import com.github.mittyrobotics.datatypes.positioning.Transform;
 import com.github.mittyrobotics.datatypes.units.Conversions;
-import com.github.mittyrobotics.motion.modeling.models.SwerveDriveModel;
-import com.github.mittyrobotics.motion.modeling.motors.Falcon500Motor;
-import com.github.mittyrobotics.motion.modeling.motors.NEOMotor;
+import com.github.mittyrobotics.motion.statespace.models.SwerveDriveModel;
+import com.github.mittyrobotics.motion.statespace.motors.Falcon500Motor;
+import com.github.mittyrobotics.motion.statespace.motors.NEOMotor;
 import com.github.mittyrobotics.visualization.RobotGraph;
 
 public class TestSwerveModel {
